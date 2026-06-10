@@ -11,7 +11,7 @@ options(scipen = 999, digits = 3)
 source("_tabla_helper.R")
 ```
 
-# Análisis de las variables continuas {#cap4}
+# Análisis de las variables continuas {#cap3}
 
 El análisis estadístico de encuestas ha evolucionado de manera constante, impulsado por el desarrollo de nuevas metodologías y enfoques que buscan mejorar la precisión y la representatividad de los resultados. En general, estos avances surgen en el ámbito académico y, con el tiempo, son adoptados por instituciones públicas, empresas privadas y organismos estadísticos, que demandan su incorporación en los principales programas de análisis de datos.
 

@@ -9,7 +9,7 @@ knitr::opts_chunk$set(warning = FALSE,
 source("_tabla_helper.R")
 ```
 
-# Modelos de regresión {#cap6}
+# Modelos de regresión {#cap5}
 
 Los modelos de regresión constituyen una de las herramientas más utilizadas en el análisis de datos provenientes de encuestas, ya que permiten estudiar la relación entre una variable de interés y un conjunto de variables explicativas. A través de estos modelos, es posible evaluar cómo cambian determinadas características de la población según factores demográficos, sociales o económicos observados en la muestra. No obstante, la validez de los resultados obtenidos depende de una adecuada especificación del modelo y de la correcta consideración de las características del diseño muestral de la encuesta.
 

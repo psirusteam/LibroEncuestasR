@@ -5,7 +5,7 @@ knitr::opts_chunk$set(warning = FALSE,
 source("_tabla_helper.R")
 ```
 
-# Conceptos básicos en encuestas de hogares
+# Conceptos básicos en encuestas de hogares  {#cap2}
 
 Las encuestas de hogares constituyen una de las principales herramientas para comprender la realidad social y económica de una población. A partir de ellas se obtiene información esencial sobre las condiciones de vida, el empleo, la educación, la salud y otros aspectos que orientan la formulación de políticas públicas y la toma de decisiones basadas en evidencia. El análisis riguroso de estas encuestas es fundamental para estudiar la realidad social, económica y demográfica de una población. Sin embargo, la validez de los resultados no depende únicamente del tamaño de la muestra o de la calidad de la recolección de datos, sino también de la manera en que la encuesta fue diseñada y de cómo dicho diseño se incorpora en el análisis estadístico. Ignorar el diseño muestral y aplicar métodos de análisis tradicionales que asumen una muestra aleatoria simple puede conducir a estimaciones sesgadas, errores en la inferencia y conclusiones equivocadas. Por esta razón, el análisis de las encuestas de hogares no puede desligarse de su diseño de selección, ya que este constituye el fundamento que sustenta la validez y representatividad de la información producida.
 

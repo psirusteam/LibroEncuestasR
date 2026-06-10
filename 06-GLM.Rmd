@@ -10,7 +10,7 @@ source("_tabla_helper.R")
 library(ggplot2)
 ```
 
-# Modelos lineales generalizados {#cap-glm}
+# Modelos lineales generalizados  {#cap6}
 
 Cuando la variable de interés no es continua o los supuestos del modelo lineal clásico no se satisfacen, los modelos lineales generalizados constituyen una alternativa adecuada para modelar las relaciones de interés. Este enfoque fue introducido por @nelder1972generalized, quienes demostraron que diversos métodos estadísticos ampliamente utilizados, como la regresión logística, los modelos log-lineales para datos de conteo y ciertos modelos avanzados de regresión para variables continuas, podían integrarse dentro de un mismo marco teórico unificado. Esta formulación permitió extender las herramientas de regresión más allá de los escenarios en los que la variable respuesta sigue una distribución normal.
 

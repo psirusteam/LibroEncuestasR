@@ -14,7 +14,7 @@ A manera de ejemplo ilustrativo, suponga una población con dos regiones de tama
 
 Este documento busca cerrar esa brecha y proporcionar al investigador los fundamentos teóricos y las herramientas computacionales necesarias para trabajar adecuadamente con encuestas provenientes de diseños complejos. A lo largo del texto se abordan de manera integrada aspectos prácticos que van desde la definición del diseño de muestreo hasta la estimación de indicadores —como totales, tamaños, medias y proporciones—, la construcción de sus respectivos intervalos de confianza, la formulación de pruebas de hipótesis, la modelación mediante técnicas de regresión avanzadas y el tratamiento de problemas habituales de imputación.
 
-# Introducción {#cap-intro}
+# Introducción {#cap1}
 
 El análisis de encuestas con diseños complejos cuenta con una trayectoria consolidada en la literatura estadística, sustentada en el enfoque de inferencia basado en el diseño de muestreo. Como señalan @sarndal2003model y @Gutierrez2016, este enfoque reconoce a la distribución de probabilidad inducida por el proceso de selección de la muestra como el único mecanismo probabilístico que rige la inferencia. Bajo este paradigma, las propiedades estadísticas de los estimadores —como el insesgamiento, la precisión y la consistencia— se evalúan con respecto a la distribución de todas las posibles muestras que el diseño puede generar, sin imponer supuestos distribucionales sobre la variable de interés.
 

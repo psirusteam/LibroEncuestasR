@@ -103,11 +103,11 @@ tab:tab-coef-logit-int-aleatorio
 fig:fig-logit-int-aleatorio
 tab:tab-coef-logit-pendiente
 fig:fig-logit-pendiente-aleatoria
-cap-intro
+cap1
 justificación
 uso-del-software-r-para-el-análisis-de-encuestas
 estructura-del-documento
-conceptos-básicos-en-encuestas-de-hogares
+cap2
 población-objetivo-y-unidades-de-muestreo
 estimadores-de-muestreo
 fundamentos-teóricos
@@ -118,7 +118,7 @@ linealización-de-taylor
 último-conglomerado
 bootstrap
 intervalos-de-confianza
-cap4
+cap3
 estimación-de-parámetros-descriptivos
 estimación-del-total
 estimación-de-la-media
@@ -134,7 +134,7 @@ viz-continuas
 histogramas
 diagramas-de-caja-boxplots
 diagramas-de-dispersión
-análisis-de-variables-categóricas
+cap4
 estimación-del-tamaño-poblacional
 estimación-de-proporciones
 contrastes-y-diferencias-de-proporciones
@@ -144,7 +144,7 @@ prueba-de-independencia-chi2
 viz-categoricas
 gráficos-de-barras
 viz-mapas
-cap6
+cap5
 formulación-del-modelo
 uso-de-los-pesos-de-muestreo
 estimación-de-los-parámetros-del-modelo
@@ -154,11 +154,11 @@ residuales
 observaciones-influyentes
 inferencia-sobre-los-parámetros-del-modelo
 estimación-y-predicción
-cap-glm
+cap6
 sec-logistica
 sec-multinomial
 sec-gamma
-cap-multinivel
+cap7
 sec-motivacionMult
 pesos-q-weighted
 modelo-lineal-multinivel

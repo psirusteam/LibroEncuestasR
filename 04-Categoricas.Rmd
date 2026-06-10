@@ -9,7 +9,7 @@ knitr::opts_chunk$set(warning = FALSE,
 source("_tabla_helper.R")
 ```
 
-# Análisis de variables categóricas
+# Análisis de variables categóricas  {#cap4}
 
 
 En el análisis de encuestas de hogares, uno de los productos más habituales es la estimación de parámetros descriptivos asociados a variables categóricas, los cuales permiten sintetizar las principales características de la población. Estas medidas facilitan una representación clara y comprensible de fenómenos sociales a partir de información recolectada mediante muestras probabilísticas.
