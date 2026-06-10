@@ -1,4 +1,4 @@
-# Análisis de encuestas con R
+# Análisis de encuestas de hogares con R
 
 **Autores:**  
 Andrés Gutiérrez · Stalyn Guerrero · Giovany Babativa-Márquez · Cristian Téllez  

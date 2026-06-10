@@ -1,11 +1,12 @@
-```{r setup, include=FALSE}
+﻿```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, 
                       message = FALSE,
                       cache = TRUE,
                       fig.align = "center",
                       fig.width = 6,
                       fig.height = 4,
-                      out.width = "70%")
+                      out.width = "70%",
+                      fig.path = "docs/figures/")
 source("_tabla_helper.R")
 ```
 
@@ -83,7 +84,7 @@ En cualquier caso, si el modelo se encuentra mal especificado, ignorar las ponde
 
 2. Pesos normalizados: en este enfoque los pesos originales se reescalan para que su suma sea igual a uno, lo que evita un incremento innecesario de la varianza en los modelos. Esta técnica es especialmente útil cuando se trabaja con diferentes subconjuntos de datos (por ejemplo, modelos estimados en subpoblaciones) o cuando se busca minimizar la inflación de la varianza. De esta forma, las nuevas ponderaciones son $w_k^{Normalized} = \frac{w_k}{\sum w_k}$.
 
-Es importante destacar que, en ambos métodos, los pesos ajustados se obtienen mediante transformaciones multiplicativas directas de los pesos muestrales originales. Por ello, no deben emplearse para calcular tamaños o totales poblacionales. Asimismo, estos procedimientos no alteran las estimaciones de razones, como medias o proporciones, ya que en tales casos los pesos se cancelan en el cociente. En la práctica, el uso de estos ajustes puede considerarse una solución pragmática en contextos donde no se dispone de software especializado para encuestas. No obstante,  cuando se cuenta con herramientas como los paquetes  `survey` y `srvyr` de R, descritos en los capítulos anteriores, el reescalamiento deja de ser necesario, pues dichos paquetes realizan el tratamiento adecuado para preservar tanto la representatividad como las propiedades inferenciales del modelo. 
+Es importante destacar que, en ambos métodos, los pesos ajustados se obtienen mediante transformaciones multiplicativas directas de los pesos muestrales originales. Por ello, no deben emplearse para calcular tamaños o totales poblacionales. Asimismo, estos procedimientos no alteran las estimaciones de razones, como medias o proporciones, ya que en tales casos los pesos se cancelan en el cociente. En la práctica, el uso de estos ajustes puede considerarse una solución pragmática en contextos donde no se dispone de software especializado para encuestas. No obstante,  cuando se cuenta con herramientas como los paquetes  `survey` [@Lumley2024] y `srvyr` [@Freedman2024] de R, descritos en los capítulos anteriores, el reescalamiento deja de ser necesario, pues dichos paquetes realizan el tratamiento adecuado para preservar tanto la representatividad como las propiedades inferenciales del modelo. 
 
 ## Estimación de los parámetros del modelo
 
@@ -132,7 +133,7 @@ $$
 \end{bmatrix}
 $$
 
-En este capítulo se mostrará cómo implementar estos modelos en `R` mediante la librería `survey`. Se abordará la especificación del diseño muestral, la estimación de modelos lineales y logísticos, así como la obtención de errores estándar y pruebas de hipótesis ajustadas al diseño, integrando los fundamentos teóricos con ejemplos prácticos en un flujo de trabajo reproducible. Para ejemplificar los conceptos desarrollados hasta este punto, se empleará la misma base de datos utilizada a lo largo del libro. El proceso inicia con la carga de las librerías, los datos y la definición del diseño de muestreo:
+En este capítulo se mostrará cómo implementar estos modelos en `R` mediante la librería `survey` [@Lumley2024], junto con `srvyr` [@Freedman2024] y `tidyverse` [@tidyverse2026] para organizar el flujo de trabajo. Se abordará la especificación del diseño muestral, la estimación de modelos lineales y logísticos, así como la obtención de errores estándar y pruebas de hipótesis ajustadas al diseño, integrando los fundamentos teóricos con ejemplos prácticos reproducibles. Para ejemplificar los conceptos desarrollados hasta este punto, se empleará la misma base de datos utilizada a lo largo del libro. El proceso inicia con la carga de las librerías, los datos y la definición del diseño de muestreo:
 
 ```{r, echo=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, error = FALSE)
@@ -143,15 +144,7 @@ options(digits = 4)
 ```{r setup2, eval=TRUE}
 library(survey)
 library(srvyr)
-library(convey)
-library(TeachingSampling)
-library(gt)
 library(tidyverse)
-library(stargazer)
-library(jtools)
-library(broom)
-library(ggplot2)
-library(ggpmisc)
 
 data(BigCity, package = "TeachingSampling")
 encuesta <- readRDS("Data/encuesta.rds")
@@ -287,7 +280,8 @@ A continuación, estos diagnósticos se aplican a los modelos previamente ajusta
 ```{r, echo = TRUE, eval=TRUE}
 library(svydiags)
 stdresids = as.numeric(svystdres(fit_svy)$stdresids)
-diseno$variables %<>% mutate(stdresids = stdresids)
+diseno$variables <- diseno$variables %>% 
+  mutate(stdresids = stdresids)
 ```
 
 El análisis de normalidad puede complementarse con el histograma de los residuales estandarizados, presentado en la Figura \@ref(fig:fig-hist-residuales). El histograma de los residuos estandarizados revela una falta de ajuste significativa respecto a la curva de distribución normal teórica (en rojo), lo cual corrobora una violación del supuesto de normalidad. La distribución de los residuos (representada en azul) muestra un pico mucho más agudo y estrecho que la curva normal, además de una asimetría positiva marcada con una cola extendida hacia la derecha. Esta discrepancia indica que el modelo no logra capturar la variabilidad real de los datos, lo que sugiere la necesidad de aplicar una transformación de la variable dependiente o emplear un modelo con una familia de distribución más flexible y robusta.
@@ -307,7 +301,7 @@ ggplot(data = diseno$variables,
 
 La homocedasticidad de los errores (varianza constante), constituye uno de los supuestos centrales en los modelos de regresión. Su incumplimiento afecta la eficiencia de los estimadores del modelo. Dado que los residuos representan las discrepancias entre los valores observados y los valores ajustados por el modelo, su análisis en función de los valores predichos o de las covariables constituye una herramienta diagnóstica fundamental. Bajo un modelo adecuadamente especificado, se espera que los residuos se distribuyan de forma aleatoria alrededor de cero, sin patrones estructurados; en cambio, la aparición de formas sistemáticas (como estructuras en embudo o curvaturas) sugiere la presencia de heterocedasticidad (varianza no constante) o posibles relaciones funcionales no captadas por la especificación del modelo.
 
-Para evaluar este supuesto, se recomienda analizar gráficamente los residuos en función de los valores estimados $\hat{\mu}_{k}$ o de covariables específicas del modelo. La aparición de patrones sistemáticos en estos gráficos constituye evidencia de heterocedasticidad o de posibles problemas de especificación funcional. En particular, para evaluar la homocedasticidad respecto de las covariables incluidas en el modelo, se construyen gráficos de residuos frente a cada una de ellas. 
+Para evaluar este supuesto, se recomienda analizar gráficamente los residuos en función de los valores estimados $\hat{\mu}_{k}$ o de covariables específicas del modelo. La aparición de patrones sistemáticos en estos gráficos constituye evidencia de heterocedasticidad o de posibles problemas de especificación funcional. En particular, para evaluar la homocedasticidad respecto de las covariables incluidas en el modelo, se construyen gráficos de residuos frente a cada una de ellas y se combinan con `patchwork` [@patchwork]. 
 
 ```{r fig-residuales-covariables, fig.cap="Gráficos de residuales estandarizados frente a cada covariable del modelo", fig.align='center', out.width='80%', echo=TRUE, eval=TRUE}
 library(patchwork)
@@ -348,7 +342,6 @@ En `R`, se evalúa la presencia de observaciones influyentes mediante la distanc
 
 
 ```{r fig-cook, fig.cap="Distancia de Cook para cada observación de la muestra", fig.align='center', out.width='65%', echo=TRUE, eval=TRUE}
-library(svydiags)
 svyCooksD(fit_svy, doplot=TRUE) %>% head(10)
 ```
 
@@ -384,7 +377,7 @@ Una vez obtenidos los valores de la medida DFBETA para cada observación y coefi
 d_dfbetas$id <- 1:nrow(d_dfbetas)
 d_dfbetas <- reshape2::melt(d_dfbetas, id.vars = "id")
 cutoff <- svydfbetas(fit_svy)$cutoff
-d_dfbetas %<>% mutate(Criterio = ifelse(abs(value) > cutoff, "Si", "No"))
+d_dfbetas <- d_dfbetas %>% mutate(Criterio = ifelse(abs(value) > cutoff, "Si", "No"))
 
 tex_label <- d_dfbetas %>%
   filter(Criterio == "Si") %>%
@@ -397,7 +390,7 @@ tex_label
 d_dfbetas$id <- 1:nrow(d_dfbetas)
 d_dfbetas <- reshape2::melt(d_dfbetas, id.vars = "id")
 cutoff <- svydfbetas(fit_svy)$cutoff
-d_dfbetas %<>% mutate(Criterio = ifelse(abs(value) > cutoff, "Si", "No"))
+d_dfbetas <- d_dfbetas %>% mutate(Criterio = ifelse(abs(value) > cutoff, "Si", "No"))
 
 tex_label <- d_dfbetas %>%
   filter(Criterio == "Si") %>%
@@ -438,7 +431,7 @@ En `R`, el cálculo de este estadístico puede realizarse mediante la función `
 d_dffits = data.frame(dffits = svydffits(fit_svy)$Dffits,
                       id = 1:length(svydffits(fit_svy)$Dffits))
 cutoff <- svydffits(fit_svy)$cutoff
-d_dffits %<>% mutate(C_cutoff = ifelse(abs(dffits) > cutoff, "Si", "No"))
+d_dffits <- d_dffits %>% mutate(C_cutoff = ifelse(abs(dffits) > cutoff, "Si", "No"))
 
 ggplot(d_dffits, aes(y = abs(dffits), x = id)) +
   geom_point(aes(col = C_cutoff)) +
@@ -511,6 +504,8 @@ $$
 $$
 
 En donde $\hat{\boldsymbol{\Sigma}}=\widehat{Var}(\hat{\boldsymbol{\beta}})$ corresponde a la matriz de varianzas y covarianzas estimada de los parámetros del modelo de regresión. Esta expresión cuantifica la incertidumbre asociada a la predicción obtenida para la unidad $k$, considerando simultáneamente la variabilidad de cada coeficiente estimado y la correlación existente entre ellos. En consecuencia, aquellas unidades cuyos valores de las covariables estén asociados a regiones con mayor incertidumbre en la estimación de los coeficientes presentarán varianzas más elevadas. Por tanto, la precisión de las estimaciones depende directamente de la precisión con la que se estimen los coeficientes del modelo de regresión. Continuando con el modelo del ejemplo, recordemos que los coeficientes estimados del modelo se presentan en la Tabla \@ref(tab:tab-coeficientes-modelo):
+
+Los coeficientes del modelo se convierten a una tabla ordenada mediante `broom::tidy()` [@broom2026], lo que facilita presentar estimaciones, errores estándar y pruebas en una estructura rectangular.
 
 ```{r tab-coeficientes-modelo, echo=FALSE, tab.cap="Coeficientes estimados del modelo de regresión con diseño muestral complejo"}
 fit_svy %>%

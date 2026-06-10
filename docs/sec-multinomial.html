@@ -376,7 +376,7 @@ y_{k(j)}
 </tr>
 </tbody>
 </table>
-<p>Para modelar una variable de respuesta multinomial se emplea la función <code>svy_vglm()</code> del paquete <code>svyVGAM</code>, que permite ajustar modelos de regresión multinomial incorporando explícitamente las características del diseño complejo de la encuesta. En este ejemplo, se especifica un modelo donde la condición de actividad se explica en función de la edad, el sexo y la zona de residencia. A diferencia de los modelos multinomiales convencionales, <code>svy_vglm()</code> calcula las varianzas de los estimadores considerando la complejidad del diseño muestral, incluyendo la estratificación, la conglomeración y los pesos de expansión. De esta forma, tanto las estimaciones puntuales como sus errores estándar e inferencias asociadas son consistentes con el diseño de la encuesta.</p>
+<p>Para modelar una variable de respuesta multinomial se emplea la función <code>svy_vglm()</code> del paquete <code>svyVGAM</code> <span class="citation">(<a href="#ref-svyVGAM2026">Lumley, 2026</a>)</span>, que permite ajustar modelos de regresión multinomial incorporando explícitamente las características del diseño complejo de la encuesta. En este ejemplo, se especifica un modelo donde la condición de actividad se explica en función de la edad, el sexo y la zona de residencia. A diferencia de los modelos multinomiales convencionales, <code>svy_vglm()</code> calcula las varianzas de los estimadores considerando la complejidad del diseño muestral, incluyendo la estratificación, la conglomeración y los pesos de expansión. De esta forma, tanto las estimaciones puntuales como sus errores estándar e inferencias asociadas son consistentes con el diseño de la encuesta.</p>
 <div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="sec-multinomial.html#cb152-1" tabindex="-1"></a><span class="fu">library</span>(svyVGAM)</span>
 <span id="cb152-2"><a href="sec-multinomial.html#cb152-2" tabindex="-1"></a>diseno_15  <span class="ot">&lt;-</span> diseno <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">15</span>)</span>
 <span id="cb152-3"><a href="sec-multinomial.html#cb152-3" tabindex="-1"></a>model_mul  <span class="ot">&lt;-</span> <span class="fu">svy_vglm</span>(</span>
@@ -484,22 +484,21 @@ y_{k(j)}
 </tr>
 </tbody>
 </table>
-<p>La Figura <a href="sec-multinomial.html#fig:fig-multinomial-ic">6.3</a> muestra los intervalos de confianza de los coeficientes estimados para cada ecuación del modelo multinomial. Las covariables cuyos intervalos no incluyen el valor cero presentan evidencia de asociación estadísticamente significativa con la variable respuesta, mientras que aquellos cuyos intervalos contienen el cero no muestran efectos significativos al nivel de confianza considerado.</p>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="sec-multinomial.html#cb155-1" tabindex="-1"></a><span class="fu">library</span>(dotwhisker)</span>
-<span id="cb155-2"><a href="sec-multinomial.html#cb155-2" tabindex="-1"></a><span class="fu">tidy.svyVGAM</span>(model_mul, <span class="at">exponentiate =</span> <span class="cn">FALSE</span>, <span class="at">conf.int =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb155-3"><a href="sec-multinomial.html#cb155-3" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb155-4"><a href="sec-multinomial.html#cb155-4" tabindex="-1"></a>    <span class="at">model =</span> <span class="fu">if_else</span>(y.level <span class="sc">==</span> <span class="dv">1</span>, <span class="st">&quot;Inactive&quot;</span>, <span class="st">&quot;Employed&quot;</span>),</span>
-<span id="cb155-5"><a href="sec-multinomial.html#cb155-5" tabindex="-1"></a>    <span class="at">sig   =</span> gtools<span class="sc">::</span><span class="fu">stars.pval</span>(p.value)</span>
-<span id="cb155-6"><a href="sec-multinomial.html#cb155-6" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb155-7"><a href="sec-multinomial.html#cb155-7" tabindex="-1"></a>  dotwhisker<span class="sc">::</span><span class="fu">dwplot</span>(</span>
-<span id="cb155-8"><a href="sec-multinomial.html#cb155-8" tabindex="-1"></a>    <span class="at">dodge_size =</span> <span class="fl">0.3</span>,</span>
-<span id="cb155-9"><a href="sec-multinomial.html#cb155-9" tabindex="-1"></a>    <span class="at">vline =</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">&quot;grey60&quot;</span>, <span class="at">linetype =</span> <span class="dv">2</span>)</span>
-<span id="cb155-10"><a href="sec-multinomial.html#cb155-10" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb155-11"><a href="sec-multinomial.html#cb155-11" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">reverse =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
-<span id="cb155-12"><a href="sec-multinomial.html#cb155-12" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb155-13"><a href="sec-multinomial.html#cb155-13" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<p>La Figura <a href="sec-multinomial.html#fig:fig-multinomial-ic">6.3</a> muestra los intervalos de confianza de los coeficientes estimados para cada ecuación del modelo multinomial. La visualización se construye con <code>dotwhisker::dwplot()</code> <span class="citation">(<a href="#ref-dotwhisker2025">Solt &amp; Hu, 2025</a>)</span>, que permite comparar coeficientes e intervalos en una escala común, y se usa <code>gtools::stars.pval()</code> <span class="citation">(<a href="#ref-gtools2025">Warnes et al., 2023</a>)</span> para codificar la significancia estadística. Las covariables cuyos intervalos no incluyen el valor cero presentan evidencia de asociación estadística significativa con la variable respuesta, mientras que aquellos cuyos intervalos contienen el cero no muestran efectos significativos al nivel de confianza considerado.</p>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="sec-multinomial.html#cb155-1" tabindex="-1"></a><span class="fu">tidy.svyVGAM</span>(model_mul, <span class="at">exponentiate =</span> <span class="cn">FALSE</span>, <span class="at">conf.int =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb155-2"><a href="sec-multinomial.html#cb155-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb155-3"><a href="sec-multinomial.html#cb155-3" tabindex="-1"></a>    <span class="at">model =</span> <span class="fu">if_else</span>(y.level <span class="sc">==</span> <span class="dv">1</span>, <span class="st">&quot;Inactive&quot;</span>, <span class="st">&quot;Employed&quot;</span>),</span>
+<span id="cb155-4"><a href="sec-multinomial.html#cb155-4" tabindex="-1"></a>    <span class="at">sig   =</span> gtools<span class="sc">::</span><span class="fu">stars.pval</span>(p.value)</span>
+<span id="cb155-5"><a href="sec-multinomial.html#cb155-5" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb155-6"><a href="sec-multinomial.html#cb155-6" tabindex="-1"></a>  dotwhisker<span class="sc">::</span><span class="fu">dwplot</span>(</span>
+<span id="cb155-7"><a href="sec-multinomial.html#cb155-7" tabindex="-1"></a>    <span class="at">dodge_size =</span> <span class="fl">0.3</span>,</span>
+<span id="cb155-8"><a href="sec-multinomial.html#cb155-8" tabindex="-1"></a>    <span class="at">vline =</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">&quot;grey60&quot;</span>, <span class="at">linetype =</span> <span class="dv">2</span>)</span>
+<span id="cb155-9"><a href="sec-multinomial.html#cb155-9" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb155-10"><a href="sec-multinomial.html#cb155-10" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">reverse =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb155-11"><a href="sec-multinomial.html#cb155-11" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb155-12"><a href="sec-multinomial.html#cb155-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-multinomial-ic"></span>
-<img src="06-GLM_files/figure-html/fig-multinomial-ic-1.svg" alt="Intervalos de confianza para los coeficientes del modelo multinomial" width="75%" />
+<img src="docs/figures/fig-multinomial-ic-1.svg" alt="Intervalos de confianza para los coeficientes del modelo multinomial" width="75%" />
 <p class="caption">
 Figura 6.3: Intervalos de confianza para los coeficientes del modelo multinomial
 </p>
@@ -513,8 +512,17 @@ Binder, D. A. (1983). On the variances of asymptotically normal estimators from 
 <div id="ref-heeringa2017applied" class="csl-entry">
 Heeringa, S. G., West, B. T., Heeringa, S. G., &amp; Berglund, P. A. (2017). <em>Applied survey data analysis</em>. chapman; hall/CRC.
 </div>
+<div id="ref-svyVGAM2026" class="csl-entry">
+Lumley, T. (2026). <em>svyVGAM: Design-Based Inference in Vector Generalised Linear Models</em>. <a href="https://doi.org/10.32614/CRAN.package.svyVGAM">https://doi.org/10.32614/CRAN.package.svyVGAM</a>
+</div>
 <div id="ref-molina1992pseudo" class="csl-entry">
 Molina, E. A., &amp; Skinner, C. J. (1992). Pseudo-likelihood and quasi-likelihood estimation for complex sampling schemes. <em>Computational Statistics &amp; Data Analysis</em>, <em>13</em>, 395-405.
+</div>
+<div id="ref-dotwhisker2025" class="csl-entry">
+Solt, F., &amp; Hu, Y. (2025). <em>dotwhisker: Dot-and-Whisker Plots of Regression Results</em>. <a href="https://doi.org/10.32614/CRAN.package.dotwhisker">https://doi.org/10.32614/CRAN.package.dotwhisker</a>
+</div>
+<div id="ref-gtools2025" class="csl-entry">
+Warnes, G. R., Bolker, B., Lumley, T., Magnusson, A., Venables, B., Ryodan, G., &amp; Moeller, S. (2023). <em>gtools: Various R Programming Tools</em>. <a href="https://doi.org/10.32614/CRAN.package.gtools">https://doi.org/10.32614/CRAN.package.gtools</a>
 </div>
 </div>
 <div class="footnotes">

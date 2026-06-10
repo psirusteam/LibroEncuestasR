@@ -5,10 +5,9 @@ knitr::opts_chunk$set(warning = FALSE,
                       fig.align = "center",
                       fig.width = 6,
                       fig.height = 4,
-                      out.width = "70%")
+                      out.width = "70%",
+                      fig.path = "docs/figures/")
 source("_tabla_helper.R")
-
-knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, error = FALSE)
 options(digits = 4)
 ```
 
@@ -24,17 +23,11 @@ El desarrollo teórico y metodológico de los modelos multinivel ha sido ampliam
 
 ## Motivación {#sec-motivacionMult}
 
-Para iniciar este capítulo, se cargan las librerías necesarias para la estimación de modelos multinivel, la manipulación de datos y la generación de tablas y gráficos. Asimismo, se importa la base de datos que será utilizada a lo largo de los ejemplos y se configura el tema gráfico empleado en el documento. 
+Para iniciar este capítulo, se cargan `tidyverse` [@tidyverse2026] para la manipulación de datos y la generación de gráficos, y `lme4` [@lme42026] para la estimación de modelos multinivel. Asimismo, se importa la base de datos que será utilizada a lo largo de los ejemplos y se configura el tema gráfico empleado en el documento. Los títulos matemáticos de algunas figuras se formatean con `latex2exp` [@latex2exp2026], llamado de forma explícita en el código.
 
 ```{r multinivel-setup, include=TRUE}
-library(survey)
-library(srvyr)
-library(TeachingSampling)
-library(broom)
-library(patchwork)
-library(ggplot2)
+library(tidyverse)
 library(lme4)
-library(performance)
 ```
 
 ```{r multinivel-datos, echo=TRUE, eval=TRUE}
@@ -74,7 +67,6 @@ encuesta_plot <- encuesta %>%
 Como punto de partida, se ajusta un modelo de regresión lineal convencional que relaciona el ingreso de los hogares con su nivel de gasto, ignorando temporalmente la estructura jerárquica de los datos. Bajo esta especificación, se asume que todas las observaciones son independientes y que la relación entre ingreso y gasto es homogénea para todos los hogares, independientemente del estrato al que pertenezcan. La Figura \@ref(fig:fig-regresion-simple) presenta la recta de regresión estimada junto con los datos observados.
 
 ```{r fig-regresion-simple, fig.cap="Modelo de regresión lineal simple para el ingreso en función del gasto (sin considerar estratos)", echo=TRUE, eval=TRUE}
-library(latex2exp)
 ggplot(data = encuesta_plot,
        aes(y = Income, x = Expenditure)) +
   geom_jitter() +
@@ -258,7 +250,7 @@ Un valor elevado del ICC indica que una proporción importante de la variabilida
 
 Siguiendo con el análisis de la encuesta de ejemplo, cuando la variable de interés es el ingreso, el modelo nulo constituye el punto de partida para cuantificar qué proporción de la variabilidad total se debe a diferencias entre estratos y qué proporción corresponde a diferencias entre hogares dentro de un mismo estrato. 
 
-La estimación de modelos multinivel en `R`se realiza mediante el paquete `lme4`. En particular, la función `lmer()` permite especificar los efectos aleatorios mediante expresiones de la forma `(efecto | grupo)`. En este contexto, la expresión `(1 | Stratum)` indica que el modelo incluye un intercepto aleatorio para cada estrato. El valor `1` representa el intercepto del modelo, mientras que `Stratum` identifica la variable de agrupación.
+La estimación de modelos multinivel en `R`se realiza mediante el paquete `lme4` [@lme42026]. En particular, la función `lmer()` permite especificar los efectos aleatorios mediante expresiones de la forma `(efecto | grupo)`. En este contexto, la expresión `(1 | Stratum)` indica que el modelo incluye un intercepto aleatorio para cada estrato. El valor `1` representa el intercepto del modelo, mientras que `Stratum` identifica la variable de agrupación.
 
 ```{r modelos-nulos-setup, echo=TRUE, eval=TRUE}
 mod_null  <- lmer(Income ~ (1 | Stratum), 
@@ -277,10 +269,9 @@ coef_mod_null <- coef(mod_null)$Stratum
 coef_mod_null %>% slice(1:12L) %>% tabla_fmt()
 ```
 
-A partir de los componentes de varianza estimados en el modelo nulo, la correlación intraclase se calcula mediante la función `icc()` del paquete `performance`. Este indicador cuantifica la proporción de la variabilidad total del ingreso que puede atribuirse a diferencias entre estratos, constituyendo una medida de la dependencia existente entre observaciones pertenecientes a un mismo grupo. Los resultados obtenidos se presentan en la Tabla \@ref(tab:tab-icc-nulo).
+A partir de los componentes de varianza estimados en el modelo nulo, la correlación intraclase se calcula mediante la función `icc()` del paquete `performance` [@performance2026]. Este indicador cuantifica la proporción de la variabilidad total del ingreso que puede atribuirse a diferencias entre estratos, constituyendo una medida de la dependencia existente entre observaciones pertenecientes a un mismo grupo. Los resultados obtenidos se presentan en la Tabla \@ref(tab:tab-icc-nulo).
 
 ```{r eval=FALSE}
-library(performance)
 performance::icc(mod_null) %>% as.data.frame()
 ```
 

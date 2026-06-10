@@ -305,15 +305,9 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="sec-motivacionMult" class="section level2 hasAnchor" number="7.1">
 <h2><span class="header-section-number">7.1</span> Motivación<a href="sec-motivacionMult.html#sec-motivacionMult" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Para iniciar este capítulo, se cargan las librerías necesarias para la estimación de modelos multinivel, la manipulación de datos y la generación de tablas y gráficos. Asimismo, se importa la base de datos que será utilizada a lo largo de los ejemplos y se configura el tema gráfico empleado en el documento.</p>
-<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="sec-motivacionMult.html#cb158-1" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
-<span id="cb158-2"><a href="sec-motivacionMult.html#cb158-2" tabindex="-1"></a><span class="fu">library</span>(srvyr)</span>
-<span id="cb158-3"><a href="sec-motivacionMult.html#cb158-3" tabindex="-1"></a><span class="fu">library</span>(TeachingSampling)</span>
-<span id="cb158-4"><a href="sec-motivacionMult.html#cb158-4" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb158-5"><a href="sec-motivacionMult.html#cb158-5" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb158-6"><a href="sec-motivacionMult.html#cb158-6" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb158-7"><a href="sec-motivacionMult.html#cb158-7" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
-<span id="cb158-8"><a href="sec-motivacionMult.html#cb158-8" tabindex="-1"></a><span class="fu">library</span>(performance)</span></code></pre></div>
+<p>Para iniciar este capítulo, se cargan <code>tidyverse</code> <span class="citation">(<a href="#ref-tidyverse2026">Wickham, Averick, et al., 2026</a>)</span> para la manipulación de datos y la generación de gráficos, y <code>lme4</code> <span class="citation">(<a href="#ref-lme42026">Bates et al., 2026</a>)</span> para la estimación de modelos multinivel. Asimismo, se importa la base de datos que será utilizada a lo largo de los ejemplos y se configura el tema gráfico empleado en el documento. Los títulos matemáticos de algunas figuras se formatean con <code>latex2exp</code> <span class="citation">(<a href="#ref-latex2exp2026">Meschiari, 2026</a>)</span>, llamado de forma explícita en el código.</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="sec-motivacionMult.html#cb158-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb158-2"><a href="sec-motivacionMult.html#cb158-2" tabindex="-1"></a><span class="fu">library</span>(lme4)</span></code></pre></div>
 <div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="sec-motivacionMult.html#cb159-1" tabindex="-1"></a>encuesta <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;Data/encuesta.rds&quot;</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb159-2"><a href="sec-motivacionMult.html#cb159-2" tabindex="-1"></a>          <span class="fu">mutate</span>(<span class="at">pobreza =</span> <span class="fu">ifelse</span>(Poverty <span class="sc">!=</span> <span class="st">&quot;NotPoor&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code></pre></div>
 <div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="sec-motivacionMult.html#cb160-1" tabindex="-1"></a>theme_cepal <span class="ot">&lt;-</span> <span class="cf">function</span>(...) <span class="fu">theme_light</span>(<span class="dv">10</span>) <span class="sc">+</span></span>
@@ -338,18 +332,17 @@ div.csl-indent {
 <span id="cb161-9"><a href="sec-motivacionMult.html#cb161-9" tabindex="-1"></a>  <span class="fu">inner_join</span>(encuesta) <span class="sc">%&gt;%</span></span>
 <span id="cb161-10"><a href="sec-motivacionMult.html#cb161-10" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Income, Expenditure, Stratum, Sex, Region, Zone, pobreza)</span></code></pre></div>
 <p>Como punto de partida, se ajusta un modelo de regresión lineal convencional que relaciona el ingreso de los hogares con su nivel de gasto, ignorando temporalmente la estructura jerárquica de los datos. Bajo esta especificación, se asume que todas las observaciones son independientes y que la relación entre ingreso y gasto es homogénea para todos los hogares, independientemente del estrato al que pertenezcan. La Figura <a href="sec-motivacionMult.html#fig:fig-regresion-simple">7.1</a> presenta la recta de regresión estimada junto con los datos observados.</p>
-<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="sec-motivacionMult.html#cb162-1" tabindex="-1"></a><span class="fu">library</span>(latex2exp)</span>
-<span id="cb162-2"><a href="sec-motivacionMult.html#cb162-2" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> encuesta_plot,</span>
-<span id="cb162-3"><a href="sec-motivacionMult.html#cb162-3" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>
-<span id="cb162-4"><a href="sec-motivacionMult.html#cb162-4" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
-<span id="cb162-5"><a href="sec-motivacionMult.html#cb162-5" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb162-6"><a href="sec-motivacionMult.html#cb162-6" tabindex="-1"></a>  <span class="fu">ggtitle</span>(latex2exp<span class="sc">::</span><span class="fu">TeX</span>(</span>
-<span id="cb162-7"><a href="sec-motivacionMult.html#cb162-7" tabindex="-1"></a>    <span class="st">&quot;$Ingreso_{i} </span><span class="sc">\\</span><span class="st">sim </span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">beta}_{0} + </span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">beta}_{1}Gasto_{i} + </span><span class="sc">\\</span><span class="st">epsilon_{i}$&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb162-8"><a href="sec-motivacionMult.html#cb162-8" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>,</span>
-<span id="cb162-9"><a href="sec-motivacionMult.html#cb162-9" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb162-10"><a href="sec-motivacionMult.html#cb162-10" tabindex="-1"></a>  <span class="fu">theme_cepal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="sec-motivacionMult.html#cb162-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> encuesta_plot,</span>
+<span id="cb162-2"><a href="sec-motivacionMult.html#cb162-2" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>
+<span id="cb162-3"><a href="sec-motivacionMult.html#cb162-3" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
+<span id="cb162-4"><a href="sec-motivacionMult.html#cb162-4" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb162-5"><a href="sec-motivacionMult.html#cb162-5" tabindex="-1"></a>  <span class="fu">ggtitle</span>(latex2exp<span class="sc">::</span><span class="fu">TeX</span>(</span>
+<span id="cb162-6"><a href="sec-motivacionMult.html#cb162-6" tabindex="-1"></a>    <span class="st">&quot;$Ingreso_{i} </span><span class="sc">\\</span><span class="st">sim </span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">beta}_{0} + </span><span class="sc">\\</span><span class="st">hat{</span><span class="sc">\\</span><span class="st">beta}_{1}Gasto_{i} + </span><span class="sc">\\</span><span class="st">epsilon_{i}$&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb162-7"><a href="sec-motivacionMult.html#cb162-7" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>,</span>
+<span id="cb162-8"><a href="sec-motivacionMult.html#cb162-8" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb162-9"><a href="sec-motivacionMult.html#cb162-9" tabindex="-1"></a>  <span class="fu">theme_cepal</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-regresion-simple"></span>
-<img src="07-Multinivel_files/figure-html/fig-regresion-simple-1.svg" alt="Modelo de regresión lineal simple para el ingreso en función del gasto (sin considerar estratos)" width="70%" />
+<img src="docs/figures/fig-regresion-simple-1.svg" alt="Modelo de regresión lineal simple para el ingreso en función del gasto (sin considerar estratos)" width="70%" />
 <p class="caption">
 Figura 7.1: Modelo de regresión lineal simple para el ingreso en función del gasto (sin considerar estratos)
 </p>
@@ -373,7 +366,7 @@ Figura 7.1: Modelo de regresión lineal simple para el ingreso en función del g
 <span id="cb164-9"><a href="sec-motivacionMult.html#cb164-9" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
 <span id="cb164-10"><a href="sec-motivacionMult.html#cb164-10" tabindex="-1"></a>  <span class="fu">theme_cepal</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-intercepto-por-estrato"></span>
-<img src="07-Multinivel_files/figure-html/fig-intercepto-por-estrato-1.svg" alt="Modelo con intercepto específico por estrato y pendiente común" width="70%" />
+<img src="docs/figures/fig-intercepto-por-estrato-1.svg" alt="Modelo con intercepto específico por estrato y pendiente común" width="70%" />
 <p class="caption">
 Figura 7.2: Modelo con intercepto específico por estrato y pendiente común
 </p>
@@ -396,7 +389,7 @@ Figura 7.2: Modelo con intercepto específico por estrato y pendiente común
 <span id="cb166-9"><a href="sec-motivacionMult.html#cb166-9" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
 <span id="cb166-10"><a href="sec-motivacionMult.html#cb166-10" tabindex="-1"></a>  <span class="fu">theme_cepal</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-pendiente-por-estrato"></span>
-<img src="07-Multinivel_files/figure-html/fig-pendiente-por-estrato-1.svg" alt="Modelo con pendiente específica por estrato e intercepto común" width="70%" />
+<img src="docs/figures/fig-pendiente-por-estrato-1.svg" alt="Modelo con pendiente específica por estrato e intercepto común" width="70%" />
 <p class="caption">
 Figura 7.3: Modelo con pendiente específica por estrato e intercepto común
 </p>
@@ -418,7 +411,7 @@ Figura 7.3: Modelo con pendiente específica por estrato e intercepto común
 <span id="cb168-9"><a href="sec-motivacionMult.html#cb168-9" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
 <span id="cb168-10"><a href="sec-motivacionMult.html#cb168-10" tabindex="-1"></a>  <span class="fu">theme_cepal</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-intercepto-pendiente-libres"></span>
-<img src="07-Multinivel_files/figure-html/fig-intercepto-pendiente-libres-1.svg" alt="Modelo con intercepto y pendiente específicos por estrato (ajuste independiente)" width="70%" />
+<img src="docs/figures/fig-intercepto-pendiente-libres-1.svg" alt="Modelo con intercepto y pendiente específicos por estrato (ajuste independiente)" width="70%" />
 <p class="caption">
 Figura 7.4: Modelo con intercepto y pendiente específicos por estrato (ajuste independiente)
 </p>
@@ -428,8 +421,17 @@ Figura 7.4: Modelo con intercepto y pendiente específicos por estrato (ajuste i
 </div>
 <h3>Referencias<a href="referencias.html#referencias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-lme42026" class="csl-entry">
+Bates, D., Maechler, M., Bolker, B., &amp; Walker, S. (2026). <em>lme4: Linear Mixed-Effects Models using ’Eigen’ and S4</em>. <a href="https://doi.org/10.32614/CRAN.package.lme4">https://doi.org/10.32614/CRAN.package.lme4</a>
+</div>
 <div id="ref-finch2019multilevel" class="csl-entry">
 Finch, W. H., Bolin, J. E., &amp; Kelley, K. (2019). <em>Multilevel Modeling Using <span>R</span></em> (2.ª ed.). CRC Press.
+</div>
+<div id="ref-latex2exp2026" class="csl-entry">
+Meschiari, S. (2026). <em>latex2exp: Use LaTeX Expressions in Plots</em>. <a href="https://doi.org/10.32614/CRAN.package.latex2exp">https://doi.org/10.32614/CRAN.package.latex2exp</a>
+</div>
+<div id="ref-tidyverse2026" class="csl-entry">
+Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, M., Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., … Yutani, H. (2026). <em>tidyverse: Easily Install and Load the Tidyverse</em>. <a href="https://doi.org/10.32614/CRAN.package.tidyverse">https://doi.org/10.32614/CRAN.package.tidyverse</a>
 </div>
 </div>
             </section>

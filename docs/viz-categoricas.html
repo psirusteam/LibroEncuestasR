@@ -306,9 +306,8 @@ div.csl-indent {
 <div id="viz-categoricas" class="section level2 hasAnchor" number="4.7">
 <h2><span class="header-section-number">4.7</span> Visualización de variables categóricas<a href="viz-categoricas.html#viz-categoricas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>La visualización de variables categóricas es fundamental en el análisis de encuestas de hogares, ya que permite comunicar de manera clara la distribución de grupos poblacionales y las comparaciones entre ellos. Al igual que en el análisis de variables continuas, los gráficos deben incorporar los pesos muestrales para que la representación visual corresponda a estimaciones válidas a nivel poblacional. Cuando la precisión estadística es relevante, es recomendable acompañar las barras con intervalos de confianza, que comunican tanto el valor central como la incertidumbre asociada al proceso de estimación.</p>
-<p>En esta sección se utilizan los paquetes <code>ggplot2</code> <span class="citation">(<a href="#ref-Wickham2023">Wickham et al., 2023</a>)</span> y <code>patchwork</code> <span class="citation">(<a href="#ref-patchwork">Pedersen, 2024</a>)</span>.</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="viz-categoricas.html#cb101-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb101-2"><a href="viz-categoricas.html#cb101-2" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code></pre></div>
+<p>En esta sección se utiliza el paquete <code>ggplot2</code> <span class="citation">(<a href="#ref-ggplot22026">Wickham, Chang, et al., 2026</a>)</span>.</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="viz-categoricas.html#cb101-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
 <div id="gráficos-de-barras" class="section level3 hasAnchor" number="4.7.1">
 <h3><span class="header-section-number">4.7.1</span> Gráficos de barras<a href="#gr%C3%A1ficos-de-barras" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>La construcción de gráficos de barras en <code>R</code> requiere, como paso previo, obtener las estimaciones que se desean representar visualmente. En el contexto de encuestas complejas, estas estimaciones pueden calcularse mediante las funciones <code>survey_total()</code> o <code>survey_prop()</code> del paquete <code>srvyr</code>, dependiendo de si el interés se centra en totales poblacionales o proporciones.</p>
@@ -329,7 +328,7 @@ div.csl-indent {
 <span id="cb102-14"><a href="viz-categoricas.html#cb102-14" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb102-15"><a href="viz-categoricas.html#cb102-15" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-barras-zona"></span>
-<img src="04-Categoricas_files/figure-html/fig-barras-zona-1.svg" alt="Gráfico de barras del tamaño poblacional por zona geográfica" width="70%" />
+<img src="docs/figures/fig-barras-zona-1.svg" alt="Gráfico de barras del tamaño poblacional por zona geográfica" width="70%" />
 <p class="caption">
 Figura 4.1: Gráfico de barras del tamaño poblacional por zona geográfica
 </p>
@@ -348,7 +347,7 @@ Figura 4.1: Gráfico de barras del tamaño poblacional por zona geográfica
 <span id="cb103-11"><a href="viz-categoricas.html#cb103-11" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb103-12"><a href="viz-categoricas.html#cb103-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-barras-pobreza"></span>
-<img src="04-Categoricas_files/figure-html/fig-barras-pobreza-1.svg" alt="Gráfico de barras del tamaño poblacional por condición de pobreza" width="70%" />
+<img src="docs/figures/fig-barras-pobreza-1.svg" alt="Gráfico de barras del tamaño poblacional por condición de pobreza" width="70%" />
 <p class="caption">
 Figura 4.2: Gráfico de barras del tamaño poblacional por condición de pobreza
 </p>
@@ -375,7 +374,7 @@ Figura 4.2: Gráfico de barras del tamaño poblacional por condición de pobreza
 <span id="cb104-19"><a href="viz-categoricas.html#cb104-19" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb104-20"><a href="viz-categoricas.html#cb104-20" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-barras-empleo-pobreza"></span>
-<img src="04-Categoricas_files/figure-html/fig-barras-empleo-pobreza-1.svg" alt="Gráfico de barras del tamaño poblacional por estado de ocupación y pobreza" width="80%" />
+<img src="docs/figures/fig-barras-empleo-pobreza-1.svg" alt="Gráfico de barras del tamaño poblacional por estado de ocupación y pobreza" width="80%" />
 <p class="caption">
 Figura 4.3: Gráfico de barras del tamaño poblacional por estado de ocupación y pobreza
 </p>
@@ -395,7 +394,7 @@ Figura 4.3: Gráfico de barras del tamaño poblacional por estado de ocupación 
 <span id="cb105-12"><a href="viz-categoricas.html#cb105-12" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb105-13"><a href="viz-categoricas.html#cb105-13" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-barras-prop-zona-hombre"></span>
-<img src="04-Categoricas_files/figure-html/fig-barras-prop-zona-hombre-1.svg" alt="Proporción de hombres en condición de pobreza por zona geográfica" width="70%" />
+<img src="docs/figures/fig-barras-prop-zona-hombre-1.svg" alt="Proporción de hombres en condición de pobreza por zona geográfica" width="70%" />
 <p class="caption">
 Figura 4.4: Proporción de hombres en condición de pobreza por zona geográfica
 </p>
@@ -415,7 +414,7 @@ Figura 4.4: Proporción de hombres en condición de pobreza por zona geográfica
 <span id="cb106-12"><a href="viz-categoricas.html#cb106-12" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb106-13"><a href="viz-categoricas.html#cb106-13" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-barras-prop-region-hombre"></span>
-<img src="04-Categoricas_files/figure-html/fig-barras-prop-region-hombre-1.svg" alt="Proporción de hombres en condición de pobreza por región" width="75%" />
+<img src="docs/figures/fig-barras-prop-region-hombre-1.svg" alt="Proporción de hombres en condición de pobreza por región" width="75%" />
 <p class="caption">
 Figura 4.5: Proporción de hombres en condición de pobreza por región
 </p>
@@ -425,7 +424,7 @@ Figura 4.5: Proporción de hombres en condición de pobreza por región
 <div id="viz-mapas" class="section level3 hasAnchor" number="4.7.2">
 <h3><span class="header-section-number">4.7.2</span> Mapas<a href="viz-categoricas.html#viz-mapas" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Los mapas temáticos constituyen una herramienta de visualización especialmente útil en el análisis de encuestas de hogares, ya que permiten representar la distribución territorial de indicadores sociales y demográficos. En este contexto, las estimaciones de proporciones calculadas en secciones anteriores —como el porcentaje de pobreza o desempleo por región— pueden proyectarse directamente sobre unidades geográficas, facilitando así la identificación de patrones espaciales y desigualdades regionales.</p>
-<p>Para construir este tipo de mapas en <code>R</code> se requiere información geoespacial en formato <em>shapefile</em>, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo <code>shapeBigCity/BigCity.shp</code>, cuyas regiones corresponden a las definidas en la base de datos <code>BigCity</code>. Los paquetes <code>sf</code> <span class="citation">(<a href="#ref-sf2018">Pebesma, 2018</a>)</span> y <code>tmap</code> <span class="citation">(<a href="#ref-tmap2023">Tennekes, 2023</a>)</span> permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta.</p>
+<p>Para construir este tipo de mapas en <code>R</code> se requiere información geoespacial en formato <em>shapefile</em>, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo <code>shapeBigCity/BigCity.shp</code>, cuyas regiones corresponden a las definidas en la base de datos <code>BigCity</code>. Los paquetes <code>sf</code> <span class="citation">(<a href="#ref-sf2026">Pebesma et al., 2026</a>)</span> y <code>tmap</code> <span class="citation">(<a href="#ref-tmap2026">Tennekes, 2026</a>)</span> permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta.</p>
 <p>El siguiente código carga los paquetes necesarios para trabajar con información geoespacial y visualización cartográfica en <code>R</code>. En primer lugar, la librería <code>sf</code> permite leer y manipular objetos espaciales modernos, mientras que <code>tmap</code> proporciona herramientas para la elaboración de mapas temáticos. La instrucción <code>tmap_mode("plot")</code> establece el modo de visualización estática de los mapas, apropiado para documentos y reportes. Finalmente, la función <code>read_sf()</code> importa el archivo geográfico <code>BigCity.shp</code>, almacenándolo en el objeto <code>shapeBigCity</code>, el cual contiene los polígonos correspondientes a las regiones de análisis.</p>
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="viz-categoricas.html#cb107-1" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
 <span id="cb107-2"><a href="viz-categoricas.html#cb107-2" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
@@ -435,7 +434,7 @@ Figura 4.5: Proporción de hombres en condición de pobreza por región
 <div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="viz-categoricas.html#cb108-1" tabindex="-1"></a><span class="fu">tm_shape</span>(shapeBigCity) <span class="sc">+</span></span>
 <span id="cb108-2"><a href="viz-categoricas.html#cb108-2" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="st">&quot;Region&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-mapa-regiones"></span>
-<img src="04-Categoricas_files/figure-html/fig-mapa-regiones-1.svg" alt="Mapa de regiones geográficas de BigCity" width="70%" />
+<img src="docs/figures/fig-mapa-regiones-1.svg" alt="Mapa de regiones geográficas de BigCity" width="70%" />
 <p class="caption">
 Figura 4.6: Mapa de regiones geográficas de BigCity
 </p>
@@ -456,7 +455,7 @@ Figura 4.6: Mapa de regiones geográficas de BigCity
 <span id="cb110-6"><a href="viz-categoricas.html#cb110-6" tabindex="-1"></a>    <span class="at">title  =</span> <span class="st">&quot;Proporción en pobreza&quot;</span>,</span>
 <span id="cb110-7"><a href="viz-categoricas.html#cb110-7" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">&quot;YlOrRd&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-mapa-pobreza-hombre"></span>
-<img src="04-Categoricas_files/figure-html/fig-mapa-pobreza-hombre-1.svg" alt="Proporción de hombres en condición de pobreza por región" width="70%" />
+<img src="docs/figures/fig-mapa-pobreza-hombre-1.svg" alt="Proporción de hombres en condición de pobreza por región" width="70%" />
 <p class="caption">
 Figura 4.7: Proporción de hombres en condición de pobreza por región
 </p>
@@ -481,13 +480,13 @@ Figura 4.7: Proporción de hombres en condición de pobreza por región
 <span id="cb111-16"><a href="viz-categoricas.html#cb111-16" tabindex="-1"></a>    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;#FFFFFF&quot;</span>, <span class="st">&quot;#000000&quot;</span>)) <span class="sc">+</span></span>
 <span id="cb111-17"><a href="viz-categoricas.html#cb111-17" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">asp =</span> <span class="dv">0</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-mapa-cv-ingreso"></span>
-<img src="04-Categoricas_files/figure-html/fig-mapa-cv-ingreso-1.svg" alt="Coeficiente de variación del ingreso medio por región" width="70%" />
+<img src="docs/figures/fig-mapa-cv-ingreso-1.svg" alt="Coeficiente de variación del ingreso medio por región" width="70%" />
 <p class="caption">
 Figura 4.8: Coeficiente de variación del ingreso medio por región
 </p>
 </div>
 <p>Los polígonos con tonos más oscuros corresponden a regiones donde la estimación del ingreso presenta mayor variabilidad relativa, lo que puede indicar tamaños muestrales insuficientes para obtener estimaciones precisas en esas áreas.</p>
-<p>Cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando <code>ggplot2</code> junto con los paquetes <code>biscale</code> y <code>cowplot</code>. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la Figura <a href="viz-categoricas.html#fig:fig-mapa-bivariante">4.9</a>. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.</p>
+<p>Cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando <code>ggplot2</code> junto con los paquetes <code>biscale</code> <span class="citation">(<a href="#ref-biscale2025">Prener et al., 2025</a>)</span> y <code>cowplot</code> <span class="citation">(<a href="#ref-cowplot2025">Wilke, 2025</a>)</span>. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la Figura <a href="viz-categoricas.html#fig:fig-mapa-bivariante">4.9</a>. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.</p>
 <div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="viz-categoricas.html#cb112-1" tabindex="-1"></a>prom_region_Sex <span class="ot">&lt;-</span> diseno <span class="sc">%&gt;%</span></span>
 <span id="cb112-2"><a href="viz-categoricas.html#cb112-2" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, Zone, Sex, pobreza) <span class="sc">%&gt;%</span></span>
 <span id="cb112-3"><a href="viz-categoricas.html#cb112-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">prop =</span> <span class="fu">survey_mean</span>(<span class="at">vartype =</span> <span class="st">&quot;cv&quot;</span>)) <span class="sc">%&gt;%</span></span>
@@ -524,7 +523,7 @@ Figura 4.8: Coeficiente de variación del ingreso medio por región
 <span id="cb113-28"><a href="viz-categoricas.html#cb113-28" tabindex="-1"></a>  <span class="fu">draw_plot</span>(map_bi,     <span class="dv">0</span>,    <span class="dv">0</span>,    <span class="dv">1</span>, <span class="at">scale =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
 <span id="cb113-29"><a href="viz-categoricas.html#cb113-29" tabindex="-1"></a>  <span class="fu">draw_plot</span>(legend_bi,  <span class="fl">0.75</span>, <span class="fl">0.4</span>,  <span class="fl">0.2</span>, <span class="fl">0.2</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-mapa-bivariante"></span>
-<img src="04-Categoricas_files/figure-html/fig-mapa-bivariante-1.svg" alt="Mapa bivariante: proporción de pobreza femenina rural y su coeficiente de variación por región" width="80%" />
+<img src="docs/figures/fig-mapa-bivariante-1.svg" alt="Mapa bivariante: proporción de pobreza femenina rural y su coeficiente de variación por región" width="80%" />
 <p class="caption">
 Figura 4.9: Mapa bivariante: proporción de pobreza femenina rural y su coeficiente de variación por región
 </p>
@@ -536,17 +535,20 @@ Figura 4.9: Mapa bivariante: proporción de pobreza femenina rural y su coeficie
 <!-- </div> -->
 <h3>Referencias<a href="referencias.html#referencias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
-<div id="ref-sf2018" class="csl-entry">
-Pebesma, E. (2018). <span>Simple Features for R: Standardized Support for Spatial Vector Data</span>. <em><span>The R Journal</span></em>, <em>10</em>(1), 439-446. <a href="https://doi.org/10.32614/RJ-2018-009">https://doi.org/10.32614/RJ-2018-009</a>
+<div id="ref-sf2026" class="csl-entry">
+Pebesma, E., Bivand, R., Racine, E., Sumner, M., Cook, I., Keitt, T., Lovelace, R., Wickham, H., Ooms, J., &amp; Müller, K. (2026). <em>sf: Simple Features for R</em>. <a href="https://doi.org/10.32614/CRAN.package.sf">https://doi.org/10.32614/CRAN.package.sf</a>
 </div>
-<div id="ref-patchwork" class="csl-entry">
-Pedersen, T. L. (2024). <em>patchwork: The composer of plots</em>. <a href="https://CRAN.R-project.org/package=patchwork">https://CRAN.R-project.org/package=patchwork</a>
+<div id="ref-biscale2025" class="csl-entry">
+Prener, C., Grossenbacher, T., &amp; Zehr, A. (2025). <em>biscale: Tools and Palettes for Bivariate Thematic Mapping</em>. <a href="https://doi.org/10.32614/CRAN.package.biscale">https://doi.org/10.32614/CRAN.package.biscale</a>
 </div>
-<div id="ref-tmap2023" class="csl-entry">
-Tennekes, M. (2023). <em>tmap: Thematic Maps</em>. <a href="https://CRAN.R-project.org/package=tmap">https://CRAN.R-project.org/package=tmap</a>
+<div id="ref-tmap2026" class="csl-entry">
+Tennekes, M. (2026). <em>tmap: Thematic Maps</em>. <a href="https://doi.org/10.32614/CRAN.package.tmap">https://doi.org/10.32614/CRAN.package.tmap</a>
 </div>
-<div id="ref-Wickham2023" class="csl-entry">
-Wickham, H., Navarro, D., &amp; Pedersen, T. L. (2023). <em>ggplot2: Elegant Graphics for Data Analysis</em> (3.ª ed.). Springer. <a href="https://doi.org/10.1007/978-3-319-24277-4">https://doi.org/10.1007/978-3-319-24277-4</a>
+<div id="ref-ggplot22026" class="csl-entry">
+Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., Dunnington, D., &amp; Brand, T. van den. (2026). <em>ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://doi.org/10.32614/CRAN.package.ggplot2">https://doi.org/10.32614/CRAN.package.ggplot2</a>
+</div>
+<div id="ref-cowplot2025" class="csl-entry">
+Wilke, C. O. (2025). <em>cowplot: Streamlined Plot Theme and Plot Annotations for ’ggplot2’</em>. <a href="https://doi.org/10.32614/CRAN.package.cowplot">https://doi.org/10.32614/CRAN.package.cowplot</a>
 </div>
 </div>
             </section>

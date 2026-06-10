@@ -1,13 +1,13 @@
-```{r setup, include=FALSE}
+﻿```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
                       cache   = TRUE,
                       fig.align = "center",
                       fig.width = 6,
                       fig.height = 4,
-                      out.width = "70%")
+                      out.width = "70%",
+                      fig.path = "docs/figures/")
 source("_tabla_helper.R")
-library(ggplot2)
 ```
 
 # Modelos lineales generalizados  {#cap6}
@@ -16,7 +16,7 @@ Cuando la variable de interés no es continua o los supuestos del modelo lineal 
 
 La necesidad de esta generalización surge porque los modelos lineales clásicos asumen, entre otras cosas, normalidad y homogeneidad de varianza en la variable respuesta, condiciones que rara vez se cumplen cuando se analizan variables categóricas, proporciones o conteos. En este tipo de situaciones, los modelos lineales generalizados ofrecen un marco flexible para modelar adecuadamente la relación entre las variables mediante la selección de una distribución de probabilidad apropiada para la respuesta y una función de enlace que conecte la media de dicha distribución con el predictor lineal.
 
-Para ilustrar los modelos presentados en este capítulo se utilizan la base de datos `encuesta` y la población `BigCity`, siguiendo la misma estructura utilizada en capítulos anteriores. Después de cargar las libraerías necesarias, el siguiente bloque de código crea dos nuevas variables categóricas (`pobreza` y `desempleo`) a partir de las variables originales `Poverty` y `Employment`, respectivamente. 
+Para ilustrar los modelos presentados en este capítulo se utilizan la base de datos `encuesta` y la población `BigCity`, siguiendo la misma estructura utilizada en capítulos anteriores. Después de cargar `tidyverse` [@tidyverse2026], `survey` [@Lumley2024], `srvyr` [@Freedman2024], `broom` [@broom2026] y `jtools` [@jtools2026], el siguiente bloque de código crea dos nuevas variables categóricas (`pobreza` y `desempleo`) a partir de las variables originales `Poverty` y `Employment`, respectivamente. 
 
 ```{r glm-setup, echo=TRUE, eval=TRUE}
 options(digits = 4)
@@ -25,8 +25,6 @@ library(survey)
 library(srvyr)
 library(broom)
 library(jtools)
-library(patchwork)
-library(modelsummary)
 
 encuesta <- readRDS("Data/encuesta.rds")
 data("BigCity", package = "TeachingSampling")
@@ -162,6 +160,8 @@ res%>%
 
 La Figura \@ref(fig:fig-logistica-base) presenta la distribución de los estimadores de los coeficientes de regresión. Se observa que, para todas las covariables excepto el sexo, los intervalos de confianza no incluyen el valor cero, lo que proporciona evidencia de una asociación estadísticamente significativa. En contraste, el intervalo de confianza asociado a la variable sexo contiene el valor cero, por lo que no se encuentra evidencia suficiente para concluir que esta variable tenga un efecto significativo una vez controladas las demás covariables incluidas en el modelo.
 
+Para visualizar la distribución de los coeficientes se emplea `plot_summs()` del paquete `jtools`, junto con `ggstance` [@ggstance2024] para la geometría horizontal de los intervalos.
+
 ```{r fig-logistica-base, fig.cap="Distribución de los parámetros del modelo logístico base", out.width="80%"}
 library(ggstance)
 plot_summs(mod_loglin,
@@ -265,7 +265,7 @@ res <- diseno %>%
   tabla_fmt()
 ```
 
-Para modelar una variable de respuesta multinomial se emplea la función `svy_vglm()` del paquete `svyVGAM`, que permite ajustar modelos de regresión multinomial incorporando explícitamente las características del diseño complejo de la encuesta. En este ejemplo, se especifica un modelo donde la condición de actividad se explica en función de la edad, el sexo y la zona de residencia. A diferencia de los modelos multinomiales convencionales, `svy_vglm()` calcula las varianzas de los estimadores considerando la complejidad del diseño muestral, incluyendo la estratificación, la conglomeración y los pesos de expansión. De esta forma, tanto las estimaciones puntuales como sus errores estándar e inferencias asociadas son consistentes con el diseño de la encuesta.
+Para modelar una variable de respuesta multinomial se emplea la función `svy_vglm()` del paquete `svyVGAM` [@svyVGAM2026], que permite ajustar modelos de regresión multinomial incorporando explícitamente las características del diseño complejo de la encuesta. En este ejemplo, se especifica un modelo donde la condición de actividad se explica en función de la edad, el sexo y la zona de residencia. A diferencia de los modelos multinomiales convencionales, `svy_vglm()` calcula las varianzas de los estimadores considerando la complejidad del diseño muestral, incluyendo la estratificación, la conglomeración y los pesos de expansión. De esta forma, tanto las estimaciones puntuales como sus errores estándar e inferencias asociadas son consistentes con el diseño de la encuesta.
 
 ```{r mod-multinomial, echo=TRUE, eval=TRUE}
 library(svyVGAM)
@@ -319,10 +319,9 @@ res <- tidy.svyVGAM(model_mul, exponentiate = FALSE, conf.int = FALSE)
   tabla_fmt()
 ```
 
-La Figura \@ref(fig:fig-multinomial-ic) muestra los intervalos de confianza de los coeficientes estimados para cada ecuación del modelo multinomial. Las covariables cuyos intervalos no incluyen el valor cero presentan evidencia de asociación estadísticamente significativa con la variable respuesta, mientras que aquellos cuyos intervalos contienen el cero no muestran efectos significativos al nivel de confianza considerado.
+La Figura \@ref(fig:fig-multinomial-ic) muestra los intervalos de confianza de los coeficientes estimados para cada ecuación del modelo multinomial. La visualización se construye con `dotwhisker::dwplot()` [@dotwhisker2025], que permite comparar coeficientes e intervalos en una escala común, y se usa `gtools::stars.pval()` [@gtools2025] para codificar la significancia estadística. Las covariables cuyos intervalos no incluyen el valor cero presentan evidencia de asociación estadística significativa con la variable respuesta, mientras que aquellos cuyos intervalos contienen el cero no muestran efectos significativos al nivel de confianza considerado.
 
 ```{r fig-multinomial-ic, fig.cap="Intervalos de confianza para los coeficientes del modelo multinomial", eval=TRUE, echo=TRUE, out.width="75%"}
-library(dotwhisker)
 tidy.svyVGAM(model_mul, exponentiate = FALSE, conf.int = FALSE) %>%
   mutate(
     model = if_else(y.level == 1, "Inactive", "Employed"),

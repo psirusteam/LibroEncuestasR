@@ -1,7 +1,8 @@
-```{r setup, include=FALSE}
+﻿```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, 
                       message = FALSE,
-                      cache = TRUE)
+                      cache = TRUE,
+                      fig.path = "docs/figures/")
 source("_tabla_helper.R")
 ```
 

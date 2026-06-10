@@ -1,7 +1,8 @@
-```{r setup-intro, include=FALSE}
+﻿```{r setup-intro, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      cache = TRUE)
+                      cache = TRUE,
+                      fig.path = "docs/figures/")
 ```
 
 # Resumen {-}
@@ -44,7 +45,7 @@ La elección de R como entorno computacional para este documento no es arbitrari
 
 En primer lugar, su condición de acceso libre. A diferencia de otros programas con costos de licencia que pueden resultar prohibitivos para muchas oficinas nacionales de estadística en países en desarrollo, R se distribuye bajo licencia GNU, lo que garantiza que los métodos presentados en este documento sean plenamente accesibles y replicables, independientemente de las restricciones presupuestarias de las instituciones.
 
-En segundo lugar, destaca su ecosistema especializado. El paquete `survey` [@Lumley2024], disponible desde 2004 y en constante evolución, implementa una amplia gama de métodos de estimación para diseños complejos: estimadores de Horvitz–Thompson, técnicas de calibración, linealización de Taylor, métodos de replicación, modelos de regresión ponderados y pruebas de hipótesis ajustadas al diseño (como Rao-Scott), entre otros. A su vez, el paquete `srvyr` [@Freedman2024] extiende estas capacidades al incorporar la sintaxis del ecosistema `tidyverse`, facilitando una transición fluida entre el análisis exploratorio y el inferencial. Paquetes complementarios como `TeachingSampling` [@GutierrezT2020], `samplesize4surveys` [@Gutierrez2020], `convey` [@covey2024] y `PracTools` [@Valliant2025] consolidan un entorno analítico difícil de igualar en otros lenguajes.
+En segundo lugar, destaca su ecosistema especializado. El paquete `survey` [@Lumley2024], disponible desde 2004 y en constante evolución, implementa una amplia gama de métodos de estimación para diseños complejos: estimadores de Horvitz–Thompson, técnicas de calibración, linealización de Taylor, métodos de replicación, modelos de regresión ponderados y pruebas de hipótesis ajustadas al diseño (como Rao-Scott), entre otros. A su vez, el paquete `srvyr` [@Freedman2024] extiende estas capacidades al incorporar la sintaxis del ecosistema `tidyverse`, facilitando una transición fluida entre el análisis exploratorio y el inferencial. Paquetes complementarios como `TeachingSampling` [@GutierrezT2020] y `convey` [@convey2024] consolidan un entorno analítico difícil de igualar en otros lenguajes.
 
 Finalmente, R ofrece una sólida integración con herramientas de reproducibilidad científica. En particular, su combinación con R Markdown y el sistema `bookdown` permite generar documentos en los que resultados, tablas y figuras se producen directamente a partir del código fuente. Esta capacidad resulta especialmente relevante en el ámbito de la estadística oficial, donde la trazabilidad y la transparencia metodológica son requisitos fundamentales.
 

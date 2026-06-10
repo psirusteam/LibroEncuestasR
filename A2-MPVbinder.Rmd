@@ -1,7 +1,14 @@
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      cache = TRUE)
+                      cache   = TRUE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4,
+                      out.width = "70%",
+                      fig.path = "docs/figures/")
+source("_tabla_helper.R")
+options(digits = 4)
 ```
 
 # Inferencia en poblaciones finitas {#ap2}
@@ -105,7 +112,7 @@ $$
      {\sum_{i \in S_I}N_i},
 $$
 
-el cual trata la muestra como si fuera autoponderada. Este estimador no es insesgado cuando las probabilidades de selección no son iguales o cuando el tamaño del conglomerado se relaciona con la variable de interés. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño. En cada muestra se calculan dos estimadores: `Est1`, que corresponde a $\hat{\bar{y}}$, y `Est2`, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, $\bar{y}_s$. Además, estos estimadores se comparan con el parámetro del modelo `theta_N`, correspondiente a $\theta = 0.3$.
+el cual trata la muestra como si fuera autoponderada. Este estimador no es insesgado cuando las probabilidades de selección no son iguales o cuando el tamaño del conglomerado se relaciona con la variable de interés. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño mediante `S.piPS()` del paquete `TeachingSampling` [@GutierrezT2020]. En cada muestra se calculan dos estimadores: `Est1`, que corresponde a $\hat{\bar{y}}$, y `Est2`, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, $\bar{y}_s$. Además, estos estimadores se comparan con el parámetro del modelo `theta_N`, correspondiente a $\theta = 0.3$.
 
 ```{r sim-muestreo2, echo=TRUE, eval=TRUE}
 library(TeachingSampling)
@@ -298,8 +305,6 @@ Este resultado extiende de manera natural el estimador ordinario al contexto de 
 La siguiente simulación de Monte Carlo anidada ilustra la inferencia doble. En el ciclo externo se genera una nueva población bajo el modelo Bernoulli. En el ciclo interno se seleccionan muchas muestras por diseño y se comparan el estimador que incorpora el diseño y el promedio simple de la muestra.
 
 ```{r sim-doble2, echo=TRUE, eval=TRUE}
-library(TeachingSampling)
-
 set.seed(2026)
 N     <- 100
 theta <- 0.3

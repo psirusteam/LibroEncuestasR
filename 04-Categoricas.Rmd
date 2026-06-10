@@ -1,11 +1,12 @@
-```{r setup, include=FALSE}
+﻿```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, 
                       message = FALSE,
                       cache = TRUE,
                       fig.align = "center",
                       fig.width = 6,
                       fig.height = 4,
-                      out.width = "70%")
+                      out.width = "70%",
+                      fig.path = "docs/figures/")
 source("_tabla_helper.R")
 ```
 
@@ -23,7 +24,6 @@ El análisis comienza con la definición del diseño de muestreo, siguiendo los 
 ```{r, eval=TRUE}
 
 library(tidyverse)
-library(gt)
 library(survey)
 library(srvyr)
 
@@ -48,7 +48,7 @@ diseno <- diseno %>%
                                        TRUE ~ ">= 18 anios"))
 ```
 
-En el código anterior se crean nuevas variables derivadas utilizando la función `mutate()` del paquete `dplyr`. Las variables `pobreza` y `desempleo` se construyen mediante la función `ifelse()`, que evalúa una condición lógica y asigna un valor dependiendo de si esta se cumple o no. En este caso, las variables toman el valor `1` cuando la persona se encuentra en condición de pobreza o desempleo, respectivamente, y `0` en caso contrario. Por su parte, la variable `edad_18` se genera mediante la función `case_when()`, la cual permite definir categorías a partir de una o varias condiciones de forma más clara y flexible que `ifelse()`. Esta función resulta especialmente útil cuando se requiere construir variables categóricas con múltiples niveles. En el ejemplo, las personas menores de 18 años se clasifican en la categoría `"< 18 anios"`, mientras que el resto se agrupa en la categoría `">= 18 anios"`.
+En el código anterior se crean nuevas variables derivadas utilizando la función `mutate()` del paquete `dplyr` [@dplyr2026]. Las variables `pobreza` y `desempleo` se construyen mediante la función `ifelse()`, que evalúa una condición lógica y asigna un valor dependiendo de si esta se cumple o no. En este caso, las variables toman el valor `1` cuando la persona se encuentra en condición de pobreza o desempleo, respectivamente, y `0` en caso contrario. Por su parte, la variable `edad_18` se genera mediante la función `case_when()`, la cual permite definir categorías a partir de una o varias condiciones de forma más clara y flexible que `ifelse()`. Esta función resulta especialmente útil cuando se requiere construir variables categóricas con múltiples niveles. En el ejemplo, las personas menores de 18 años se clasifican en la categoría `"< 18 anios"`, mientras que el resto se agrupa en la categoría `">= 18 anios"`.
 
 Además de lo anterior, se hace necesario generar subgrupos de la población para realizar estimaciones desagregadas. En este capítulo se emplean cuatro subpoblaciones de ejemplo:
 
@@ -639,11 +639,10 @@ Por otro lado, esta prueba de independencia entre las variables `Region` y `pobr
 
 La visualización de variables categóricas es fundamental en el análisis de encuestas de hogares, ya que permite comunicar de manera clara la distribución de grupos poblacionales y las comparaciones entre ellos. Al igual que en el análisis de variables continuas, los gráficos deben incorporar los pesos muestrales para que la representación visual corresponda a estimaciones válidas a nivel poblacional. Cuando la precisión estadística es relevante, es recomendable acompañar las barras con intervalos de confianza, que comunican tanto el valor central como la incertidumbre asociada al proceso de estimación.
 
-En esta sección se utilizan los paquetes `ggplot2` [@Wickham2023] y `patchwork` [@patchwork].
+En esta sección se utiliza el paquete `ggplot2` [@ggplot22026].
 
 ```{r, message=FALSE, warning=FALSE}
 library(ggplot2)
-library(patchwork)
 ```
 
 ### Gráficos de barras
@@ -755,7 +754,7 @@ En síntesis, los gráficos de barras junto con sus correspondientes errores est
 
 Los mapas temáticos constituyen una herramienta de visualización especialmente útil en el análisis de encuestas de hogares, ya que permiten representar la distribución territorial de indicadores sociales y demográficos. En este contexto, las estimaciones de proporciones calculadas en secciones anteriores —como el porcentaje de pobreza o desempleo por región— pueden proyectarse directamente sobre unidades geográficas, facilitando así la identificación de patrones espaciales y desigualdades regionales.
 
-Para construir este tipo de mapas en `R` se requiere información geoespacial en formato *shapefile*, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo `shapeBigCity/BigCity.shp`, cuyas regiones corresponden a las definidas en la base de datos `BigCity`. Los paquetes `sf` [@sf2018] y `tmap` [@tmap2023] permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta.
+Para construir este tipo de mapas en `R` se requiere información geoespacial en formato *shapefile*, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo `shapeBigCity/BigCity.shp`, cuyas regiones corresponden a las definidas en la base de datos `BigCity`. Los paquetes `sf` [@sf2026] y `tmap` [@tmap2026] permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta.
 
 El siguiente código carga los paquetes necesarios para trabajar con información geoespacial y visualización cartográfica en `R`. En primer lugar, la librería `sf` permite leer y manipular objetos espaciales modernos, mientras que `tmap` proporciona herramientas para la elaboración de mapas temáticos. La instrucción `tmap_mode("plot")` establece el modo de visualización estática de los mapas, apropiado para documentos y reportes. Finalmente, la función `read_sf()` importa el archivo geográfico `BigCity.shp`, almacenándolo en el objeto `shapeBigCity`, el cual contiene los polígonos correspondientes a las regiones de análisis.
 
@@ -823,7 +822,7 @@ shape_cv +
 
 Los polígonos con tonos más oscuros corresponden a regiones donde la estimación del ingreso presenta mayor variabilidad relativa, lo que puede indicar tamaños muestrales insuficientes para obtener estimaciones precisas en esas áreas.
 
-Cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando `ggplot2` junto con los paquetes `biscale` y `cowplot`. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la Figura \@ref(fig:fig-mapa-bivariante). El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.
+Cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando `ggplot2` junto con los paquetes `biscale` [@biscale2025] y `cowplot` [@cowplot2025]. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la Figura \@ref(fig:fig-mapa-bivariante). El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.
 
 ```{r mapas-bivar-setup, echo=TRUE, eval=TRUE}
 prom_region_Sex <- diseno %>%

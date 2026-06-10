@@ -307,56 +307,32 @@ div.csl-indent {
 <h2><span class="header-section-number">A.1</span> Preparación del entorno de trabajo<a href="#preparaci%C3%B3n-del-entorno-de-trabajo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><code>R</code> es un lenguaje de programación de carácter colaborativo, lo que permite que su comunidad de usuarios y desarrolladores contribuya continuamente mediante la creación de funciones, paquetes y librerías especializadas. Gracias a este ecosistema abierto, es posible ampliar sus capacidades para distintos tipos de análisis estadístico y procesamiento de datos. Entre las librerías más utilizadas para el análisis de bases de datos se encuentran las siguientes:</p>
 <ul>
-<li><p>La librería <code>tidyverse</code> <span class="citation">(<a href="#ref-tidyverse2019">Wickham et al., 2019</a>)</span> corresponde a un conjunto de paquetes de <code>R</code> diseñados para apoyar distintas etapas del trabajo con datos, desde su importación y transformación hasta su exploración, análisis y visualización. Su uso se ha extendido ampliamente en ciencia de datos porque ofrece una forma de trabajo consistente y ordenada.</p></li>
-<li><p>El paquete <code>dplyr</code> <span class="citation">(<a href="#ref-dplyr2026">Wickham et al., 2026</a>)</span> ofrece herramientas para organizar y transformar bases de datos rectangulares. Su utilidad radica en que reúne, en una sintaxis simple y consistente, las operaciones más frecuentes del trabajo analítico con datos: seleccionar variables, filtrar registros, crear nuevas columnas, ordenar observaciones y resumir información.</p></li>
-<li><p><code>ggplot2</code> <span class="citation">(<a href="#ref-Wickham2023">Wickham et al., 2023</a>)</span> permite construir gráficos estadísticos mediante la gramática de los gráficos. Bajo este enfoque, una visualización se entiende como la combinación ordenada de capas: datos, variables, geometrías, escalas, títulos, colores y otros elementos visuales.</p></li>
-<li><p>El paquete <code>survey</code> <span class="citation">(<a href="#ref-Lumley2024">Lumley, 2024</a>)</span> proporciona herramientas especializadas para analizar información proveniente de encuestas con diseños muestrales complejos, incorporando ponderaciones, estratificación y conglomeración.</p></li>
-<li><p>La librería <code>srvyr</code> <span class="citation">(<a href="#ref-Freedman2024">Freedman Ellis &amp; Schneider, 2024</a>)</span> extiende la funcionalidad del paquete <code>survey</code> para utilizar una sintaxis más cercana al enfoque de <code>tidyverse</code>.</p></li>
-<li><p>El paquete <code>TeachingSampling</code> <span class="citation">(<a href="#ref-GutierrezT2020">Gutiérrez, 2020b</a>)</span> ofrece funciones para seleccionar muestras probabilísticas y realizar inferencia sobre poblaciones finitas bajo diversos diseños de muestreo.</p></li>
-<li><p>La librería <code>samplesize4surveys</code> <span class="citation">(<a href="#ref-Gutierrez2020">Gutiérrez, 2020a</a>)</span> permite calcular tamaños de muestra para estimar totales, medias y proporciones en el contexto de diseños de muestreo complejos.</p></li>
+<li><p>La librería <code>tidyverse</code> <span class="citation">(<a href="#ref-tidyverse2026">Wickham, Averick, et al., 2026</a>)</span> corresponde a un conjunto de paquetes de <code>R</code> diseñados para apoyar distintas etapas del trabajo con datos, desde su importación y transformación hasta su exploración, análisis y visualización. Su uso se ha extendido ampliamente en ciencia de datos porque ofrece una forma de trabajo consistente y ordenada.</p></li>
+<li><p>El paquete <code>dplyr</code> <span class="citation">(<a href="#ref-dplyr2026">Wickham, François, et al., 2026</a>)</span> ofrece herramientas para organizar y transformar bases de datos rectangulares. Su utilidad radica en que reúne, en una sintaxis simple y consistente, las operaciones más frecuentes del trabajo analítico con datos: seleccionar variables, filtrar registros, crear nuevas columnas, ordenar observaciones y resumir información.</p></li>
+<li><p>El paquete <code>TeachingSampling</code> <span class="citation">(<a href="#ref-GutierrezT2020">Gutiérrez, 2020</a>)</span> ofrece funciones para seleccionar muestras probabilísticas y realizar inferencia sobre poblaciones finitas bajo diversos diseños de muestreo.</p></li>
 </ul>
 <p>Antes de poder utilizar las diferentes funciones que cada librería tiene, es necesario descargarlas de antemano de la web. El comando <code>install.packages</code> permite realizar esta tarea. Note que algunas librerías pueden depender de otras, así que para poder utilizarlas es necesario instalar también las dependencias adicionales.</p>
 <div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="preparación-del-entorno-de-trabajo.html#cb198-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;dplyr&quot;</span>)</span>
 <span id="cb198-2"><a href="preparación-del-entorno-de-trabajo.html#cb198-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
-<span id="cb198-3"><a href="preparación-del-entorno-de-trabajo.html#cb198-3" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;survey&quot;</span>)</span>
-<span id="cb198-4"><a href="preparación-del-entorno-de-trabajo.html#cb198-4" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;srvyr&quot;</span>)</span>
-<span id="cb198-5"><a href="preparación-del-entorno-de-trabajo.html#cb198-5" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
-<span id="cb198-6"><a href="preparación-del-entorno-de-trabajo.html#cb198-6" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;TeachingSampling&quot;</span>)</span>
-<span id="cb198-7"><a href="preparación-del-entorno-de-trabajo.html#cb198-7" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;samplesize4surveys&quot;</span>)</span></code></pre></div>
+<span id="cb198-3"><a href="preparación-del-entorno-de-trabajo.html#cb198-3" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;TeachingSampling&quot;</span>)</span></code></pre></div>
 <p>Una vez instalados los paquetes, se cargan con <code>library()</code>. El primer comando limpia los objetos existentes en la sesión de trabajo, lo que ayuda a que los resultados del capítulo dependan solo del código que se ejecuta aquí. Debe tenerse en cuenta que un paquete solo puede cargarse si previamente ha sido instalado en el sistema.</p>
 <div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="preparación-del-entorno-de-trabajo.html#cb199-1" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
 <span id="cb199-2"><a href="preparación-del-entorno-de-trabajo.html#cb199-2" tabindex="-1"></a></span>
 <span id="cb199-3"><a href="preparación-del-entorno-de-trabajo.html#cb199-3" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)</span>
 <span id="cb199-4"><a href="preparación-del-entorno-de-trabajo.html#cb199-4" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;dplyr&quot;</span>)</span>
-<span id="cb199-5"><a href="preparación-del-entorno-de-trabajo.html#cb199-5" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;survey&quot;</span>)</span>
-<span id="cb199-6"><a href="preparación-del-entorno-de-trabajo.html#cb199-6" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;srvyr&quot;</span>)</span>
-<span id="cb199-7"><a href="preparación-del-entorno-de-trabajo.html#cb199-7" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
-<span id="cb199-8"><a href="preparación-del-entorno-de-trabajo.html#cb199-8" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;TeachingSampling&quot;</span>)</span>
-<span id="cb199-9"><a href="preparación-del-entorno-de-trabajo.html#cb199-9" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;samplesize4surveys&quot;</span>)</span></code></pre></div>
+<span id="cb199-5"><a href="preparación-del-entorno-de-trabajo.html#cb199-5" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;TeachingSampling&quot;</span>)</span></code></pre></div>
 <p>Una vez se descargan e instalan las librerías o paquetes en <code>R</code>, el paso recomendado es que todos los procesamientos que se realicen se hagan a través de un la creación de proyectos. Un proyecto de <code>R</code> se define como un archivo que contiene los archivos de origen y contenido asociados con el trabajo que se está realizando. Adicionalmente, contiene información que permite la compilación de cada archivo de <code>R</code> que se va a utilizar, mantiene la información para integrarse con sistemas de control de código fuente y ayuda a organizar la aplicación de los procesamientos en componentes lógicos.</p>
 </div>
 <h3>Referencias<a href="referencias.html#referencias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
-<div id="ref-Freedman2024" class="csl-entry">
-Freedman Ellis, G., &amp; Schneider, B. (2024). <em>srvyr: ’dplyr’-Like Syntax for Summary Statistics of Survey Data</em>. <a href="https://doi.org/10.32614/CRAN.package.srvyr">https://doi.org/10.32614/CRAN.package.srvyr</a>
-</div>
-<div id="ref-Gutierrez2020" class="csl-entry">
-Gutiérrez, H. A. (2020a). <em>samplesize4surveys: Sample Size Calculations for Complex Surveys</em>. <a href="https://doi.org/10.32614/CRAN.package.samplesize4surveys">https://doi.org/10.32614/CRAN.package.samplesize4surveys</a>
-</div>
 <div id="ref-GutierrezT2020" class="csl-entry">
-Gutiérrez, H. A. (2020b). <em>TeachingSampling: Selection of Samples and Parameter Estimation in Finite Population</em>. <a href="https://doi.org/10.32614/CRAN.package.TeachingSampling">https://doi.org/10.32614/CRAN.package.TeachingSampling</a>
+Gutiérrez, H. A. (2020). <em>TeachingSampling: Selection of Samples and Parameter Estimation in Finite Population</em>. <a href="https://doi.org/10.32614/CRAN.package.TeachingSampling">https://doi.org/10.32614/CRAN.package.TeachingSampling</a>
 </div>
-<div id="ref-Lumley2024" class="csl-entry">
-Lumley, T. (2024). <em>survey: analysis of complex survey samples</em>.
-</div>
-<div id="ref-tidyverse2019" class="csl-entry">
-Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, M., Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., … Yutani, H. (2019). Welcome to the <span>tidyverse</span>. <em>Journal of Open Source Software</em>, <em>4</em>(43), 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>
+<div id="ref-tidyverse2026" class="csl-entry">
+Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, M., Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., … Yutani, H. (2026). <em>tidyverse: Easily Install and Load the Tidyverse</em>. <a href="https://doi.org/10.32614/CRAN.package.tidyverse">https://doi.org/10.32614/CRAN.package.tidyverse</a>
 </div>
 <div id="ref-dplyr2026" class="csl-entry">
 Wickham, H., François, R., Henry, L., Müller, K., &amp; Vaughan, D. (2026). <em>dplyr: A Grammar of Data Manipulation</em>. <a href="https://doi.org/10.32614/CRAN.package.dplyr">https://doi.org/10.32614/CRAN.package.dplyr</a>
-</div>
-<div id="ref-Wickham2023" class="csl-entry">
-Wickham, H., Navarro, D., &amp; Pedersen, T. L. (2023). <em>ggplot2: Elegant Graphics for Data Analysis</em> (3.ª ed.). Springer. <a href="https://doi.org/10.1007/978-3-319-24277-4">https://doi.org/10.1007/978-3-319-24277-4</a>
 </div>
 </div>
             </section>

@@ -1,11 +1,12 @@
-```{r setup, include=FALSE}
+﻿```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, 
                       message = FALSE,
                       cache = TRUE,
                       fig.align = "center",
                       fig.width = 6,
                       fig.height = 4,
-                      out.width = "70%")
+                      out.width = "70%",
+                      fig.path = "docs/figures/")
 
 options(scipen = 999, digits = 3)
 source("_tabla_helper.R")
@@ -15,7 +16,7 @@ source("_tabla_helper.R")
 
 El análisis estadístico de encuestas ha evolucionado de manera constante, impulsado por el desarrollo de nuevas metodologías y enfoques que buscan mejorar la precisión y la representatividad de los resultados. En general, estos avances surgen en el ámbito académico y, con el tiempo, son adoptados por instituciones públicas, empresas privadas y organismos estadísticos, que demandan su incorporación en los principales programas de análisis de datos.
 
-Este capítulo presenta los principales procedimientos para el análisis estadístico de variables continuas utilizando `R`, incorporando adecuadamente las características del diseño muestral, tales como los pesos de expansión, la estratificación y la conglomeración. A lo largo del capítulo se ilustran métodos para estimar parámetros poblacionales, medir su precisión y realizar inferencias válidas a partir de datos provenientes de encuestas complejas. Asimismo, se introducen funciones y herramientas del paquete `survey`, uno de los recursos más utilizados en `R` para el análisis de encuestas.
+Este capítulo presenta los principales procedimientos para el análisis estadístico de variables continuas utilizando `R`, incorporando adecuadamente las características del diseño muestral, tales como los pesos de expansión, la estratificación y la conglomeración. A lo largo del capítulo se ilustran métodos para estimar parámetros poblacionales, medir su precisión y realizar inferencias válidas a partir de datos provenientes de encuestas complejas. Asimismo, se introducen funciones y herramientas del paquete `survey` [@Lumley2024], uno de los recursos más utilizados en `R` para el análisis de encuestas.
 
 Las bases de datos utilizadas en el análisis de encuestas pueden encontrarse en una amplia variedad de formatos (.xlsx, .dat, .csv, .parquet, .sas7bdat, .sav, .txt, entre otros). Sin embargo, una buena práctica consiste en importar la información desde cualquiera de estos formatos y guardarla inmediatamente en un archivo con extensión `.rds`, que es el formato nativo de `R`. 
 
@@ -25,14 +26,13 @@ Para ilustrar la sintaxis computacional que se utilizará a lo largo del capítu
 
 ```{r, eval=T}
 library(tidyverse)
-library(gt)
 
 encuesta <- readRDS("Data/encuesta.rds")
 ```
 
 De acuerdo con @ONUDeff[sección 7.8], es fundamental que la estructura del diseño muestral sea tenida en cuenta en el proceso de inferencia al estimar estadísticas oficiales basadas en encuestas de hogares. Como se ha insistido en este docuemnto, ignorar este aspecto puede generar estimaciones sesgadas y errores de muestreo subestimados. En este sentido, los programas estadísticos incorporan funcionalidades específicas para manejar datos provenientes de encuestas con diseños complejos [@heeringa2017applied, apéndice A]. 
 
-Una vez cargada la muestra de hogares en `R`, el siguiente paso es definir el diseño muestral del cual proviene dicha muestra. Para ello se utilizará el paquete `srvyr` que surge como un complemento del paquete `survey`. Estas librerías permiten definir objetos tipo `survey.design`, a los que se aplican las funciones de estimación y análisis de encuestas, y que pueden ser combinadas con la programación del paquete `tidyverse`. A continuación, se muestra un ejemplo en el que se define un objeto de tipo `survey_design` para la encuesta:
+Una vez cargada la muestra de hogares en `R`, el siguiente paso es definir el diseño muestral del cual proviene dicha muestra. Para ello se utilizará el paquete `srvyr` [@Freedman2024], que surge como un complemento del paquete `survey` [@Lumley2024]. Estas librerías permiten definir objetos tipo `survey.design`, a los que se aplican las funciones de estimación y análisis de encuestas, y que pueden ser combinadas con la programación del paquete `tidyverse` [@tidyverse2026]. A continuación, se muestra un ejemplo en el que se define un objeto de tipo `survey_design` para la encuesta:
 
 ```{r, message=FALSE, warning=FALSE}
 options(survey.lonely.UPM = "adjust") 
@@ -570,7 +570,7 @@ $$
 
 donde $w_{hik}^{*}=\dfrac{w_{hik}}{\sum_{h}\sum_{i}\sum_{k}w_{hik}}$ corresponde al peso muestral normalizado, $\hat{F}_{hik}$ representa la función de distribución acumulada (FDA) estimada para la observación $k$ dentro del conglomerado $i$ del estrato $h$, y $\hat{\bar{y}}$ denota la media ponderada de la variable de ingreso en la población.
 
-Autores como @osier2009variance y @langel2013variance profundizan en aspectos técnicos adicionales, especialmente en lo relacionado con la estimación de la varianza del coeficiente de Gini bajo diseños complejos. El paquete `convey` (@covey2024) implementa los procedimientos recomendados para calcular el coeficiente de Gini y su varianza en encuestas de hogares. Primero, se prepara el diseño muestral mediante `convey_prep()`. Luego, la función `svygini()` calcula el índice de Gini utilizando la variable de ingreso y el diseño de encuesta complejo especificado. A continuación se muestra la sintaxis para estimarlo en la base de datos de ejemplo, presentada en la Tabla \@ref(tab:tab-gini):
+Autores como @osier2009variance y @langel2013variance profundizan en aspectos técnicos adicionales, especialmente en lo relacionado con la estimación de la varianza del coeficiente de Gini bajo diseños complejos. El paquete `convey` [@convey2024] implementa los procedimientos recomendados para calcular el coeficiente de Gini y su varianza en encuestas de hogares. Primero, se prepara el diseño muestral mediante `convey_prep()`. Luego, la función `svygini()` calcula el índice de Gini utilizando la variable de ingreso y el diseño de encuesta complejo especificado. A continuación se muestra la sintaxis para estimarlo en la base de datos de ejemplo, presentada en la Tabla \@ref(tab:tab-gini):
 
 ```{r eval=FALSE}
 library(convey)
@@ -603,7 +603,6 @@ El área comprendida entre la curva de Lorenz y la diagonal de igualdad se conoc
 Para realizar la curva de Lorenz en `R` se utiliza la función `svylorenz()`, presentada en la Figura \@ref(fig:fig-lorenz):
 
 ```{r fig-lorenz, fig.cap="Curva de Lorenz estimada para el ingreso de los hogares", fig.align="center", out.width="65%"}
-library(convey)
 clorenz <- svylorenz(formula = ~Income,
                      design = diseno_gini,
                      quantiles = seq(0,1,.05),
@@ -759,7 +758,6 @@ df_res <- tibble(
   Diferencia_estimada = res$estimate
 )
 
-# Mostrar con gt
 df_res %>%
   tabla_fmt()
 ```
@@ -1016,7 +1014,7 @@ df_res %>%
 
 La representación gráfica de variables continuas es un componente esencial en el análisis de encuestas de hogares. Los gráficos bien diseñados permiten identificar distribuciones, tendencias y relaciones entre variables, facilitando la interpretación de los hallazgos y su comunicación a distintos públicos [@wilkinson2005grammar]. Un aspecto fundamental en este contexto es que los gráficos deben incorporar los pesos muestrales para reflejar la distribución de la población de interés. 
 
-En esta sección se utilizan los paquetes `ggplot2` [@Wickham2023] y `patchwork` [@patchwork] para la construcción y composición de gráficos, combinados con `survey` [@Lumley2024] y `srvyr` [@Freedman2024].
+En esta sección se utilizan los paquetes `ggplot2` [@ggplot22026] y `patchwork` [@patchwork] para la construcción y composición de gráficos, combinados con `survey` [@Lumley2024] y `srvyr` [@Freedman2024].
 
 ```{r, message=FALSE, warning=FALSE}
 library(ggplot2)

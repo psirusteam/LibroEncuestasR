@@ -432,12 +432,13 @@ y_{k}\log(\theta_{k})
 </tbody>
 </table>
 <p>La Figura <a href="sec-logistica.html#fig:fig-logistica-base">6.1</a> presenta la distribución de los estimadores de los coeficientes de regresión. Se observa que, para todas las covariables excepto el sexo, los intervalos de confianza no incluyen el valor cero, lo que proporciona evidencia de una asociación estadísticamente significativa. En contraste, el intervalo de confianza asociado a la variable sexo contiene el valor cero, por lo que no se encuentra evidencia suficiente para concluir que esta variable tenga un efecto significativo una vez controladas las demás covariables incluidas en el modelo.</p>
+<p>Para visualizar la distribución de los coeficientes se emplea <code>plot_summs()</code> del paquete <code>jtools</code>, junto con <code>ggstance</code> <span class="citation">(<a href="#ref-ggstance2024">Henry et al., 2024</a>)</span> para la geometría horizontal de los intervalos.</p>
 <div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="sec-logistica.html#cb148-1" tabindex="-1"></a><span class="fu">library</span>(ggstance)</span>
 <span id="cb148-2"><a href="sec-logistica.html#cb148-2" tabindex="-1"></a><span class="fu">plot_summs</span>(mod_loglin,</span>
 <span id="cb148-3"><a href="sec-logistica.html#cb148-3" tabindex="-1"></a>           <span class="at">scale =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb148-4"><a href="sec-logistica.html#cb148-4" tabindex="-1"></a>           <span class="at">plot.distributions =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-logistica-base"></span>
-<img src="06-GLM_files/figure-html/fig-logistica-base-1.svg" alt="Distribución de los parámetros del modelo logístico base" width="80%" />
+<img src="docs/figures/fig-logistica-base-1.svg" alt="Distribución de los parámetros del modelo logístico base" width="80%" />
 <p class="caption">
 Figura 6.1: Distribución de los parámetros del modelo logístico base
 </p>
@@ -524,7 +525,7 @@ Figura 6.1: Distribución de los parámetros del modelo logístico base
 <span id="cb150-2"><a href="sec-logistica.html#cb150-2" tabindex="-1"></a>           <span class="at">scale =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb150-3"><a href="sec-logistica.html#cb150-3" tabindex="-1"></a>           <span class="at">plot.distributions =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-comparacion-logistica"></span>
-<img src="06-GLM_files/figure-html/fig-comparacion-logistica-1.svg" alt="Comparación de los parámetros del modelo logístico con y sin interacciones" width="70%" />
+<img src="docs/figures/fig-comparacion-logistica-1.svg" alt="Comparación de los parámetros del modelo logístico con y sin interacciones" width="70%" />
 <p class="caption">
 Figura 6.2: Comparación de los parámetros del modelo logístico con y sin interacciones
 </p>
@@ -537,6 +538,9 @@ Binder, D. A. (1983). On the variances of asymptotically normal estimators from 
 </div>
 <div id="ref-heeringa2017applied" class="csl-entry">
 Heeringa, S. G., West, B. T., Heeringa, S. G., &amp; Berglund, P. A. (2017). <em>Applied survey data analysis</em>. chapman; hall/CRC.
+</div>
+<div id="ref-ggstance2024" class="csl-entry">
+Henry, L., Wickham, H., &amp; Chang, W. (2024). <em>ggstance: Horizontal ’ggplot2’ Components</em>. <a href="https://doi.org/10.32614/CRAN.package.ggstance">https://doi.org/10.32614/CRAN.package.ggstance</a>
 </div>
 <div id="ref-molina1992pseudo" class="csl-entry">
 Molina, E. A., &amp; Skinner, C. J. (1992). Pseudo-likelihood and quasi-likelihood estimation for complex sampling schemes. <em>Computational Statistics &amp; Data Analysis</em>, <em>13</em>, 395-405.

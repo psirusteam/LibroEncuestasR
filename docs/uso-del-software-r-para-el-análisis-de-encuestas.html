@@ -307,7 +307,7 @@ div.csl-indent {
 <h2><span class="header-section-number">1.2</span> Uso del software R para el análisis de encuestas<a href="#uso-del-software-r-para-el-an%C3%A1lisis-de-encuestas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>La elección de R como entorno computacional para este documento no es arbitraria. R reúne al menos tres características que lo convierten en una opción idónea para el análisis de encuestas de hogares en el contexto latinoamericano.</p>
 <p>En primer lugar, su condición de acceso libre. A diferencia de otros programas con costos de licencia que pueden resultar prohibitivos para muchas oficinas nacionales de estadística en países en desarrollo, R se distribuye bajo licencia GNU, lo que garantiza que los métodos presentados en este documento sean plenamente accesibles y replicables, independientemente de las restricciones presupuestarias de las instituciones.</p>
-<p>En segundo lugar, destaca su ecosistema especializado. El paquete <code>survey</code> <span class="citation">(<a href="#ref-Lumley2024">Lumley, 2024</a>)</span>, disponible desde 2004 y en constante evolución, implementa una amplia gama de métodos de estimación para diseños complejos: estimadores de Horvitz–Thompson, técnicas de calibración, linealización de Taylor, métodos de replicación, modelos de regresión ponderados y pruebas de hipótesis ajustadas al diseño (como Rao-Scott), entre otros. A su vez, el paquete <code>srvyr</code> <span class="citation">(<a href="#ref-Freedman2024">Freedman Ellis &amp; Schneider, 2024</a>)</span> extiende estas capacidades al incorporar la sintaxis del ecosistema <code>tidyverse</code>, facilitando una transición fluida entre el análisis exploratorio y el inferencial. Paquetes complementarios como <code>TeachingSampling</code> <span class="citation">(<a href="#ref-GutierrezT2020">Gutiérrez, 2020b</a>)</span>, <code>samplesize4surveys</code> <span class="citation">(<a href="#ref-Gutierrez2020">Gutiérrez, 2020a</a>)</span>, <code>convey</code> <span class="citation">(<a href="#ref-covey2024">Jacob et al., 2024</a>)</span> y <code>PracTools</code> <span class="citation">(<a href="#ref-Valliant2025">Valliant &amp; Zipf, 2025</a>)</span> consolidan un entorno analítico difícil de igualar en otros lenguajes.</p>
+<p>En segundo lugar, destaca su ecosistema especializado. El paquete <code>survey</code> <span class="citation">(<a href="#ref-Lumley2024">Lumley, 2024</a>)</span>, disponible desde 2004 y en constante evolución, implementa una amplia gama de métodos de estimación para diseños complejos: estimadores de Horvitz–Thompson, técnicas de calibración, linealización de Taylor, métodos de replicación, modelos de regresión ponderados y pruebas de hipótesis ajustadas al diseño (como Rao-Scott), entre otros. A su vez, el paquete <code>srvyr</code> <span class="citation">(<a href="#ref-Freedman2024">Freedman Ellis &amp; Schneider, 2024</a>)</span> extiende estas capacidades al incorporar la sintaxis del ecosistema <code>tidyverse</code>, facilitando una transición fluida entre el análisis exploratorio y el inferencial. Paquetes complementarios como <code>TeachingSampling</code> <span class="citation">(<a href="#ref-GutierrezT2020">Gutiérrez, 2020</a>)</span> y <code>convey</code> <span class="citation">(<a href="#ref-convey2024">Jacob et al., 2024</a>)</span> consolidan un entorno analítico difícil de igualar en otros lenguajes.</p>
 <p>Finalmente, R ofrece una sólida integración con herramientas de reproducibilidad científica. En particular, su combinación con R Markdown y el sistema <code>bookdown</code> permite generar documentos en los que resultados, tablas y figuras se producen directamente a partir del código fuente. Esta capacidad resulta especialmente relevante en el ámbito de la estadística oficial, donde la trazabilidad y la transparencia metodológica son requisitos fundamentales.</p>
 </div>
 <h3>Referencias<a href="referencias.html#referencias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -315,20 +315,14 @@ div.csl-indent {
 <div id="ref-Freedman2024" class="csl-entry">
 Freedman Ellis, G., &amp; Schneider, B. (2024). <em>srvyr: ’dplyr’-Like Syntax for Summary Statistics of Survey Data</em>. <a href="https://doi.org/10.32614/CRAN.package.srvyr">https://doi.org/10.32614/CRAN.package.srvyr</a>
 </div>
-<div id="ref-Gutierrez2020" class="csl-entry">
-Gutiérrez, H. A. (2020a). <em>samplesize4surveys: Sample Size Calculations for Complex Surveys</em>. <a href="https://doi.org/10.32614/CRAN.package.samplesize4surveys">https://doi.org/10.32614/CRAN.package.samplesize4surveys</a>
-</div>
 <div id="ref-GutierrezT2020" class="csl-entry">
-Gutiérrez, H. A. (2020b). <em>TeachingSampling: Selection of Samples and Parameter Estimation in Finite Population</em>. <a href="https://doi.org/10.32614/CRAN.package.TeachingSampling">https://doi.org/10.32614/CRAN.package.TeachingSampling</a>
+Gutiérrez, H. A. (2020). <em>TeachingSampling: Selection of Samples and Parameter Estimation in Finite Population</em>. <a href="https://doi.org/10.32614/CRAN.package.TeachingSampling">https://doi.org/10.32614/CRAN.package.TeachingSampling</a>
 </div>
-<div id="ref-covey2024" class="csl-entry">
-Jacob, G., Pessoa, D., &amp; Damico, A. (2024). <em>Poverty and Inequality with Complex Survey Data</em>. <a href="https://www.convey-r.org/">https://www.convey-r.org/</a>
+<div id="ref-convey2024" class="csl-entry">
+Jacob, G., Pessoa, D., &amp; Damico, A. (2024). <em>convey: Income Concentration Analysis with Complex Survey Samples</em>. <a href="https://doi.org/10.32614/CRAN.package.convey">https://doi.org/10.32614/CRAN.package.convey</a>
 </div>
 <div id="ref-Lumley2024" class="csl-entry">
 Lumley, T. (2024). <em>survey: analysis of complex survey samples</em>.
-</div>
-<div id="ref-Valliant2025" class="csl-entry">
-Valliant, R., &amp; Zipf, G. (2025). <em>PracTools: Designing and Weighting Survey Samples</em>. <a href="https://doi.org/10.32614/CRAN.package.PracTools">https://doi.org/10.32614/CRAN.package.PracTools</a>
 </div>
 </div>
             </section>

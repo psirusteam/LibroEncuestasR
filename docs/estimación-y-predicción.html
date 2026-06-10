@@ -315,6 +315,7 @@ div.csl-indent {
 \mathbf{x}&#39;_{k}\ \hat{\boldsymbol{\Sigma}}\ \mathbf{x}_{k}
 \]</span></p>
 <p>En donde <span class="math inline">\(\hat{\boldsymbol{\Sigma}}=\widehat{Var}(\hat{\boldsymbol{\beta}})\)</span> corresponde a la matriz de varianzas y covarianzas estimada de los parámetros del modelo de regresión. Esta expresión cuantifica la incertidumbre asociada a la predicción obtenida para la unidad <span class="math inline">\(k\)</span>, considerando simultáneamente la variabilidad de cada coeficiente estimado y la correlación existente entre ellos. En consecuencia, aquellas unidades cuyos valores de las covariables estén asociados a regiones con mayor incertidumbre en la estimación de los coeficientes presentarán varianzas más elevadas. Por tanto, la precisión de las estimaciones depende directamente de la precisión con la que se estimen los coeficientes del modelo de regresión. Continuando con el modelo del ejemplo, recordemos que los coeficientes estimados del modelo se presentan en la Tabla <a href="estimación-y-predicción.html#tab:tab-coeficientes-modelo">5.4</a>:</p>
+<p>Los coeficientes del modelo se convierten a una tabla ordenada mediante <code>broom::tidy()</code> <span class="citation">(<a href="#ref-broom2026">Robinson et al., 2026</a>)</span>, lo que facilita presentar estimaciones, errores estándar y pruebas en una estructura rectangular.</p>
 <table>
 <caption><span id="tab:tab-coeficientes-modelo">Cuadro 5.4: </span>Coeficientes estimados del modelo de regresión con diseño muestral complejo</caption>
 <thead>
@@ -443,7 +444,7 @@ div.csl-indent {
 <span id="cb140-10"><a href="estimación-y-predicción.html#cb140-10" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">position =</span> pd) <span class="sc">+</span></span>
 <span id="cb140-11"><a href="estimación-y-predicción.html#cb140-11" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-pred-intervalos"></span>
-<img src="05-Regresi%C3%B3n_files/figure-html/fig-pred-intervalos-1.svg" alt="Predicciones puntuales e intervalos de confianza para las primeras 100 observaciones de la muestra" width="65%" />
+<img src="docs/figures/fig-pred-intervalos-1.svg" alt="Predicciones puntuales e intervalos de confianza para las primeras 100 observaciones de la muestra" width="65%" />
 <p class="caption">
 Figura 5.7: Predicciones puntuales e intervalos de confianza para las primeras 100 observaciones de la muestra
 </p>
@@ -491,6 +492,9 @@ t_{\left(1-\frac{\alpha}{2},df\right)}
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
 <div id="ref-heeringa2017applied" class="csl-entry">
 Heeringa, S. G., West, B. T., Heeringa, S. G., &amp; Berglund, P. A. (2017). <em>Applied survey data analysis</em>. chapman; hall/CRC.
+</div>
+<div id="ref-broom2026" class="csl-entry">
+Robinson, D., Hayes, A., Couch, S., &amp; Hvitfeldt, E. (2026). <em>broom: Convert Statistical Objects into Tidy Tibbles</em>. <a href="https://doi.org/10.32614/CRAN.package.broom">https://doi.org/10.32614/CRAN.package.broom</a>
 </div>
 </div>
             </section>

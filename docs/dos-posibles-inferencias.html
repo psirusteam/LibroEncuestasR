@@ -344,8 +344,8 @@ E_{\xi}\left(\frac{1}{N}\sum_{k \in U}Y_k\right)
 <span id="cb252-10"><a href="dos-posibles-inferencias.html#cb252-10" tabindex="-1"></a>}</span>
 <span id="cb252-11"><a href="dos-posibles-inferencias.html#cb252-11" tabindex="-1"></a></span>
 <span id="cb252-12"><a href="dos-posibles-inferencias.html#cb252-12" tabindex="-1"></a><span class="fu">cbind</span>(theta, <span class="at">Esp0 =</span> <span class="fu">mean</span>(Est0), <span class="at">Sesgo =</span> <span class="fu">mean</span>(Est0) <span class="sc">-</span> theta)</span></code></pre></div>
-<pre><code>##      theta    Esp0   Sesgo
-## [1,]   0.3 0.30225 0.00225</code></pre>
+<pre><code>##      theta   Esp0   Sesgo
+## [1,]   0.3 0.3023 0.00225</code></pre>
 <p>El código fija una semilla para que el ejercicio sea reproducible. Luego genera <code>nsim1</code> poblaciones independientes mediante <code>rbinom()</code>. La salida reporta el parámetro verdadero <code>theta</code>, el promedio de las medias simuladas <code>Esp0</code> y el sesgo Monte Carlo. Como se espera bajo el modelo Bernoulli IID, <code>Esp0</code> queda muy cerca de 0.3 y el sesgo es cercano a cero. Las pequeñas diferencias se deben a que se usan 1000 simulaciones, no un número infinito de repeticiones.</p>
 <p>En la teoría de muestreo, en cambio, las características de interés son parámetros fijos de la población. Si una persona está desempleada, su estado se considera un valor fijo de la población finita. Lo aleatorio es el mecanismo mediante el cual se selecciona la muestra. El total poblacional se define como <span class="math inline">\(t_y = \sum_{k \in U} y_k\)</span>, mientras que la media poblacional es <span class="math inline">\(\bar{y}_U = \frac{t_y}{N}\)</span>. Si se observa una muestra <span class="math inline">\(s\)</span>, el estimador de Horvitz-Thompson del total es</p>
 <p><span class="math display">\[
@@ -375,7 +375,7 @@ E_{\xi}\left(\frac{1}{N}\sum_{k \in U}Y_k\right)
 \frac{\sum_{i \in S_I}t_{y_i}}
      {\sum_{i \in S_I}N_i},
 \]</span></p>
-<p>el cual trata la muestra como si fuera autoponderada. Este estimador no es insesgado cuando las probabilidades de selección no son iguales o cuando el tamaño del conglomerado se relaciona con la variable de interés. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño. En cada muestra se calculan dos estimadores: <code>Est1</code>, que corresponde a <span class="math inline">\(\hat{\bar{y}}\)</span>, y <code>Est2</code>, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, <span class="math inline">\(\bar{y}_s\)</span>. Además, estos estimadores se comparan con el parámetro del modelo <code>theta_N</code>, correspondiente a <span class="math inline">\(\theta = 0.3\)</span>.</p>
+<p>el cual trata la muestra como si fuera autoponderada. Este estimador no es insesgado cuando las probabilidades de selección no son iguales o cuando el tamaño del conglomerado se relaciona con la variable de interés. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño mediante <code>S.piPS()</code> del paquete <code>TeachingSampling</code> <span class="citation">(<a href="#ref-GutierrezT2020">Gutiérrez, 2020</a>)</span>. En cada muestra se calculan dos estimadores: <code>Est1</code>, que corresponde a <span class="math inline">\(\hat{\bar{y}}\)</span>, y <code>Est2</code>, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, <span class="math inline">\(\bar{y}_s\)</span>. Además, estos estimadores se comparan con el parámetro del modelo <code>theta_N</code>, correspondiente a <span class="math inline">\(\theta = 0.3\)</span>.</p>
 <div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="dos-posibles-inferencias.html#cb254-1" tabindex="-1"></a><span class="fu">library</span>(TeachingSampling)</span>
 <span id="cb254-2"><a href="dos-posibles-inferencias.html#cb254-2" tabindex="-1"></a></span>
 <span id="cb254-3"><a href="dos-posibles-inferencias.html#cb254-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
@@ -410,14 +410,17 @@ E_{\xi}\left(\frac{1}{N}\sum_{k \in U}Y_k\right)
 <span id="cb254-32"><a href="dos-posibles-inferencias.html#cb254-32" tabindex="-1"></a>      <span class="at">Sesgo_piS =</span> <span class="fu">mean</span>(Est1) <span class="sc">-</span> theta_N,</span>
 <span id="cb254-33"><a href="dos-posibles-inferencias.html#cb254-33" tabindex="-1"></a>      <span class="at">Esp_S =</span> <span class="fu">mean</span>(Est2),</span>
 <span id="cb254-34"><a href="dos-posibles-inferencias.html#cb254-34" tabindex="-1"></a>      <span class="at">Sesgo_S =</span> <span class="fu">mean</span>(Est2) <span class="sc">-</span> theta_N)</span></code></pre></div>
-<pre><code>##      theta_N   Esp_piS  Sesgo_piS     Esp_S    Sesgo_S
-## [1,]     0.3 0.3036762 0.00367619 0.3584908 0.05849078</code></pre>
+<pre><code>##      theta_N Esp_piS Sesgo_piS  Esp_S Sesgo_S
+## [1,]     0.3  0.3037  0.003676 0.3585 0.05849</code></pre>
 <p>El primer bloque del código genera hogares de tamaños desiguales, entre 2 y 6 personas. Para hacer visible el efecto del diseño, la probabilidad individual de desempleo varía suavemente con el tamaño del hogar, pero se centra de manera que el promedio esperado de la población siga siendo cercano a <code>theta</code>. Luego se calcula <code>theta_N</code>, que es la proporción real de desempleo en esa población específica. En cada repetición, <code>S.piPS()</code> selecciona UPMs con probabilidades proporcionales al tamaño; después se calculan la media de las medias de las UPMs seleccionadas y el promedio simple de las personas observadas. La salida compara ambos estimadores con <code>theta_N</code>. El sesgo de Monte Carlo de <code>Esp_piS</code> es cercano a cero, mientras que el de <code>Esp_S</code> no lo es, mostrando resultado de ignorar el diseño en este ejercicio.</p>
 </div>
 <h3>Referencias<a href="referencias.html#referencias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
 <div id="ref-binder2011estimating" class="csl-entry">
 Binder, D. A. (2011). Estimating model parameters from a complex survey under a model-design randomization framework. <em>Pakistan Journal of Statistics</em>, <em>27</em>(4).
+</div>
+<div id="ref-GutierrezT2020" class="csl-entry">
+Gutiérrez, H. A. (2020). <em>TeachingSampling: Selection of Samples and Parameter Estimation in Finite Population</em>. <a href="https://doi.org/10.32614/CRAN.package.TeachingSampling">https://doi.org/10.32614/CRAN.package.TeachingSampling</a>
 </div>
 </div>
             </section>

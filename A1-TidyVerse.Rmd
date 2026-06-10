@@ -1,7 +1,14 @@
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE,
                       message = FALSE,
-                      cache = TRUE)
+                      cache   = TRUE,
+                      fig.align = "center",
+                      fig.width = 6,
+                      fig.height = 4,
+                      out.width = "70%",
+                      fig.path = "docs/figures/")
+source("_tabla_helper.R")
+options(digits = 4)
 ```
 
 # (APPENDIX) Anexos {-}
@@ -14,30 +21,18 @@ knitr::opts_chunk$set(warning = FALSE,
 
 `R` es un lenguaje de programación de carácter colaborativo, lo que permite que su comunidad de usuarios y desarrolladores contribuya continuamente mediante la creación de funciones, paquetes y librerías especializadas. Gracias a este ecosistema abierto, es posible ampliar sus capacidades para distintos tipos de análisis estadístico y procesamiento de datos. Entre las librerías más utilizadas para el análisis de bases de datos se encuentran las siguientes:
 
-* La librería `tidyverse` [@tidyverse2019] corresponde a un conjunto de paquetes de `R` diseñados para apoyar distintas etapas del trabajo con datos, desde su importación y transformación hasta su exploración, análisis y visualización. Su uso se ha extendido ampliamente en ciencia de datos porque ofrece una forma de trabajo consistente y ordenada.
+* La librería `tidyverse` [@tidyverse2026] corresponde a un conjunto de paquetes de `R` diseñados para apoyar distintas etapas del trabajo con datos, desde su importación y transformación hasta su exploración, análisis y visualización. Su uso se ha extendido ampliamente en ciencia de datos porque ofrece una forma de trabajo consistente y ordenada.
 
 * El paquete `dplyr` [@dplyr2026] ofrece herramientas para organizar y transformar bases de datos rectangulares. Su utilidad radica en que reúne, en una sintaxis simple y consistente, las operaciones más frecuentes del trabajo analítico con datos: seleccionar variables, filtrar registros, crear nuevas columnas, ordenar observaciones y resumir información.
 
-* `ggplot2` [@Wickham2023] permite construir gráficos estadísticos mediante la gramática de los gráficos. Bajo este enfoque, una visualización se entiende como la combinación ordenada de capas: datos, variables, geometrías, escalas, títulos, colores y otros elementos visuales.
-
-* El paquete `survey` [@Lumley2024] proporciona herramientas especializadas para analizar información proveniente de encuestas con diseños muestrales complejos, incorporando ponderaciones, estratificación y conglomeración.
-
-* La librería `srvyr` [@Freedman2024] extiende la funcionalidad del paquete `survey` para utilizar una sintaxis más cercana al enfoque de `tidyverse`.
-
 * El paquete `TeachingSampling` [@GutierrezT2020] ofrece funciones para seleccionar muestras probabilísticas y realizar inferencia sobre poblaciones finitas bajo diversos diseños de muestreo.
-
-* La librería `samplesize4surveys` [@Gutierrez2020] permite calcular tamaños de muestra para estimar totales, medias y proporciones en el contexto de diseños de muestreo complejos.
 
 Antes de poder utilizar las diferentes funciones que cada librería tiene, es necesario descargarlas de antemano de la web. El comando `install.packages` permite realizar esta tarea. Note que algunas librerías pueden depender de otras, así que para poder utilizarlas es necesario instalar también las dependencias adicionales.
 
 ```{r, eval=FALSE}
 install.packages("dplyr")
 install.packages("tidyverse")
-install.packages("survey")
-install.packages("srvyr")
-install.packages("ggplot2")
 install.packages("TeachingSampling")
-install.packages("samplesize4surveys")
 ```
 
 Una vez instalados los paquetes, se cargan con `library()`. El primer comando limpia los objetos existentes en la sesión de trabajo, lo que ayuda a que los resultados del capítulo dependan solo del código que se ejecuta aquí. Debe tenerse en cuenta que un paquete solo puede cargarse si previamente ha sido instalado en el sistema.
@@ -47,11 +42,7 @@ rm(list = ls())
 
 library("tidyverse")
 library("dplyr")
-library("survey")
-library("srvyr")
-library("ggplot2")
 library("TeachingSampling")
-library("samplesize4surveys")
 ```
 
 Una vez se descargan e instalan las librerías o paquetes en `R`, el paso recomendado es que todos los procesamientos que se realicen se hagan a través de un la creación de proyectos. Un proyecto de `R` se define como un archivo que contiene los archivos de origen y contenido asociados con el trabajo que se está realizando. Adicionalmente, contiene información que permite la compilación de cada archivo de `R` que se va a utilizar, mantiene la información para integrarse con sistemas de control de código fuente y ayuda a organizar la aplicación de los procesamientos en componentes lógicos.
@@ -63,7 +54,6 @@ Es muy usual que al trabajar proyectos en `R` sea necesario importar bases de da
 Una vez se carga la base de datos se procede a utilizar las funciones en `R` para poder obtener resultados de los procesamientos agregados y gráficos de interés. Para ejemplificar el uso de funciones que permitan obtener resultados agregados, utilizaremos la base de datos `BigCity` del paquete `TeachingSampling`. Esta base corresponde a un conjunto de variables socioeconómicas de 150266 personas en un año en particular. 
 
 ```{r, warning=FALSE, echo=TRUE, message=FALSE, eval=TRUE}
-library(TeachingSampling)
 data(BigCity)
 data1 <- BigCity
 ```

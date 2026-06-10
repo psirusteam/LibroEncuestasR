@@ -306,7 +306,7 @@ div.csl-indent {
 <div id="viz-continuas" class="section level2 hasAnchor" number="3.5">
 <h2><span class="header-section-number">3.5</span> Visualización de variables continuas<a href="viz-continuas.html#viz-continuas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>La representación gráfica de variables continuas es un componente esencial en el análisis de encuestas de hogares. Los gráficos bien diseñados permiten identificar distribuciones, tendencias y relaciones entre variables, facilitando la interpretación de los hallazgos y su comunicación a distintos públicos <span class="citation">(<a href="#ref-wilkinson2005grammar">Wilkinson, 2005</a>)</span>. Un aspecto fundamental en este contexto es que los gráficos deben incorporar los pesos muestrales para reflejar la distribución de la población de interés.</p>
-<p>En esta sección se utilizan los paquetes <code>ggplot2</code> <span class="citation">(<a href="#ref-Wickham2023">Wickham et al., 2023</a>)</span> y <code>patchwork</code> <span class="citation">(<a href="#ref-patchwork">Pedersen, 2024</a>)</span> para la construcción y composición de gráficos, combinados con <code>survey</code> <span class="citation">(<a href="#ref-Lumley2024">Lumley, 2024</a>)</span> y <code>srvyr</code> <span class="citation">(<a href="#ref-Freedman2024">Freedman Ellis &amp; Schneider, 2024</a>)</span>.</p>
+<p>En esta sección se utilizan los paquetes <code>ggplot2</code> <span class="citation">(<a href="#ref-ggplot22026">Wickham, Chang, et al., 2026</a>)</span> y <code>patchwork</code> <span class="citation">(<a href="#ref-patchwork">Pedersen, 2025</a>)</span> para la construcción y composición de gráficos, combinados con <code>survey</code> <span class="citation">(<a href="#ref-Lumley2024">Lumley, 2024</a>)</span> y <code>srvyr</code> <span class="citation">(<a href="#ref-Freedman2024">Freedman Ellis &amp; Schneider, 2024</a>)</span>.</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="viz-continuas.html#cb44-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb44-2"><a href="viz-continuas.html#cb44-2" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb44-3"><a href="viz-continuas.html#cb44-3" tabindex="-1"></a><span class="fu">data</span>(BigCity, <span class="at">package =</span> <span class="st">&quot;TeachingSampling&quot;</span>)</span></code></pre></div>
@@ -339,7 +339,7 @@ div.csl-indent {
 <span id="cb46-7"><a href="viz-continuas.html#cb46-7" tabindex="-1"></a>  <span class="fu">theme_cepal</span>()</span>
 <span id="cb46-8"><a href="viz-continuas.html#cb46-8" tabindex="-1"></a>plot1_Ponde</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-hist-ingreso-ponde"></span>
-<img src="03-Continuas_files/figure-html/fig-hist-ingreso-ponde-1.svg" alt="Histograma ponderado del ingreso de los hogares" width="65%" />
+<img src="docs/figures/fig-hist-ingreso-ponde-1.svg" alt="Histograma ponderado del ingreso de los hogares" width="65%" />
 <p class="caption">
 Figura 3.2: Histograma ponderado del ingreso de los hogares
 </p>
@@ -359,7 +359,7 @@ Figura 3.2: Histograma ponderado del ingreso de los hogares
 <span id="cb47-11"><a href="viz-continuas.html#cb47-11" tabindex="-1"></a></span>
 <span id="cb47-12"><a href="viz-continuas.html#cb47-12" tabindex="-1"></a>plot3_Ponde</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-hist-zona"></span>
-<img src="03-Continuas_files/figure-html/fig-hist-zona-1.svg" alt="Histograma ponderado del ingreso por zona geográfica" width="65%" />
+<img src="docs/figures/fig-hist-zona-1.svg" alt="Histograma ponderado del ingreso por zona geográfica" width="65%" />
 <p class="caption">
 Figura 3.3: Histograma ponderado del ingreso por zona geográfica
 </p>
@@ -370,7 +370,7 @@ Figura 3.3: Histograma ponderado del ingreso por zona geográfica
 <span id="cb48-2"><a href="viz-continuas.html#cb48-2" tabindex="-1"></a>  plot3_Ponde <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Zone), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb48-3"><a href="viz-continuas.html#cb48-3" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-densidades"></span>
-<img src="03-Continuas_files/figure-html/fig-densidades-1.svg" alt="Histogramas con curvas de densidad superpuestas para ingreso y gasto" width="90%" />
+<img src="docs/figures/fig-densidades-1.svg" alt="Histogramas con curvas de densidad superpuestas para ingreso y gasto" width="90%" />
 <p class="caption">
 Figura 3.4: Histogramas con curvas de densidad superpuestas para ingreso y gasto
 </p>
@@ -398,7 +398,7 @@ Figura 3.4: Histogramas con curvas de densidad superpuestas para ingreso y gasto
 <span id="cb49-16"><a href="viz-continuas.html#cb49-16" tabindex="-1"></a></span>
 <span id="cb49-17"><a href="viz-continuas.html#cb49-17" tabindex="-1"></a>plot9_Ponde <span class="sc">|</span> plot11_Ponde</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-boxplot-zona-sexo"></span>
-<img src="03-Continuas_files/figure-html/fig-boxplot-zona-sexo-1.svg" alt="Boxplots ponderados del ingreso por zona y sexo" width="90%" />
+<img src="docs/figures/fig-boxplot-zona-sexo-1.svg" alt="Boxplots ponderados del ingreso por zona y sexo" width="90%" />
 <p class="caption">
 Figura 3.5: Boxplots ponderados del ingreso por zona y sexo
 </p>
@@ -414,7 +414,7 @@ Figura 3.5: Boxplots ponderados del ingreso por zona y sexo
 <span id="cb50-8"><a href="viz-continuas.html#cb50-8" tabindex="-1"></a>  <span class="at">col  =</span> <span class="st">&quot;grey80&quot;</span>,</span>
 <span id="cb50-9"><a href="viz-continuas.html#cb50-9" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Ingreso&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Zona&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-svyhist-svybox"></span>
-<img src="03-Continuas_files/figure-html/fig-svyhist-svybox-1.svg" alt="Histograma y boxplot del ingreso ajustados al diseño muestral complejo" width="80%" />
+<img src="docs/figures/fig-svyhist-svybox-1.svg" alt="Histograma y boxplot del ingreso ajustados al diseño muestral complejo" width="80%" />
 <p class="caption">
 Figura 3.6: Histograma y boxplot del ingreso ajustados al diseño muestral complejo
 </p>
@@ -431,7 +431,7 @@ Figura 3.6: Histograma y boxplot del ingreso ajustados al diseño muestral compl
 <span id="cb51-5"><a href="viz-continuas.html#cb51-5" tabindex="-1"></a>  <span class="fu">theme_cepal</span>()</span>
 <span id="cb51-6"><a href="viz-continuas.html#cb51-6" tabindex="-1"></a>plot20_Ponde</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-scatter-basico"></span>
-<img src="03-Continuas_files/figure-html/fig-scatter-basico-1.svg" alt="Diagrama de dispersión entre ingreso y gasto de los hogares" width="65%" />
+<img src="docs/figures/fig-scatter-basico-1.svg" alt="Diagrama de dispersión entre ingreso y gasto de los hogares" width="65%" />
 <p class="caption">
 Figura 3.7: Diagrama de dispersión entre ingreso y gasto de los hogares
 </p>
@@ -447,7 +447,7 @@ Figura 3.7: Diagrama de dispersión entre ingreso y gasto de los hogares
 <span id="cb52-7"><a href="viz-continuas.html#cb52-7" tabindex="-1"></a>  <span class="fu">theme_cepal</span>()</span>
 <span id="cb52-8"><a href="viz-continuas.html#cb52-8" tabindex="-1"></a>plot22_Ponde</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-scatter-zona"></span>
-<img src="03-Continuas_files/figure-html/fig-scatter-zona-1.svg" alt="Diagrama de dispersión entre ingreso y gasto por zona geográfica" width="65%" />
+<img src="docs/figures/fig-scatter-zona-1.svg" alt="Diagrama de dispersión entre ingreso y gasto por zona geográfica" width="65%" />
 <p class="caption">
 Figura 3.8: Diagrama de dispersión entre ingreso y gasto por zona geográfica
 </p>
@@ -468,10 +468,10 @@ Lumley, T. (2010). <em>Complex Surveys: A Guide to Analysis Using R: A Guide to 
 Lumley, T. (2024). <em>survey: analysis of complex survey samples</em>.
 </div>
 <div id="ref-patchwork" class="csl-entry">
-Pedersen, T. L. (2024). <em>patchwork: The composer of plots</em>. <a href="https://CRAN.R-project.org/package=patchwork">https://CRAN.R-project.org/package=patchwork</a>
+Pedersen, T. L. (2025). <em>patchwork: The composer of plots</em>. <a href="https://doi.org/10.32614/CRAN.package.patchwork">https://doi.org/10.32614/CRAN.package.patchwork</a>
 </div>
-<div id="ref-Wickham2023" class="csl-entry">
-Wickham, H., Navarro, D., &amp; Pedersen, T. L. (2023). <em>ggplot2: Elegant Graphics for Data Analysis</em> (3.ª ed.). Springer. <a href="https://doi.org/10.1007/978-3-319-24277-4">https://doi.org/10.1007/978-3-319-24277-4</a>
+<div id="ref-ggplot22026" class="csl-entry">
+Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., Dunnington, D., &amp; Brand, T. van den. (2026). <em>ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://doi.org/10.32614/CRAN.package.ggplot2">https://doi.org/10.32614/CRAN.package.ggplot2</a>
 </div>
 <div id="ref-wilkinson2005grammar" class="csl-entry">
 Wilkinson, L. (2005). <em>The grammar of graphics</em> (2.ª ed.). Springer.

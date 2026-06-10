@@ -350,7 +350,8 @@ r_{k} = \frac{y_k - \mu_k}{\sqrt{\widehat{Var}(\mu_k)/w_k}},
 <p>A continuación, estos diagnósticos se aplican a los modelos previamente ajustados. Para ello, se utiliza el paquete <code>svydiags</code> <span class="citation">(<a href="#ref-Valliant2024">Valliant, 2024</a>)</span>, desarrollado como extensión del paquete <code>survey</code> para el diagnóstico de modelos estimados bajo diseños muestrales complejos. Este paquete permite obtener los residuales estandarizados de manera directa, facilitando la evaluación de los supuestos del modelo en este tipo de contextos:</p>
 <div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="diagnóstico-del-modelo.html#cb124-1" tabindex="-1"></a><span class="fu">library</span>(svydiags)</span>
 <span id="cb124-2"><a href="diagnóstico-del-modelo.html#cb124-2" tabindex="-1"></a>stdresids <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">svystdres</span>(fit_svy)<span class="sc">$</span>stdresids)</span>
-<span id="cb124-3"><a href="diagnóstico-del-modelo.html#cb124-3" tabindex="-1"></a>diseno<span class="sc">$</span>variables <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">stdresids =</span> stdresids)</span></code></pre></div>
+<span id="cb124-3"><a href="diagnóstico-del-modelo.html#cb124-3" tabindex="-1"></a>diseno<span class="sc">$</span>variables <span class="ot">&lt;-</span> diseno<span class="sc">$</span>variables <span class="sc">%&gt;%</span> </span>
+<span id="cb124-4"><a href="diagnóstico-del-modelo.html#cb124-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stdresids =</span> stdresids)</span></code></pre></div>
 <p>El análisis de normalidad puede complementarse con el histograma de los residuales estandarizados, presentado en la Figura <a href="diagnóstico-del-modelo.html#fig:fig-hist-residuales">5.2</a>. El histograma de los residuos estandarizados revela una falta de ajuste significativa respecto a la curva de distribución normal teórica (en rojo), lo cual corrobora una violación del supuesto de normalidad. La distribución de los residuos (representada en azul) muestra un pico mucho más agudo y estrecho que la curva normal, además de una asimetría positiva marcada con una cola extendida hacia la derecha. Esta discrepancia indica que el modelo no logra capturar la variabilidad real de los datos, lo que sugiere la necesidad de aplicar una transformación de la variable dependiente o emplear un modelo con una familia de distribución más flexible y robusta.</p>
 <div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="diagnóstico-del-modelo.html#cb125-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> diseno<span class="sc">$</span>variables,</span>
 <span id="cb125-2"><a href="diagnóstico-del-modelo.html#cb125-2" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> stdresids)) <span class="sc">+</span></span>
@@ -362,13 +363,13 @@ r_{k} = \frac{y_k - \mu_k}{\sqrt{\widehat{Var}(\mu_k)/w_k}},
 <span id="cb125-8"><a href="diagnóstico-del-modelo.html#cb125-8" tabindex="-1"></a>                <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb125-9"><a href="diagnóstico-del-modelo.html#cb125-9" tabindex="-1"></a>  <span class="fu">theme_cepal</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-hist-residuales"></span>
-<img src="05-Regresi%C3%B3n_files/figure-html/fig-hist-residuales-1.svg" alt="Histograma de residuales estandarizados con curva de densidad estimada y distribución normal teórica" width="65%" />
+<img src="docs/figures/fig-hist-residuales-1.svg" alt="Histograma de residuales estandarizados con curva de densidad estimada y distribución normal teórica" width="65%" />
 <p class="caption">
 Figura 5.2: Histograma de residuales estandarizados con curva de densidad estimada y distribución normal teórica
 </p>
 </div>
 <p>La homocedasticidad de los errores (varianza constante), constituye uno de los supuestos centrales en los modelos de regresión. Su incumplimiento afecta la eficiencia de los estimadores del modelo. Dado que los residuos representan las discrepancias entre los valores observados y los valores ajustados por el modelo, su análisis en función de los valores predichos o de las covariables constituye una herramienta diagnóstica fundamental. Bajo un modelo adecuadamente especificado, se espera que los residuos se distribuyan de forma aleatoria alrededor de cero, sin patrones estructurados; en cambio, la aparición de formas sistemáticas (como estructuras en embudo o curvaturas) sugiere la presencia de heterocedasticidad (varianza no constante) o posibles relaciones funcionales no captadas por la especificación del modelo.</p>
-<p>Para evaluar este supuesto, se recomienda analizar gráficamente los residuos en función de los valores estimados <span class="math inline">\(\hat{\mu}_{k}\)</span> o de covariables específicas del modelo. La aparición de patrones sistemáticos en estos gráficos constituye evidencia de heterocedasticidad o de posibles problemas de especificación funcional. En particular, para evaluar la homocedasticidad respecto de las covariables incluidas en el modelo, se construyen gráficos de residuos frente a cada una de ellas.</p>
+<p>Para evaluar este supuesto, se recomienda analizar gráficamente los residuos en función de los valores estimados <span class="math inline">\(\hat{\mu}_{k}\)</span> o de covariables específicas del modelo. La aparición de patrones sistemáticos en estos gráficos constituye evidencia de heterocedasticidad o de posibles problemas de especificación funcional. En particular, para evaluar la homocedasticidad respecto de las covariables incluidas en el modelo, se construyen gráficos de residuos frente a cada una de ellas y se combinan con <code>patchwork</code> <span class="citation">(<a href="#ref-patchwork">Pedersen, 2025</a>)</span>.</p>
 <div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="diagnóstico-del-modelo.html#cb126-1" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb126-2"><a href="diagnóstico-del-modelo.html#cb126-2" tabindex="-1"></a></span>
 <span id="cb126-3"><a href="diagnóstico-del-modelo.html#cb126-3" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> diseno<span class="sc">$</span>variables,</span>
@@ -388,7 +389,7 @@ Figura 5.2: Histograma de residuales estandarizados con curva de densidad estima
 <span id="cb126-17"><a href="diagnóstico-del-modelo.html#cb126-17" tabindex="-1"></a></span>
 <span id="cb126-18"><a href="diagnóstico-del-modelo.html#cb126-18" tabindex="-1"></a>(g1<span class="sc">|</span>g2<span class="sc">|</span>g3)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-residuales-covariables"></span>
-<img src="05-Regresi%C3%B3n_files/figure-html/fig-residuales-covariables-1.svg" alt="Gráficos de residuales estandarizados frente a cada covariable del modelo" width="80%" />
+<img src="docs/figures/fig-residuales-covariables-1.svg" alt="Gráficos de residuales estandarizados frente a cada covariable del modelo" width="80%" />
 <p class="caption">
 Figura 5.3: Gráficos de residuales estandarizados frente a cada covariable del modelo
 </p>
@@ -404,10 +405,9 @@ Figura 5.3: Gráficos de residuales estandarizados frente a cada covariable del 
 \]</span></p>
 <p>donde <span class="math inline">\(p\)</span> denota los parámetros del modelo y <span class="math inline">\(df\)</span> representa los grados de libertad asociados al diseño muestral. En la práctica, se considera que una observación puede ser influyente si su distancia de Cook supera valores de referencia aproximados entre 2 y 3, según lo propuesto en la literatura <span class="citation">(<a href="#ref-heeringa2017applied">Heeringa et al., 2017</a>)</span>.</p>
 <p>En <code>R</code>, se evalúa la presencia de observaciones influyentes mediante la distancia de Cook, estimada con la función <code>svyCooksD</code> del paquete <code>svydiags</code>. Los resultados obtenidos se presentan en la Figura <a href="diagnóstico-del-modelo.html#fig:fig-cook">5.4</a>, en donde se observa que ninguna de las distancias de Cook supera el umbral de referencia de 3, por lo que, bajo este criterio, no se identifican observaciones con influencia significativa sobre el ajuste del modelo.</p>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="diagnóstico-del-modelo.html#cb127-1" tabindex="-1"></a><span class="fu">library</span>(svydiags)</span>
-<span id="cb127-2"><a href="diagnóstico-del-modelo.html#cb127-2" tabindex="-1"></a><span class="fu">svyCooksD</span>(fit_svy, <span class="at">doplot=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="diagnóstico-del-modelo.html#cb127-1" tabindex="-1"></a><span class="fu">svyCooksD</span>(fit_svy, <span class="at">doplot=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-cook"></span>
-<img src="05-Regresi%C3%B3n_files/figure-html/fig-cook-1.svg" alt="Distancia de Cook para cada observación de la muestra" width="65%" />
+<img src="docs/figures/fig-cook-1.svg" alt="Distancia de Cook para cada observación de la muestra" width="65%" />
 <p class="caption">
 Figura 5.4: Distancia de Cook para cada observación de la muestra
 </p>
@@ -505,7 +505,7 @@ Figura 5.4: Distancia de Cook para cada observación de la muestra
 <div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="diagnóstico-del-modelo.html#cb130-1" tabindex="-1"></a>d_dfbetas<span class="sc">$</span>id <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(d_dfbetas)</span>
 <span id="cb130-2"><a href="diagnóstico-del-modelo.html#cb130-2" tabindex="-1"></a>d_dfbetas <span class="ot">&lt;-</span> reshape2<span class="sc">::</span><span class="fu">melt</span>(d_dfbetas, <span class="at">id.vars =</span> <span class="st">&quot;id&quot;</span>)</span>
 <span id="cb130-3"><a href="diagnóstico-del-modelo.html#cb130-3" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">svydfbetas</span>(fit_svy)<span class="sc">$</span>cutoff</span>
-<span id="cb130-4"><a href="diagnóstico-del-modelo.html#cb130-4" tabindex="-1"></a>d_dfbetas <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">Criterio =</span> <span class="fu">ifelse</span>(<span class="fu">abs</span>(value) <span class="sc">&gt;</span> cutoff, <span class="st">&quot;Si&quot;</span>, <span class="st">&quot;No&quot;</span>))</span>
+<span id="cb130-4"><a href="diagnóstico-del-modelo.html#cb130-4" tabindex="-1"></a>d_dfbetas <span class="ot">&lt;-</span> d_dfbetas <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Criterio =</span> <span class="fu">ifelse</span>(<span class="fu">abs</span>(value) <span class="sc">&gt;</span> cutoff, <span class="st">&quot;Si&quot;</span>, <span class="st">&quot;No&quot;</span>))</span>
 <span id="cb130-5"><a href="diagnóstico-del-modelo.html#cb130-5" tabindex="-1"></a></span>
 <span id="cb130-6"><a href="diagnóstico-del-modelo.html#cb130-6" tabindex="-1"></a>tex_label <span class="ot">&lt;-</span> d_dfbetas <span class="sc">%&gt;%</span></span>
 <span id="cb130-7"><a href="diagnóstico-del-modelo.html#cb130-7" tabindex="-1"></a>  <span class="fu">filter</span>(Criterio <span class="sc">==</span> <span class="st">&quot;Si&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -599,7 +599,7 @@ Figura 5.4: Distancia de Cook para cada observación de la muestra
 <span id="cb131-10"><a href="diagnóstico-del-modelo.html#cb131-10" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Si&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>, <span class="st">&quot;No&quot;</span> <span class="ot">=</span> <span class="st">&quot;black&quot;</span>)) <span class="sc">+</span></span>
 <span id="cb131-11"><a href="diagnóstico-del-modelo.html#cb131-11" tabindex="-1"></a>  <span class="fu">theme_cepal</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-dfbetas"></span>
-<img src="05-Regresi%C3%B3n_files/figure-html/fig-dfbetas-1.svg" alt="Valores DfBetas por parámetro: observaciones influyentes señaladas en rojo" width="80%" />
+<img src="docs/figures/fig-dfbetas-1.svg" alt="Valores DfBetas por parámetro: observaciones influyentes señaladas en rojo" width="80%" />
 <p class="caption">
 Figura 5.5: Valores DfBetas por parámetro: observaciones influyentes señaladas en rojo
 </p>
@@ -613,7 +613,7 @@ donde <span class="math inline">\(z\)</span> toma comúnmente valores de 2 o 3, 
 <div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="diagnóstico-del-modelo.html#cb132-1" tabindex="-1"></a>d_dffits <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">dffits =</span> <span class="fu">svydffits</span>(fit_svy)<span class="sc">$</span>Dffits,</span>
 <span id="cb132-2"><a href="diagnóstico-del-modelo.html#cb132-2" tabindex="-1"></a>                      <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">svydffits</span>(fit_svy)<span class="sc">$</span>Dffits))</span>
 <span id="cb132-3"><a href="diagnóstico-del-modelo.html#cb132-3" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">svydffits</span>(fit_svy)<span class="sc">$</span>cutoff</span>
-<span id="cb132-4"><a href="diagnóstico-del-modelo.html#cb132-4" tabindex="-1"></a>d_dffits <span class="sc">%&lt;&gt;%</span> <span class="fu">mutate</span>(<span class="at">C_cutoff =</span> <span class="fu">ifelse</span>(<span class="fu">abs</span>(dffits) <span class="sc">&gt;</span> cutoff, <span class="st">&quot;Si&quot;</span>, <span class="st">&quot;No&quot;</span>))</span>
+<span id="cb132-4"><a href="diagnóstico-del-modelo.html#cb132-4" tabindex="-1"></a>d_dffits <span class="ot">&lt;-</span> d_dffits <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">C_cutoff =</span> <span class="fu">ifelse</span>(<span class="fu">abs</span>(dffits) <span class="sc">&gt;</span> cutoff, <span class="st">&quot;Si&quot;</span>, <span class="st">&quot;No&quot;</span>))</span>
 <span id="cb132-5"><a href="diagnóstico-del-modelo.html#cb132-5" tabindex="-1"></a></span>
 <span id="cb132-6"><a href="diagnóstico-del-modelo.html#cb132-6" tabindex="-1"></a><span class="fu">ggplot</span>(d_dffits, <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">abs</span>(dffits), <span class="at">x =</span> id)) <span class="sc">+</span></span>
 <span id="cb132-7"><a href="diagnóstico-del-modelo.html#cb132-7" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">col =</span> C_cutoff)) <span class="sc">+</span></span>
@@ -622,7 +622,7 @@ donde <span class="math inline">\(z\)</span> toma comúnmente valores de 2 o 3, 
 <span id="cb132-10"><a href="diagnóstico-del-modelo.html#cb132-10" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Si&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>, <span class="st">&quot;No&quot;</span> <span class="ot">=</span> <span class="st">&quot;black&quot;</span>)) <span class="sc">+</span></span>
 <span id="cb132-11"><a href="diagnóstico-del-modelo.html#cb132-11" tabindex="-1"></a>  <span class="fu">theme_cepal</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-dffits"></span>
-<img src="05-Regresi%C3%B3n_files/figure-html/fig-dffits-1.svg" alt="Valores DfFits: observaciones influyentes sobre el ajuste global señaladas en rojo" width="65%" />
+<img src="docs/figures/fig-dffits-1.svg" alt="Valores DfFits: observaciones influyentes sobre el ajuste global señaladas en rojo" width="65%" />
 <p class="caption">
 Figura 5.6: Valores DfFits: observaciones influyentes sobre el ajuste global señaladas en rojo
 </p>
@@ -636,6 +636,9 @@ Heeringa, S. G., West, B. T., Heeringa, S. G., &amp; Berglund, P. A. (2017). <em
 </div>
 <div id="ref-Li_Valliant_2015" class="csl-entry">
 Li, J., &amp; Valliant, R. (2015). Linear Regression Diagnostics in Cluster Samples. <em>Journal of Official Statistics</em>, <em>31</em>(1), 61-75. <a href="https://doi.org/10.1515/jos-2015-0003">https://doi.org/10.1515/jos-2015-0003</a>
+</div>
+<div id="ref-patchwork" class="csl-entry">
+Pedersen, T. L. (2025). <em>patchwork: The composer of plots</em>. <a href="https://doi.org/10.32614/CRAN.package.patchwork">https://doi.org/10.32614/CRAN.package.patchwork</a>
 </div>
 <div id="ref-pfeffermann2011modelling" class="csl-entry">
 Pfeffermann, D. (2011). Modelling of complex survey data: <span>W</span>hy model? <span>W</span>hy is it a problem? <span>H</span>ow can we approach it? <em>Survey Methodology</em>, <em>37</em>(2), 115-136.

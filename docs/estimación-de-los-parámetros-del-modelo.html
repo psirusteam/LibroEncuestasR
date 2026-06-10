@@ -337,29 +337,21 @@ div.csl-indent {
 \widehat{Cov}(\hat{\beta}_{0},\hat{\beta}_{p}) &amp; \widehat{Cov}(\hat{\beta}_{1},\hat{\beta}_{p}) &amp; \cdots &amp; \widehat{Var}(\hat{\beta}_{p})
 \end{bmatrix}
 \]</span></p>
-<p>En este capítulo se mostrará cómo implementar estos modelos en <code>R</code> mediante la librería <code>survey</code>. Se abordará la especificación del diseño muestral, la estimación de modelos lineales y logísticos, así como la obtención de errores estándar y pruebas de hipótesis ajustadas al diseño, integrando los fundamentos teóricos con ejemplos prácticos en un flujo de trabajo reproducible. Para ejemplificar los conceptos desarrollados hasta este punto, se empleará la misma base de datos utilizada a lo largo del libro. El proceso inicia con la carga de las librerías, los datos y la definición del diseño de muestreo:</p>
+<p>En este capítulo se mostrará cómo implementar estos modelos en <code>R</code> mediante la librería <code>survey</code> <span class="citation">(<a href="#ref-Lumley2024">Lumley, 2024</a>)</span>, junto con <code>srvyr</code> <span class="citation">(<a href="#ref-Freedman2024">Freedman Ellis &amp; Schneider, 2024</a>)</span> y <code>tidyverse</code> <span class="citation">(<a href="#ref-tidyverse2026">Wickham, Averick, et al., 2026</a>)</span> para organizar el flujo de trabajo. Se abordará la especificación del diseño muestral, la estimación de modelos lineales y logísticos, así como la obtención de errores estándar y pruebas de hipótesis ajustadas al diseño, integrando los fundamentos teóricos con ejemplos prácticos reproducibles. Para ejemplificar los conceptos desarrollados hasta este punto, se empleará la misma base de datos utilizada a lo largo del libro. El proceso inicia con la carga de las librerías, los datos y la definición del diseño de muestreo:</p>
 <div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-1" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
 <span id="cb114-2"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-2" tabindex="-1"></a><span class="fu">library</span>(srvyr)</span>
-<span id="cb114-3"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-3" tabindex="-1"></a><span class="fu">library</span>(convey)</span>
-<span id="cb114-4"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-4" tabindex="-1"></a><span class="fu">library</span>(TeachingSampling)</span>
-<span id="cb114-5"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-5" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
-<span id="cb114-6"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-6" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb114-7"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-7" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span>
-<span id="cb114-8"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-8" tabindex="-1"></a><span class="fu">library</span>(jtools)</span>
-<span id="cb114-9"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-9" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb114-10"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-10" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb114-11"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-11" tabindex="-1"></a><span class="fu">library</span>(ggpmisc)</span>
-<span id="cb114-12"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-12" tabindex="-1"></a></span>
-<span id="cb114-13"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-13" tabindex="-1"></a><span class="fu">data</span>(BigCity, <span class="at">package =</span> <span class="st">&quot;TeachingSampling&quot;</span>)</span>
-<span id="cb114-14"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-14" tabindex="-1"></a>encuesta <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;Data/encuesta.rds&quot;</span>)</span>
-<span id="cb114-15"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-15" tabindex="-1"></a></span>
-<span id="cb114-16"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-16" tabindex="-1"></a>diseno <span class="ot">&lt;-</span> encuesta <span class="sc">%&gt;%</span></span>
-<span id="cb114-17"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-17" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(</span>
-<span id="cb114-18"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-18" tabindex="-1"></a>    <span class="at">strata =</span> Stratum,</span>
-<span id="cb114-19"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-19" tabindex="-1"></a>    <span class="at">ids =</span> PSU,</span>
-<span id="cb114-20"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-20" tabindex="-1"></a>    <span class="at">weights =</span> wk,</span>
-<span id="cb114-21"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-21" tabindex="-1"></a>    <span class="at">nest =</span> T</span>
-<span id="cb114-22"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-22" tabindex="-1"></a>  )</span></code></pre></div>
+<span id="cb114-3"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-3" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb114-4"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-4" tabindex="-1"></a></span>
+<span id="cb114-5"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-5" tabindex="-1"></a><span class="fu">data</span>(BigCity, <span class="at">package =</span> <span class="st">&quot;TeachingSampling&quot;</span>)</span>
+<span id="cb114-6"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-6" tabindex="-1"></a>encuesta <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;Data/encuesta.rds&quot;</span>)</span>
+<span id="cb114-7"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-7" tabindex="-1"></a></span>
+<span id="cb114-8"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-8" tabindex="-1"></a>diseno <span class="ot">&lt;-</span> encuesta <span class="sc">%&gt;%</span></span>
+<span id="cb114-9"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-9" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(</span>
+<span id="cb114-10"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-10" tabindex="-1"></a>    <span class="at">strata =</span> Stratum,</span>
+<span id="cb114-11"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-11" tabindex="-1"></a>    <span class="at">ids =</span> PSU,</span>
+<span id="cb114-12"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-12" tabindex="-1"></a>    <span class="at">weights =</span> wk,</span>
+<span id="cb114-13"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-13" tabindex="-1"></a>    <span class="at">nest =</span> T</span>
+<span id="cb114-14"><a href="estimación-de-los-parámetros-del-modelo.html#cb114-14" tabindex="-1"></a>  )</span></code></pre></div>
 <p>En los ejemplos desarrollados a lo largo de este capítulo se emplerán los mismos subgrupos considerados en los capítulos anteriores.</p>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="estimación-de-los-parámetros-del-modelo.html#cb115-1" tabindex="-1"></a>sub_Urbano <span class="ot">&lt;-</span> diseno <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(Zone <span class="sc">==</span> <span class="st">&quot;Urban&quot;</span>)</span>
 <span id="cb115-2"><a href="estimación-de-los-parámetros-del-modelo.html#cb115-2" tabindex="-1"></a>sub_Rural  <span class="ot">&lt;-</span> diseno <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(Zone <span class="sc">==</span> <span class="st">&quot;Rural&quot;</span>)</span>
@@ -375,7 +367,7 @@ div.csl-indent {
 <span id="cb116-6"><a href="estimación-de-los-parámetros-del-modelo.html#cb116-6" tabindex="-1"></a></span>
 <span id="cb116-7"><a href="estimación-de-los-parámetros-del-modelo.html#cb116-7" tabindex="-1"></a>plot_sin </span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-scatter-muestra-sinP"></span>
-<img src="05-Regresi%C3%B3n_files/figure-html/fig-scatter-muestra-sinP-1.svg" alt="Diagrama de dispersión entre gasto e ingreso en la muestra (sin ponderar)" width="65%" />
+<img src="docs/figures/fig-scatter-muestra-sinP-1.svg" alt="Diagrama de dispersión entre gasto e ingreso en la muestra (sin ponderar)" width="65%" />
 <p class="caption">
 Figura 5.1: Diagrama de dispersión entre gasto e ingreso en la muestra (sin ponderar)
 </p>
@@ -413,11 +405,20 @@ Figura 5.1: Diagrama de dispersión entre gasto e ingreso en la muestra (sin pon
 <div id="ref-binder2011estimating" class="csl-entry">
 Binder, D. A. (2011). Estimating model parameters from a complex survey under a model-design randomization framework. <em>Pakistan Journal of Statistics</em>, <em>27</em>(4).
 </div>
+<div id="ref-Freedman2024" class="csl-entry">
+Freedman Ellis, G., &amp; Schneider, B. (2024). <em>srvyr: ’dplyr’-Like Syntax for Summary Statistics of Survey Data</em>. <a href="https://doi.org/10.32614/CRAN.package.srvyr">https://doi.org/10.32614/CRAN.package.srvyr</a>
+</div>
 <div id="ref-kish1974inference" class="csl-entry">
 Kish, L., &amp; Frankel, M. R. (1974). Inference from complex samples. <em>Journal of the Royal Statistical Society, Series B</em>, <em>36</em>, 1-37.
 </div>
+<div id="ref-Lumley2024" class="csl-entry">
+Lumley, T. (2024). <em>survey: analysis of complex survey samples</em>.
+</div>
 <div id="ref-molina1992pseudo" class="csl-entry">
 Molina, E. A., &amp; Skinner, C. J. (1992). Pseudo-likelihood and quasi-likelihood estimation for complex sampling schemes. <em>Computational Statistics &amp; Data Analysis</em>, <em>13</em>, 395-405.
+</div>
+<div id="ref-tidyverse2026" class="csl-entry">
+Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, M., Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., … Yutani, H. (2026). <em>tidyverse: Easily Install and Load the Tidyverse</em>. <a href="https://doi.org/10.32614/CRAN.package.tidyverse">https://doi.org/10.32614/CRAN.package.tidyverse</a>
 </div>
 <div id="ref-wolter2007" class="csl-entry">
 Wolter, K. M., &amp; Wolter, K. M. (2007). <em>Introduction to variance estimation</em> (Vol. 53). Springer.
