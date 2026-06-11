@@ -311,7 +311,7 @@ div.csl-indent {
 <p>Cuando se desea estimar los parámetros de un modelo de regresión lineal a partir de una muestra con un diseño complejo, el enfoque estándar cambia. En consecuencia, los estimadores tradicionales, como los obtenidos por máxima verosimilitud o mínimos cuadrados, pueden resultar sesgados y producir errores estándar poco confiables. Frente a esta situación, <span class="citation">Wolter &amp; Wolter (<a href="#ref-wolter2007">2007</a>)</span> propone el uso de métodos no paramétricos robustos, como la linealización de Taylor o Bootstrap, para estimar varianzas y obtener inferencias válidas.</p>
 <p>En el caso de un modelo de regresión lineal simple, la estimación de <span class="math inline">\(\beta_1\)</span> bajo un esquema de muestreo complejo se realiza mediante un estimador ponderado, que puede expresarse de la siguiente forma:</p>
 <p><span class="math display">\[
-\hat{\beta_{1}}  =  
+\hat{\beta_{1}}  =
 \frac{\sum_{h} \sum_{i} \sum_{k} w_{hik}\,(y_{hik}-\hat{\bar{y}})(x_{hik}-\hat{\bar{x}})}
 {\sum_{h} \sum_{i} \sum_{k} w_{hik}\,(x_{hik}-\hat{\bar{x}})^{2}}
 =
@@ -319,7 +319,7 @@ div.csl-indent {
 \]</span></p>
 <p>En donde <span class="math inline">\(\hat{\bar{y}}=\hat{t}_y/\hat{N}\)</span> y <span class="math inline">\(\hat{\bar{x}}=\hat{t}_x/\hat{N}\)</span> corresponden a las medias estimadas de las variables de estudio y auxiliar, respectivamente, mientras que <span class="math inline">\(w_{hik}\)</span> representa los pesos de muestreo asociados a cada unidad de observación. Esta formulación incorpora explícitamente dichos pesos, lo que permite considerar las probabilidades desiguales de selección y las características propias del diseño muestral. Asimismo, la varianza estimada de <span class="math inline">\(\hat{\beta}_1\)</span> puede aproximarse como:</p>
 <p><span class="math display">\[
-\widehat{Var}\left(\hat{\beta_{1}}\right)  
+\widehat{Var}\left(\hat{\beta_{1}}\right)
 \approx  \frac{\widehat{Var}(\hat{t}_{xy})+\hat{\beta}_{1}^{2}\widehat{Var}(\hat{t}_{xx})-2\hat{\beta}_{1}\widehat{Cov}(\hat{t}_{xy},\hat{t}_{xx})}{(\hat{t}_{xx})^{2}}
 \]</span></p>
 <p>Si <span class="math inline">\(\hat{\beta}_{1}\)</span> corresponde al estimador de la pendiente en un modelo de regresión lineal simple ponderado, entonces el estimador del intercepto <span class="math inline">\(\hat{\beta}_{0}\)</span> está dado por</p>
@@ -343,9 +343,9 @@ div.csl-indent {
 <span id="cb113-3"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-3" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb113-4"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-4" tabindex="-1"></a></span>
 <span id="cb113-5"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-5" tabindex="-1"></a><span class="fu">data</span>(BigCity, <span class="at">package =</span> <span class="st">&quot;TeachingSampling&quot;</span>)</span>
-<span id="cb113-6"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-6" tabindex="-1"></a>encuesta <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;Data/encuesta.rds&quot;</span>)</span>
+<span id="cb113-6"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-6" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;Data/encuesta.rds&quot;</span>)</span>
 <span id="cb113-7"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-7" tabindex="-1"></a></span>
-<span id="cb113-8"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-8" tabindex="-1"></a>diseno <span class="ot">&lt;-</span> encuesta <span class="sc">%&gt;%</span></span>
+<span id="cb113-8"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-8" tabindex="-1"></a>survey_design <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb113-9"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-9" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(</span>
 <span id="cb113-10"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-10" tabindex="-1"></a>    <span class="at">strata =</span> Stratum,</span>
 <span id="cb113-11"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-11" tabindex="-1"></a>    <span class="at">ids =</span> PSU,</span>
@@ -353,22 +353,22 @@ div.csl-indent {
 <span id="cb113-13"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-13" tabindex="-1"></a>    <span class="at">nest =</span> <span class="cn">TRUE</span></span>
 <span id="cb113-14"><a href="estimacion-de-los-parametros-del-modelo.html#cb113-14" tabindex="-1"></a>  )</span></code></pre></div>
 <p>En los ejemplos desarrollados a lo largo de este capítulo se emplerán los mismos subgrupos considerados en los capítulos anteriores.</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-1" tabindex="-1"></a>sub_Urbano <span class="ot">&lt;-</span> diseno <span class="sc">%&gt;%</span></span>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-1" tabindex="-1"></a>urban_subset <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb114-2"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-2" tabindex="-1"></a>  <span class="fu">filter</span>(Zone <span class="sc">==</span> <span class="st">&quot;Urban&quot;</span>)</span>
-<span id="cb114-3"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-3" tabindex="-1"></a>sub_Rural  <span class="ot">&lt;-</span> diseno <span class="sc">%&gt;%</span></span>
+<span id="cb114-3"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-3" tabindex="-1"></a>rural_subset  <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb114-4"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-4" tabindex="-1"></a>  <span class="fu">filter</span>(Zone <span class="sc">==</span> <span class="st">&quot;Rural&quot;</span>)</span>
-<span id="cb114-5"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-5" tabindex="-1"></a>sub_Mujer  <span class="ot">&lt;-</span> diseno <span class="sc">%&gt;%</span></span>
+<span id="cb114-5"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-5" tabindex="-1"></a>female_subset  <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb114-6"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-6" tabindex="-1"></a>  <span class="fu">filter</span>(Sex <span class="sc">==</span> <span class="st">&quot;Female&quot;</span>)</span>
-<span id="cb114-7"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-7" tabindex="-1"></a>sub_Hombre <span class="ot">&lt;-</span> diseno <span class="sc">%&gt;%</span></span>
+<span id="cb114-7"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-7" tabindex="-1"></a>male_subset <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb114-8"><a href="estimacion-de-los-parametros-del-modelo.html#cb114-8" tabindex="-1"></a>  <span class="fu">filter</span>(Sex <span class="sc">==</span> <span class="st">&quot;Male&quot;</span>)</span></code></pre></div>
 <p>Con el objetivo de ajustar un modelo de regresión entre las variables ingreso y gasto, resulta conveniente explorar previamente la relación existente entre ambas variables. Para ello, se construye un diagrama de dispersión mediante <code>ggplot2</code>, el cual permite evaluar visualmente la forma y la intensidad de la asociación. El resultado se presenta en la Figura <a href="estimacion-de-los-parametros-del-modelo.html#fig:fig-scatter-muestra-sinP">5.1</a>.</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="estimacion-de-los-parametros-del-modelo.html#cb115-1" tabindex="-1"></a>plot_sin <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> encuesta,</span>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="estimacion-de-los-parametros-del-modelo.html#cb115-1" tabindex="-1"></a>unweighted_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> survey_data,</span>
 <span id="cb115-2"><a href="estimacion-de-los-parametros-del-modelo.html#cb115-2" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> Expenditure, <span class="at">y =</span> Income)) <span class="sc">+</span></span>
 <span id="cb115-3"><a href="estimacion-de-los-parametros-del-modelo.html#cb115-3" tabindex="-1"></a>            <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb115-4"><a href="estimacion-de-los-parametros-del-modelo.html#cb115-4" tabindex="-1"></a>            <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,</span>
 <span id="cb115-5"><a href="estimacion-de-los-parametros-del-modelo.html#cb115-5" tabindex="-1"></a>            <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb115-6"><a href="estimacion-de-los-parametros-del-modelo.html#cb115-6" tabindex="-1"></a></span>
-<span id="cb115-7"><a href="estimacion-de-los-parametros-del-modelo.html#cb115-7" tabindex="-1"></a>plot_sin </span></code></pre></div>
+<span id="cb115-7"><a href="estimacion-de-los-parametros-del-modelo.html#cb115-7" tabindex="-1"></a>unweighted_plot</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:fig-scatter-muestra-sinP"></span>
 <img src="figures/fig-scatter-muestra-sinP-1.svg" alt="Diagrama de dispersión entre gasto e ingreso en la muestra (sin ponderar)" width="65%" />
 <p class="caption">
@@ -376,9 +376,9 @@ Figura 5.1: Diagrama de dispersión entre gasto e ingreso en la muestra (sin pon
 </p>
 </div>
 <p>Los datos muestrales conservan una relación aproximadamente lineal entre ingreso y gasto, aunque se observa una mayor dispersión en los valores correspondientes a hogares con niveles de gasto más elevados. Una vez completada la exploración gráfica de los datos, se procede al ajuste de los modelos de regresión lineal.</p>
-<p>Para ajustar modelos incorporando los factores de expansión se usa la función <code>svyglm</code> de la librería <code>survey</code>, que permite estimar modelos lineales incorporando explícitamente las características del diseño muestral. En este caso, la expresión <code>Income ~ Expenditure</code> especifica que la variable <code>Income</code> se modela en función de la variable <code>Expenditure</code>; es decir, se ajusta una regresión lineal simple en la que el gasto actúa como variable explicativa del ingreso. El argumento <code>design = diseno</code> indica que el modelo debe utilizar el objeto de diseño muestral previamente definido, mientras que <code>family = stats::gaussian()</code> especifica que se ajusta un modelo lineal con distribución normal, equivalente a una regresión lineal clásica.</p>
+<p>Para ajustar modelos incorporando los factores de expansión se usa la función <code>svyglm</code> de la librería <code>survey</code>, que permite estimar modelos lineales incorporando explícitamente las características del diseño muestral. En este caso, la expresión <code>Income ~ Expenditure</code> especifica que la variable <code>Income</code> se modela en función de la variable <code>Expenditure</code>; es decir, se ajusta una regresión lineal simple en la que el gasto actúa como variable explicativa del ingreso. El argumento <code>design = survey_design</code> indica que el modelo debe utilizar el objeto de diseño muestral previamente definido, mientras que <code>family = stats::gaussian()</code> especifica que se ajusta un modelo lineal con distribución normal, equivalente a una regresión lineal clásica.</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="estimacion-de-los-parametros-del-modelo.html#cb116-1" tabindex="-1"></a>fit_svy <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(Income <span class="sc">~</span> Expenditure <span class="sc">+</span> Zone <span class="sc">+</span> Sex,</span>
-<span id="cb116-2"><a href="estimacion-de-los-parametros-del-modelo.html#cb116-2" tabindex="-1"></a>                  <span class="at">design =</span> diseno, </span>
+<span id="cb116-2"><a href="estimacion-de-los-parametros-del-modelo.html#cb116-2" tabindex="-1"></a>                  <span class="at">design =</span> survey_design,</span>
 <span id="cb116-3"><a href="estimacion-de-los-parametros-del-modelo.html#cb116-3" tabindex="-1"></a>                  <span class="at">family=</span>stats<span class="sc">::</span><span class="fu">gaussian</span>())</span>
 <span id="cb116-4"><a href="estimacion-de-los-parametros-del-modelo.html#cb116-4" tabindex="-1"></a></span>
 <span id="cb116-5"><a href="estimacion-de-los-parametros-del-modelo.html#cb116-5" tabindex="-1"></a>fit_svy</span></code></pre></div>
@@ -390,7 +390,7 @@ Figura 5.1: Diagrama de dispersión entre gasto e ingreso en la muestra (sin pon
 ##   - strata: Stratum 
 ##   - weights: wk 
 ## 
-## Call:  svyglm(formula = Income ~ Expenditure + Zone + Sex, design = diseno, 
+## Call:  svyglm(formula = Income ~ Expenditure + Zone + Sex, design = survey_design, 
 ##     family = stats::gaussian())
 ## 
 ## Coefficients:

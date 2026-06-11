@@ -1,13 +1,21 @@
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(warning = FALSE, 
-                      message = FALSE,
-                      cache = TRUE,
-                      fig.align = "center",
-                      fig.width = 6,
-                      fig.height = 4,
-                      out.width = "70%",
-                      fig.path = "figures/")
-knitr::opts_knit$set(base.dir = "docs")
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  fig.align = "center",
+  fig.width = 6,
+  fig.height = 4,
+  out.width = "70%"
+)
+
+if (knitr::is_latex_output()) {
+  knitr::opts_chunk$set(fig.path = "docs/figures/")
+} else {
+  knitr::opts_knit$set(base.dir = "docs")
+  knitr::opts_chunk$set(fig.path = "figures/")
+}
+
 options(scipen = 999, digits = 3)
 source("_tabla_helper.R")
 ```
@@ -20,7 +28,7 @@ En la práctica, las encuestas de hogares suelen utilizar diseños complejos que
 
 En este contexto, un aspecto fundamental es la adecuada consideración del diseño muestral. Para obtener conclusiones válidas sobre la población, es necesario adoptar un enfoque de inferencia basado en el diseño, el cual reconoce que la muestra no proviene de una selección aleatoria cualquiera, sino de un plan probabilístico cuidadosamente definido. En este esquema, cada unidad de la población posee una probabilidad conocida y distinta de cero de ser seleccionada, lo que constituye la principal garantía de que los resultados puedan generalizarse a la población de referencia.
 
-Bajo este enfoque, es posible demostrar que las estimaciones son insesgadas (o aproximadamente insesgadas), con respecto al esquema de muestreo, sin necesidad de asumir distribuciones específicas para la variable de interés. Esta característica confiere a la inferencia basada en el diseño un carácter robusto y ampliamente aceptado en el análisis de encuestas de hogares. Un componente central de este proceso son los pesos de muestreo, los cuales indican cuántas unidades de la población representa cada unidad seleccionada. Estos pesos permiten ajustar las estimaciones a las particularidades del diseño, garantizando que los resultados reflejen adecuadamente la estructura de la población. 
+Bajo este enfoque, es posible demostrar que las estimaciones son insesgadas (o aproximadamente insesgadas), con respecto al esquema de muestreo, sin necesidad de asumir distribuciones específicas para la variable de interés. Esta característica confiere a la inferencia basada en el diseño un carácter robusto y ampliamente aceptado en el análisis de encuestas de hogares. Un componente central de este proceso son los pesos de muestreo, los cuales indican cuántas unidades de la población representa cada unidad seleccionada. Estos pesos permiten ajustar las estimaciones a las particularidades del diseño, garantizando que los resultados reflejen adecuadamente la estructura de la población.
 
 Como muestran @korn1995analysis, las estimaciones ponderadas y no ponderadas pueden diferir sustancialmente, lo que evidencia la importancia de utilizar métodos de análisis coherentes con el diseño de la encuesta. En consecuencia, considerar adecuadamente los pesos de muestreo, la estratificación y las unidades de selección no constituye un aspecto técnico secundario, sino un requisito esencial para garantizar la credibilidad de los resultados.
 
@@ -89,7 +97,7 @@ $$
 \hat{t}_{y} = \sum_{s} d_k y_k
 $$
 
-donde $d_k = 1/\pi_k$ son los pesos básicos provenientes del diseño de muestreo y $\pi_k = \Pr(k \in s)$ son las probabilidades de inclusión de primer orden. 
+donde $d_k = 1/\pi_k$ son los pesos básicos provenientes del diseño de muestreo y $\pi_k = \Pr(k \in s)$ son las probabilidades de inclusión de primer orden.
 
 En la práctica, los pesos de diseño suelen modificarse para reflejar procesos adicionales como el ajuste por no respuesta o la calibración a totales poblacionales conocidos, obteniendo así nuevos pesos ajustados, denotados como $w_k$ para todo $k \in s$. El reemplazo de $d_k$ por $w_k$ permite mejorar la precisión y reducir sesgos en las estimaciones, especialmente cuando existen fuentes auxiliares de información confiables.
 
@@ -104,7 +112,7 @@ donde $d_{kl} = 1/\pi_{kl}$ y $\pi_{kl} = \Pr(k,l \in s)$ representan las probab
 Para comprender de manera más concreta la relevancia de considerar el diseño muestral en la estimación de totales y de sus varianzas, analicemos un ejemplo de @UNhandbook que permite visualizar cómo el método de estimación se ajusta al esquema de selección adoptado. Suponga una población finita de tamaño $N=6$, de la cual se selecciona una muestra aleatoria simple (MAS) sin reemplazo de tamaño $n=3$. En dicha muestra se observan los valores $(y_1=10, y_2=14, y_3=18)$. Bajo este diseño, el estimador de Horvitz–Thompson del total poblacional se define como la suma de los valores observados divididos por sus probabilidades de inclusión, y su varianza estimada se obtiene a partir de las covarianzas inducidas por el proceso de selección. De esta forma, la varianza estimada del estimador de Horvitz–Thompson se calcula como:
 
 $$
-\widehat{Var}_{MAS}(\hat{t}_{y}) = \frac{N^2}{n}\left(1-\frac{n}{N}\right)S_{y_s}^2 
+\widehat{Var}_{MAS}(\hat{t}_{y}) = \frac{N^2}{n}\left(1-\frac{n}{N}\right)S_{y_s}^2
 $$
 
 donde $S_{y_s}^2$ corresponde a la varianza muestral de los valores observados. Sustituyendo en la expresión, se obtiene
@@ -125,7 +133,7 @@ $$
 \sqrt{\widehat{Var}_p(\hat{t}_{y})} = \sqrt{96} \approx 9.80.
 $$
 
-En cambio, si la varianza se estima usando un método ingenuo que ignore el diseño de muestreo, el intervalo de confianza sería más amplio con evidentes sesgos, lo que podría conducir a inferencias erróneas. 
+En cambio, si la varianza se estima usando un método ingenuo que ignore el diseño de muestreo, el intervalo de confianza sería más amplio con evidentes sesgos, lo que podría conducir a inferencias erróneas.
 
 Por último, de acuerdo con @kish1965survey [p. 258], el efecto del diseño (DEFF) se define como la razón entre la varianza de un estimador obtenida bajo un diseño de muestreo complejo y la varianza del mismo estimador bajo un muestreo aleatorio simple (MAS) de igual tamaño de muestra. Su estimación se expresa como:
 
@@ -133,7 +141,7 @@ $$
 \widehat{{DEFF}} = \frac{\widehat{Var}_{p}(\hat{\theta})}{\widehat{Var}_{MAS}(\hat{\theta})}
 $$
 
-En donde, $\widehat{Var}_{p}(\hat{\theta})$ corresponde a la varianza estimada de $\hat{\theta}$ bajo el diseño complejo $p(\cdot)$, mientras que $\widehat{Var}_{MAS}(\hat{\theta})$ 
+En donde, $\widehat{Var}_{p}(\hat{\theta})$ corresponde a la varianza estimada de $\hat{\theta}$ bajo el diseño complejo $p(\cdot)$, mientras que $\widehat{Var}_{MAS}(\hat{\theta})$
 representa la varianza estimada del mismo estimador bajo un diseño MAS con igual tamaño muestral.
 
 Este indicador permite cuantificar cuánto aumenta la varianza debido a la conglomeración y otras características propias de los diseños complejos en comparación con un muestreo simple. Según @ONUDeff [p. 40], el DEFF puede entenderse de tres maneras: como el factor de incremento de la varianza frente al MAS, como una medida de la pérdida relativa de precisión o como una indicación del aumento en el tamaño de la muestra que sería necesario en un diseño complejo para alcanzar el mismo nivel de varianza que en un MAS. Según @Park2003Design, el efecto del diseño de una encuesta puede deberse a los siguientes tres factores:
@@ -148,9 +156,9 @@ La interpretación de un DEFF alto debe hacerse con precaución, ya que no siemp
 
 ## Fundamentos teóricos {#fundamentos-teoricos}
 
-Tal como destacan @heeringa2017applied, el cálculo de totales y medias poblacionales, junto con sus varianzas, ha sido esencial para el desarrollo de la teoría del muestreo probabilístico y la interpretación adecuada de los resultados de encuestas de hogares. La determinación de los totales poblacionales constituye uno de los pilares fundamentales del análisis de encuestas. Tanto las medias como las proporciones y las razones se derivan de estos totales. Un total se define como la suma de una variable específica (por ejemplo, ingreso o gasto) a nivel de toda la población. 
+Tal como destacan @heeringa2017applied, el cálculo de totales y medias poblacionales, junto con sus varianzas, ha sido esencial para el desarrollo de la teoría del muestreo probabilístico y la interpretación adecuada de los resultados de encuestas de hogares. La determinación de los totales poblacionales constituye uno de los pilares fundamentales del análisis de encuestas. Tanto las medias como las proporciones y las razones se derivan de estos totales. Un total se define como la suma de una variable específica (por ejemplo, ingreso o gasto) a nivel de toda la población.
 
-Con encuestas de hogares, el análisis de datos numéricoséricos  implica con frecuencia calcular estadísticas descriptivas como medias, totales y razones, ya que estas permiten sintetizar las principales características de la población y sirven de base para la toma de decisiones. Dichas estimaciones pueden calcularse para la población en su conjunto o para subgrupos específicos, según los objetivos de la investigación. 
+Con encuestas de hogares, el análisis de datos numéricoséricos  implica con frecuencia calcular estadísticas descriptivas como medias, totales y razones, ya que estas permiten sintetizar las principales características de la población y sirven de base para la toma de decisiones. Dichas estimaciones pueden calcularse para la población en su conjunto o para subgrupos específicos, según los objetivos de la investigación.
 
 ### Estimación puntual {#estimacion-puntual}
 
@@ -197,7 +205,7 @@ Var(\hat{f}) = \sum_{j=1}^J a_j^2 Var(\hat{\theta}_j)
 a_j a_k \, Cov(\hat{\theta}_j,\hat{\theta}_k).
 $$
 
-Este resultado es particularmente importante porque incluye numerosos casos de interés práctico que se desarrollarán a lo largo de este documento.  
+Este resultado es particularmente importante porque incluye numerosos casos de interés práctico que se desarrollarán a lo largo de este documento.
 
 #### Ecuaciones de estimación {#ecuaciones-de-estimacion}
 
@@ -207,7 +215,7 @@ $$
 \sum_{k\in U} z_k(\theta)=0,
 $$
 
-donde $z_k(\cdot)$ es una función de estimación evaluada para la unidad $k$ y $\theta$ representa el parámetro poblacional de interés. Estas ecuaciones proporcionan un marco general para definir y calcular diversos parámetros de la población, como totales, medias y razones. Por ejemplo, para el total poblacional, se define $z_k(\theta)=y_k-\theta/N$, de manera que la ecuación de estimación es $\sum_{k\in U}(y_k-\theta/N)=0$. La solución de esta ecuación conduce a $\theta=\sum_{k\in U} y_k = Y$, es decir, al total poblacional. 
+donde $z_k(\cdot)$ es una función de estimación evaluada para la unidad $k$ y $\theta$ representa el parámetro poblacional de interés. Estas ecuaciones proporcionan un marco general para definir y calcular diversos parámetros de la población, como totales, medias y razones. Por ejemplo, para el total poblacional, se define $z_k(\theta)=y_k-\theta/N$, de manera que la ecuación de estimación es $\sum_{k\in U}(y_k-\theta/N)=0$. La solución de esta ecuación conduce a $\theta=\sum_{k\in U} y_k = Y$, es decir, al total poblacional.
 
 De forma similar, para la media poblacional se utiliza $z_k(\theta)=y_k-\theta$, y la ecuación $\sum_{k\in U}(y_k-\theta)=0$ tiene como solución $\theta=\left(\sum_{k\in U} y_k\right)/N = \overline{Y}$, correspondiente a la media de la población. Asimismo, en el caso de las razones de totales, se define $z_k(\theta)=y_k-\theta x_k$. Así, la ecuación $\sum_{k\in U}(y_k-\theta x_k)=0$ conduce a la solución $\theta=\dfrac{\sum_{k\in U} y_k}{\sum_{k\in U} x_k} = R$, que corresponde a la razón poblacional entre los totales de las variables $y$ y $x$. Estas formulaciones muestran cómo distintos parámetros de interés pueden expresarse mediante ecuaciones de estimación que comparten una estructura común.
 
@@ -234,7 +242,7 @@ donde $\hat{J}(\hat{\theta}) = \sum_{k\in s} w_k \left[ \frac{\partial z_k(\thet
 
 El método del último conglomerado constituye un enfoque directo y robusto para estimar la varianza de totales en encuestas que emplean diseños de muestreo por conglomerados estratificados en múltiples etapas. Propuesto por @hansen1953sample, este método simplifica la complejidad de los diseños multinivel al centrarse únicamente en la variación entre las Unidades Primarias de Muestreo (UPM). Se asume que, dentro de cada estrato de muestreo, las UPM fueron seleccionadas de manera independiente con reemplazo (posiblemente con probabilidades desiguales), aunque en la práctica la selección suele realizarse sin reemplazo.
 
-El método se basa en la variación entre las estadísticas calculadas a nivel de UPM. Cuando se aplica correctamente, refleja implícitamente cualquier submuestreo realizado dentro de las UPM, permitiendo estimaciones de varianza más simples pero confiables. Es especialmente útil en diseños complejos que incluyen estratificación y probabilidades desiguales de selección tanto de UPM como de unidades de niveles inferiores (hogares e individuos). Los requisitos para aplicar este método incluyen la disponibilidad de estimaciones insesgadas de totales para las variables de interés en cada UPM seleccionada. Además, si la muestra se estratifica en la primera etapa, es necesario contar con al menos dos UPM disponibles por estrato, ya que esto permite estimar adecuadamente la variabilidad entre conglomerados dentro de cada estrato. 
+El método se basa en la variación entre las estadísticas calculadas a nivel de UPM. Cuando se aplica correctamente, refleja implícitamente cualquier submuestreo realizado dentro de las UPM, permitiendo estimaciones de varianza más simples pero confiables. Es especialmente útil en diseños complejos que incluyen estratificación y probabilidades desiguales de selección tanto de UPM como de unidades de niveles inferiores (hogares e individuos). Los requisitos para aplicar este método incluyen la disponibilidad de estimaciones insesgadas de totales para las variables de interés en cada UPM seleccionada. Además, si la muestra se estratifica en la primera etapa, es necesario contar con al menos dos UPM disponibles por estrato, ya que esto permite estimar adecuadamente la variabilidad entre conglomerados dentro de cada estrato.
 
 De esta forma, considere un diseño de muestreo en múltiples etapas donde se seleccionan $n_h$ UPM en el estrato $h$, ($h=1,\dots,H$). Una estimación del total de la variable de interés en la UPM $i$ del estrato $h$ es:
 
@@ -278,7 +286,7 @@ $$
 w_{hik}^{(r)} = w_{hik} \times \frac{n_h}{n_h - 1} \times n_{hi}^{(r)}
 $$
 
-Si los pesos originales incluyen ajustes por no respuesta o calibración, estos deben aplicarse también a cada conjunto de pesos bootstrap. 
+Si los pesos originales incluyen ajustes por no respuesta o calibración, estos deben aplicarse también a cada conjunto de pesos bootstrap.
 
 Cuando se proporciona únicamente pesos de replicación Bootstrap, los analistas pueden estimar errores estándar correctamente, aun sin identificadores de estratos o UPM. Para cada réplica $r$, se calcula el parámetro de interés $\hat{\theta}^{(r)}$ usando los pesos bootstrap $w_{hik}^{(r)}$. La varianza del estimador original se aproxima mediante la variabilidad entre todas las réplicas:
 

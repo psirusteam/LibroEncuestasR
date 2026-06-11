@@ -1,13 +1,21 @@
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(warning = FALSE, 
-                      message = FALSE,
-                      cache = TRUE,
-                      fig.align = "center",
-                      fig.width = 6,
-                      fig.height = 4,
-                      out.width = "70%",
-                      fig.path = "figures/")
-knitr::opts_knit$set(base.dir = "docs")
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  fig.align = "center",
+  fig.width = 6,
+  fig.height = 4,
+  out.width = "70%"
+)
+
+if (knitr::is_latex_output()) {
+  knitr::opts_chunk$set(fig.path = "docs/figures/")
+} else {
+  knitr::opts_knit$set(base.dir = "docs")
+  knitr::opts_chunk$set(fig.path = "figures/")
+}
+
 options(scipen = 999, digits = 3)
 source("_tabla_helper.R")
 ```
@@ -34,9 +42,9 @@ I_k =
 \end{cases}
 $$
 
-que inducen la probabilidad de inclusión $\pi_k = \Pr_p(I_k=1)$ y, a su vez, el correspondiente peso de muestreo, definido como $w_k = \frac{1}{\pi_k}$. 
+que inducen la probabilidad de inclusión $\pi_k = \Pr_p(I_k=1)$ y, a su vez, el correspondiente peso de muestreo, definido como $w_k = \frac{1}{\pi_k}$.
 
-Un estimador que ignora los pesos de muestreo puede no representar adecuadamente a la población objetivo, especialmente cuando la muestra proviene de un diseño complejo. En la inferencia basada en el diseño, la población se considera fija y la fuente de aleatoriedad proviene del mecanismo de selección de la muestra; por ello, sus elementos centrales son las probabilidades de inclusión $\pi_k$ y los pesos de muestreo $w_k$. 
+Un estimador que ignora los pesos de muestreo puede no representar adecuadamente a la población objetivo, especialmente cuando la muestra proviene de un diseño complejo. En la inferencia basada en el diseño, la población se considera fija y la fuente de aleatoriedad proviene del mecanismo de selección de la muestra; por ello, sus elementos centrales son las probabilidades de inclusión $\pi_k$ y los pesos de muestreo $w_k$.
 
 Por el contrario, la inferencia basada en modelos considera que los valores de la variable de interés en toda la población se conciben como realizaciones de un proceso estocástico, usualmente denotado por $\xi$. Así, mientras la inferencia basada en los modelos estudia propiedades como $E_{\xi}(Y_k)$ y $Var_{\xi}(Y_k)$, la inferencia basada en el diseño se orienta a incorporar las características del plan muestral en los estimadores, para que sean insesgados $E_{p}(\hat{t}_y) = t_y$.
 
@@ -46,7 +54,7 @@ $$
 E_{\xi}(Y_k) = \theta, \qquad Var_{\xi}(Y_k) = \theta(1-\theta).
 $$
 
-donde $E_{\xi}(\cdot)$ y $Var_{\xi}(\cdot)$ denotan la esperanza y la varianza bajo el modelo $\xi$ (conocido como modelo de superpoblación). Para una población finita generada por ese modelo, la media poblacional es $\bar{Y}_U = \frac{1}{N}\sum_{k \in U}Y_k$. Bajo el modelo, esta media es insesgada para $\theta$, puesto que 
+donde $E_{\xi}(\cdot)$ y $Var_{\xi}(\cdot)$ denotan la esperanza y la varianza bajo el modelo $\xi$ (conocido como modelo de superpoblación). Para una población finita generada por ese modelo, la media poblacional es $\bar{Y}_U = \frac{1}{N}\sum_{k \in U}Y_k$. Bajo el modelo, esta media es insesgada para $\theta$, puesto que
 
 $$
 E_{\xi}(\bar{Y}_U) =
@@ -62,17 +70,17 @@ set.seed(2026)
 N     <- 100
 theta <- 0.3
 nsim1 <- 1000
-Est0  <- rep(NA, nsim1)
+model_estimates  <- rep(NA, nsim1)
 
 for (i in 1:nsim1) {
   y       <- rbinom(N, 1, theta)
-  Est0[i] <- mean(y)
+  model_estimates[i] <- mean(y)
 }
 
-cbind(theta, Esp0 = mean(Est0), Sesgo = mean(Est0) - theta)
+cbind(theta, expected_model_mean = mean(model_estimates), bias = mean(model_estimates) - theta)
 ```
 
-El código fija una semilla para que el ejercicio sea reproducible. Luego genera `nsim1` poblaciones independientes mediante `rbinom()`. La salida reporta el parámetro verdadero `theta`, el promedio de las medias simuladas `Esp0` y el sesgo Monte Carlo. Como se espera bajo el modelo Bernoulli IID, `Esp0` queda muy cerca de 0.3 y el sesgo es cercano a cero. Las pequeñas diferencias se deben a que se usan 1000 simulaciones, no un número infinito de repeticiones.
+El código fija una semilla para que el ejercicio sea reproducible. Luego genera `nsim1` poblaciones independientes mediante `rbinom()`. La salida reporta el parámetro verdadero `theta`, el promedio de las medias simuladas `expected_model_mean` y el sesgo Monte Carlo. Como se espera bajo el modelo Bernoulli IID, `expected_model_mean` queda muy cerca de 0.3 y el sesgo es cercano a cero. Las pequeñas diferencias se deben a que se usan 1000 simulaciones, no un número infinito de repeticiones.
 
 En la teoría de muestreo, en cambio, las características de interés son parámetros fijos de la población. Si una persona está desempleada, su estado se considera un valor fijo de la población finita. Lo aleatorio es el mecanismo mediante el cual se selecciona la muestra. El total poblacional se define como $t_y = \sum_{k \in U} y_k$, mientras que la media poblacional es $\bar{y}_U = \frac{t_y}{N}$. Si se observa una muestra $s$, el estimador de Horvitz-Thompson del total es
 
@@ -113,7 +121,7 @@ $$
      {\sum_{i \in S_I}N_i},
 $$
 
-el cual trata la muestra como si fuera autoponderada. Este estimador no es insesgado cuando las probabilidades de selección no son iguales o cuando el tamaño del conglomerado se relaciona con la variable de interés. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño mediante `S.piPS()` del paquete `TeachingSampling` [@GutierrezT2020]. En cada muestra se calculan dos estimadores: `Est1`, que corresponde a $\hat{\bar{y}}$, y `Est2`, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, $\bar{y}_s$. Además, estos estimadores se comparan con el parámetro del modelo `theta_N`, correspondiente a $\theta = 0.3$.
+el cual trata la muestra como si fuera autoponderada. Este estimador no es insesgado cuando las probabilidades de selección no son iguales o cuando el tamaño del conglomerado se relaciona con la variable de interés. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño mediante `S.piPS()` del paquete `TeachingSampling` [@GutierrezT2020]. En cada muestra se calculan dos estimadores: `design_estimates`, que corresponde a $\hat{\bar{y}}$, y `simple_estimates`, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, $\bar{y}_s$. Además, estos estimadores se comparan con el parámetro del modelo `theta_population`, correspondiente a $\theta = 0.3$.
 
 ```{r sim-muestreo2, echo=TRUE, eval=TRUE}
 library(TeachingSampling)
@@ -122,7 +130,7 @@ set.seed(2026)
 N      <- 100
 theta  <- 0.3
 nsim2  <- 1000
-Est1 <- Est2 <- rep(NA, nsim2)
+design_estimates <- simple_estimates <- rep(NA, nsim2)
 
 cluster_size <- rep(2:6, each = 5)
 NI           <- length(cluster_size)
@@ -130,33 +138,33 @@ cluster_id   <- rep(seq_len(NI), cluster_size)
 size_center  <- weighted.mean(cluster_size, cluster_size)
 prob_person  <- theta + rep((cluster_size - size_center) / 12, cluster_size)
 y            <- rbinom(N, 1, prob_person)
-theta_N      <- mean(y)
-Ty_i         <- tapply(y, cluster_id, sum)
-Mean_i       <- tapply(y, cluster_id, mean)
+theta_population      <- mean(y)
+cluster_totals         <- tapply(y, cluster_id, sum)
+cluster_means       <- tapply(y, cluster_id, mean)
 
-nI <- floor(NI * 0.3)
+sampled_cluster_count <- floor(NI * 0.3)
 for (j in 1:nsim2) {
-  res         <- S.piPS(nI, cluster_size)
-  sam         <- res[, 1]
-  size_sam    <- cluster_size[sam]
-  total_sam   <- Ty_i[sam]
-  mean_sam    <- Mean_i[sam]
-  Est1[j] <- mean(mean_sam)
-  Est2[j] <- sum(total_sam) / sum(size_sam)
+  res         <- S.piPS(sampled_cluster_count, cluster_size)
+  sampled_clusters         <- res[, 1]
+  sampled_cluster_size    <- cluster_size[sampled_clusters]
+  sampled_cluster_total   <- cluster_totals[sampled_clusters]
+  sampled_cluster_mean    <- cluster_means[sampled_clusters]
+  design_estimates[j] <- mean(sampled_cluster_mean)
+  simple_estimates[j] <- sum(sampled_cluster_total) / sum(sampled_cluster_size)
 }
 
-cbind(theta_N,
-      Esp_piS = mean(Est1),
-      Sesgo_piS = mean(Est1) - theta_N,
-      Esp_S = mean(Est2),
-      Sesgo_S = mean(Est2) - theta_N)
+cbind(theta_population,
+      expected_pps = mean(design_estimates),
+      bias_pps = mean(design_estimates) - theta_population,
+      expected_simple = mean(simple_estimates),
+      bias_simple = mean(simple_estimates) - theta_population)
 ```
 
-El primer bloque del código genera hogares de tamaños desiguales, entre 2 y 6 personas. Para hacer visible el efecto del diseño, la probabilidad individual de desempleo varía suavemente con el tamaño del hogar, pero se centra de manera que el promedio esperado de la población siga siendo cercano a `theta`. Luego se calcula `theta_N`, que es la proporción real de desempleo en esa población específica. En cada repetición, `S.piPS()` selecciona UPMs con probabilidades proporcionales al tamaño; después se calculan la media de las medias de las UPMs seleccionadas y el promedio simple de las personas observadas. La salida compara ambos estimadores con `theta_N`. El sesgo de Monte Carlo de `Esp_piS` es cercano a cero, mientras que el de `Esp_S` no lo es, mostrando resultado de ignorar el diseño en este ejercicio.
+El primer bloque del código genera hogares de tamaños desiguales, entre 2 y 6 personas. Para hacer visible el efecto del diseño, la probabilidad individual de desempleo varía suavemente con el tamaño del hogar, pero se centra de manera que el promedio esperado de la población siga siendo cercano a `theta`. Luego se calcula `theta_population`, que es la proporción real de desempleo en esa población específica. En cada repetición, `S.piPS()` selecciona UPMs con probabilidades proporcionales al tamaño; después se calculan la media de las medias de las UPMs seleccionadas y el promedio simple de las personas observadas. La salida compara ambos estimadores con `theta_population`. El sesgo de Monte Carlo de `expected_pps` es cercano a cero, mientras que el de `expected_simple` no lo es, mostrando resultado de ignorar el diseño en este ejercicio.
 
 ## La integración de ambas inferencias {#la-integracion-de-ambas-inferencias}
 
-No obstante, en muchas aplicaciones ambos marcos inferenciales no se presentan como enfoques excluyentes, sino como componentes complementarios de un mismo problema. En particular, puede considerarse que la muestra ha sido obtenida mediante un diseño probabilístico complejo y que, al mismo tiempo, los valores de la variable de interés responden a un modelo de superpoblación. Esta formulación conduce a un esquema de inferencia doble, en el cual la incertidumbre no proviene de una única fuente, sino de la combinación entre el mecanismo que genera los valores poblacionales (modelo de superpoblación) y el mecanismo que determina qué unidades son observadas (diseño de muestreo). 
+No obstante, en muchas aplicaciones ambos marcos inferenciales no se presentan como enfoques excluyentes, sino como componentes complementarios de un mismo problema. En particular, puede considerarse que la muestra ha sido obtenida mediante un diseño probabilístico complejo y que, al mismo tiempo, los valores de la variable de interés responden a un modelo de superpoblación. Esta formulación conduce a un esquema de inferencia doble, en el cual la incertidumbre no proviene de una única fuente, sino de la combinación entre el mecanismo que genera los valores poblacionales (modelo de superpoblación) y el mecanismo que determina qué unidades son observadas (diseño de muestreo).
 
 Formalmente, intervienen dos medidas de probabilidad: $\xi$, asociada al proceso generador de los valores $Y_k$, y $p(\cdot)$, asociada al diseño muestral que selecciona la muestra $s$. Por tanto, las propiedades de los estimadores deben evaluarse considerando simultáneamente ambas fuentes de variación. Bajo este marco, la esperanza combinada puede expresarse como
 
@@ -212,7 +220,7 @@ $$
 
 Así, la proporción muestral es el estimador natural del parámetro Bernoulli. El punto clave es que este resultado depende del supuesto de que las observaciones tienen igual distribución y no provienen de un diseño con probabilidades desiguales.
 
-Por otro lado, en un modelo de regresión lineal múltiple con errores normales, se tiene que $\mathbf{y} \sim N(\mathbf{X}\boldsymbol{\beta},\sigma^2 I)$. En este caso, la log-verosimilitud, omitiendo constantes, puede escribirse como 
+Por otro lado, en un modelo de regresión lineal múltiple con errores normales, se tiene que $\mathbf{y} \sim N(\mathbf{X}\boldsymbol{\beta},\sigma^2 I)$. En este caso, la log-verosimilitud, omitiendo constantes, puede escribirse como
 
 $$
 \ell(\boldsymbol{\beta},\sigma^2) = -\frac{n}{2}\log(\sigma^2) -\frac{1}{2\sigma^2}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})'(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})
@@ -228,7 +236,7 @@ La máxima pseudo-verosimilitud, desarrollada a partir de los resultados de @bin
 
 $$
 \ell_p(\theta)
-= \sum_{k \in s} w_k \log f(y_k;\theta) 
+= \sum_{k \in s} w_k \log f(y_k;\theta)
 $$
 
 El peso $w_{hik}=1/\pi_{hik}$ indica cuántas unidades de la población representa la observación $y_{hik}$. Por eso, la contribución de una unidad con baja probabilidad de inclusión se amplifica en la pseudo-verosimilitud. Las ecuaciones de estimación resultantes son
@@ -271,7 +279,7 @@ $$
 =
 \frac{\sum_{k \in s}w_k y_k}
      {\sum_{k \in s}w_k}
-= \hat{p}_d 
+= \hat{p}_d
 $$
 
 Por tanto, para una variable binaria, la MPV conduce al estimador ponderado de la proporción, equivalente al estimador de Hájek. Este resultado conecta directamente la teoría de pseudo-verosimilitud con los estimadores de proporciones presentados en los capítulos de variables categóricas.
@@ -310,44 +318,44 @@ set.seed(2026)
 N     <- 100
 theta <- 0.3
 nsim1 <- 100
-Esp1 <- Esp2 <- Theta_U <- rep(NA, nsim1)
+expected_design_estimates <- expected_simple_estimates <- population_means <- rep(NA, nsim1)
 
 cluster_size <- rep(2:6, each = 5)
 NI           <- length(cluster_size)
 cluster_id   <- rep(seq_len(NI), cluster_size)
 size_center  <- weighted.mean(cluster_size, cluster_size)
 prob_person  <- theta + rep((cluster_size - size_center) / 12, cluster_size)
-nI           <- floor(NI * 0.3)
+sampled_cluster_count           <- floor(NI * 0.3)
 
 for (i in 1:nsim1) {
   y        <- rbinom(N, 1, prob_person)
-  Theta_U[i] <- mean(y)
-  Ty_i     <- tapply(y, cluster_id, sum)
-  Mean_i   <- tapply(y, cluster_id, mean)
+  population_means[i] <- mean(y)
+  cluster_totals     <- tapply(y, cluster_id, sum)
+  cluster_means   <- tapply(y, cluster_id, mean)
 
-  Est1 <- Est2 <- rep(NA, 100)
+  design_estimates <- simple_estimates <- rep(NA, 100)
   for (j in 1:100) {
-    res       <- S.piPS(nI, cluster_size)
-    sam       <- res[, 1]
-    size_sam  <- cluster_size[sam]
-    total_sam <- Ty_i[sam]
-    mean_sam  <- Mean_i[sam]
-    Est1[j] <- mean(mean_sam)
-    Est2[j] <- sum(total_sam) / sum(size_sam)
+    res       <- S.piPS(sampled_cluster_count, cluster_size)
+    sampled_clusters       <- res[, 1]
+    sampled_cluster_size  <- cluster_size[sampled_clusters]
+    sampled_cluster_total <- cluster_totals[sampled_clusters]
+    sampled_cluster_mean  <- cluster_means[sampled_clusters]
+    design_estimates[j] <- mean(sampled_cluster_mean)
+    simple_estimates[j] <- sum(sampled_cluster_total) / sum(sampled_cluster_size)
   }
-  Esp1[i] <- mean(Est1)
-  Esp2[i] <- mean(Est2)
+  expected_design_estimates[i] <- mean(design_estimates)
+  expected_simple_estimates[i] <- mean(simple_estimates)
 }
 
 cbind(theta,
-      Media_U = mean(Theta_U),
-      Esp_piS = mean(Esp1),
-      Sesgo_piS = mean(Esp1) - theta,
-      Esp_S = mean(Esp2),
-      Sesgo_S = mean(Esp2) - theta)
+      mean_population = mean(population_means),
+      expected_pps = mean(expected_design_estimates),
+      bias_pps = mean(expected_design_estimates) - theta,
+      expected_simple = mean(expected_simple_estimates),
+      bias_simple = mean(expected_simple_estimates) - theta)
 ```
 
-El código reproduce las dos fuentes de aleatoriedad. El ciclo externo representa el modelo $\xi$, porque genera nuevas poblaciones finitas con `rbinom()`. El ciclo interno representa el diseño $p$, porque para cada población se seleccionan múltiples muestras con `S.piPS()`. La salida incluye `Media_U`, que es el promedio de las medias poblacionales generadas; `Esp_piS`, que resume el comportamiento del estimador que incorpora el diseño; y `Esp_S`, que resume el promedio simple de la muestra seleccionada. Cuando el diseño se incorpora correctamente, el sesgo Monte Carlo respecto de `theta` debe ser pequeño. La comparación con `Esp_S` muestra por qué la inferencia basada en encuestas requiere pesos y varianzas de diseño, incluso cuando se parte de un modelo estadístico sencillo.
+El código reproduce las dos fuentes de aleatoriedad. El ciclo externo representa el modelo $\xi$, porque genera nuevas poblaciones finitas con `rbinom()`. El ciclo interno representa el diseño $p$, porque para cada población se seleccionan múltiples muestras con `S.piPS()`. La salida incluye `mean_population`, que es el promedio de las medias poblacionales generadas; `expected_pps`, que resume el comportamiento del estimador que incorpora el diseño; y `expected_simple`, que resume el promedio simple de la muestra seleccionada. Cuando el diseño se incorpora correctamente, el sesgo Monte Carlo respecto de `theta` debe ser pequeño. La comparación con `expected_simple` muestra por qué la inferencia basada en encuestas requiere pesos y varianzas de diseño, incluso cuando se parte de un modelo estadístico sencillo.
 
 En síntesis, la máxima verosimilitud ordinaria es adecuada cuando las observaciones pueden tratarse como IID bajo un modelo probabilístico. En encuestas complejas, la máxima pseudo-verosimilitud ofrece una extensión natural: conserva la estructura de las ecuaciones de estimación, pero pondera cada contribución individual por su peso muestral. Así, los modelos estadísticos se ajustan de manera más coherente con la población que la encuesta busca representar.
 

@@ -1,13 +1,21 @@
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(warning = FALSE, 
-                      message = FALSE,
-                      cache = TRUE,
-                      fig.align = "center",
-                      fig.width = 6,
-                      fig.height = 4,
-                      out.width = "70%",
-                      fig.path = "figures/")
-knitr::opts_knit$set(base.dir = "docs")
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  cache = TRUE,
+  fig.align = "center",
+  fig.width = 6,
+  fig.height = 4,
+  out.width = "70%"
+)
+
+if (knitr::is_latex_output()) {
+  knitr::opts_chunk$set(fig.path = "docs/figures/")
+} else {
+  knitr::opts_knit$set(base.dir = "docs")
+  knitr::opts_chunk$set(fig.path = "figures/")
+}
+
 options(scipen = 999, digits = 3)
 source("_tabla_helper.R")
 ```
@@ -50,47 +58,47 @@ Una vez se descargan e instalan las librerías o paquetes en `R`, el paso recome
 
 ## Carga e inspección inicial de la base {#carga-e-inspeccion-inicial-de-la-base}
 
-Es muy usual que al trabajar proyectos en `R` sea necesario importar bases de datos con información relevante para un estudio en particular. Los formatos de bases de datos que `R` permite importar son diversos, entre ellos se tienen `xlsx`, `csv`, `txt`, `STATA`, etc. Una vez leída la base de datos en el formato pertinente es recomendable transformarla al formato nativo de `R`, es decir `.RDS`. Este es un formato más eficiente y propio de `R`. 
+Es muy usual que al trabajar proyectos en `R` sea necesario importar bases de datos con información relevante para un estudio en particular. Los formatos de bases de datos que `R` permite importar son diversos, entre ellos se tienen `xlsx`, `csv`, `txt`, `STATA`, etc. Una vez leída la base de datos en el formato pertinente es recomendable transformarla al formato nativo de `R`, es decir `.RDS`. Este es un formato más eficiente y propio de `R`.
 
-Una vez se carga la base de datos se procede a utilizar las funciones en `R` para poder obtener resultados de los procesamientos agregados y gráficos de interés. Para ejemplificar el uso de funciones que permitan obtener resultados agregados, utilizaremos la base de datos `BigCity` del paquete `TeachingSampling`. Esta base corresponde a un conjunto de variables socioeconómicas de 150266 personas en un año en particular. 
+Una vez se carga la base de datos se procede a utilizar las funciones en `R` para poder obtener resultados de los procesamientos agregados y gráficos de interés. Para ejemplificar el uso de funciones que permitan obtener resultados agregados, utilizaremos la base de datos `BigCity` del paquete `TeachingSampling`. Esta base corresponde a un conjunto de variables socioeconómicas de 150266 personas en un año en particular.
 
 ```{r, warning=FALSE, echo=TRUE, message=FALSE, eval=TRUE}
 data(BigCity)
-data1 <- BigCity
+bigcity_data <- BigCity
 ```
 
-El objeto `data1` contiene una copia de `BigCity`. La función `head()` permite observar las primeras filas y obtener una impresión rápida de la estructura de la base.
+El objeto `bigcity_data` contiene una copia de `BigCity`. La función `head()` permite observar las primeras filas y obtener una impresión rápida de la estructura de la base.
 
 ```{r}
-head(data1)
+head(bigcity_data)
 ```
 
 Una vez cargada la base de datos en `R`, se puede empezar a realizar los procesamientos según las necesidades de cada investigador. En este sentido, una de las primeras revisiones que se realizan al cargar una base de datos es verificar su dimensión; es decir, identificar la cantidad de filas y columnas que contiene. Lo anterior se puede hacer con la función `nrow`, que identifica el número de registros en la base de datos, y con la función `ncol`, que muestra el número de variables. Los códigos computacionales son los siguientes:
 
 ```{r}
-nrow(data1)
+nrow(bigcity_data)
 ```
 
 ```{r}
-ncol(data1)
+ncol(bigcity_data)
 ```
 
 Una forma resumida de revisar la cantidad de filas y columnas de una base de datos es mediante la función `dim`, la cual devuelve un vector cuya primera componente corresponde al número de filas y cuya segunda componente indica el número de columnas.
 
 ```{r}
-dim(data1)
+dim(bigcity_data)
 ```
 
 En algunas ocasiones, las bases de datos pueden ser extensas, ya sea porque contienen un número considerable de variables observadas o porque el número de registros es grande. Por esta razón, para visualizarlas adecuadamente, puede ser conveniente abrirlas en una ventana independiente y explorar su contenido de forma tabular. Esto se realiza mediante la función `View`, como se muestra a continuación.
 
 ```{r, eval=FALSE}
-View(data1)
+View(bigcity_data)
 ```
 
 Otra verificación importante al cargar una base de datos en `R` consiste en identificar las variables que contiene. Para ello, se puede utilizar la función `names`, la cual muestra los nombres de las variables incluidas en la base de datos.
 
 ```{r}
-names(data1)
+names(bigcity_data)
 ```
 
 La salida anterior muestra los nombres de las variables contenidas en la base de datos. En este caso, la base cuenta con 12 variables. Las primeras variables corresponden a identificadores y elementos del diseño muestral, como `HHID`, `PersonID`, `Stratum`, `PSU` y `Zone`. Luego aparecen variables sociodemográficas, como `Sex`, `Age` y `MaritalST`. Finalmente, se incluyen variables económicas y de condición laboral o social, como `Income`, `Expenditure`, `Employment` y `Poverty`.
@@ -98,7 +106,7 @@ La salida anterior muestra los nombres de las variables contenidas en la base de
 Si se desea profundizar en el tipo de información que almacena cada variable, puede utilizarse la función `str`, la cual muestra de manera compacta la estructura de un objeto y sus componentes. Para nuestra base de datos, esta función se utilizaría de la siguiente manera:
 
 ```{r, eval=TRUE}
-str(data1)
+str(bigcity_data)
 ```
 
 Como se observa en la salida anterior, la función `str` permite identificar la clase de cada variable incluida en la base de datos. Por ejemplo, la variable `HHID` es de tipo carácter, al igual que la variable `Sex`, mientras que las variables `Income` y `Expenditure` son de tipo numérico. Los demás atributos asociados con las variables también pueden revisarse directamente en la salida del código. Esta función resulta especialmente útil para obtener una visión general del contenido y la estructura de una base de datos.
@@ -108,7 +116,7 @@ Como se observa en la salida anterior, la función `str` permite identificar la 
 Una de las contribuciones más útiles de `R` es la incorporación de las tuberías (*pipelines*), las cuales permiten construir consultas, transformaciones y nuevos objetos a partir de una base de datos de manera más intuitiva, ordenada y fácil de interpretar. El operador de encadenamiento `%>%`, proveniente del paquete `magrittr` [@pipe] y cargado automáticamente al utilizar la librería `tidyverse`, permite enlazar varias operaciones sucesivas, de modo que el resultado obtenido en un paso se convierte en el insumo del paso siguiente. A continuación, se presenta un ejemplo sencillo de su uso con la base de datos `BigLucy`, en el cual se calcula el número total de elementos que contiene la base mediante la función `count`.
 
 ```{r, eval=TRUE}
-data1 %>%
+bigcity_data %>%
   count()
 ```
 
@@ -116,29 +124,29 @@ La línea de código anterior puede interpretarse de forma sencilla: se toma la 
 
 ### `filter`: selección de registros {#filter-seleccion-de-registros}
 
-`filter()` conserva las filas que cumplen una o varias condiciones. En el siguiente ejemplo se crean dos subconjuntos de `data1`: uno con los hombres y otro con las mujeres. El resultado son dos objetos nuevos. `datasexH` contiene únicamente registros con `Sex == "Male"`, mientras que `datasexM` contiene registros con `Sex == "Female"`. 
+`filter()` conserva las filas que cumplen una o varias condiciones. En el siguiente ejemplo se crean dos subconjuntos de `bigcity_data`: uno con los hombres y otro con las mujeres. El resultado son dos objetos nuevos. `male_data` contiene únicamente registros con `Sex == "Male"`, mientras que `female_data` contiene registros con `Sex == "Female"`.
 
 ```{r}
-datasexH <- data1 %>%
+male_data <- bigcity_data %>%
   filter(Sex == "Male")
-datasexM <- data1 %>%
+female_data <- bigcity_data %>%
   filter(Sex == "Female")
 ```
 
-También puede filtrarse por condición de pobreza. En este caso se conservan solo las personas clasificadas como no pobres. Em este caso, el objeto `datanopobre` contiene el subconjunto de registros cuya variable `Poverty` toma el valor `"NotPoor"`.
+También puede filtrarse por condición de pobreza. En este caso se conservan solo las personas clasificadas como no pobres. Em este caso, el objeto `nonpoor_data` contiene el subconjunto de registros cuya variable `Poverty` toma el valor `"NotPoor"`.
 
 ```{r, eval=TRUE}
-datanopobre <- data1 %>%
+nonpoor_data <- bigcity_data %>%
   filter(Poverty == "NotPoor")
 ```
 
-La función `filter()` también permite conservar registros cuyos valores pertenecen a un conjunto específico. En los siguientes ejemplos se filtra por valores particulares de ingreso. Note que `%in%` evalúa si `Income` pertenece al conjunto indicado. Así, `datared` conserva ingresos iguales a 265 o 600, y `dataingreso2` conserva ingresos iguales a 1000 o 2000.
+La función `filter()` también permite conservar registros cuyos valores pertenecen a un conjunto específico. En los siguientes ejemplos se filtra por valores particulares de ingreso. Note que `%in%` evalúa si `Income` pertenece al conjunto indicado. Así, `working_data` conserva ingresos iguales a 265 o 600, y `income_filter_data` conserva ingresos iguales a 1000 o 2000.
 
 ```{r, eval=TRUE}
-datared <- data1 %>%
+working_data <- bigcity_data %>%
   filter(Income %in% c(265, 600))
 
-dataingreso2 <- data1 %>%
+income_filter_data <- bigcity_data %>%
   filter(Income %in% c(1000, 2000))
 ```
 
@@ -149,29 +157,29 @@ La función `select()` conserva columnas específicas. Para continuar con los ej
 
 
 ```{r}
-datared <- data1 %>%
+working_data <- bigcity_data %>%
   select(PersonID, HHID, PSU, Zone, Sex, Age, Income)
 ```
 
 
-Adicionalmente, `select()` también permite excluir variables. Para eliminar columnas, se antepone el signo menos (`-`) al nombre de cada variable. El objeto `datagrey` conserva las variables de `datared`, excepto `HHID` y `PersonID`. Esta operación es útil cuando se desea trabajar con una base más compacta.
+Adicionalmente, `select()` también permite excluir variables. Para eliminar columnas, se antepone el signo menos (`-`) al nombre de cada variable. El objeto `compact_data` conserva las variables de `working_data`, excepto `HHID` y `PersonID`. Esta operación es útil cuando se desea trabajar con una base más compacta.
 
 ```{r, eval=TRUE}
-datagrey <- datared %>%
+compact_data <- working_data %>%
   select(-HHID, -PersonID)
 ```
 
 
 ### `arrange`: ordenamiento de filas {#arrange-ordenamiento-de-filas}
 
-La función `arrange()` ordena las filas de una base según una o más variables. En el primer ejemplo, `datared` se ordena de menor a mayor ingreso, mientras que `datadog` contiene las mismas columnas que `datared`, pero sus filas quedan ordenadas por `Income`. La función `head()` muestra los primeros registros después del ordenamiento.
+La función `arrange()` ordena las filas de una base según una o más variables. En el primer ejemplo, `working_data` se ordena de menor a mayor ingreso, mientras que `sorted_data` contiene las mismas columnas que `working_data`, pero sus filas quedan ordenadas por `Income`. La función `head()` muestra los primeros registros después del ordenamiento.
 
 
 ```{r}
-datadog <- datared %>%
+sorted_data <- working_data %>%
   arrange(Income)
 
-datadog %>%
+sorted_data %>%
   head()
 ```
 
@@ -179,7 +187,7 @@ datadog %>%
 El ordenamiento también puede realizarse considerando más de una variable. En este ejemplo, la base se organiza primero según la variable `Sex` y, posteriormente, dentro de cada grupo, de acuerdo con la variable `Age`. La siguiente salida permite revisar los primeros registros después de aplicar este criterio de ordenamiento.
 
 ```{r, eval=TRUE}
-datared %>%
+working_data %>%
   arrange(Sex, Age) %>%
   head()
 ```
@@ -189,7 +197,7 @@ Para ordenar los registros de mayor a menor, se utiliza la opción `desc()` dent
 
 
 ```{r}
-datared %>%
+working_data %>%
   arrange(desc(Age)) %>%
   head()
 ```
@@ -197,10 +205,10 @@ datared %>%
 
 ### `mutate`: creación o transformación de variables {#mutate-creacion-o-transformacion-de-variables}
 
-La función `mutate()` crea nuevas variables o modifica variables existentes. Dado que `BigCity` no incluye una variable de región geográfica explícita, se construye `Region` a partir de `Stratum`. Primero se extrae la parte numérica del estrato con `gsub("\\D", "", Stratum)`, luego se convierte a número con `as.numeric()` y finalmente se divide en cinco intervalos con `cut()`. El resultado es una nueva columna `Region` dentro de `data1`, en la que sus categorías permiten producir resúmenes regionales en los pasos siguientes.
+La función `mutate()` crea nuevas variables o modifica variables existentes. Dado que `BigCity` no incluye una variable de región geográfica explícita, se construye `Region` a partir de `Stratum`. Primero se extrae la parte numérica del estrato con `gsub("\\D", "", Stratum)`, luego se convierte a número con `as.numeric()` y finalmente se divide en cinco intervalos con `cut()`. El resultado es una nueva columna `Region` dentro de `bigcity_data`, en la que sus categorías permiten producir resúmenes regionales en los pasos siguientes.
 
 ```{r}
-data1 <- data1 %>%
+bigcity_data <- bigcity_data %>%
   mutate(
     Region = cut(
       as.numeric(gsub("\\D", "", Stratum)),
@@ -211,13 +219,13 @@ data1 <- data1 %>%
 ```
 
 
-En el análisis de bases de datos también es frecuente recodificar variables categóricas. El siguiente código crea `IDRegion`, una versión codificada de `Region` que conserva el orden de las regiones y asigna códigos de dos dígitos. Esta forma de recodificación facilita la presentación o el cruce con otras fuentes de información.
+En el análisis de bases de datos también es frecuente recodificar variables categóricas. El siguiente código crea `region_id`, una versión codificada de `Region` que conserva el orden de las regiones y asigna códigos de dos dígitos. Esta forma de recodificación facilita la presentación o el cruce con otras fuentes de información.
 
 
 ```{r}
-data1 <- data1 %>%
+bigcity_data <- bigcity_data %>%
   mutate(
-    IDRegion = factor(
+    region_id = factor(
       Region,
       levels = c("Norte", "Sur", "Centro", "Occidente", "Oriente"),
       labels = c("01", "02", "03", "04", "05")
@@ -226,14 +234,14 @@ data1 <- data1 %>%
 ```
 
 
-El siguiente ejemplo crea `Logincome`, que corresponde al logaritmo natural del ingreso (transformación de la escala del ingreso). Esta operación se usa con frecuencia cuando una variable monetaria presenta alta dispersión. Luego se muestran las primeras filas de las variables relevantes.
+El siguiente ejemplo crea `log_income`, que corresponde al logaritmo natural del ingreso (transformación de la escala del ingreso). Esta operación se usa con frecuencia cuando una variable monetaria presenta alta dispersión. Luego se muestran las primeras filas de las variables relevantes.
 
 ```{r, eval=TRUE}
-datablue2 <- datared %>%
-  mutate(Logincome = log(Income))
+log_income_data <- working_data %>%
+  mutate(log_income = log(Income))
 
-datablue2 %>%
-  select(PersonID, Income, Logincome) %>%
+log_income_data %>%
+  select(PersonID, Income, log_income) %>%
   head()
 ```
 
@@ -241,23 +249,23 @@ datablue2 %>%
 Note que `mutate()` puede crear más de una variable en el mismo paso. Además, las variables creadas al inicio de `mutate()` pueden ser utilizadas en cálculos posteriores dentro del mismo llamado. Por ejemplo, `Income2` duplica el ingreso original e `Income4` duplica `Income2`. La siguiente salida muestra que `Income4` equivale a cuatro veces el ingreso inicial.
 
 ```{r, eval=TRUE}
-datacat <- datablue2 %>%
+income_transform_data <- log_income_data %>%
   mutate(Income2 = 2 * Income,
          Income4 = 2 * Income2)
 
-datacat %>%
+income_transform_data %>%
   select(PersonID, Income2, Income4) %>%
   head()
 ```
 
 
-También se puede crear una variable categórica mediante condiciones. En este ejemplo, la función `case_when()` clasifica la edad en rangos y luego convierte el resultado en un factor ordenado. El resultado es `CatAge`, una variable de grupos etarios ordenados. Esta transformación facilita la producción de tablas por tramos de edad.
+También se puede crear una variable categórica mediante condiciones. En este ejemplo, la función `case_when()` clasifica la edad en rangos y luego convierte el resultado en un factor ordenado. El resultado es `age_group`, una variable de grupos etarios ordenados. Esta transformación facilita la producción de tablas por tramos de edad.
 
 
 ```{r}
-data1 <- data1 %>%
+bigcity_data <- bigcity_data %>%
   mutate(
-    CatAge = case_when(
+    age_group = case_when(
       Age <= 5 ~ "0-5",
       Age <= 15 ~ "6-15",
       Age <= 30 ~ "16-30",
@@ -265,8 +273,8 @@ data1 <- data1 %>%
       Age <= 60 ~ "46-60",
       TRUE ~ "Más de 60"
     ),
-    CatAge = factor(
-      CatAge,
+    age_group = factor(
+      age_group,
       levels = c("0-5", "6-15", "16-30",
                  "31-45", "46-60", "Más de 60"),
       ordered = TRUE
@@ -280,21 +288,21 @@ data1 <- data1 %>%
 La función `summarise()` permite construir una tabla resumen a partir de una o varias variables de la base de datos. En el siguiente ejemplo se calculan dos estadísticas descriptivas de la variable `Income`: el total y la media. Como resultado, se obtiene una tabla con una sola fila que contiene la suma de los ingresos observados y el ingreso promedio de los registros incluidos en la base.
 
 ```{r}
-data1 %>%
-  summarise(total.ing = sum(Income),
-            media.ing = mean(Income))
+bigcity_data %>%
+  summarise(total_income = sum(Income),
+            mean_income = mean(Income))
 ```
 
 
 También pueden calcularse medidas de localización para describir la posición de los valores dentro de la distribución. En este caso, se obtiene la mediana, el primer decil, el noveno decil y la diferencia entre estos dos últimos. El resultado permite resumir distintos puntos de la distribución del ingreso, mientras que el rango decílico muestra la distancia entre el 10% inferior y el 10% superior de los ingresos observados.
 
 ```{r}
-data1 %>%
+bigcity_data %>%
   summarise(
-  mediana = median(Income),
-  decil1 = quantile(Income, 0.1),
-  decil9 = quantile(Income, 0.9),
-  rangodecil = decil9 - decil1
+  median_income = median(Income),
+  decile_1 = quantile(Income, 0.1),
+  decile_9 = quantile(Income, 0.9),
+  decile_range = decile_9 - decile_1
 )
 ```
 
@@ -303,14 +311,14 @@ Con `summarise()` también es posible calcular medidas de dispersión, tales com
 
 
 ```{r}
-data1 %>%
+bigcity_data %>%
   summarise(
-  varianza = var(Income),
-  desv = sd(Income),
-  mini = min(Income),
-  maxi = max(Income),
-  rango = maxi - mini,
-  rangoiq = IQR(Income)
+  variance_income = var(Income),
+  sd_income = sd(Income),
+  min_income = min(Income),
+  max_income = max(Income),
+  range_income = max_income - min_income,
+  iqr_income = IQR(Income)
 )
 ```
 
@@ -321,7 +329,7 @@ La función `group_by()` permite agrupar la base de datos de acuerdo con una o m
 
 
 ```{r, eval=TRUE}
-data1 %>%
+bigcity_data %>%
   count(Region) %>%
   arrange(desc(n))
 ```
@@ -330,7 +338,7 @@ Para obtener el número de encuestas efectivas por sexo, se aplica la misma lóg
 
 
 ```{r}
-data1 %>%
+bigcity_data %>%
   count(Sex) %>%
   arrange(desc(n))
 ```
@@ -340,7 +348,7 @@ El conteo también puede realizarse según la zona geográfica. En este caso, la
 
 
 ```{r}
-data1 %>%
+bigcity_data %>%
   count(Zone) %>%
   arrange(desc(n))
 ```
@@ -350,20 +358,20 @@ Además de los conteos, también es posible calcular medidas resumen por grupo, 
 
 
 ```{r}
-data1 %>%
+bigcity_data %>%
   group_by(Region) %>%
   summarise(n = n(),
-            media = mean(Income))
+            mean_income = mean(Income))
 ```
 
 El mismo procedimiento puede aplicarse para calcular el ingreso medio por sexo. En este caso, la base se agrupa según la variable `Sex` y luego se obtiene el promedio de `Income` para cada categoría. La tabla resultante permite comparar el ingreso medio observado entre los distintos grupos definidos por el sexo.
 
 
 ```{r}
-data1 %>%
+bigcity_data %>%
   group_by(Sex) %>%
   summarise(n = n(),
-            media = mean(Income))
+            mean_income = mean(Income))
 ```
 
 
@@ -371,13 +379,13 @@ Por último, se calculan la media, la desviación estándar y el rango intercuar
 
 
 ```{r}
-data1 %>%
+bigcity_data %>%
   group_by(Employment) %>%
   summarise(
     n = n(),
-    media = mean(Income),
-    desv = sd(Income),
-    rangoiq = IQR(Income)
+    mean_income = mean(Income),
+    sd_income = sd(Income),
+    iqr_income = IQR(Income)
   )
 ```
 

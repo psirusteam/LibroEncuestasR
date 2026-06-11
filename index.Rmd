@@ -1,4 +1,4 @@
---- 
+---
 title: "Análisis de encuestas de hogares con R"
 author: "Andrés Gutiérrez^[Asesor Regional en Estadísticas Sociales - Comisión Económica para América Latina y el Caribe (CEPAL) - andres.gutierrez@cepal.org], Stalyn Guerrero^[Consultor - Comisión Económica para América Latina y el Caribe (CEPAL), guerrerostalyn@gmail.com], Giovany Babativa-Márquez^[Profesor asociado - Departamento de Estadística, Facultad de Ciencias, Universidad Nacional de Colombia, Sede Bogotá - jgbabativam@unal.edu.co], Cristian Téllez^[Consultor - Comisión Económica para América Latina y el Caribe (CEPAL), cftellezp@unal.edu.co]"
 date: "`r Sys.Date()`"
@@ -48,7 +48,7 @@ output:
 # knitr::include_graphics(path = "Pics/CClicence.png")
 ```
 
-La versión online de este libro está licenciada bajo una [Licencia Internacional de Creative Commons para compartir con atribución no comercial 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/). 
+La versión online de este libro está licenciada bajo una [Licencia Internacional de Creative Commons para compartir con atribución no comercial 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 También puede descargar la versión en PDF aquí:
 <a href="Libro.pdf" download><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <i class="fa fa-download" aria-hidden="true"></i> Descargar libro en PDF</a>.
