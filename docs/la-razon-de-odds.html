@@ -23,7 +23,7 @@
 <meta name="author" content="Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa-Márquez, Cristian Téllez" />
 
 
-<meta name="date" content="2026-06-11" />
+<meta name="date" content="2026-06-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -323,10 +323,10 @@ P(\text{Sex}=\text{Male} \mid \text{pobreza}=0)
 <p>Un valor igual a uno indicaría ausencia de asociación entre las variables, es decir, que la relación entre sexo y condición de pobreza es similar para hombres y mujeres. Valores superiores a uno indicarían una mayor ventaja relativa para las mujeres en comparación con los hombres, mientras que valores inferiores a uno sugerirían una mayor ventaja relativa para los hombres. En el contexto de encuestas de hogares, este tipo de medidas resulta especialmente útil para estudiar desigualdades sociodemográficas y brechas en condiciones de bienestar entre distintos grupos poblacionales.</p>
 <p>El procedimiento para realizarlo en <code>R</code> sería, primero estimar las proporciones de la tabla cruzada entre las variables sexo y pobreza, presentada en la Tabla <a href="la-razon-de-odds.html#tab:tab-interaccion-sexo-pobreza">4.21</a>:</p>
 <div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="la-razon-de-odds.html#cb91-1" tabindex="-1"></a>sex_poverty_interaction_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb91-2"><a href="la-razon-de-odds.html#cb91-2" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex, poverty) <span class="sc">%&gt;%</span></span>
+<span id="cb91-2"><a href="la-razon-de-odds.html#cb91-2" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex, poor) <span class="sc">%&gt;%</span></span>
 <span id="cb91-3"><a href="la-razon-de-odds.html#cb91-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">&quot;se&quot;</span>, <span class="st">&quot;ci&quot;</span>)))</span>
 <span id="cb91-4"><a href="la-razon-de-odds.html#cb91-4" tabindex="-1"></a></span>
-<span id="cb91-5"><a href="la-razon-de-odds.html#cb91-5" tabindex="-1"></a>sex_poverty_odds_contrast <span class="ot">&lt;-</span> <span class="fu">svymean</span>(<span class="at">x =</span> <span class="sc">~</span><span class="fu">interaction</span>(Sex, poverty),</span>
+<span id="cb91-5"><a href="la-razon-de-odds.html#cb91-5" tabindex="-1"></a>sex_poverty_odds_contrast <span class="ot">&lt;-</span> <span class="fu">svymean</span>(<span class="at">x =</span> <span class="sc">~</span><span class="fu">interaction</span>(Sex, poor),</span>
 <span id="cb91-6"><a href="la-razon-de-odds.html#cb91-6" tabindex="-1"></a>                                     <span class="at">design =</span> survey_design,</span>
 <span id="cb91-7"><a href="la-razon-de-odds.html#cb91-7" tabindex="-1"></a>                                     <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">ci =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb91-8"><a href="la-razon-de-odds.html#cb91-8" tabindex="-1"></a>                                     <span class="at">keep.vars =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
@@ -334,16 +334,16 @@ P(\text{Sex}=\text{Male} \mid \text{pobreza}=0)
 <caption><span id="tab:tab-interaccion-sexo-pobreza">Tabla 4.21: </span>Proporciones conjuntas de sexo y condición de pobreza</caption>
 <colgroup>
 <col width="9%" />
-<col width="12%" />
+<col width="8%" />
 <col width="16%" />
 <col width="20%" />
-<col width="21%" />
-<col width="21%" />
+<col width="22%" />
+<col width="22%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="left">Sex</th>
-<th align="center">poverty</th>
+<th align="center">poor</th>
 <th align="center">proportion</th>
 <th align="center">proportion_se</th>
 <th align="center">proportion_low</th>
@@ -387,10 +387,10 @@ P(\text{Sex}=\text{Male} \mid \text{pobreza}=0)
 </table>
 <p>Luego, se realiza el contraste dividiendo cada uno de los elementos de la expresión mostrada anteriormente:</p>
 <div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="la-razon-de-odds.html#cb92-1" tabindex="-1"></a>odds_ratio <span class="ot">&lt;-</span> <span class="fu">quote</span>(</span>
-<span id="cb92-2"><a href="la-razon-de-odds.html#cb92-2" tabindex="-1"></a> (<span class="st">`</span><span class="at">interaction(Sex, poverty)Female.0</span><span class="st">`</span> <span class="sc">/</span></span>
-<span id="cb92-3"><a href="la-razon-de-odds.html#cb92-3" tabindex="-1"></a>  <span class="st">`</span><span class="at">interaction(Sex, poverty)Female.1</span><span class="st">`</span>) <span class="sc">/</span></span>
-<span id="cb92-4"><a href="la-razon-de-odds.html#cb92-4" tabindex="-1"></a> (<span class="st">`</span><span class="at">interaction(Sex, poverty)Male.0</span><span class="st">`</span> <span class="sc">/</span></span>
-<span id="cb92-5"><a href="la-razon-de-odds.html#cb92-5" tabindex="-1"></a>  <span class="st">`</span><span class="at">interaction(Sex, poverty)Male.1</span><span class="st">`</span>)</span>
+<span id="cb92-2"><a href="la-razon-de-odds.html#cb92-2" tabindex="-1"></a> (<span class="st">`</span><span class="at">interaction(Sex, poor)Female.0</span><span class="st">`</span> <span class="sc">/</span></span>
+<span id="cb92-3"><a href="la-razon-de-odds.html#cb92-3" tabindex="-1"></a>  <span class="st">`</span><span class="at">interaction(Sex, poor)Female.1</span><span class="st">`</span>) <span class="sc">/</span></span>
+<span id="cb92-4"><a href="la-razon-de-odds.html#cb92-4" tabindex="-1"></a> (<span class="st">`</span><span class="at">interaction(Sex, poor)Male.0</span><span class="st">`</span> <span class="sc">/</span></span>
+<span id="cb92-5"><a href="la-razon-de-odds.html#cb92-5" tabindex="-1"></a>  <span class="st">`</span><span class="at">interaction(Sex, poor)Male.1</span><span class="st">`</span>)</span>
 <span id="cb92-6"><a href="la-razon-de-odds.html#cb92-6" tabindex="-1"></a>)</span>
 <span id="cb92-7"><a href="la-razon-de-odds.html#cb92-7" tabindex="-1"></a></span>
 <span id="cb92-8"><a href="la-razon-de-odds.html#cb92-8" tabindex="-1"></a><span class="fu">svycontrast</span>(<span class="at">stat =</span> sex_poverty_odds_contrast,</span>

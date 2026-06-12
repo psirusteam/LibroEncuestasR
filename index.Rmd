@@ -11,8 +11,8 @@ toc-title: Tabla de Contenido
 colorlinks: yes
 lot: yes
 lof: yes
-fontsize: 10pt
-geometry: margin = 3cm
+fontsize: 12pt
+geometry: margin = 2cm
 header-includes:
   - \usepackage{amsmath}
   - \usepackage[ruled,vlined,linesnumbered]{algorithm2e}

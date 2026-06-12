@@ -52,13 +52,15 @@ Luego, se generan algunas variables categóricas derivadas de la información or
 
 ```{r, tabs1, echo=TRUE, eval=TRUE}
 survey_design <- survey_design %>%
-          mutate(poverty   = ifelse(Poverty != "NotPoor", 1, 0),
-                 unemployment = ifelse(Employment == "Unemployed", 1, 0),
-                 age_18   = case_when(Age < 18 ~ "< 18 anios",
-                                       TRUE ~ ">= 18 anios"))
+  mutate(
+    poor   = ifelse(Poverty != "NotPoor", 1, 0),
+    unemployment = ifelse(Employment == "Unemployed", 1, 0),
+    age_18 = case_when(Age < 18 ~ "< 18 years", 
+                       TRUE     ~ ">= 18 years")
+  )
 ```
 
-En el código anterior se crean nuevas variables derivadas utilizando la función `mutate()` del paquete `dplyr` [@dplyr2026]. Las variables `poverty` y `unemployment` se construyen mediante la función `ifelse()`, que evalúa una condición lógica y asigna un valor dependiendo de si esta se cumple o no. En este caso, las variables toman el valor `1` cuando la persona se encuentra en condición de pobreza o desempleo, respectivamente, y `0` en caso contrario. Por su parte, la variable `age_18` se genera mediante la función `case_when()`, la cual permite definir categorías a partir de una o varias condiciones de forma más clara y flexible que `ifelse()`. Esta función resulta especialmente útil cuando se requiere construir variables categóricas con múltiples niveles. En el ejemplo, las personas menores de 18 años se clasifican en la categoría `"< 18 anios"`, mientras que el resto se agrupa en la categoría `">= 18 anios"`.
+En el código anterior se crean nuevas variables derivadas utilizando la función `mutate()` del paquete `dplyr` [@dplyr2026]. Las variables `poor` y `unemployment` se construyen mediante la función `ifelse()`, que evalúa una condición lógica y asigna un valor dependiendo de si esta se cumple o no. En este caso, las variables toman el valor `1` cuando la persona se encuentra en condición de pobreza o desempleo, respectivamente, y `0` en caso contrario. Por su parte, la variable `age_18` se genera mediante la función `case_when()`, la cual permite definir categorías a partir de una o varias condiciones de forma más clara y flexible que `ifelse()`. Esta función resulta especialmente útil cuando se requiere construir variables categóricas con múltiples niveles. En el ejemplo, las personas menores de 18 años se clasifican en la categoría `"< 18 years"`, mientras que el resto se agrupa en la categoría `">= 18 years"`.
 
 Además de lo anterior, se hace necesario generar subgrupos de la población para realizar estimaciones desagregadas. En este capítulo se emplean cuatro subpoblaciones de ejemplo:
 
@@ -321,11 +323,11 @@ Por ejemplo, suponga que el interés está en comparar la proporción de mujeres
 ```{r}
 sex_poverty_proportion <- survey_design %>%
   group_by(Sex) %>%
-  summarise(proportion = survey_mean(poverty,
+  summarise(proportion = survey_mean(poor,
                                      na.rm = TRUE,
                                      vartype = c("se", "ci")))
 
-sex_poverty_contrast <- svyby(formula = ~poverty, by = ~Sex,
+sex_poverty_contrast <- svyby(formula = ~poor, by = ~Sex,
                               design = survey_design, svymean, na.rm = TRUE,
                               covmat = TRUE, vartype = c("se", "ci"))
 ```
@@ -470,19 +472,19 @@ A continuación, y siguiendo con la base de datos de ejemplo, se estima la distr
 ```{r}
 
 poverty_design <- survey_design %>%
-       mutate(poverty = factor(poverty, levels = 0:1,
+       mutate(poor = factor(poor, levels = 0:1,
                           labels = c("Not poor", "Poor")))
 ```
 
 ```{r eval=FALSE}
 poverty_design %>%
-  group_by(poverty,Sex) %>%
+  group_by(poor,Sex) %>%
   summarise(proportion = survey_prop(vartype = c("se", "ci")))
 
 ```
 ```{r tab-contingencia-pobreza-sexo, tab.cap="Proporción de hombres y mujeres en condición de pobreza y no pobreza", echo=FALSE}
 poverty_design %>%
-  group_by(poverty,Sex) %>%
+  group_by(poor,Sex) %>%
   summarise(proportion = survey_prop(vartype = c("se", "ci"))) %>%
   tabla_fmt()
 
@@ -494,7 +496,7 @@ Con el mismo enfoque de `srvyr`, tambien puede estimarse la tabla de contingenci
 
 ```{r}
 sex_by_poverty_proportion <- poverty_design %>%
-  group_by(poverty, Sex) %>%
+  group_by(poor, Sex) %>%
   summarise(proportion = survey_prop(vartype = c("se", "ci")))
 ```
 
@@ -507,12 +509,12 @@ Adicionalmente, los intervalos de confianza pueden obtenerse mediante la funció
 
 ```{r eval=FALSE}
 sex_by_poverty_proportion %>%
-  dplyr::select(poverty, Sex, proportion_low, proportion_upp)
+  dplyr::select(poor, Sex, proportion_low, proportion_upp)
 ```
 
 ```{r tab-confint-sexo-pobreza, tab.cap="Intervalos de confianza para la proporción por sexo y pobreza", echo=FALSE}
 sex_by_poverty_proportion %>%
-  dplyr::select(poverty, Sex, proportion_low, proportion_upp) %>%
+  dplyr::select(poor, Sex, proportion_low, proportion_upp) %>%
   tabla_fmt()
 ```
 
@@ -543,12 +545,12 @@ sex_by_employment_proportion %>%
 ```
 
 
-Si ahora el objetivo es estimar la pobreza por region, se utiliza la variable numerica `poverty` dentro de un flujo `srvyr`, como se muestra en la Tabla \@ref(tab:tab-svyby-region-pobreza).
+Si ahora el objetivo es estimar la pobreza por region, se utiliza la variable numerica `poor` dentro de un flujo `srvyr`, como se muestra en la Tabla \@ref(tab:tab-svyby-region-pobreza).
 
 
 ```{r}
 region_poverty_proportion <- survey_design %>%
-  group_by(Region, poverty) %>%
+  group_by(Region, poor) %>%
   summarise(proportion = survey_prop(vartype = c("se", "ci")))
 ```
 
@@ -587,10 +589,10 @@ El procedimiento para realizarlo en `R` sería, primero estimar las proporciones
 
 ```{r}
 sex_poverty_interaction_proportion <- survey_design %>%
-  group_by(Sex, poverty) %>%
+  group_by(Sex, poor) %>%
   summarise(proportion = survey_prop(vartype = c("se", "ci")))
 
-sex_poverty_odds_contrast <- svymean(x = ~interaction(Sex, poverty),
+sex_poverty_odds_contrast <- svymean(x = ~interaction(Sex, poor),
                                      design = survey_design,
                                      se = TRUE, na.rm = TRUE, ci = TRUE,
                                      keep.vars = TRUE)
@@ -607,10 +609,10 @@ Luego, se realiza el contraste dividiendo cada uno de los elementos de la expres
 
 ```{r, echo = TRUE, eval = TRUE}
 odds_ratio <- quote(
- (`interaction(Sex, poverty)Female.0` /
-  `interaction(Sex, poverty)Female.1`) /
- (`interaction(Sex, poverty)Male.0` /
-  `interaction(Sex, poverty)Male.1`)
+ (`interaction(Sex, poor)Female.0` /
+  `interaction(Sex, poor)Female.1`) /
+ (`interaction(Sex, poor)Male.0` /
+  `interaction(Sex, poor)Male.1`)
 )
 
 svycontrast(stat = sex_poverty_odds_contrast,
@@ -652,7 +654,7 @@ Bajo la hipótesis nula $H_0$, el estadístico $\chi_{RS}^2$ sigue aproximadamen
 El paquete `survey` en `R` implementa este tipo de pruebas mediante la función `svychisq()`, la cual incorpora automáticamente los ajustes de Rao-Scott para tener en cuenta las características del diseño muestral complejo. Esta función permite evaluar la existencia de asociación entre dos variables categóricas utilizando tablas de contingencia ponderadas y corrigiendo adecuadamente la variabilidad de los estimadores. A modo de ejemplo, para evaluar si la condición de pobreza es independiente del sexo, se ejecuta el siguiente código:
 
 ```{r, eval=TRUE}
-svychisq(formula = ~Sex + poverty, design = survey_design, statistic="F")
+svychisq(formula = ~Sex + poor, design = survey_design, statistic="F")
 ``` 
 
 En este caso, el argumento `formula` especifica las dos variables categóricas cuya independencia se desea evaluar; `design` corresponde al diseño muestral previamente definido; y `statistic = "F"` indica que la prueba se realizará utilizando la versión ajustada basada en la distribución $F$. Si el valor-*p* es superior al 5%, no se rechaza la hipótesis nula $H_0$, concluyendo que no existe evidencia estadística suficiente para afirmar que pobreza y sexo están asociadas. Por el contrario, si el valor-*p* es inferior al 5%, se rechaza $H_0$, lo que sugiere la existencia de dependencia o asociación entre ambas variables categóricas. De manera similar, se pueden evaluar otras relaciones, como desempleo y sexo o pobreza y región.
@@ -664,10 +666,10 @@ svychisq(formula = ~Sex + Employment, design = survey_design, statistic = "F")
 En este primer caso, para el contraste de independencia entre las variables `Sex` y `Employment`, el estadístico obtenido fue $F = 62.251$, con un valor-$p$ menor que $2.2\times10^{-16}$, lo que proporciona evidencia estadísticamente significativa para rechazar la hipótesis nula de independencia entre ambas variables. En consecuencia, los resultados sugieren que existe una asociación significativa entre el sexo y la condición de empleo en la población de estudio.
 
 ```{r, eval=TRUE}
-svychisq(formula = ~Region + poverty, design = survey_design, statistic = "F")
+svychisq(formula = ~Region + poor, design = survey_design, statistic = "F")
 ```
 
-Por otro lado, esta prueba de independencia entre las variables `Region` y `poverty`, da como resultado $F = 0.48794$, con un valor-$p = 0.6914$. Dado que este valor-$p$ es considerablemente mayor que niveles de significancia convencionales, no existe evidencia suficiente para rechazar la hipótesis nula de independencia. Por tanto, los resultados sugieren que, bajo el diseño muestral considerado, no se observa una asociación estadísticamente significativa entre la región y la condición de pobreza.
+Por otro lado, esta prueba de independencia entre las variables `Region` y `poor`, da como resultado $F = 0.48794$, con un valor-$p = 0.6914$. Dado que este valor-$p$ es considerablemente mayor que niveles de significancia convencionales, no existe evidencia suficiente para rechazar la hipótesis nula de independencia. Por tanto, los resultados sugieren que, bajo el diseño muestral considerado, no se observa una asociación estadísticamente significativa entre la región y la condición de pobreza.
 
 ## Visualización de variables categóricas {#viz-categoricas}
 
@@ -767,14 +769,14 @@ De forma análoga, se puede graficar la proporción de hombres en condición de 
 
 ```{r fig-barras-prop-region-hombre, fig.cap="Proporción de hombres en condición de pobreza por región", fig.align='center', out.width='75%', echo=TRUE}
 male_region_poverty_proportion <- male_subset %>%
-  group_by(Region, poverty) %>%
+  group_by(Region, poor) %>%
   summarise(proportion = survey_prop(vartype = c("se", "ci"))) %>%
   data.frame()
 
 ggplot(data = male_region_poverty_proportion,
   aes(x = Region, y = proportion,
       ymax = proportion_upp, ymin = proportion_low,
-      fill = as.factor(poverty))) +
+      fill = as.factor(poor))) +
   geom_bar(stat = "identity", position = "dodge") +
   geom_errorbar(position = position_dodge(width = 0.9), width = 0.3) +
   theme_bw() +
@@ -806,7 +808,7 @@ tm_shape(bigcity_shape) +
   tm_polygons(col = "Region")
 ```
 
-Por ejemplo, si se desea representar geográficamente la proporción de hombres en condición de pobreza por región, estimada previamente en la Figura \@ref(fig:fig-barras-prop-region-hombre), es necesario integrar las estimaciones obtenidas con la información espacial del shapefile. Para ello, el objeto `male_region_poverty_proportion`, que contiene las proporciones estimadas para cada región, se vincula con el archivo geográfico mediante la función `left_join()`. Posteriormente, se filtran únicamente las observaciones correspondientes a la categoría de pobreza (`poverty == 1`), de manera que el mapa represente exclusivamente la distribución espacial de la población masculina en condición de pobreza.
+Por ejemplo, si se desea representar geográficamente la proporción de hombres en condición de pobreza por región, estimada previamente en la Figura \@ref(fig:fig-barras-prop-region-hombre), es necesario integrar las estimaciones obtenidas con la información espacial del shapefile. Para ello, el objeto `male_region_poverty_proportion`, que contiene las proporciones estimadas para cada región, se vincula con el archivo geográfico mediante la función `left_join()`. Posteriormente, se filtran únicamente las observaciones correspondientes a la categoría de pobreza (`poor == 1`), de manera que el mapa represente exclusivamente la distribución espacial de la población masculina en condición de pobreza.
 
 
 ```{r mapas-pobreza-setup, echo=TRUE, eval=TRUE}
@@ -814,7 +816,7 @@ shape_region_map <- tm_shape(
   bigcity_shape %>%
     left_join(
       male_region_poverty_proportion %>%
-        filter(poverty == 1),
+        filter(poor == 1),
       by = "Region"))
 ```
 
@@ -861,9 +863,9 @@ Cuando se desea representar simultáneamente dos variables —por ejemplo, la pr
 
 ```{r mapas-bivar-setup, echo=TRUE, eval=TRUE}
 region_sex_poverty_proportion <- survey_design %>%
-  group_by(Region, Zone, Sex, poverty) %>%
+  group_by(Region, Zone, Sex, poor) %>%
   summarise(proportion = survey_mean(vartype = "cv")) %>%
-  filter(poverty == 1, Zone == "Rural", Sex == "Female")
+  filter(poor == 1, Zone == "Rural", Sex == "Female")
 ```
 
 

@@ -23,7 +23,7 @@
 <meta name="author" content="Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa-Márquez, Cristian Téllez" />
 
 
-<meta name="date" content="2026-06-11" />
+<meta name="date" content="2026-06-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -309,11 +309,11 @@ div.csl-indent {
 <p>Por ejemplo, suponga que el interés está en comparar la proporción de mujeres en condición de pobreza con la proporción de hombres en esta misma situación. Formalmente, este contraste puede expresarse como <span class="math inline">\(\hat{p}_F - \hat{p}_M\)</span>, donde <span class="math inline">\(\hat{p}_F\)</span> representa la proporción estimada de mujeres en pobreza y <span class="math inline">\(\hat{p}_M\)</span> la proporción estimada de hombres en dicha condición. Para construir este contraste, primero se estiman las proporciones de hombres y mujeres en estado de pobreza utilizando el mismo procedimiento descrito en capítulos anteriores. Los resultados correspondientes se presentan en la Tabla <a href="contrastes-y-diferencias-de-proporciones.html#tab:tab-svyby-pobreza-sexo2">4.12</a>:</p>
 <div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-1" tabindex="-1"></a>sex_poverty_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb66-2"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-2" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex) <span class="sc">%&gt;%</span></span>
-<span id="cb66-3"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_mean</span>(poverty,</span>
+<span id="cb66-3"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_mean</span>(poor,</span>
 <span id="cb66-4"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-4" tabindex="-1"></a>                                     <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb66-5"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-5" tabindex="-1"></a>                                     <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">&quot;se&quot;</span>, <span class="st">&quot;ci&quot;</span>)))</span>
 <span id="cb66-6"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-6" tabindex="-1"></a></span>
-<span id="cb66-7"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-7" tabindex="-1"></a>sex_poverty_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(<span class="at">formula =</span> <span class="sc">~</span>poverty, <span class="at">by =</span> <span class="sc">~</span>Sex,</span>
+<span id="cb66-7"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-7" tabindex="-1"></a>sex_poverty_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(<span class="at">formula =</span> <span class="sc">~</span>poor, <span class="at">by =</span> <span class="sc">~</span>Sex,</span>
 <span id="cb66-8"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-8" tabindex="-1"></a>                              <span class="at">design =</span> survey_design, svymean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb66-9"><a href="contrastes-y-diferencias-de-proporciones.html#cb66-9" tabindex="-1"></a>                              <span class="at">covmat =</span> <span class="cn">TRUE</span>, <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">&quot;se&quot;</span>, <span class="st">&quot;ci&quot;</span>))</span></code></pre></div>
 <table>
