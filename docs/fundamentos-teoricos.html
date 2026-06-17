@@ -23,7 +23,7 @@
 <meta name="author" content="Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa-Márquez, Cristian Téllez" />
 
 
-<meta name="date" content="2026-06-12" />
+<meta name="date" content="2026-06-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -365,7 +365,7 @@ a_j a_k \, Cov(\hat{\theta}_j,\hat{\theta}_k).
 </div>
 <div id="ultimo-conglomerado" class="section level4 hasAnchor" number="2.3.2.3">
 <h4><span class="header-section-number">2.3.2.3</span> Último conglomerado<a href="fundamentos-teoricos.html#ultimo-conglomerado" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p>El método del último conglomerado constituye un enfoque directo y robusto para estimar la varianza de totales en encuestas que emplean diseños de muestreo por conglomerados estratificados en múltiples etapas. Propuesto por <span class="citation">Hansen et al. (<a href="#ref-hansen1953sample">1953</a>)</span>, este método simplifica la complejidad de los diseños multinivel al centrarse únicamente en la variación entre las Unidades Primarias de Muestreo (UPM). Se asume que, dentro de cada estrato de muestreo, las UPM fueron seleccionadas de manera independiente con reemplazo (posiblemente con probabilidades desiguales), aunque en la práctica la selección suele realizarse sin reemplazo.</p>
+<p>El método del último conglomerado constituye un enfoque directo y robusto para estimar la varianza de totales en encuestas que emplean diseños de muestreo por conglomerados estratificados en múltiples etapas. Propuesto por <span class="citation"><span class="nocase">Hansen et al.</span> (<a href="#ref-hansen1953sample">1953</a>)</span>, este método simplifica la complejidad de los diseños multinivel al centrarse únicamente en la variación entre las Unidades Primarias de Muestreo (UPM). Se asume que, dentro de cada estrato de muestreo, las UPM fueron seleccionadas de manera independiente con reemplazo (posiblemente con probabilidades desiguales), aunque en la práctica la selección suele realizarse sin reemplazo.</p>
 <p>El método se basa en la variación entre las estadísticas calculadas a nivel de UPM. Cuando se aplica correctamente, refleja implícitamente cualquier submuestreo realizado dentro de las UPM, permitiendo estimaciones de varianza más simples pero confiables. Es especialmente útil en diseños complejos que incluyen estratificación y probabilidades desiguales de selección tanto de UPM como de unidades de niveles inferiores (hogares e individuos). Los requisitos para aplicar este método incluyen la disponibilidad de estimaciones insesgadas de totales para las variables de interés en cada UPM seleccionada. Además, si la muestra se estratifica en la primera etapa, es necesario contar con al menos dos UPM disponibles por estrato, ya que esto permite estimar adecuadamente la variabilidad entre conglomerados dentro de cada estrato.</p>
 <p>De esta forma, considere un diseño de muestreo en múltiples etapas donde se seleccionan <span class="math inline">\(n_h\)</span> UPM en el estrato <span class="math inline">\(h\)</span>, (<span class="math inline">\(h=1,\dots,H\)</span>). Una estimación del total de la variable de interés en la UPM <span class="math inline">\(i\)</span> del estrato <span class="math inline">\(h\)</span> es:</p>
 <p><span class="math display">\[
@@ -379,7 +379,7 @@ a_j a_k \, Cov(\hat{\theta}_j,\hat{\theta}_k).
 <p><span class="math display">\[
 \widehat{Var}(\hat{t}_y) = \sum_{h} \frac{n_h}{n_h-1} \sum_{i} (\hat{t}_{y_i} - \hat{\bar t}_{y_h})^2
 \]</span></p>
-<p>Para más detalles, véase Hansen, <span class="citation">Hansen et al. (<a href="#ref-hansen1953sample">1953, p. 258</a>)</span> o <span class="citation">Wolter &amp; Wolter (<a href="#ref-wolter2007">2007</a>)</span>. Aunque este método se propuso originalmente para calcular varianzas de estimadores de totales, el método puede combinarse con linealización de Taylor o ecuaciones de estimación para derivar varianzas de otros parámetros poblacionales formulables como soluciones de ecuaciones de estimación. Esta flexibilidad hace que el método sea aplicable a diversos contextos de análisis de encuestas de hogares.</p>
+<p>Para más detalles, véase Hansen, <span class="citation"><span class="nocase">Hansen et al.</span> (<a href="#ref-hansen1953sample">1953, p. 258</a>)</span> o <span class="citation">Wolter &amp; Wolter (<a href="#ref-wolter2007">2007</a>)</span>. Aunque este método se propuso originalmente para calcular varianzas de estimadores de totales, el método puede combinarse con linealización de Taylor o ecuaciones de estimación para derivar varianzas de otros parámetros poblacionales formulables como soluciones de ecuaciones de estimación. Esta flexibilidad hace que el método sea aplicable a diversos contextos de análisis de encuestas de hogares.</p>
 <p>Un supuesto fundamental de esta técnica es que, dentro de cada estrato, las UPM se eligen de forma independiente y con reemplazo. En la práctica, la mayoría de las encuestas selecciona UPM sin reemplazo, generando diseños más eficientes. En consecuencia, las varianzas calculadas bajo la hipótesis de independencia constituyen aproximaciones de las verdaderas varianzas de muestreo. Cuando la fracción muestral es pequeña (por ejemplo, inferior al <span class="math inline">\(5\%\)</span>), dichas aproximaciones suelen ser suficientemente precisas para su utilización por parte de las oficinas nacionales de estadística o de otros analistas.</p>
 <p>Este método destaca por su simplicidad y robustez, lo que lo hace muy atractivo en la práctica. Aunque los métodos más sofisticados que consideran todas las etapas del diseño pueden ofrecer estimaciones de varianza ligeramente más precisas, su aplicación requiere información más detallada y mayor complejidad computacional. Por el contrario, el método del último conglomerado proporciona una aproximación confiable y eficiente, especialmente útil al estimar totales o medias en encuestas de hogares. Para un análisis detallado sobre la precisión de esta aproximación y posibles alternativas, véase <span class="citation">Särndal et al. (<a href="#ref-sarndal2003model">2003</a>)</span>.</p>
 </div>
@@ -420,7 +420,7 @@ Bruch, C., Münnich, R., &amp; Zins, S. (2011). Variance estimation for complex 
 Efron, B. (1979). Bootstrap methods: Another look at the jackknife. <em>The Annals of Statistics</em>, <em>7</em>(1), 1-26. <a href="https://doi.org/10.1214/aos/1176344552">https://doi.org/10.1214/aos/1176344552</a>
 </div>
 <div id="ref-hansen1953sample" class="csl-entry">
-Hansen, M. H., Hurwitz, W. N., Madow, W. G., et al. (1953). <em>Sample survey methods and theory</em>.
+<span class="nocase">Hansen, M. H., Hurwitz, W. N., Madow, W. G., et al.</span> (1953). <em>Sample survey methods and theory</em>.
 </div>
 <div id="ref-heeringa2017applied" class="csl-entry">
 Heeringa, S. G., West, B. T., Heeringa, S. G., &amp; Berglund, P. A. (2017). <em>Applied survey data analysis</em>. chapman; hall/CRC.

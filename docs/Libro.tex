@@ -81,6 +81,7 @@
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -106,13 +107,13 @@
 \def\fps@figure{htbp}
 \makeatother
 \ifLuaTeX
-\usepackage[bidi=basic]{babel}
+\usepackage[bidi=basic,shorthands=off]{babel}
 \else
-\usepackage[bidi=default]{babel}
+\usepackage[bidi=default,shorthands=off]{babel}
 \fi
-% get rid of language-specific shorthands (see #6817):
-\let\LanguageShortHands\languageshorthands
-\def\languageshorthands#1{}
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -154,14 +155,13 @@
 
 \title{Análisis de encuestas de hogares con R}
 \author{Andrés Gutiérrez\footnote{Asesor Regional en Estadísticas Sociales - Comisión Económica para América Latina y el Caribe (CEPAL) - \href{mailto:andres.gutierrez@cepal.org}{\nolinkurl{andres.gutierrez@cepal.org}}}, Stalyn Guerrero\footnote{Consultor - Comisión Económica para América Latina y el Caribe (CEPAL), \href{mailto:guerrerostalyn@gmail.com}{\nolinkurl{guerrerostalyn@gmail.com}}}, Giovany Babativa-Márquez\footnote{Profesor asociado - Departamento de Estadística, Facultad de Ciencias, Universidad Nacional de Colombia, Sede Bogotá - \href{mailto:jgbabativam@unal.edu.co}{\nolinkurl{jgbabativam@unal.edu.co}}}, Cristian Téllez\footnote{Consultor - Comisión Económica para América Latina y el Caribe (CEPAL), \href{mailto:cftellezp@unal.edu.co}{\nolinkurl{cftellezp@unal.edu.co}}}}
-\date{2026-06-12}
+\date{2026-06-17}
 
 \begin{document}
 \maketitle
 
 \renewcommand*\contentsname{Tabla de Contenido}
 {
-\hypersetup{linkcolor=}
 \setcounter{tocdepth}{1}
 \tableofcontents
 }
@@ -1962,7 +1962,7 @@ Sex & ratio & ratio\_se & ratio\_low & ratio\_upp \\
 \bottomrule\noalign{}
 \endlastfoot
 Female & 1.52 & 0.046 & 1.43 & 1.61 \\
-Male & 1.56 & 0.070 & 1.43 & 1.70 \\
+Male & 1.56 & 0.070 & 1.42 & 1.70 \\
 \end{longtable}
 
 La función \texttt{svycontrast()} no se limita únicamente a la comparación de medias o totales, sino que también permite construir contrastes entre otros parámetros de interés, como razones y proporciones estimadas a partir de diseños de muestreo complejos. A continuación, se presentan los códigos computacionales utilizados para realizar este análisis, cuyos resultados se muestran en la Tabla \ref{tab:tab-contraste-razon-sexo}. A partir de dichos resultados, puede concluirse que la diferencia entre las razones estimadas es de 0.045 a favor de los hombres.
@@ -3016,6 +3016,7 @@ donde \(w_{hik}\) representa el factor de expansión asociado al elemento \(k\) 
 
 Además de las frecuencias conjuntas, también es posible estimar los tamaños marginales por filas y columnas, definidos respectivamente como \(\hat{N}_{r+} = \sum_{c=1}^{C} \hat{N}_{rc}\) y \(\hat{N}_{+c} = \sum_{r=1}^{R} \hat{N}_{rc}\). Mientras que el total general se expresa como \(\hat{N}_{++} = \sum_{r=1}^{R}\sum_{c=1}^{C} \hat{N}_{rc}\). La estructura general de una tabla de contingencia con \(R\) filas y \(C\) columnas puede representarse de la siguiente forma:
 
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2135}}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1461}}
@@ -3046,6 +3047,7 @@ Marginal fila
 \(R\) & \(\hat{N}_{R1}\) & \(\hat{N}_{R2}\) & \(\cdots\) & \(\hat{N}_{RC}\) & \(\hat{N}_{R+}\) \\
 Marginal columna & \(\hat{N}_{+1}\) & \(\hat{N}_{+2}\) & \(\cdots\) & \(\hat{N}_{+C}\) & \(\hat{N}_{++}\) \\
 \end{longtable}
+}
 
 De manera tradicional, las tablas de contingencia suelen representarse como arreglos bidimensionales de dimensión \(R \times C\). Sin embargo, también pueden extenderse para incorporar una o más variables adicionales, generando subconjuntos o subtablas que permiten estudiar relaciones más complejas entre variables categóricas. A partir de los tamaños estimados, también pueden estimarse proporciones para cada celda de la tabla de contingencia, de la siguiente manera:
 
@@ -5934,7 +5936,7 @@ idStrt005 & -89.7 & 1.286 \\
 idStrt006 & 28.6 & 1.217 \\
 idStrt007 & 41.0 & 1.079 \\
 idStrt008 & 163.8 & 0.928 \\
-idStrt009 & 16.6 & 0.838 \\
+idStrt009 & 16.5 & 0.838 \\
 idStrt010 & 89.9 & 1.830 \\
 \end{longtable}
 
@@ -6277,16 +6279,16 @@ La estimación del modelo con intercepto y pendiente aleatoria indica una hetero
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-idStrt001 & 4.865 & -0.025 \\
-idStrt002 & 9.862 & -0.035 \\
+idStrt001 & 4.864 & -0.025 \\
+idStrt002 & 9.860 & -0.035 \\
 idStrt003 & -1.133 & -0.007 \\
-idStrt004 & 1.899 & -0.015 \\
-idStrt005 & 8.030 & -0.026 \\
+idStrt004 & 1.897 & -0.015 \\
+idStrt005 & 8.029 & -0.026 \\
 idStrt006 & -1.153 & 0.009 \\
-idStrt007 & 0.974 & -0.012 \\
+idStrt007 & 0.973 & -0.012 \\
 idStrt008 & 1.488 & -0.006 \\
 idStrt009 & 3.660 & -0.005 \\
-idStrt010 & 4.133 & -0.020 \\
+idStrt010 & 4.132 & -0.020 \\
 \end{longtable}
 
 Los coeficientes por estrato evidencian que la relación entre gasto y pobreza no sólo cambia en el nivel base, sino también en la intensidad y dirección de la pendiente. En varios estratos la pendiente del gasto es negativa, lo que mantiene la interpretación esperada de que mayores niveles de gasto reducen la probabilidad de pobreza. Sin embargo, también aparecen pendientes cercanas a cero e incluso positivas en algunos estratos, lo que sugiere patrones locales distintos. Esta variabilidad es precisamente la que el modelo busca capturar mediante el efecto aleatorio de la pendiente. La Figura \ref{fig:fig-logit-pendiente-aleatoria} muestra que las curvas predichas son más heterogéneas entre estratos que en el modelo anterior:

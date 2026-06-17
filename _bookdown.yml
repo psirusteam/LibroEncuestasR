@@ -9,7 +9,7 @@ rmd_files: [
   "02-Conceptos.Rmd",
   "03-Continuas.Rmd",
   "04-Categoricas.Rmd",
-  "05-Regresión.Rmd",
+  "05-Regresion.Rmd",
   "06-GLM.Rmd",
   "07-Multinivel.Rmd",
   "A1-TidyVerse.Rmd",
