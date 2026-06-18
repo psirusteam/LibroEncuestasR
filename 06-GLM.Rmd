@@ -26,7 +26,7 @@ Cuando la variable de interés no es continua o los supuestos del modelo lineal 
 
 La necesidad de esta generalización surge porque los modelos lineales clásicos asumen, entre otras cosas, normalidad y homogeneidad de varianza en la variable respuesta, condiciones que rara vez se cumplen cuando se analizan variables categóricas, proporciones o conteos. En este tipo de situaciones, los modelos lineales generalizados ofrecen un marco flexible para modelar adecuadamente la relación entre las variables mediante la selección de una distribución de probabilidad apropiada para la respuesta y una función de enlace que conecte la media de dicha distribución con el predictor lineal.
 
-Para ilustrar los modelos presentados en este capítulo se utilizan la base de datos `survey_data` y la población `BigCity`, siguiendo la misma estructura utilizada en capítulos anteriores. Después de cargar `tidyverse` [@tidyverse2026], `survey` [@Lumley2024], `srvyr` [@Freedman2024], `broom` [@broom2026] y `jtools` [@jtools2026], el siguiente bloque de código crea dos nuevas variables categóricas (`poverty` y `unemployment`) a partir de las variables originales `Poverty` y `Employment`, respectivamente.
+Para ilustrar los modelos presentados en este capítulo se utilizan la base de datos `survey_data` y la población `BigCity`, siguiendo la misma estructura utilizada en capítulos anteriores. Después de cargar `tidyverse` [@tidyverse2026], `survey` [@Lumley2024], `srvyr` [@Freedman2024], `broom` [@broom2026] y `jtools` [@jtools2026], el siguiente bloque de código crea dos nuevas variables categóricas (`poor` y `unemployed`) a partir de las variables originales `Poverty` y `Employment`, respectivamente.
 
 ```{r preparar-diseno-glm, echo = TRUE, eval = TRUE}
 options(digits = 4)
@@ -49,12 +49,12 @@ survey_design <- survey_data %>%
 
 survey_design <- survey_design %>%
   mutate(
-    poverty = factor(
+    poor = factor(
       ifelse(Poverty != "NotPoor", 1, 0),
       levels = c(0, 1),
       labels = c("=Poor", "=Not poor")
     ),
-    unemployment = factor(ifelse(Employment == "Unemployed", 1, 0),
+    unemployed = factor(ifelse(Employment == "Unemployed", 1, 0),
       levels = c(0, 1),
       labels = c("=Unemployed", "=Not unemployed")
     )
@@ -134,13 +134,13 @@ Siguiendo con la encuesta de ejemplo, y con el fin de analizar los factores asoc
 
 ```{r mod-logistico-base, echo = TRUE, eval = TRUE}
 logit_model <- svyglm(
-  formula = poverty ~ Expenditure + Employment + Sex,
+  formula = poor ~ Expenditure + Employment + Sex,
   family = binomial,
   design = survey_design
 )
 ```
 
-En la especificación del modelo, el argumento `formula = poverty ~ Expenditure + Employment + Sex` define la relación entre la variable respuesta `poverty` y las covariables incluidas en el predictor lineal. Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento `design = survey_design` incorpora la información del diseño muestral. El objeto resultante, `logit_model`, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo.
+En la especificación del modelo, el argumento `formula = poor ~ Expenditure + Employment + Sex` define la relación entre la variable respuesta `poor` y las covariables incluidas en el predictor lineal. Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento `design = survey_design` incorpora la información del diseño muestral. El objeto resultante, `logit_model`, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo.
 
 Los resultados de la Tabla \@ref(tab:tab-ic-logistica) muestran las sestimaciones de los coeficientes de regresión, junto con su error estándar, los intervalos de confirza y el valor-p. Del modelo se deduce que un mayor nivel de gasto se asocia con una menor probabilidad de encontrarse en condición de pobreza. Asimismo, en comparación con la categoría de referencia (desocupados), tanto las personas inactivas como las ocupadas presentan una menor propensión a ser pobres, siendo este efecto más marcado entre estas últimas. En contraste, el sexo tiene una influencia muy reducida sobre la probabilidad de pobreza una vez controlado el efecto de las demás covariables incluidas en el modelo.
 
@@ -174,7 +174,7 @@ El modelo puede ampliarse incorporando términos de interacción para evaluar si
 
 ```{r mod-logistico-interaccion, echo = TRUE, eval = TRUE}
 interaction_logit_model <- svyglm(
-  formula = poverty ~ Expenditure + Employment + Sex + Sex:Employment,
+  formula = poor ~ Expenditure + Employment + Sex + Sex:Employment,
   family = binomial,
   design = survey_design
 )

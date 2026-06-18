@@ -23,7 +23,7 @@
 <meta name="author" content="Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa-Márquez, Cristian Téllez" />
 
 
-<meta name="date" content="2026-06-17" />
+<meta name="date" content="2026-06-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -309,7 +309,7 @@ div.csl-indent {
 <div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="sec-motivacionMult.html#cb157-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb157-2"><a href="sec-motivacionMult.html#cb157-2" tabindex="-1"></a><span class="fu">library</span>(lme4)</span></code></pre></div>
 <div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="sec-motivacionMult.html#cb158-1" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;Data/encuesta.rds&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb158-2"><a href="sec-motivacionMult.html#cb158-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">poverty =</span> <span class="fu">ifelse</span>(Poverty <span class="sc">!=</span> <span class="st">&quot;NotPoor&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code></pre></div>
+<span id="cb158-2"><a href="sec-motivacionMult.html#cb158-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">poor =</span> <span class="fu">ifelse</span>(Poverty <span class="sc">!=</span> <span class="st">&quot;NotPoor&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code></pre></div>
 <p>Con fines ilustrativos, los ejemplos de esta sección se desarrollan a partir de una submuestra de la encuesta. El siguiente bloque de código construye la base de datos utilizada en los ejemplos del capítulo. Para ello, identifica los tres estratos con menor número de hogares y conserva únicamente las variables requeridas para el análisis: ingreso, gasto, estrato, sexo, región, zona de residencia y condición de pobreza.</p>
 <div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="sec-motivacionMult.html#cb159-1" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb159-2"><a href="sec-motivacionMult.html#cb159-2" tabindex="-1"></a>  <span class="fu">select</span>(HHID, Stratum) <span class="sc">%&gt;%</span></span>
@@ -320,7 +320,7 @@ div.csl-indent {
 <span id="cb159-7"><a href="sec-motivacionMult.html#cb159-7" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n) <span class="sc">%&gt;%</span></span>
 <span id="cb159-8"><a href="sec-motivacionMult.html#cb159-8" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span><span class="dt">L</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb159-9"><a href="sec-motivacionMult.html#cb159-9" tabindex="-1"></a>  <span class="fu">inner_join</span>(survey_data, <span class="at">by =</span> <span class="st">&quot;Stratum&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb159-10"><a href="sec-motivacionMult.html#cb159-10" tabindex="-1"></a>  <span class="fu">select</span>(Income, Expenditure, Stratum, Sex, Region, Zone, poverty)</span></code></pre></div>
+<span id="cb159-10"><a href="sec-motivacionMult.html#cb159-10" tabindex="-1"></a>  <span class="fu">select</span>(Income, Expenditure, Stratum, Sex, Region, Zone, poor)</span></code></pre></div>
 <p>Como punto de partida, se ajusta un modelo de regresión lineal convencional que relaciona el ingreso de los hogares con su nivel de gasto, ignorando temporalmente la estructura jerárquica de los datos. Bajo esta especificación, se asume que todas las observaciones son independientes y que la relación entre ingreso y gasto es homogénea para todos los hogares, independientemente del estrato al que pertenezcan. La Figura <a href="sec-motivacionMult.html#fig:fig-regresion-simple">7.1</a> presenta la recta de regresión estimada junto con los datos observados.</p>
 <div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="sec-motivacionMult.html#cb160-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data,</span>
 <span id="cb160-2"><a href="sec-motivacionMult.html#cb160-2" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>

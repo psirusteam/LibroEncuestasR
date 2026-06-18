@@ -41,7 +41,7 @@ library(lme4)
 
 ```{r multinivel-datos, echo = TRUE, eval = TRUE}
 survey_data <- readRDS("Data/encuesta.rds") %>%
-  mutate(poverty = ifelse(Poverty != "NotPoor", 1, 0))
+  mutate(poor = ifelse(Poverty != "NotPoor", 1, 0))
 ```
 
 
@@ -57,7 +57,7 @@ plot_data <- survey_data %>%
   select(-n) %>%
   slice(1:3L) %>%
   inner_join(survey_data, by = "Stratum") %>%
-  select(Income, Expenditure, Stratum, Sex, Region, Zone, poverty)
+  select(Income, Expenditure, Stratum, Sex, Region, Zone, poor)
 ```
 
 
@@ -478,7 +478,7 @@ En esta formulación, $\eta_{kj}$ cumple un papel análogo al valor esperado lin
 
 ```{r fig-logit-pobreza-gasto, fig.cap="Relación entre gasto y condición de pobreza con curva logística ajustada", echo = TRUE, eval = TRUE}
 ggplot(data = survey_data,
-       aes(y = poverty, x = Expenditure)) +
+       aes(y = poor, x = Expenditure)) +
   geom_point(alpha = 0.5) +
   geom_smooth(
     formula = y ~ x,
@@ -531,7 +531,7 @@ Un valor elevado de $\rho$ indica que la probabilidad del evento presenta una es
 
 ```{r mod-logit-nulo-setup, echo = TRUE, eval = TRUE}
 logistic_null_model <- glmer(
-  poverty ~ (1 | Stratum),
+  poor ~ (1 | Stratum),
   data = survey_data,
   weights = qk,
   family = binomial(link = "logit")
@@ -568,7 +568,7 @@ Bajo esta especificación, dos estratos con los mismos valores de las covariable
 
 ```{r mod-logit-int-aleatorio-setup, echo = TRUE, eval = TRUE}
 random_intercept_logit_model <- glmer(
-  poverty ~ Expenditure + (1 | Stratum),
+  poor ~ Expenditure + (1 | Stratum),
   data = survey_data,
   family = binomial(link = "logit"),
   weights = qk
@@ -617,7 +617,7 @@ ggplot(data = prediction_data,
        aes(y = probability, x = Expenditure, colour = Stratum)) +
   geom_line() +
   geom_point(data = plot_data,
-             aes(y = poverty, x = Expenditure)) +
+             aes(y = poor, x = Expenditure)) +
   labs(y = "Poverty probability", x = "Expenditure") +
   theme(legend.position = "none")
 ```
@@ -633,7 +633,7 @@ Ambos parámetros se descomponen en una parte promedio poblacional y una desviac
 
 ```{r mod-logit-pendiente-aleatoria-setup, echo = TRUE, eval = TRUE}
 random_slope_logit_model <- glmer(
-  poverty ~ 1 + Expenditure + (1 + Expenditure | Stratum),
+  poor ~ 1 + Expenditure + (1 + Expenditure | Stratum),
   data = survey_data,
   weights = qk,
   family = binomial(link = "logit")
@@ -678,7 +678,7 @@ ggplot(data = prediction_data,
        aes(y = probability, x = Expenditure, colour = Stratum)) +
   geom_line() +
   geom_point(data = plot_data,
-             aes(y = poverty, x = Expenditure)) +
+             aes(y = poor, x = Expenditure)) +
   labs(y = "Poverty probability", x = "Expenditure") +
   theme(legend.position = "none")
 ```

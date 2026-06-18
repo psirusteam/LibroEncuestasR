@@ -155,7 +155,7 @@
 
 \title{Análisis de encuestas de hogares con R}
 \author{Andrés Gutiérrez\footnote{Asesor Regional en Estadísticas Sociales - Comisión Económica para América Latina y el Caribe (CEPAL) - \href{mailto:andres.gutierrez@cepal.org}{\nolinkurl{andres.gutierrez@cepal.org}}}, Stalyn Guerrero\footnote{Consultor - Comisión Económica para América Latina y el Caribe (CEPAL), \href{mailto:guerrerostalyn@gmail.com}{\nolinkurl{guerrerostalyn@gmail.com}}}, Giovany Babativa-Márquez\footnote{Profesor asociado - Departamento de Estadística, Facultad de Ciencias, Universidad Nacional de Colombia, Sede Bogotá - \href{mailto:jgbabativam@unal.edu.co}{\nolinkurl{jgbabativam@unal.edu.co}}}, Cristian Téllez\footnote{Consultor - Comisión Económica para América Latina y el Caribe (CEPAL), \href{mailto:cftellezp@unal.edu.co}{\nolinkurl{cftellezp@unal.edu.co}}}}
-\date{2026-06-17}
+\date{2026-06-18}
 
 \begin{document}
 \maketitle
@@ -4805,7 +4805,7 @@ Cuando la variable de interés no es continua o los supuestos del modelo lineal 
 
 La necesidad de esta generalización surge porque los modelos lineales clásicos asumen, entre otras cosas, normalidad y homogeneidad de varianza en la variable respuesta, condiciones que rara vez se cumplen cuando se analizan variables categóricas, proporciones o conteos. En este tipo de situaciones, los modelos lineales generalizados ofrecen un marco flexible para modelar adecuadamente la relación entre las variables mediante la selección de una distribución de probabilidad apropiada para la respuesta y una función de enlace que conecte la media de dicha distribución con el predictor lineal.
 
-Para ilustrar los modelos presentados en este capítulo se utilizan la base de datos \texttt{survey\_data} y la población \texttt{BigCity}, siguiendo la misma estructura utilizada en capítulos anteriores. Después de cargar \texttt{tidyverse} \citep{tidyverse2026}, \texttt{survey} \citep{Lumley2024}, \texttt{srvyr} \citep{Freedman2024}, \texttt{broom} \citep{broom2026} y \texttt{jtools} \citep{jtools2026}, el siguiente bloque de código crea dos nuevas variables categóricas (\texttt{poverty} y \texttt{unemployment}) a partir de las variables originales \texttt{Poverty} y \texttt{Employment}, respectivamente.
+Para ilustrar los modelos presentados en este capítulo se utilizan la base de datos \texttt{survey\_data} y la población \texttt{BigCity}, siguiendo la misma estructura utilizada en capítulos anteriores. Después de cargar \texttt{tidyverse} \citep{tidyverse2026}, \texttt{survey} \citep{Lumley2024}, \texttt{srvyr} \citep{Freedman2024}, \texttt{broom} \citep{broom2026} y \texttt{jtools} \citep{jtools2026}, el siguiente bloque de código crea dos nuevas variables categóricas (\texttt{poor} y \texttt{unemployed}) a partir de las variables originales \texttt{Poverty} y \texttt{Employment}, respectivamente.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4829,12 +4829,12 @@ Para ilustrar los modelos presentados en este capítulo se utilizan la base de d
 
 \NormalTok{survey\_design }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{mutate}\NormalTok{(}
-    \AttributeTok{poverty =} \FunctionTok{factor}\NormalTok{(}
+    \AttributeTok{poor =} \FunctionTok{factor}\NormalTok{(}
       \FunctionTok{ifelse}\NormalTok{(Poverty }\SpecialCharTok{!=} \StringTok{"NotPoor"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
       \AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
       \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"=Poor"}\NormalTok{, }\StringTok{"=Not poor"}\NormalTok{)}
 \NormalTok{    ),}
-    \AttributeTok{unemployment =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{ifelse}\NormalTok{(Employment }\SpecialCharTok{==} \StringTok{"Unemployed"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
+    \AttributeTok{unemployed =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{ifelse}\NormalTok{(Employment }\SpecialCharTok{==} \StringTok{"Unemployed"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
       \AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
       \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"=Unemployed"}\NormalTok{, }\StringTok{"=Not unemployed"}\NormalTok{)}
 \NormalTok{    )}
@@ -4913,14 +4913,14 @@ Siguiendo con la encuesta de ejemplo, y con el fin de analizar los factores asoc
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{logit\_model }\OtherTok{\textless{}{-}} \FunctionTok{svyglm}\NormalTok{(}
-  \AttributeTok{formula =}\NormalTok{ poverty }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Expenditure }\SpecialCharTok{+}\NormalTok{ Employment }\SpecialCharTok{+}\NormalTok{ Sex,}
+  \AttributeTok{formula =}\NormalTok{ poor }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Expenditure }\SpecialCharTok{+}\NormalTok{ Employment }\SpecialCharTok{+}\NormalTok{ Sex,}
   \AttributeTok{family =}\NormalTok{ binomial,}
   \AttributeTok{design =}\NormalTok{ survey\_design}
 \NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-En la especificación del modelo, el argumento \texttt{formula\ =\ poverty\ \textasciitilde{}\ Expenditure\ +\ Employment\ +\ Sex} define la relación entre la variable respuesta \texttt{poverty} y las covariables incluidas en el predictor lineal. Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento \texttt{design\ =\ survey\_design} incorpora la información del diseño muestral. El objeto resultante, \texttt{logit\_model}, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo.
+En la especificación del modelo, el argumento \texttt{formula\ =\ poor\ \textasciitilde{}\ Expenditure\ +\ Employment\ +\ Sex} define la relación entre la variable respuesta \texttt{poor} y las covariables incluidas en el predictor lineal. Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento \texttt{design\ =\ survey\_design} incorpora la información del diseño muestral. El objeto resultante, \texttt{logit\_model}, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo.
 
 Los resultados de la Tabla \ref{tab:tab-ic-logistica} muestran las sestimaciones de los coeficientes de regresión, junto con su error estándar, los intervalos de confirza y el valor-p.~Del modelo se deduce que un mayor nivel de gasto se asocia con una menor probabilidad de encontrarse en condición de pobreza. Asimismo, en comparación con la categoría de referencia (desocupados), tanto las personas inactivas como las ocupadas presentan una menor propensión a ser pobres, siendo este efecto más marcado entre estas últimas. En contraste, el sexo tiene una influencia muy reducida sobre la probabilidad de pobreza una vez controlado el efecto de las demás covariables incluidas en el modelo.
 
@@ -5010,7 +5010,7 @@ El modelo puede ampliarse incorporando términos de interacción para evaluar si
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{interaction\_logit\_model }\OtherTok{\textless{}{-}} \FunctionTok{svyglm}\NormalTok{(}
-  \AttributeTok{formula =}\NormalTok{ poverty }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Expenditure }\SpecialCharTok{+}\NormalTok{ Employment }\SpecialCharTok{+}\NormalTok{ Sex }\SpecialCharTok{+}\NormalTok{ Sex}\SpecialCharTok{:}\NormalTok{Employment,}
+  \AttributeTok{formula =}\NormalTok{ poor }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Expenditure }\SpecialCharTok{+}\NormalTok{ Employment }\SpecialCharTok{+}\NormalTok{ Sex }\SpecialCharTok{+}\NormalTok{ Sex}\SpecialCharTok{:}\NormalTok{Employment,}
   \AttributeTok{family =}\NormalTok{ binomial,}
   \AttributeTok{design =}\NormalTok{ survey\_design}
 \NormalTok{)}
@@ -5401,7 +5401,7 @@ Para iniciar este capítulo, se cargan \texttt{tidyverse} \citep{tidyverse2026} 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{survey\_data }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"Data/encuesta.rds"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{poverty =} \FunctionTok{ifelse}\NormalTok{(Poverty }\SpecialCharTok{!=} \StringTok{"NotPoor"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{poor =} \FunctionTok{ifelse}\NormalTok{(Poverty }\SpecialCharTok{!=} \StringTok{"NotPoor"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -5418,7 +5418,7 @@ Con fines ilustrativos, los ejemplos de esta sección se desarrollan a partir de
   \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{n) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\DataTypeTok{L}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{inner\_join}\NormalTok{(survey\_data, }\AttributeTok{by =} \StringTok{"Stratum"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{select}\NormalTok{(Income, Expenditure, Stratum, Sex, Region, Zone, poverty)}
+  \FunctionTok{select}\NormalTok{(Income, Expenditure, Stratum, Sex, Region, Zone, poor)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -6004,7 +6004,7 @@ En esta formulación, \(\eta_{kj}\) cumple un papel análogo al valor esperado l
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ survey\_data,}
-       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ poverty, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
+       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ poor, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
   \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{geom\_smooth}\NormalTok{(}
     \AttributeTok{formula =}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x,}
@@ -6068,7 +6068,7 @@ Un valor elevado de \(\rho\) indica que la probabilidad del evento presenta una 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{logistic\_null\_model }\OtherTok{\textless{}{-}} \FunctionTok{glmer}\NormalTok{(}
-\NormalTok{  poverty }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stratum),}
+\NormalTok{  poor }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stratum),}
   \AttributeTok{data =}\NormalTok{ survey\_data,}
   \AttributeTok{weights =}\NormalTok{ qk,}
   \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{)}
@@ -6137,7 +6137,7 @@ Bajo esta especificación, dos estratos con los mismos valores de las covariable
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{random\_intercept\_logit\_model }\OtherTok{\textless{}{-}} \FunctionTok{glmer}\NormalTok{(}
-\NormalTok{  poverty }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Expenditure }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stratum),}
+\NormalTok{  poor }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Expenditure }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ Stratum),}
   \AttributeTok{data =}\NormalTok{ survey\_data,}
   \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{),}
   \AttributeTok{weights =}\NormalTok{ qk}
@@ -6216,7 +6216,7 @@ La Figura \ref{fig:fig-logit-int-aleatorio} presenta las curvas de probabilidad 
        \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ probability, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
   \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
   \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data,}
-             \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ poverty, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
+             \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ poor, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
   \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{"Poverty probability"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Expenditure"}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
 \end{Highlighting}
@@ -6242,7 +6242,7 @@ Ambos parámetros se descomponen en una parte promedio poblacional y una desviac
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{random\_slope\_logit\_model }\OtherTok{\textless{}{-}} \FunctionTok{glmer}\NormalTok{(}
-\NormalTok{  poverty }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+}\NormalTok{ Expenditure }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ Expenditure }\SpecialCharTok{|}\NormalTok{ Stratum),}
+\NormalTok{  poor }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+}\NormalTok{ Expenditure }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ Expenditure }\SpecialCharTok{|}\NormalTok{ Stratum),}
   \AttributeTok{data =}\NormalTok{ survey\_data,}
   \AttributeTok{weights =}\NormalTok{ qk,}
   \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{)}
@@ -6319,7 +6319,7 @@ Los coeficientes por estrato evidencian que la relación entre gasto y pobreza n
        \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ probability, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
   \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
   \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data,}
-             \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ poverty, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
+             \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ poor, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
   \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{"Poverty probability"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Expenditure"}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
 \end{Highlighting}
