@@ -1,0 +1,188 @@
+:root {
+  --aehr-blue: #00b7ff;
+  --aehr-blue-dark: #0077a8;
+  --aehr-ink: #1f2933;
+  --aehr-muted: #5b6770;
+  --aehr-border: #d9e2ec;
+  --aehr-soft: #f6f9fb;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--aehr-ink);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+a {
+  color: var(--aehr-blue-dark);
+}
+
+a:hover {
+  color: var(--aehr-blue);
+}
+
+#title-block-header {
+  border-bottom: 1px solid var(--aehr-border);
+  margin-bottom: 2rem;
+  padding-bottom: 1.4rem;
+}
+
+#title-block-header .title {
+  color: var(--aehr-ink);
+  font-size: clamp(2.1rem, 4vw, 3.8rem);
+  line-height: 1.04;
+  margin-bottom: 0.5rem;
+}
+
+#title-block-header .subtitle {
+  color: var(--aehr-muted);
+  font-size: 1.15rem;
+  font-weight: 400;
+  margin-top: 0.35rem;
+}
+
+#title-block-header .quarto-title-meta {
+  color: var(--aehr-muted);
+  font-size: 0.92rem;
+  margin-top: 1.1rem;
+}
+
+.sidebar-title {
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+.sidebar nav[role="doc-toc"] ul > li > a.active,
+.sidebar nav[role="doc-toc"] ul > li > ul > li > a.active,
+#quarto-sidebar .sidebar-item-container .active {
+  color: var(--aehr-blue-dark);
+  font-weight: 700;
+}
+
+#quarto-sidebar {
+  border-right: 1px solid var(--aehr-border);
+}
+
+#TOC {
+  border-left: 3px solid var(--aehr-blue);
+  padding-left: 0.85rem;
+}
+
+#TOC .active {
+  color: var(--aehr-blue-dark);
+  font-weight: 700;
+}
+
+main.content h1,
+main.content h2,
+main.content h3 {
+  color: var(--aehr-ink);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+main.content h2 {
+  border-bottom: 1px solid var(--aehr-border);
+  padding-bottom: 0.35rem;
+}
+
+main.content h2::after {
+  background: var(--aehr-blue);
+  content: "";
+  display: block;
+  height: 3px;
+  margin-top: 0.45rem;
+  width: 4rem;
+}
+
+.chapter-number,
+.header-section-number {
+  color: var(--aehr-blue-dark);
+  font-weight: 700;
+}
+
+.sourceCode,
+pre.sourceCode {
+  border: 1px solid var(--aehr-border);
+  border-radius: 0.35rem;
+}
+
+div.cell-output,
+div.cell-output-stdout,
+div.cell-output-display {
+  border-left: 3px solid var(--aehr-border);
+  padding-left: 0.75rem;
+}
+
+table {
+  font-size: 0.94rem;
+}
+
+.table,
+.dataTable,
+.cell-output table {
+  border-color: var(--aehr-border);
+}
+
+.cell-output table thead,
+table thead {
+  border-bottom: 2px solid var(--aehr-blue);
+}
+
+.cell-output table th,
+.cell-output table td,
+table th,
+table td {
+  padding: 0.42rem 0.55rem;
+}
+
+.callout {
+  border-left-width: 0.35rem;
+  border-radius: 0.25rem;
+}
+
+.callout-title-container {
+  font-weight: 700;
+}
+
+.quarto-figure,
+.cell-output-display {
+  margin-bottom: 1.4rem;
+}
+
+.figure-caption,
+.table-caption,
+figcaption {
+  color: var(--aehr-muted);
+  font-size: 0.92rem;
+}
+
+.nav-page {
+  border-top: 1px solid var(--aehr-border);
+  margin-top: 2rem;
+  padding-top: 1rem;
+}
+
+.nav-page a {
+  color: var(--aehr-blue-dark);
+  font-weight: 700;
+}
+
+.footer {
+  color: var(--aehr-muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 991.98px) {
+  #title-block-header .title {
+    font-size: 2.15rem;
+  }
+
+  main.content h2::after {
+    width: 3rem;
+  }
+}

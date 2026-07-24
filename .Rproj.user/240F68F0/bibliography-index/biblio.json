@@ -1,0 +1,3223 @@
+{
+    "sources": [
+        {
+            "URL": "https://unstats.un.org/unsd/publication/seriesf/seriesf_96e.pdf",
+            "author": [
+                {
+                    "literal": "United Nations"
+                }
+            ],
+            "collection-number": "Series F No. 96",
+            "collection-title": "Studies in methods",
+            "id": "UnitedNations2005Household",
+            "issued": {
+                "date-parts": [
+                    [
+                        2005
+                    ]
+                ]
+            },
+            "publisher": "United Nations",
+            "publisher-place": "New York",
+            "title": "Household sample surveys in developing and transition countries",
+            "type": "book"
+        },
+        {
+            "URL": "https://unstats.un.org/unsd/statcom/decisions-ref/?code=49%2F106",
+            "author": [
+                {
+                    "literal": "United Nations Statistical Commission"
+                }
+            ],
+            "id": "UnitedNations2018HouseholdSDG",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "title": "Decision 49/106: Household surveys",
+            "title-short": "Decision 49/106",
+            "type": ""
+        },
+        {
+            "URL": "https://repositorio.cepal.org/server/api/core/bitstreams/e369edef-a10b-412a-9df1-951b23133551/content",
+            "author": [
+                {
+                    "literal": "Comisión Económica para América Latina y el Caribe"
+                }
+            ],
+            "id": "CEPAL2025BADEHOG",
+            "issued": {
+                "date-parts": [
+                    [
+                        2025
+                    ]
+                ]
+            },
+            "publisher": "Comisión Económica para América Latina y el Caribe",
+            "publisher-place": "Santiago",
+            "title": "Nota metodológica: Indicadores en CEPALSTAT estimados a partir del banco de datos de encuestas de hogares (BADEHOG)",
+            "title-short": "Nota metodológica",
+            "type": "report"
+        },
+        {
+            "author": [
+                {
+                    "family": "Kish",
+                    "given": "Leslie"
+                },
+                {
+                    "family": "Frankel",
+                    "given": "Martin R."
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society, Series B",
+            "id": "kish1974inference",
+            "issued": {
+                "date-parts": [
+                    [
+                        1974
+                    ]
+                ]
+            },
+            "page": "1-37",
+            "title": "Inference from complex samples",
+            "type": "article-journal",
+            "volume": "36"
+        },
+        {
+            "URL": "https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf",
+            "author": [
+                {
+                    "literal": "Naciones Unidas"
+                }
+            ],
+            "collection-number": "98",
+            "collection-title": "Estudios de métodos, serie f",
+            "id": "ONUDeff",
+            "issued": {
+                "date-parts": [
+                    [
+                        2009
+                    ]
+                ]
+            },
+            "publisher": "Naciones Unidas",
+            "publisher-place": "Nueva York",
+            "title": "Diseño de muestras para encuestas de hogares: Directrices prácticas.",
+            "title-short": "Diseño de muestras para encuestas de hogares",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1093/jssam/smac040",
+            "author": [
+                {
+                    "family": "Seidenberg",
+                    "given": "Andrew B."
+                },
+                {
+                    "family": "Moser",
+                    "given": "Richard P."
+                },
+                {
+                    "family": "West",
+                    "given": "Brady T."
+                }
+            ],
+            "container-title": "Journal of Survey Statistics and Methodology",
+            "id": "Seidenberg2023PRICSSA",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "page": "743-757",
+            "title": "Preferred reporting items for complex sample survey analysis (PRICSSA)",
+            "type": "article-journal",
+            "volume": "11"
+        },
+        {
+            "author": [
+                {
+                    "family": "Särndal",
+                    "given": "Carl-Erik"
+                },
+                {
+                    "family": "Swensson",
+                    "given": "Bengt"
+                },
+                {
+                    "family": "Wretman",
+                    "given": "Jan"
+                }
+            ],
+            "id": "sarndal2003model",
+            "issued": {
+                "date-parts": [
+                    [
+                        2003
+                    ]
+                ]
+            },
+            "publisher": "Springer Science & Business Media",
+            "title": "Model assisted survey sampling",
+            "type": "book"
+        },
+        {
+            "ISBN": "978-958-762-586-8",
+            "author": [
+                {
+                    "family": "Gutiérrez",
+                    "given": "Hugo Andrés"
+                }
+            ],
+            "edition": "Segunda edición",
+            "id": "Gutierrez2016",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016
+                    ]
+                ]
+            },
+            "publisher": "Ediciones de la U",
+            "title": "Estrategias de muestreo: Diseño de encuestas y estimación de parámetros",
+            "title-short": "Estrategias de muestreo",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Hansen",
+                    "given": "Morris H"
+                },
+                {
+                    "family": "Hurwitz",
+                    "given": "William N"
+                },
+                {
+                    "family": "Madow",
+                    "given": "William G"
+                },
+                {
+                    "literal": "others"
+                }
+            ],
+            "id": "hansen1953sample",
+            "issued": {
+                "date-parts": [
+                    [
+                        1953
+                    ]
+                ]
+            },
+            "publisher": "New York: John Wiley & Sons,",
+            "title": "Sample survey methods and theory",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Binder",
+                    "given": "David A"
+                }
+            ],
+            "container-title": "International Statistical Review/Revue Internationale de Statistique",
+            "id": "binder1983variances",
+            "issued": {
+                "date-parts": [
+                    [
+                        1983
+                    ]
+                ]
+            },
+            "page": "279-292",
+            "publisher": "JSTOR",
+            "title": "On the variances of asymptotically normal estimators from complex surveys",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Wolter",
+                    "given": "Kirk M."
+                }
+            ],
+            "id": "Wolter2007Variance",
+            "issued": {
+                "date-parts": [
+                    [
+                        2007
+                    ]
+                ]
+            },
+            "publisher": "Springer",
+            "title": "Introduction to variance estimation",
+            "type": "book"
+        },
+        {
+            "DOI": "10.2307/2344614",
+            "author": [
+                {
+                    "family": "Nelder",
+                    "given": "John A."
+                },
+                {
+                    "family": "Wedderburn",
+                    "given": "Robert W. M."
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series A (General)",
+            "id": "nelder1972generalized",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        1972
+                    ]
+                ]
+            },
+            "page": "370-384",
+            "title": "Generalized linear models",
+            "type": "article-journal",
+            "volume": "135"
+        },
+        {
+            "author": [
+                {
+                    "family": "Fuller",
+                    "given": "Wayne A."
+                }
+            ],
+            "container-title": "Sankhya, Series C",
+            "id": "fuller1975regression",
+            "issued": {
+                "date-parts": [
+                    [
+                        1975
+                    ]
+                ]
+            },
+            "page": "117-132",
+            "title": "Regression analysis for sample survey",
+            "type": "article-journal",
+            "volume": "37"
+        },
+        {
+            "DOI": "10.2307/1403631",
+            "author": [
+                {
+                    "family": "Pfeffermann",
+                    "given": "Danny"
+                }
+            ],
+            "container-title": "International Statistical Review",
+            "id": "pfeffermann1993role",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        1993
+                    ]
+                ]
+            },
+            "page": "317-337",
+            "title": "The role of sampling weights when modeling survey data",
+            "type": "article-journal",
+            "volume": "61"
+        },
+        {
+            "author": [
+                {
+                    "family": "Heeringa",
+                    "given": "Steven G"
+                },
+                {
+                    "family": "West",
+                    "given": "Brady T"
+                },
+                {
+                    "family": "Heeringa",
+                    "given": "Steve G"
+                },
+                {
+                    "family": "Berglund",
+                    "given": "Patricia A"
+                }
+            ],
+            "id": "heeringa2017applied",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "publisher": "chapman; hall/CRC",
+            "title": "Applied survey data analysis",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Cochran",
+                    "given": "William Gemmell"
+                }
+            ],
+            "id": "cochran1977sampling",
+            "issued": {
+                "date-parts": [
+                    [
+                        1977
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "title": "Sampling techniques",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Lumley",
+                    "given": "Thomas"
+                }
+            ],
+            "id": "Lumley2010",
+            "issued": {
+                "date-parts": [
+                    [
+                        2010
+                    ]
+                ]
+            },
+            "publisher": "John Wiley; Sons",
+            "title": "Complex surveys: A guide to analysis using r: A guide to analysis using r",
+            "title-short": "Complex surveys",
+            "type": "book"
+        },
+        {
+            "URL": "https://bookdown.org/yihui/bookdown/",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                }
+            ],
+            "id": "Xie2016bookdown",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016
+                    ]
+                ]
+            },
+            "publisher": "Chapman; Hall/CRC",
+            "publisher-place": "Boca Raton",
+            "title": "Bookdown: Authoring books and technical documents with r markdown",
+            "title-short": "Bookdown",
+            "type": "book"
+        },
+        {
+            "URL": "https://bookdown.org/yihui/rmarkdown/",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                },
+                {
+                    "family": "Allaire",
+                    "given": "J. J."
+                },
+                {
+                    "family": "Grolemund",
+                    "given": "Garrett"
+                }
+            ],
+            "id": "Xie2018RMarkdown",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "publisher": "Chapman; Hall/CRC",
+            "publisher-place": "Boca Raton",
+            "title": "R markdown: The definitive guide",
+            "title-short": "R markdown",
+            "type": "book"
+        },
+        {
+            "URL": "https://www.r-project.org/about.html",
+            "accessed": {
+                "date-parts": [
+                    [
+                        2026,
+                        7,
+                        23
+                    ]
+                ]
+            },
+            "author": [
+                {
+                    "literal": "R Core Team"
+                }
+            ],
+            "id": "RProject2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "title": "What is r?",
+            "type": ""
+        },
+        {
+            "author": [
+                {
+                    "family": "Lumley",
+                    "given": "Thomas"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "Lumley2004",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2004
+                    ]
+                ]
+            },
+            "note": "R package verson 2.2",
+            "page": "1-19",
+            "title": "Analysis of complex survey samples",
+            "type": "article-journal",
+            "volume": "9"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.survey",
+            "URL": "https://CRAN.R-project.org/package=survey",
+            "author": [
+                {
+                    "family": "Lumley",
+                    "given": "Thomas"
+                },
+                {
+                    "family": "Gao",
+                    "given": "Peter"
+                },
+                {
+                    "family": "Schneider",
+                    "given": "Ben"
+                },
+                {
+                    "family": "Kolenikov",
+                    "given": "Stas"
+                }
+            ],
+            "id": "Lumley2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 4.5",
+            "title": "Survey: Analysis of complex survey samples",
+            "title-short": "Survey",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.srvyr",
+            "URL": "https://CRAN.R-project.org/package=srvyr",
+            "author": [
+                {
+                    "family": "Freedman Ellis",
+                    "given": "Greg"
+                },
+                {
+                    "family": "Schneider",
+                    "given": "Ben"
+                }
+            ],
+            "id": "FreedmanEllis2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 1.3.1",
+            "title": "Srvyr: ’Dplyr’-like syntax for summary statistics of survey data",
+            "title-short": "Srvyr",
+            "type": "book"
+        },
+        {
+            "URL": "https://unstats.un.org/fpos",
+            "author": [
+                {
+                    "literal": "United Nations General Assembly"
+                }
+            ],
+            "id": "UnitedNations2014FPOS",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "note": "Resolution A/RES/68/261",
+            "title": "Fundamental principles of official statistics",
+            "type": ""
+        },
+        {
+            "URL": "https://unstats.un.org/unsd/methodology/dataquality/references/1902216-UNNQAFManual-WEB.pdf",
+            "author": [
+                {
+                    "literal": "United Nations"
+                }
+            ],
+            "id": "UnitedNations2019NQAF",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019
+                    ]
+                ]
+            },
+            "publisher": "United Nations Statistics Division",
+            "publisher-place": "New York",
+            "title": "United nations national quality assurance frameworks manual for official statistics",
+            "type": "report"
+        },
+        {
+            "DOI": "10.1111/1467-9868.00106",
+            "author": [
+                {
+                    "family": "Pfeffermann",
+                    "given": "Danny"
+                },
+                {
+                    "family": "Skinner",
+                    "given": "Chris J."
+                },
+                {
+                    "family": "Holmes",
+                    "given": "David J."
+                },
+                {
+                    "family": "Goldstein",
+                    "given": "Harvey"
+                },
+                {
+                    "family": "Rasbash",
+                    "given": "Jon"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series B",
+            "id": "pfeffermann1998weighting",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        1998
+                    ]
+                ]
+            },
+            "page": "23-40",
+            "title": "Weighting for unequal selection probabilities in multilevel models",
+            "type": "article-journal",
+            "volume": "60"
+        },
+        {
+            "DOI": "10.1111/j.1467-985X.2006.00426.x",
+            "author": [
+                {
+                    "family": "Rabe-Hesketh",
+                    "given": "Sophia"
+                },
+                {
+                    "family": "Skrondal",
+                    "given": "Anders"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series A",
+            "id": "rabehesketh2006multilevel",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "page": "805-827",
+            "title": "Multilevel modelling of complex survey data",
+            "type": "article-journal",
+            "volume": "169"
+        },
+        {
+            "author": [
+                {
+                    "family": "Snijders",
+                    "given": "Tom AB"
+                },
+                {
+                    "family": "Bosker",
+                    "given": "Roel"
+                }
+            ],
+            "id": "snijders2011",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "publisher": "sage",
+            "title": "Multilevel analysis: An introduction to basic and advanced multilevel modeling",
+            "title-short": "Multilevel analysis",
+            "type": "article-journal"
+        },
+        {
+            "ISBN": "978-92-1-002242-2",
+            "URL": "https://repositorio.cepal.org/server/api/core/bitstreams/14d443ec-8f1e-44a7-b22b-9f124f205abe/content",
+            "author": [
+                {
+                    "literal": "Comisión Económica para América Latina y el Caribe"
+                }
+            ],
+            "collection-number": "5",
+            "collection-title": "Metodologías de la CEPAL",
+            "id": "CEPAL2023Diseno",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "note": "LC/PUB.2023/14-P",
+            "publisher": "Naciones Unidas",
+            "publisher-place": "Santiago",
+            "title": "Diseño y análisis estadístico de las encuestas de hogares de américa latina",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "literal": "United Nations Statistics Division"
+                }
+            ],
+            "id": "UNhandbook",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "publisher": "United Nations",
+            "title": "Handbook of surveys on households and individuals foundations and emerging approaches",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1080/01621459.1952.10483446",
+            "author": [
+                {
+                    "family": "Horvitz",
+                    "given": "Daniel G."
+                },
+                {
+                    "family": "Thompson",
+                    "given": "Donovan J."
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "HorvitzThompson1952",
+            "issue": "260",
+            "issued": {
+                "date-parts": [
+                    [
+                        1952
+                    ]
+                ]
+            },
+            "page": "663-685",
+            "title": "A generalization of sampling without replacement from a finite universe",
+            "type": "article-journal",
+            "volume": "47"
+        },
+        {
+            "URL": "https://www.scb.se/dokumentation/statistiska-metoder/JOS-archive/",
+            "author": [
+                {
+                    "family": "Kish",
+                    "given": "Leslie"
+                }
+            ],
+            "container-title": "Journal of Official Statistics",
+            "id": "Kish1992Unequal",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        1992
+                    ]
+                ]
+            },
+            "page": "183-200",
+            "title": "Weighting for unequal P_i",
+            "type": "article-journal",
+            "volume": "8"
+        },
+        {
+            "author": [
+                {
+                    "family": "Korn",
+                    "given": "Edward L"
+                },
+                {
+                    "family": "Graubard",
+                    "given": "Barry I"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series A (Statistics in Society)",
+            "id": "korn1995analysis",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        1995
+                    ]
+                ]
+            },
+            "page": "263-295",
+            "publisher": "Wiley Online Library",
+            "title": "Analysis of large health surveys: Accounting for the sampling design",
+            "title-short": "Analysis of large health surveys",
+            "type": "article-journal",
+            "volume": "158"
+        },
+        {
+            "author": [
+                {
+                    "family": "Gambino",
+                    "given": "Jack G"
+                },
+                {
+                    "dropping-particle": "do",
+                    "family": "Nascimento Silva",
+                    "given": "Pedro Luis"
+                }
+            ],
+            "container-title": "Handbook of statistics",
+            "id": "gambino2009sampling",
+            "issued": {
+                "date-parts": [
+                    [
+                        2009
+                    ]
+                ]
+            },
+            "page": "407-439",
+            "publisher": "Elsevier",
+            "title": "Sampling and estimation in household surveys",
+            "type": "chapter",
+            "volume": "29"
+        },
+        {
+            "author": [
+                {
+                    "family": "Kish",
+                    "given": "Leslie"
+                }
+            ],
+            "id": "kish1965survey",
+            "issued": {
+                "date-parts": [
+                    [
+                        1965
+                    ]
+                ]
+            },
+            "publisher": "Wiley",
+            "title": "Survey sampling.",
+            "type": "article-journal"
+        },
+        {
+            "DOI": "10.1080/01621459.1992.10475217",
+            "author": [
+                {
+                    "family": "Deville",
+                    "given": "Jean-Claude"
+                },
+                {
+                    "family": "Särndal",
+                    "given": "Carl-Erik"
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "DevilleSarndal1992",
+            "issue": "418",
+            "issued": {
+                "date-parts": [
+                    [
+                        1992
+                    ]
+                ]
+            },
+            "page": "376-382",
+            "title": "Calibration estimators in survey sampling",
+            "type": "article-journal",
+            "volume": "87"
+        },
+        {
+            "DOI": "10.1177/096228029600500302",
+            "author": [
+                {
+                    "family": "Brick",
+                    "given": "J. Michael"
+                },
+                {
+                    "family": "Kalton",
+                    "given": "Graham"
+                }
+            ],
+            "container-title": "Statistical Methods in Medical Research",
+            "id": "BrickKalton1996",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        1996
+                    ]
+                ]
+            },
+            "page": "215-238",
+            "title": "Handling missing data in survey research",
+            "type": "article-journal",
+            "volume": "5"
+        },
+        {
+            "author": [
+                {
+                    "family": "Kalton",
+                    "given": "Graham"
+                },
+                {
+                    "family": "Flores-Cervantes",
+                    "given": "Ismael"
+                }
+            ],
+            "container-title": "Journal of official statistics",
+            "id": "kalton2003weighting",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        2003
+                    ]
+                ]
+            },
+            "page": "81",
+            "publisher": "Statistics Sweden (SCB)",
+            "title": "Weighting methods",
+            "type": "article-journal",
+            "volume": "19"
+        },
+        {
+            "author": [
+                {
+                    "family": "Särndal",
+                    "given": "Carl-Erik"
+                },
+                {
+                    "family": "Lundström",
+                    "given": "Sixten"
+                }
+            ],
+            "id": "sarndal2005nonresponse",
+            "issued": {
+                "date-parts": [
+                    [
+                        2005
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "title": "Estimation in surveys with nonresponse",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1002/9781118032619",
+            "ISBN": "978-0-471-13773-3",
+            "author": [
+                {
+                    "family": "Korn",
+                    "given": "Edward L."
+                },
+                {
+                    "family": "Graubard",
+                    "given": "Barry I."
+                }
+            ],
+            "id": "KornGraubard1999",
+            "issued": {
+                "date-parts": [
+                    [
+                        1999
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "publisher-place": "New York",
+            "title": "Analysis of health surveys",
+            "type": "book"
+        },
+        {
+            "ISSN": "0733-5830",
+            "URL": "https://www.asasrms.org/Proceedings/y2003/Files/JSM2003-000156.pdf",
+            "author": [
+                {
+                    "family": "Park",
+                    "given": "Inho"
+                },
+                {
+                    "family": "Winglee",
+                    "given": "Marianne"
+                },
+                {
+                    "family": "Clark",
+                    "given": "Jay"
+                },
+                {
+                    "family": "Rust",
+                    "given": "Keith"
+                },
+                {
+                    "family": "Sedlak",
+                    "given": "Andrea"
+                },
+                {
+                    "family": "Morganstein",
+                    "given": "David"
+                }
+            ],
+            "container-title": "Proceedings of the section on survey research methods",
+            "id": "Park2003Design",
+            "issued": {
+                "date-parts": [
+                    [
+                        2003
+                    ]
+                ]
+            },
+            "note": "American Statistical Association, Alexandria, VA",
+            "page": "3179-3186",
+            "title": "Design effects and survey planning",
+            "type": "paper-conference"
+        },
+        {
+            "ISSN": "1680-8789 (versión electrónica), 1994-7364 (versión impresa)",
+            "URL": "https://repositorio.cepal.org/server/api/core/bitstreams/feb8c8be-6434-41f2-8fd9-f12f71a0739a/content",
+            "author": [
+                {
+                    "family": "Gutiérrez",
+                    "given": "Hugo Andrés"
+                },
+                {
+                    "family": "Babativa-Márquez",
+                    "given": "Giovany"
+                }
+            ],
+            "collection-title": "CEPAL - serie estudios estadísticos",
+            "genre": "LC/TS.2023/95",
+            "id": "GutierrezBabativa2023",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "number": "106",
+            "publisher": "Comisión Económica para América Latina y el Caribe (CEPAL), Naciones Unidas",
+            "publisher-place": "Santiago",
+            "title": "Efectos de diseño para indicadores sociales en américa latina: Función generalizada de varianza para estimadores directos provenientes de encuestas de hogares",
+            "title-short": "Efectos de diseño para indicadores sociales en américa latina",
+            "type": "report"
+        },
+        {
+            "author": [
+                {
+                    "family": "Wolter",
+                    "given": "Kirk M"
+                },
+                {
+                    "family": "Wolter",
+                    "given": "Kirk M"
+                }
+            ],
+            "id": "wolter2007",
+            "issued": {
+                "date-parts": [
+                    [
+                        2007
+                    ]
+                ]
+            },
+            "publisher": "Springer",
+            "title": "Introduction to variance estimation",
+            "type": "book",
+            "volume": "53"
+        },
+        {
+            "DOI": "10.1080/01621459.1988.10478591",
+            "author": [
+                {
+                    "family": "Rao",
+                    "given": "J. N. K."
+                },
+                {
+                    "family": "Wu",
+                    "given": "C. F. J."
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "RaoWu1988",
+            "issue": "401",
+            "issued": {
+                "date-parts": [
+                    [
+                        1988
+                    ]
+                ]
+            },
+            "page": "231-241",
+            "title": "Resampling inference with complex survey data",
+            "type": "article-journal",
+            "volume": "83"
+        },
+        {
+            "DOI": "10.1177/096228029600500305",
+            "author": [
+                {
+                    "family": "Rust",
+                    "given": "Keith F."
+                },
+                {
+                    "family": "Rao",
+                    "given": "J. N. K."
+                }
+            ],
+            "container-title": "Statistical Methods in Medical Research",
+            "id": "RustRao1996",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        1996
+                    ]
+                ]
+            },
+            "page": "283-310",
+            "title": "Variance estimation for complex surveys using replication techniques",
+            "type": "article-journal",
+            "volume": "5"
+        },
+        {
+            "DOI": "10.1214/aos/1176344552",
+            "author": [
+                {
+                    "family": "Efron",
+                    "given": "Bradley"
+                }
+            ],
+            "container-title": "The Annals of Statistics",
+            "id": "efron1979bootstrap",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        1979
+                    ]
+                ]
+            },
+            "page": "1-26",
+            "title": "Bootstrap methods: Another look at the jackknife",
+            "title-short": "Bootstrap methods",
+            "type": "article-journal",
+            "volume": "7"
+        },
+        {
+            "author": [
+                {
+                    "family": "Rao",
+                    "given": "J. N. K."
+                },
+                {
+                    "family": "Wu",
+                    "given": "C. F. J."
+                },
+                {
+                    "family": "Yue",
+                    "given": "K."
+                }
+            ],
+            "container-title": "Survey Methodology",
+            "id": "rao1992resampling",
+            "issued": {
+                "date-parts": [
+                    [
+                        1992
+                    ]
+                ]
+            },
+            "page": "209-217",
+            "title": "Some recent work on resampling methods for complex surveys",
+            "type": "article-journal",
+            "volume": "18"
+        },
+        {
+            "author": [
+                {
+                    "family": "Bruch",
+                    "given": "Christian"
+                },
+                {
+                    "family": "Münnich",
+                    "given": "Ralf"
+                },
+                {
+                    "family": "Zins",
+                    "given": "Stefan"
+                }
+            ],
+            "container-title": "Deliverable D3",
+            "id": "bruch2011variance",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "title": "Variance estimation for complex surveys",
+            "type": "article-journal",
+            "volume": "1"
+        },
+        {
+            "DOI": "10.1201/9781315153278",
+            "ISBN": "978-1-4987-6160-4",
+            "author": [
+                {
+                    "family": "Heeringa",
+                    "given": "Steven G."
+                },
+                {
+                    "family": "West",
+                    "given": "Brady T."
+                },
+                {
+                    "family": "Berglund",
+                    "given": "Patricia A."
+                }
+            ],
+            "edition": "2",
+            "id": "HeeringaWestBerglund2017",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "publisher": "Chapman; Hall/CRC",
+            "publisher-place": "Boca Raton",
+            "title": "Applied survey data analysis",
+            "type": "book"
+        },
+        {
+            "URL": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/readRDS.html",
+            "author": [
+                {
+                    "literal": "R Core Team"
+                }
+            ],
+            "id": "RCoreSerialization2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "Documentación de R, versión 4.6.0",
+            "publisher": "R Foundation for Statistical Computing",
+            "publisher-place": "Vienna",
+            "title": "Serialization interface for single objects",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Bautista",
+                    "given": "Leonardo"
+                }
+            ],
+            "container-title": "Universidad Nacional de Colombia",
+            "id": "bautista1998",
+            "issued": {
+                "date-parts": [
+                    [
+                        1998
+                    ]
+                ]
+            },
+            "title": "Diseños de muestreo estadístico",
+            "type": "article-journal"
+        },
+        {
+            "URL": "https://www.fao.org/sustainable-development-goals-data-portal/data/indicators/2.1.1-prevalence-of-undernourishment/es",
+            "author": [
+                {
+                    "literal": "Organización de las Naciones Unidas para la Alimentación y la Agricultura"
+                }
+            ],
+            "id": "FAO2026PoU",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "title": "Indicador 2.1.1: Prevalencia de la subalimentación",
+            "title-short": "Indicador 2.1.1",
+            "type": ""
+        },
+        {
+            "URL": "https://www150.statcan.gc.ca/n1/en/catalogue/12-001-X201600114545",
+            "author": [
+                {
+                    "family": "Schulze Waltrup",
+                    "given": "Linda"
+                },
+                {
+                    "family": "Kauermann",
+                    "given": "Göran"
+                }
+            ],
+            "container-title": "Survey Methodology",
+            "id": "SchulzeWaltrupKauermann2016",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016
+                    ]
+                ]
+            },
+            "page": "179-187",
+            "title": "A short note on quantile and expectile estimation in unequal probability samples",
+            "type": "article-journal",
+            "volume": "42"
+        },
+        {
+            "DOI": "10.1080/01621459.1952.10483443",
+            "author": [
+                {
+                    "family": "Woodruff",
+                    "given": "Ralph S."
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "Woodruff1952",
+            "issue": "260",
+            "issued": {
+                "date-parts": [
+                    [
+                        1952
+                    ]
+                ]
+            },
+            "page": "635-646",
+            "title": "Confidence intervals for medians and other position measures",
+            "type": "article-journal",
+            "volume": "47"
+        },
+        {
+            "author": [
+                {
+                    "family": "Kovar",
+                    "given": "JG"
+                },
+                {
+                    "family": "Rao",
+                    "given": "JNK"
+                },
+                {
+                    "family": "Wu",
+                    "given": "CFJ"
+                }
+            ],
+            "container-title": "Canadian Journal of Statistics",
+            "id": "kovar1988",
+            "issue": "S1",
+            "issued": {
+                "date-parts": [
+                    [
+                        1988
+                    ]
+                ]
+            },
+            "page": "25-45",
+            "publisher": "Wiley Online Library",
+            "title": "Bootstrap and other methods to measure errors in survey estimates",
+            "type": "article-journal",
+            "volume": "16"
+        },
+        {
+            "author": [
+                {
+                    "family": "Dorfman",
+                    "given": "Alan H."
+                },
+                {
+                    "family": "Valliant",
+                    "given": "Richard"
+                }
+            ],
+            "container-title": "Proceedings of the survey research methods section",
+            "id": "DorfmanValliant1993",
+            "issued": {
+                "date-parts": [
+                    [
+                        1993
+                    ]
+                ]
+            },
+            "page": "866-871",
+            "publisher": "American Statistical Association",
+            "title": "Quantile variance estimators in complex surveys",
+            "type": "paper-conference"
+        },
+        {
+            "URL": "https://www150.statcan.gc.ca/n1/en/catalogue/12-001-X199500214396",
+            "author": [
+                {
+                    "family": "Binder",
+                    "given": "David A."
+                },
+                {
+                    "family": "Kovačević",
+                    "given": "Milorad S."
+                }
+            ],
+            "container-title": "Survey Methodology",
+            "id": "BinderKovacevic1995",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        1995
+                    ]
+                ]
+            },
+            "page": "137-145",
+            "title": "Estimating some measures of income inequality from survey data: An application of the estimating equations approach",
+            "title-short": "Estimating some measures of income inequality from survey data",
+            "type": "article-journal",
+            "volume": "21"
+        },
+        {
+            "DOI": "10.1111/j.1467-985X.2012.01048.x",
+            "author": [
+                {
+                    "family": "Langel",
+                    "given": "Matti"
+                },
+                {
+                    "family": "Tillé",
+                    "given": "Yves"
+                }
+            ],
+            "container-title": "Journal of the Royal Statistical Society: Series A (Statistics in Society)",
+            "id": "LangelTille2013",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        2013
+                    ]
+                ]
+            },
+            "page": "521-540",
+            "title": "Variance estimation of the gini index: Revisiting a result several times published",
+            "title-short": "Variance estimation of the gini index",
+            "type": "article-journal",
+            "volume": "176"
+        },
+        {
+            "author": [
+                {
+                    "family": "Osier",
+                    "given": "Guillaume"
+                }
+            ],
+            "collection-number": "3",
+            "container-title": "Survey research methods",
+            "id": "osier2009variance",
+            "issued": {
+                "date-parts": [
+                    [
+                        2009
+                    ]
+                ]
+            },
+            "page": "167-195",
+            "title": "Variance estimation for complex indicators of poverty and inequality using linearization techniques",
+            "type": "paper-conference",
+            "volume": "3"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.convey",
+            "URL": "https://CRAN.R-project.org/package=convey",
+            "author": [
+                {
+                    "family": "Jacob",
+                    "given": "Guilherme"
+                },
+                {
+                    "family": "Pessoa",
+                    "given": "Djalma"
+                },
+                {
+                    "family": "Damico",
+                    "given": "Anthony"
+                }
+            ],
+            "id": "convey2024",
+            "issued": {
+                "date-parts": [
+                    [
+                        2024
+                    ]
+                ]
+            },
+            "note": "R package version 1.0.1",
+            "title": "Convey: Income concentration analysis with complex survey samples",
+            "title-short": "Convey",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Kovacevic",
+                    "given": "Milorad S"
+                },
+                {
+                    "family": "Binder",
+                    "given": "David A"
+                }
+            ],
+            "container-title": "Journal of Official Statistics",
+            "id": "kovacevic1997",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        1997
+                    ]
+                ]
+            },
+            "page": "41",
+            "publisher": "Statistics Sweden (SCB)",
+            "title": "Variance estimation for measures of income inequality and polarization-the estimating equations approach",
+            "type": "article-journal",
+            "volume": "13"
+        },
+        {
+            "URL": "https://www.jtools.jacob-long.com/articles/svycor",
+            "author": [
+                {
+                    "family": "Long",
+                    "given": "Jacob A."
+                }
+            ],
+            "id": "Long2026Svycor",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "Documentación del paquete jtools",
+            "title": "Calculate correlations and correlation tables with complex survey data",
+            "type": ""
+        },
+        {
+            "author": [
+                {
+                    "family": "Wilkinson",
+                    "given": "Leland"
+                }
+            ],
+            "edition": "2",
+            "id": "wilkinson2005grammar",
+            "issued": {
+                "date-parts": [
+                    [
+                        2005
+                    ]
+                ]
+            },
+            "publisher": "Springer",
+            "publisher-place": "New York",
+            "title": "The grammar of graphics",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.patchwork",
+            "URL": "https://CRAN.R-project.org/package=patchwork",
+            "author": [
+                {
+                    "family": "Pedersen",
+                    "given": "Thomas Lin"
+                }
+            ],
+            "id": "patchwork",
+            "issued": {
+                "date-parts": [
+                    [
+                        2025
+                    ]
+                ]
+            },
+            "note": "R package version 1.3.2",
+            "title": "Patchwork: The composer of plots",
+            "title-short": "Patchwork",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.ggplot2",
+            "URL": "https://CRAN.R-project.org/package=ggplot2",
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                },
+                {
+                    "family": "Chang",
+                    "given": "Winston"
+                },
+                {
+                    "family": "Henry",
+                    "given": "Lionel"
+                },
+                {
+                    "family": "Pedersen",
+                    "given": "Thomas Lin"
+                },
+                {
+                    "family": "Takahashi",
+                    "given": "Kohske"
+                },
+                {
+                    "family": "Wilke",
+                    "given": "Claus"
+                },
+                {
+                    "family": "Woo",
+                    "given": "Kara"
+                },
+                {
+                    "family": "Yutani",
+                    "given": "Hiroaki"
+                },
+                {
+                    "family": "Dunnington",
+                    "given": "Dewey"
+                },
+                {
+                    "dropping-particle": "van den",
+                    "family": "Brand",
+                    "given": "Teun"
+                }
+            ],
+            "id": "ggplot22026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 4.0.3",
+            "title": "ggplot2: Create elegant data visualisations using the grammar of graphics",
+            "title-short": "ggplot2",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Tukey",
+                    "given": "John W."
+                }
+            ],
+            "id": "Tukey1977EDA",
+            "issued": {
+                "date-parts": [
+                    [
+                        1977
+                    ]
+                ]
+            },
+            "publisher": "Addison-Wesley",
+            "publisher-place": "Reading, MA",
+            "title": "Exploratory data analysis",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1002/9781119405283",
+            "ISBN": "978-1-119-40526-9",
+            "author": [
+                {
+                    "family": "Agresti",
+                    "given": "Alan"
+                }
+            ],
+            "edition": "3",
+            "id": "Agresti2019Intro",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "publisher-place": "Hoboken, NJ",
+            "title": "An introduction to categorical data analysis",
+            "type": "book"
+        },
+        {
+            "ISBN": "978-958-783-437-6",
+            "URL": "https://portaldelibros.unal.edu.co/gpd-anyalisis-estadyustico-de-datos-categy-ricos-9789587834376-667e35367b60f.html",
+            "author": [
+                {
+                    "family": "Díaz Monroy",
+                    "given": "Luis Guillermo"
+                },
+                {
+                    "family": "Morales Rivera",
+                    "given": "Mario Alfonso"
+                },
+                {
+                    "family": "León Dávila",
+                    "given": "Leidy Rocío"
+                }
+            ],
+            "edition": "1",
+            "id": "DiazMoralesLeon2018",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "publisher": "Editorial Universidad Nacional de Colombia",
+            "publisher-place": "Bogotá",
+            "title": "Análisis estadístico de datos categóricos",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1080/01621459.1981.10477633",
+            "author": [
+                {
+                    "family": "Rao",
+                    "given": "J. N. K."
+                },
+                {
+                    "family": "Scott",
+                    "given": "Alastair J."
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "RaoScott1981",
+            "issue": "374",
+            "issued": {
+                "date-parts": [
+                    [
+                        1981
+                    ]
+                ]
+            },
+            "page": "221-230",
+            "title": "The analysis of categorical data from complex sample surveys: Chi-squared tests for goodness of fit and independence in two-way tables",
+            "title-short": "The analysis of categorical data from complex sample surveys",
+            "type": "article-journal",
+            "volume": "76"
+        },
+        {
+            "author": [
+                {
+                    "family": "Fay",
+                    "given": "Robert E."
+                }
+            ],
+            "container-title": "Proceedings of the Social Statistics Section, American Statistical Association",
+            "id": "fay1979contingency",
+            "issued": {
+                "date-parts": [
+                    [
+                        1979
+                    ]
+                ]
+            },
+            "page": "402-405",
+            "title": "On adjusting the pearson chi-square statistic for cluster sampling",
+            "type": "article-journal"
+        },
+        {
+            "DOI": "10.2307/2287405",
+            "author": [
+                {
+                    "family": "Fellegi",
+                    "given": "Ivan P."
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "fellegi1980approximate",
+            "issue": "370",
+            "issued": {
+                "date-parts": [
+                    [
+                        1980
+                    ]
+                ]
+            },
+            "page": "261-268",
+            "title": "Approximate tests of independence and goodness of fit based on stratified multistage samples",
+            "type": "article-journal",
+            "volume": "75"
+        },
+        {
+            "author": [
+                {
+                    "family": "Rao",
+                    "given": "Jon N. K."
+                },
+                {
+                    "family": "Scott",
+                    "given": "Alastair J."
+                }
+            ],
+            "container-title": "The Annals of Statistics",
+            "id": "rao1984chisquare",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        1984
+                    ]
+                ]
+            },
+            "page": "46-60",
+            "publisher": "Institute of Mathematical Statistics",
+            "title": "On chi-squared tests for multiway contingency tables with cell proportions estimated from survey data",
+            "type": "article-journal",
+            "volume": "12"
+        },
+        {
+            "author": [
+                {
+                    "family": "Thomas",
+                    "given": "D. Roland"
+                },
+                {
+                    "family": "Rao",
+                    "given": "Jon N. K."
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "thomas1987chisquare",
+            "issue": "398",
+            "issued": {
+                "date-parts": [
+                    [
+                        1987
+                    ]
+                ]
+            },
+            "page": "630-636",
+            "title": "Small-sample comparisons of level and power for simple goodness-of-fit statistics under cluster sampling",
+            "type": "article-journal",
+            "volume": "82"
+        },
+        {
+            "DOI": "10.1007/978-3-319-24277-4",
+            "ISBN": "978-3-319-24277-4",
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                }
+            ],
+            "edition": "2",
+            "id": "Wickham2016ggplot2",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016
+                    ]
+                ]
+            },
+            "publisher": "Springer",
+            "publisher-place": "Cham",
+            "title": "ggplot2: Elegant graphics for data analysis",
+            "title-short": "ggplot2",
+            "type": "book"
+        },
+        {
+            "DOI": "10.18637/jss.v084.i06",
+            "author": [
+                {
+                    "family": "Tennekes",
+                    "given": "Martijn"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "Tennekes2018tmap",
+            "issue": "6",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "page": "1-39",
+            "title": "Tmap: Thematic maps in r",
+            "title-short": "Tmap",
+            "type": "article-journal",
+            "volume": "84"
+        },
+        {
+            "DOI": "10.32614/RJ-2018-009",
+            "author": [
+                {
+                    "family": "Pebesma",
+                    "given": "Edzer"
+                }
+            ],
+            "container-title": "The R Journal",
+            "id": "Pebesma2018sf",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "page": "439-446",
+            "title": "Simple features for r: Standardized support for spatial vector data",
+            "title-short": "Simple features for r",
+            "type": "article-journal",
+            "volume": "10"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.sf",
+            "URL": "https://CRAN.R-project.org/package=sf",
+            "author": [
+                {
+                    "family": "Pebesma",
+                    "given": "Edzer"
+                },
+                {
+                    "family": "Bivand",
+                    "given": "Roger"
+                },
+                {
+                    "family": "Racine",
+                    "given": "Etienne"
+                },
+                {
+                    "family": "Sumner",
+                    "given": "Michael"
+                },
+                {
+                    "family": "Cook",
+                    "given": "Ian"
+                },
+                {
+                    "family": "Keitt",
+                    "given": "Tim"
+                },
+                {
+                    "family": "Lovelace",
+                    "given": "Robin"
+                },
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                },
+                {
+                    "family": "Ooms",
+                    "given": "Jeroen"
+                },
+                {
+                    "family": "Müller",
+                    "given": "Kirill"
+                }
+            ],
+            "id": "sf2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 1.1-1",
+            "title": "Sf: Simple features for r",
+            "title-short": "Sf",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.tmap",
+            "URL": "https://CRAN.R-project.org/package=tmap",
+            "author": [
+                {
+                    "family": "Tennekes",
+                    "given": "Martijn"
+                }
+            ],
+            "id": "tmap2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 4.3",
+            "title": "Tmap: Thematic maps",
+            "title-short": "Tmap",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.biscale",
+            "URL": "https://CRAN.R-project.org/package=biscale",
+            "author": [
+                {
+                    "family": "Prener",
+                    "given": "Christopher"
+                },
+                {
+                    "family": "Grossenbacher",
+                    "given": "Timo"
+                },
+                {
+                    "family": "Zehr",
+                    "given": "Angelo"
+                }
+            ],
+            "id": "biscale2025",
+            "issued": {
+                "date-parts": [
+                    [
+                        2025
+                    ]
+                ]
+            },
+            "note": "R package version 1.1.0",
+            "title": "Biscale: Tools and palettes for bivariate thematic mapping",
+            "title-short": "Biscale",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.cowplot",
+            "URL": "https://CRAN.R-project.org/package=cowplot",
+            "author": [
+                {
+                    "family": "Wilke",
+                    "given": "Claus O."
+                }
+            ],
+            "id": "cowplot2025",
+            "issued": {
+                "date-parts": [
+                    [
+                        2025
+                    ]
+                ]
+            },
+            "note": "R package version 1.2.0",
+            "title": "Cowplot: Streamlined plot theme and plot annotations for ’ggplot2’",
+            "title-short": "Cowplot",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1002/0470867205",
+            "ISBN": "978-0-471-89987-7",
+            "editor": [
+                {
+                    "family": "Chambers",
+                    "given": "Raymond L."
+                },
+                {
+                    "family": "Skinner",
+                    "given": "Chris J."
+                }
+            ],
+            "id": "ChambersSkinner2003",
+            "issued": {
+                "date-parts": [
+                    [
+                        2003
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "publisher-place": "Chichester",
+            "title": "Analysis of survey data",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Pfeffermann",
+                    "given": "Danny"
+                }
+            ],
+            "container-title": "Survey Methodology",
+            "id": "pfeffermann2011modelling",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "page": "115-136",
+            "title": "Modelling of complex survey data: Why model? Why is it a problem? How can we approach it?",
+            "title-short": "Modelling of complex survey data",
+            "type": "article-journal",
+            "volume": "37"
+        },
+        {
+            "author": [
+                {
+                    "family": "Shah",
+                    "given": "Babubhai V."
+                },
+                {
+                    "family": "Holt",
+                    "given": "Maurice M."
+                },
+                {
+                    "family": "Folsom",
+                    "given": "Ralph F."
+                }
+            ],
+            "container-title": "Bulletin of the International Statistical Institute",
+            "id": "shah1977inference",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        1977
+                    ]
+                ]
+            },
+            "page": "43-57",
+            "title": "Inference about regression models from sample survey data",
+            "type": "article-journal",
+            "volume": "41"
+        },
+        {
+            "editor": [
+                {
+                    "family": "Skinner",
+                    "given": "Chris J."
+                },
+                {
+                    "family": "Holt",
+                    "given": "David"
+                },
+                {
+                    "family": "Smith",
+                    "given": "Tom M. F."
+                }
+            ],
+            "id": "skinner1989analysis",
+            "issued": {
+                "date-parts": [
+                    [
+                        1989
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "publisher-place": "New York",
+            "title": "Analysis of complex surveys",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Fuller",
+                    "given": "Wayne A."
+                }
+            ],
+            "container-title": "Survey Methodology",
+            "id": "fuller2002regression",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2002
+                    ]
+                ]
+            },
+            "page": "5-23",
+            "title": "Regression estimation for survey samples",
+            "type": "article-journal",
+            "volume": "28"
+        },
+        {
+            "ISBN": "978-1-5443-3647-3",
+            "author": [
+                {
+                    "family": "Fox",
+                    "given": "John"
+                },
+                {
+                    "family": "Weisberg",
+                    "given": "Sanford"
+                }
+            ],
+            "edition": "3",
+            "id": "FoxWeisberg2019",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019
+                    ]
+                ]
+            },
+            "publisher": "SAGE Publications",
+            "publisher-place": "Thousand Oaks, CA",
+            "title": "An r companion to applied regression",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Molina",
+                    "given": "Elizabeth A."
+                },
+                {
+                    "family": "Skinner",
+                    "given": "Chris J."
+                }
+            ],
+            "container-title": "Computational Statistics & Data Analysis",
+            "id": "molina1992pseudo",
+            "issued": {
+                "date-parts": [
+                    [
+                        1992
+                    ]
+                ]
+            },
+            "page": "395-405",
+            "title": "Pseudo-likelihood and quasi-likelihood estimation for complex sampling schemes",
+            "type": "article-journal",
+            "volume": "13"
+        },
+        {
+            "author": [
+                {
+                    "family": "Binder",
+                    "given": "David A."
+                }
+            ],
+            "container-title": "Pakistan Journal of Statistics",
+            "id": "binder2011estimating",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "title": "Estimating model parameters from a complex survey under a model-design randomization framework",
+            "type": "article-journal",
+            "volume": "27"
+        },
+        {
+            "DOI": "10.1515/jos-2015-0003",
+            "ISSN": "0282-423X, 2001-7367",
+            "author": [
+                {
+                    "family": "Li",
+                    "given": "Jianzhu"
+                },
+                {
+                    "family": "Valliant",
+                    "given": "Richard"
+                }
+            ],
+            "container-title": "Journal of Official Statistics",
+            "id": "Li_Valliant_2015",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015,
+                        3
+                    ]
+                ]
+            },
+            "page": "61-75",
+            "title": "Linear regression diagnostics in cluster samples",
+            "type": "article-journal",
+            "volume": "31"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.svydiags",
+            "URL": "https://CRAN.R-project.org/package=svydiags",
+            "author": [
+                {
+                    "family": "Valliant",
+                    "given": "Richard"
+                }
+            ],
+            "id": "Valliant2024",
+            "issued": {
+                "date-parts": [
+                    [
+                        2024
+                    ]
+                ]
+            },
+            "note": "R package version 0.7",
+            "title": "Svydiags: Regression model diagnostics for survey data",
+            "title-short": "Svydiags",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.broom",
+            "URL": "https://CRAN.R-project.org/package=broom",
+            "author": [
+                {
+                    "family": "Robinson",
+                    "given": "David"
+                },
+                {
+                    "family": "Hayes",
+                    "given": "Alex"
+                },
+                {
+                    "family": "Couch",
+                    "given": "Simon"
+                },
+                {
+                    "family": "Hvitfeldt",
+                    "given": "Emil"
+                }
+            ],
+            "id": "broom2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 1.0.13",
+            "title": "Broom: Convert statistical objects into tidy tibbles",
+            "title-short": "Broom",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1007/978-1-4899-3242-6",
+            "author": [
+                {
+                    "family": "McCullagh",
+                    "given": "Peter"
+                },
+                {
+                    "family": "Nelder",
+                    "given": "John A."
+                }
+            ],
+            "edition": "2",
+            "id": "McCullaghNelder1989",
+            "issued": {
+                "date-parts": [
+                    [
+                        1989
+                    ]
+                ]
+            },
+            "publisher": "Chapman; Hall",
+            "publisher-place": "London",
+            "title": "Generalized linear models",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.ggstance",
+            "URL": "https://CRAN.R-project.org/package=ggstance",
+            "author": [
+                {
+                    "family": "Henry",
+                    "given": "Lionel"
+                },
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                },
+                {
+                    "family": "Chang",
+                    "given": "Winston"
+                }
+            ],
+            "id": "ggstance2024",
+            "issued": {
+                "date-parts": [
+                    [
+                        2024
+                    ]
+                ]
+            },
+            "note": "R package version 0.3.7",
+            "title": "Ggstance: Horizontal ’ggplot2’ components",
+            "title-short": "Ggstance",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.jtools",
+            "URL": "https://CRAN.R-project.org/package=jtools",
+            "author": [
+                {
+                    "family": "Long",
+                    "given": "Jacob A."
+                }
+            ],
+            "id": "jtools2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 2.3.1",
+            "title": "Jtools: Analysis and presentation of social scientific data",
+            "title-short": "Jtools",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.svyVGAM",
+            "URL": "https://CRAN.R-project.org/package=svyVGAM",
+            "author": [
+                {
+                    "family": "Lumley",
+                    "given": "Thomas"
+                }
+            ],
+            "id": "svyVGAM2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 1.3",
+            "title": "svyVGAM: Design-based inference in vector generalised linear models",
+            "title-short": "svyVGAM",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.gtools",
+            "URL": "https://CRAN.R-project.org/package=gtools",
+            "author": [
+                {
+                    "family": "Warnes",
+                    "given": "Gregory R."
+                },
+                {
+                    "family": "Bolker",
+                    "given": "Ben"
+                },
+                {
+                    "family": "Lumley",
+                    "given": "Thomas"
+                },
+                {
+                    "family": "Magnusson",
+                    "given": "Arni"
+                },
+                {
+                    "family": "Venables",
+                    "given": "Bill"
+                },
+                {
+                    "family": "Ryodan",
+                    "given": "Genei"
+                },
+                {
+                    "family": "Moeller",
+                    "given": "Steffen"
+                }
+            ],
+            "id": "gtools2025",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "note": "R package version 3.9.5",
+            "title": "Gtools: Various r programming tools",
+            "title-short": "Gtools",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.dotwhisker",
+            "URL": "https://CRAN.R-project.org/package=dotwhisker",
+            "author": [
+                {
+                    "family": "Solt",
+                    "given": "Frederick"
+                },
+                {
+                    "family": "Hu",
+                    "given": "Yue"
+                }
+            ],
+            "id": "dotwhisker2025",
+            "issued": {
+                "date-parts": [
+                    [
+                        2025
+                    ]
+                ]
+            },
+            "note": "R package version 0.8.4",
+            "title": "Dotwhisker: Dot-and-whisker plots of regression results",
+            "title-short": "Dotwhisker",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Goldstein",
+                    "given": "Harvey"
+                }
+            ],
+            "edition": "4",
+            "id": "goldstein2011multilevel",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "publisher-place": "Chichester",
+            "title": "Multilevel statistical models",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Rabe-Hesketh",
+                    "given": "Sophia"
+                },
+                {
+                    "family": "Skrondal",
+                    "given": "Anders"
+                }
+            ],
+            "edition": "3",
+            "id": "rabehesketh2012multilevel",
+            "issued": {
+                "date-parts": [
+                    [
+                        2012
+                    ]
+                ]
+            },
+            "publisher": "Stata Press",
+            "publisher-place": "College Station, TX",
+            "title": "Multilevel and longitudinal modeling using stata",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Gelman",
+                    "given": "Andrew"
+                },
+                {
+                    "family": "Hill",
+                    "given": "Jennifer"
+                }
+            ],
+            "id": "gelman2006data",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "publisher": "Cambridge University Press",
+            "publisher-place": "New York",
+            "title": "Data analysis using regression and multilevel/hierarchical models",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1214/06-BA117",
+            "author": [
+                {
+                    "family": "Browne",
+                    "given": "William J."
+                },
+                {
+                    "family": "Draper",
+                    "given": "David"
+                }
+            ],
+            "container-title": "Bayesian Analysis",
+            "id": "browne2006comparison",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "page": "473-514",
+            "title": "A comparison of bayesian and likelihood-based methods for fitting multilevel models",
+            "type": "article-journal",
+            "volume": "1"
+        },
+        {
+            "DOI": "10.1136/jech.2004.029454",
+            "author": [
+                {
+                    "family": "Merlo",
+                    "given": "Juan"
+                },
+                {
+                    "family": "Chaix",
+                    "given": "Basile"
+                },
+                {
+                    "family": "Ohlsson",
+                    "given": "Henrik"
+                },
+                {
+                    "family": "Beckman",
+                    "given": "Anders"
+                },
+                {
+                    "family": "Johnell",
+                    "given": "Kristina"
+                },
+                {
+                    "family": "Hjerpe",
+                    "given": "Per"
+                },
+                {
+                    "family": "Råstam",
+                    "given": "Lennart"
+                },
+                {
+                    "family": "Larsen",
+                    "given": "Klaus"
+                }
+            ],
+            "container-title": "Journal of Epidemiology & Community Health",
+            "id": "merlo2006brief",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "page": "290-297",
+            "title": "A brief conceptual tutorial of multilevel analysis in social epidemiology: Using measures of clustering in multilevel logistic regression to investigate contextual phenomena",
+            "title-short": "A brief conceptual tutorial of multilevel analysis in social epidemiology",
+            "type": "article-journal",
+            "volume": "60"
+        },
+        {
+            "DOI": "10.1186/1471-2288-9-49",
+            "author": [
+                {
+                    "family": "Carle",
+                    "given": "Adam C."
+                }
+            ],
+            "container-title": "BMC Medical Research Methodology",
+            "id": "Carle2009",
+            "issued": {
+                "date-parts": [
+                    [
+                        2009
+                    ]
+                ]
+            },
+            "page": "49",
+            "title": "Fitting multilevel models in complex survey data with design weights: recommendations",
+            "title-short": "Fitting multilevel models in complex survey data with design weights",
+            "type": "article-journal",
+            "volume": "9"
+        },
+        {
+            "DOI": "10.18637/jss.v067.i01",
+            "author": [
+                {
+                    "family": "Bates",
+                    "given": "Douglas"
+                },
+                {
+                    "family": "Mächler",
+                    "given": "Martin"
+                },
+                {
+                    "family": "Bolker",
+                    "given": "Ben"
+                },
+                {
+                    "family": "Walker",
+                    "given": "Steve"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "BatesEtAl2015",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015
+                    ]
+                ]
+            },
+            "page": "1-48",
+            "title": "Fitting linear mixed-effects models using lme4",
+            "type": "article-journal",
+            "volume": "67"
+        },
+        {
+            "author": [
+                {
+                    "family": "Finch",
+                    "given": "W. Holmes"
+                },
+                {
+                    "family": "Bolin",
+                    "given": "Jocelyn E."
+                },
+                {
+                    "family": "Kelley",
+                    "given": "Ken"
+                }
+            ],
+            "edition": "2",
+            "id": "finch2019multilevel",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019
+                    ]
+                ]
+            },
+            "publisher": "CRC Press",
+            "publisher-place": "Boca Raton, FL",
+            "title": "Multilevel modeling using R",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1080/03610920500476598",
+            "author": [
+                {
+                    "family": "Asparouhov",
+                    "given": "Tihomir"
+                }
+            ],
+            "container-title": "Communications in Statistics, Theory and Methods",
+            "id": "asparouhov2006general",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "page": "439-460",
+            "title": "General multi-level modeling with sampling weights",
+            "type": "article-journal",
+            "volume": "35"
+        },
+        {
+            "DOI": "10.1177/0081175013490035",
+            "author": [
+                {
+                    "family": "Cai",
+                    "given": "Tianji"
+                }
+            ],
+            "container-title": "Sociological Methodology",
+            "id": "cai2013investigation",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2013
+                    ]
+                ]
+            },
+            "page": "178-219",
+            "title": "Investigation of ways to handle sampling weights for multilevel model analyses",
+            "type": "article-journal",
+            "volume": "43"
+        },
+        {
+            "author": [
+                {
+                    "family": "Kreft",
+                    "given": "Ita G. G."
+                },
+                {
+                    "family": "De Leeuw",
+                    "given": "Jan"
+                }
+            ],
+            "id": "kreft1998introducing",
+            "issued": {
+                "date-parts": [
+                    [
+                        1998
+                    ]
+                ]
+            },
+            "publisher": "Sage Publications",
+            "publisher-place": "London",
+            "title": "Introducing multilevel modeling",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.performance",
+            "URL": "https://CRAN.R-project.org/package=performance",
+            "author": [
+                {
+                    "family": "Lüdecke",
+                    "given": "Daniel"
+                },
+                {
+                    "family": "Ben-Shachar",
+                    "given": "Mattan S."
+                },
+                {
+                    "family": "Patil",
+                    "given": "Indrajeet"
+                },
+                {
+                    "family": "Waggoner",
+                    "given": "Philip"
+                },
+                {
+                    "family": "Makowski",
+                    "given": "Dominique"
+                }
+            ],
+            "id": "performance2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 0.17.0",
+            "title": "Performance: Assessment of regression models performance",
+            "title-short": "Performance",
+            "type": "book"
+        },
+        {
+            "URL": "https://www.R-project.org/",
+            "author": [
+                {
+                    "literal": "R Core Team"
+                }
+            ],
+            "id": "RCoreTeam2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "publisher": "R Foundation for Statistical Computing",
+            "publisher-place": "Vienna, Austria",
+            "title": "R: A language and environment for statistical computing",
+            "title-short": "R",
+            "type": "book"
+        },
+        {
+            "DOI": "10.18637/jss.v059.i10",
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "Wickham2014",
+            "issue": "10",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "page": "1-23",
+            "title": "Tidy data",
+            "type": "article-journal",
+            "volume": "59"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.tidyverse",
+            "URL": "https://CRAN.R-project.org/package=tidyverse",
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                },
+                {
+                    "family": "Averick",
+                    "given": "Mara"
+                },
+                {
+                    "family": "Bryan",
+                    "given": "Jennifer"
+                },
+                {
+                    "family": "Chang",
+                    "given": "Winston"
+                },
+                {
+                    "family": "McGowan",
+                    "given": "Lucy D’Agostino"
+                },
+                {
+                    "family": "François",
+                    "given": "Romain"
+                },
+                {
+                    "family": "Grolemund",
+                    "given": "Garrett"
+                },
+                {
+                    "family": "Hayes",
+                    "given": "Alex"
+                },
+                {
+                    "family": "Henry",
+                    "given": "Lionel"
+                },
+                {
+                    "family": "Hester",
+                    "given": "Jim"
+                },
+                {
+                    "family": "Kuhn",
+                    "given": "Max"
+                },
+                {
+                    "family": "Pedersen",
+                    "given": "Thomas Lin"
+                },
+                {
+                    "family": "Miller",
+                    "given": "Evan"
+                },
+                {
+                    "family": "Bache",
+                    "given": "Stephan Milton"
+                },
+                {
+                    "family": "Müller",
+                    "given": "Kirill"
+                },
+                {
+                    "family": "Ooms",
+                    "given": "Jeroen"
+                },
+                {
+                    "family": "Robinson",
+                    "given": "David"
+                },
+                {
+                    "family": "Seidel",
+                    "given": "Dana Paige"
+                },
+                {
+                    "family": "Spinu",
+                    "given": "Vitalie"
+                },
+                {
+                    "family": "Takahashi",
+                    "given": "Kohske"
+                },
+                {
+                    "family": "Vaughan",
+                    "given": "Davis"
+                },
+                {
+                    "family": "Wilke",
+                    "given": "Claus"
+                },
+                {
+                    "family": "Woo",
+                    "given": "Kara"
+                },
+                {
+                    "family": "Yutani",
+                    "given": "Hiroaki"
+                }
+            ],
+            "id": "tidyverse2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 2.0.0",
+            "title": "Tidyverse: Easily install and load the tidyverse",
+            "title-short": "Tidyverse",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.dplyr",
+            "URL": "https://CRAN.R-project.org/package=dplyr",
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                },
+                {
+                    "family": "François",
+                    "given": "Romain"
+                },
+                {
+                    "family": "Henry",
+                    "given": "Lionel"
+                },
+                {
+                    "family": "Müller",
+                    "given": "Kirill"
+                },
+                {
+                    "family": "Vaughan",
+                    "given": "Davis"
+                }
+            ],
+            "id": "dplyr2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 1.2.1",
+            "title": "Dplyr: A grammar of data manipulation",
+            "title-short": "Dplyr",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.TeachingSampling",
+            "URL": "https://CRAN.R-project.org/package=TeachingSampling",
+            "author": [
+                {
+                    "family": "Gutiérrez",
+                    "given": "Hugo Andrés"
+                }
+            ],
+            "id": "GutierrezT2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "note": "R package version 4.1.1",
+            "title": "TeachingSampling: Selection of samples and parameter estimation in finite population",
+            "title-short": "TeachingSampling",
+            "type": "book"
+        },
+        {
+            "URL": "https://docs.posit.co/ide/user/ide/guide/code/projects.html",
+            "author": [
+                {
+                    "literal": "Posit Software, PBC"
+                }
+            ],
+            "id": "PositProjects2026",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "publisher": "Posit Software, PBC",
+            "title": "RStudio projects",
+            "type": "book"
+        },
+        {
+            "URL": "https://r4ds.hadley.nz/",
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                },
+                {
+                    "family": "Çetinkaya-Rundel",
+                    "given": "Mine"
+                },
+                {
+                    "family": "Grolemund",
+                    "given": "Garrett"
+                }
+            ],
+            "edition": "2",
+            "id": "WickhamEtAl2023",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "publisher": "O’Reilly Media",
+            "publisher-place": "Sebastopol, CA",
+            "title": "R for data science: Import, tidy, transform, visualize, and model data",
+            "title-short": "R for data science",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.magrittr",
+            "URL": "https://CRAN.R-project.org/package=magrittr",
+            "author": [
+                {
+                    "family": "Bache",
+                    "given": "Stefan Milton"
+                },
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                }
+            ],
+            "id": "pipe",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 2.0.5",
+            "title": "Magrittr: A forward-pipe operator for r",
+            "title-short": "Magrittr",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Kish",
+                    "given": "Leslie"
+                }
+            ],
+            "id": "kish1987statistical",
+            "issued": {
+                "date-parts": [
+                    [
+                        1987
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "publisher-place": "New York",
+            "title": "Statistical design for research",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Casella",
+                    "given": "George"
+                },
+                {
+                    "family": "Berger",
+                    "given": "Roger L."
+                }
+            ],
+            "edition": "2",
+            "id": "CasellaBerger2002",
+            "issued": {
+                "date-parts": [
+                    [
+                        2002
+                    ]
+                ]
+            },
+            "publisher": "Duxbury",
+            "publisher-place": "Pacific Grove, CA",
+            "title": "Statistical inference",
+            "type": "book"
+        }
+    ],
+    "project_biblios": [
+        "references.bib"
+    ]
+}

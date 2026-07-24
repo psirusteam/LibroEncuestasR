@@ -1,0 +1,28 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const labels = {
+    note: "Nota",
+    tip: "Consejo",
+    important: "Importante",
+    warning: "Advertencia",
+    caution: "Precaución"
+  };
+
+  Object.keys(labels).forEach(function (type) {
+    document.querySelectorAll(".callout-" + type).forEach(function (callout, index) {
+      const title = callout.querySelector(".callout-title-container");
+      if (!title || title.dataset.numbered === "true") {
+        return;
+      }
+
+      const text = title.textContent.trim();
+      if (!text || text === labels[type]) {
+        title.textContent = labels[type] + " " + (index + 1);
+      } else if (!new RegExp("^" + labels[type] + "\\s+\\d+").test(text)) {
+        title.textContent = labels[type] + " " + (index + 1) + ". " + text;
+      }
+      title.dataset.numbered = "true";
+    });
+  });
+});
+</script>

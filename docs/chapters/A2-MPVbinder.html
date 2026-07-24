@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>9&nbsp; Inferencia en poblaciones finitas – &lt;span style='font-weight: 700'&gt;Análisis de Encuestas de Hogares&lt;/span&gt;&lt;br/&gt;&lt;i style='color: #00b7ff'&gt;usando R&lt;/i&gt;</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/references.html" rel="next">
+<link href="../chapters/A1-TidyVerse.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      E: "\\mathbb{E}",
+      Var: "\\operatorname{Var}",
+      Cov: "\\operatorname{Cov}",
+      Corr: "\\operatorname{Corr}",
+      Pr: "\\operatorname{Pr}",
+      deff: "\\operatorname{deff}",
+      bold: ["\\boldsymbol{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/A1-TidyVerse.html">Anexos</a></li><li class="breadcrumb-item"><a href="../chapters/A2-MPVbinder.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Inferencia en poblaciones finitas</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../"><span style="font-weight: 700">Análisis de Encuestas de Hogares</span><br><i style="color: #00b7ff">usando R</i></a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-Introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-Conceptos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Conceptos básicos en encuestas de hogares</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-Continuas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis de las variables continuas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-Categoricas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de variables categóricas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-Regresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modelos de regresión</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-GLM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modelos lineales generalizados</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-Multinivel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modelos multinivel</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Anexos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/A1-TidyVerse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Manejo de bases de datos con <code>R</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/A2-MPVbinder.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Inferencia en poblaciones finitas</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referencias</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#dos-posibles-inferencias" id="toc-dos-posibles-inferencias" class="nav-link active" data-scroll-target="#dos-posibles-inferencias"><span class="header-section-number">9.1</span> Dos posibles inferencias</a></li>
+  <li><a href="#la-integracion-de-ambas-inferencias" id="toc-la-integracion-de-ambas-inferencias" class="nav-link" data-scroll-target="#la-integracion-de-ambas-inferencias"><span class="header-section-number">9.2</span> La integración de ambas inferencias</a>
+  <ul class="collapse">
+  <li><a href="#sec-mv" id="toc-sec-mv" class="nav-link" data-scroll-target="#sec-mv"><span class="header-section-number">9.2.1</span> Método de la máxima verosimilitud</a></li>
+  <li><a href="#sec-mpv-formal" id="toc-sec-mpv-formal" class="nav-link" data-scroll-target="#sec-mpv-formal"><span class="header-section-number">9.2.2</span> Método de máxima pseudo-verosimilitud</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/A1-TidyVerse.html">Anexos</a></li><li class="breadcrumb-item"><a href="../chapters/A2-MPVbinder.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Inferencia en poblaciones finitas</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="ap2" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Inferencia en poblaciones finitas</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Una cuestión fundamental en el análisis de encuestas es identificar cuál es la medida de probabilidad que rige la inferencia. En la inferencia estadística clásica se suele asumir que las observaciones disponibles son variables aleatorias independientes e idénticamente distribuidas (IID). Bajo ese enfoque, la aleatoriedad proviene del modelo que genera los datos. Sin embargo, como señala <span class="citation" data-cites="kish1987statistical">Kish (<a href="references.html#ref-kish1987statistical" role="doc-biblioref">1987</a>)</span> y desarrollan <span class="citation" data-cites="skinner1989analysis">Skinner, Holt, y Smith (<a href="references.html#ref-skinner1989analysis" role="doc-biblioref">1989</a>)</span>, este supuesto no describe adecuadamente la información proveniente de encuestas con diseños muestrales complejos, donde las observaciones son seleccionadas mediante estratificación, conglomeración y probabilidades de inclusión desiguales.</p>
+<section id="dos-posibles-inferencias" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="dos-posibles-inferencias"><span class="header-section-number">9.1</span> Dos posibles inferencias</h2>
+<p>En encuestas de hogares conviene distinguir tres objetos. Primero, la población finita, denotada como <span class="math inline">\(U = \{1,2,\ldots,N\}\)</span>, la cual contiene todas las unidades de interés. Segundo, la variable de estudio <span class="math inline">\(y_k\)</span>, observada o definida para cada unidad <span class="math inline">\(k \in U\)</span>. Tercero, el diseño muestral <span class="math inline">\(p(s)\)</span>, que asigna probabilidades a las posibles muestras <span class="math inline">\(s \subset U\)</span>, siguiendo la formulación de <span class="citation" data-cites="sarndal2003model">Särndal, Swensson, y Wretman (<a href="references.html#ref-sarndal2003model" role="doc-biblioref">2003</a>)</span>. En la notación utilizada a lo largo de este documento, una unidad puede identificarse como <span class="math inline">\(k\)</span> dentro del conglomerado o UPM <span class="math inline">\(i\)</span>, perteneciente al estrato <span class="math inline">\(h\)</span>, de modo que los estimadores ponderados suelen escribirse como sumas de la forma</p>
+<p><span class="math display">\[
+\hat{t}_y = \sum_h \sum_i \sum_k w_{hik} \ y_{hik}
+\]</span></p>
+<p>donde <span class="math inline">\(w_{hik}\)</span> representa el factor de expansión o peso muestral asociado con la unidad observada. En la teoría de muestreo, los valores <span class="math inline">\(y_k\)</span> se consideran fijos una vez definida la población. La aleatoriedad no está en los valores de la variable, sino en los indicadores de inclusión</p>
+<p><span class="math display">\[
+I_k =
+\begin{cases}
+1, &amp; \text{si } k \in s,\\
+0, &amp; \text{si } k \notin s,
+\end{cases}
+\]</span></p>
+<p>que inducen la probabilidad de inclusión <span class="math inline">\(\pi_k = \Pr_p(I_k=1)\)</span> y, a su vez, el correspondiente peso de muestreo, definido como <span class="math inline">\(w_k = \frac{1}{\pi_k}\)</span>.</p>
+<p>Un estimador que ignora los pesos de muestreo puede no representar adecuadamente a la población objetivo, especialmente cuando la muestra proviene de un diseño complejo. En la inferencia basada en el diseño, la población se considera fija y la fuente de aleatoriedad proviene del mecanismo de selección de la muestra; por ello, sus elementos centrales son las probabilidades de inclusión <span class="math inline">\(\pi_k\)</span> y los pesos de muestreo <span class="math inline">\(w_k\)</span>.</p>
+<p>Por el contrario, la inferencia basada en modelos considera que los valores de la variable de interés en toda la población se conciben como realizaciones de un proceso estocástico, usualmente denotado por <span class="math inline">\(\xi\)</span>. Así, mientras la inferencia basada en los modelos estudia propiedades como <span class="math inline">\(E_{\xi}(Y_k)\)</span> y <span class="math inline">\(Var_{\xi}(Y_k)\)</span>, la inferencia basada en el diseño se orienta a incorporar las características del plan muestral en los estimadores. La inferencia basada en el diseño no garantiza que todo estimador sea exactamente insesgado; esa propiedad debe verificarse para cada estimador y diseño. En particular, el total de Horvitz–Thompson satisface <span class="math inline">\(E_{p}(\hat{t}_y) = t_y\)</span> bajo probabilidades de inclusión positivas, como demostraron <span class="citation" data-cites="HorvitzThompson1952">Horvitz y Thompson (<a href="references.html#ref-HorvitzThompson1952" role="doc-biblioref">1952</a>)</span>.</p>
+<p>Esta distinción permite entender por qué, aun cuando exista un modelo razonable para la variable de interés, el diseño muestral debe incorporarse explícitamente si se desea obtener inferencias válidas para la población objetivo. Para comprender la distinción entre inferencia basada en el modelo e inferencia basada en el diseño, partimos de un ejemplo sencillo, adaptado de <span class="citation" data-cites="binder2011estimating">David A. Binder (<a href="references.html#ref-binder2011estimating" role="doc-biblioref">2011</a>)</span>. Supóngase que se generan <span class="math inline">\(N=100\)</span> realizaciones independientes de una variable Bernoulli con parámetro <span class="math inline">\(\theta=0.3\)</span>, donde <span class="math inline">\(\theta\)</span> representa la proporción esperada de personas desempleadas en una población generada por un modelo. Si <span class="math inline">\(Y_k \sim Bernoulli(\theta)\)</span>, entonces la esperanza bajo el modelo es <span class="math inline">\(E_{\xi}(Y_k) = \theta\)</span>, mientras que la varianza bajo el modelo es <span class="math inline">\(Var_{\xi}(Y_k) = \theta(1-\theta)\)</span>.</p>
+<p>En la literatura especializada, el modelo <span class="math inline">\(\xi\)</span> recibe el nombre de modelo de superpoblación, pues genera poblaciones finitas. De esta forma, para una población finita generada por ese modelo, la media poblacional es <span class="math inline">\(\bar{Y}_U = \frac{1}{N}\sum_{k \in U}Y_k\)</span>. Nótese que, bajo el modelo <span class="math inline">\(\xi\)</span>, esta media es insesgada para <span class="math inline">\(\theta\)</span>, puesto que</p>
+<p><span class="math display">\[
+E_{\xi}(\bar{Y}_U) =
+E_{\xi}\left(\frac{1}{N}\sum_{k \in U}Y_k\right)
+= \frac{1}{N}\sum_{k \in U}E_{\xi}(Y_k)
+= \theta.
+\]</span></p>
+<p>La siguiente simulación de Monte Carlo reproduce este proceso. En cada repetición se genera una población completa de tamaño <span class="math inline">\(N=100\)</span> y se calcula su media. El promedio de esas medias poblacionales debe aproximarse a <span class="math inline">\(\theta\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>population_size <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>n_sim_model <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>model_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_sim_model)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (sim <span class="cf">in</span> <span class="fu">seq_len</span>(n_sim_model)) {</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  outcome <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(population_size, <span class="dv">1</span>, theta)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  model_estimates[sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(outcome)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  theta,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_model_mean =</span> <span class="fu">mean</span>(model_estimates),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias =</span> <span class="fu">mean</span>(model_estimates) <span class="sc">-</span> theta</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     theta expected_model_mean    bias
+[1,]   0.3               0.302 0.00225</code></pre>
+</div>
+</div>
+<p>El código fija una semilla para que el ejercicio sea reproducible. Luego genera <code>n_sim_model</code> poblaciones independientes mediante <code>rbinom()</code>. La salida reporta el parámetro verdadero <code>theta</code>, el promedio de las medias simuladas <code>expected_model_mean</code> y el sesgo Monte Carlo. Como se espera bajo el modelo Bernoulli IID, <code>expected_model_mean</code> queda muy cerca de 0.3 y el sesgo es cercano a cero. Las pequeñas diferencias se deben a que se usan 1000 simulaciones, no un número infinito de repeticiones.</p>
+<p>En la teoría de muestreo, en cambio, las características de interés son parámetros fijos de la población. Si una persona está desempleada, su estado se considera un valor fijo de la población finita. Lo aleatorio es el mecanismo mediante el cual se selecciona la muestra. El total poblacional se define como <span class="math inline">\(t_y = \sum_{k \in U} y_k\)</span>, mientras que la media poblacional es <span class="math inline">\(\bar{y}_U = \frac{t_y}{N}\)</span>. Si se observa una muestra <span class="math inline">\(s\)</span>, el estimador del total propuesto por <span class="citation" data-cites="HorvitzThompson1952">Horvitz y Thompson (<a href="references.html#ref-HorvitzThompson1952" role="doc-biblioref">1952</a>)</span> es</p>
+<p><span class="math display">\[
+\hat{t}_{y} = \sum_{k \in s}\frac{y_k}{\pi_k}
+= \sum_{k \in s}w_k y_k.
+\]</span></p>
+<p>Como se mencionó en los capítulos anteriores, cuando el tamaño poblacional <span class="math inline">\(N\)</span> es desconocido, la media poblacional puede estimarse mediante el estimador de razón ponderado, cuya formulación estudian <span class="citation" data-cites="sarndal2003model">Särndal, Swensson, y Wretman (<a href="references.html#ref-sarndal2003model" role="doc-biblioref">2003</a>)</span>, definido como</p>
+<p><span class="math display">\[
+\hat{\bar{y}} =
+\frac{\sum_{k \in s}w_k y_k}
+{\sum_{k \in s}w_k}
+\]</span></p>
+<p>Estos estimadores incorporan las probabilidades de inclusión en su forma funcional y es esa, la diferencia central frente al promedio simple no ponderado de una muestra. Para ilustrar el impacto del diseño, supóngase que la población anterior se divide en <span class="math inline">\(N_I\)</span> UPMs. La UPM <span class="math inline">\(i\)</span> tiene tamaño <span class="math inline">\(N_i\)</span>, total <span class="math inline">\(t_{y_i}=\sum_{k \in U_i}y_{ik}\)</span> y media <span class="math inline">\(\bar{y}_i=t_{y_i}/N_i\)</span>. De acuerdo con el tratamiento del muestreo con probabilidades desiguales de <span class="citation" data-cites="cochran1977sampling">Cochran (<a href="references.html#ref-cochran1977sampling" role="doc-biblioref">1977</a>)</span>, bajo un diseño de tamaño fijo que asigna probabilidades de inclusión de primer orden proporcionales a <span class="math inline">\(N_i\)</span>, siempre que todas sean menores o iguales que uno, estas probabilidades toman la siguiente forma:</p>
+<p><span class="math display">\[
+\pi_{Ii} = \frac{n_I N_i}{N}
+\]</span></p>
+<p>Cuando todos los miembros de las UPM seleccionadas son observados, el estimador de Horvitz–Thompson de la media poblacional es exactamente insesgado bajo las probabilidades de inclusión anteriores y puede escribirse como</p>
+<p><span class="math display">\[
+\hat{\bar{y}}
+= \frac{1}{N}\sum_{i \in S_I}\frac{t_{y_i}}{\pi_{Ii}}
+= \frac{1}{N}\sum_{i \in S_I}\frac{N_i\bar{y}_i}{n_I N_i/N}
+= \frac{1}{n_I}\sum_{i \in S_I}\bar{y}_i.
+\]</span></p>
+<p>Esta expresión ejemplifica por qué, bajo este diseño específico de selección proporcional al tamaño, el promedio de las medias de los conglomerados brinda insesgamiento. En contraste, el promedio simple de las personas observadas en las UPMs seleccionadas, sería:</p>
+<p><span class="math display">\[
+\bar{y}_s =
+\frac{\sum_{i \in S_I}t_{y_i}}
+     {\sum_{i \in S_I}N_i},
+\]</span></p>
+<p>el cual trata la muestra como si fuera autoponderada. Este estimador puede ser sesgado cuando las probabilidades de selección son desiguales, especialmente si el tamaño del conglomerado se relaciona con la variable de interés. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño mediante <code>S.piPS()</code> del paquete <code>TeachingSampling</code>. En cada muestra se calculan dos estimadores: <code>design_estimates</code>, que corresponde a <span class="math inline">\(\hat{\bar{y}}\)</span>, y <code>simple_estimates</code>, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, <span class="math inline">\(\bar{y}_s\)</span>. Además, estos estimadores se comparan con el parámetro del modelo <code>theta_population</code>, correspondiente a <span class="math inline">\(\theta = 0.3\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TeachingSampling)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>population_size <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>n_sim_sampling <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>design_estimates <span class="ot">&lt;-</span> simple_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_sim_sampling)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>cluster_size <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">5</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(cluster_size)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>cluster_id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq_len</span>(n_clusters), cluster_size)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>size_center <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(cluster_size, cluster_size)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>prob_person <span class="ot">&lt;-</span> theta <span class="sc">+</span> <span class="fu">rep</span>((cluster_size <span class="sc">-</span> size_center) <span class="sc">/</span> <span class="dv">12</span>, cluster_size)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>outcome <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(population_size, <span class="dv">1</span>, prob_person)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>theta_population <span class="ot">&lt;-</span> <span class="fu">mean</span>(outcome)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>cluster_totals <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, sum)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>cluster_means <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, mean)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>sampled_cluster_count <span class="ot">&lt;-</span> <span class="fu">floor</span>(n_clusters <span class="sc">*</span> <span class="fl">0.3</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (sim <span class="cf">in</span> <span class="fu">seq_len</span>(n_sim_sampling)) {</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  pps_sample <span class="ot">&lt;-</span> <span class="fu">S.piPS</span>(sampled_cluster_count, cluster_size)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  sampled_clusters <span class="ot">&lt;-</span> pps_sample[, <span class="dv">1</span>]</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  sampled_cluster_size <span class="ot">&lt;-</span> cluster_size[sampled_clusters]</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  sampled_cluster_total <span class="ot">&lt;-</span> cluster_totals[sampled_clusters]</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  sampled_cluster_mean <span class="ot">&lt;-</span> cluster_means[sampled_clusters]</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  design_estimates[sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sampled_cluster_mean)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  simple_estimates[sim] <span class="ot">&lt;-</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(sampled_cluster_total) <span class="sc">/</span> <span class="fu">sum</span>(sampled_cluster_size)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  theta_population,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_pps =</span> <span class="fu">mean</span>(design_estimates),</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_pps =</span> <span class="fu">mean</span>(design_estimates) <span class="sc">-</span> theta_population,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_simple =</span> <span class="fu">mean</span>(simple_estimates),</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_simple =</span> <span class="fu">mean</span>(simple_estimates) <span class="sc">-</span> theta_population</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     theta_population expected_pps bias_pps expected_simple bias_simple
+[1,]              0.3        0.304  0.00368           0.358      0.0585</code></pre>
+</div>
+</div>
+<p>El primer bloque del código genera hogares de tamaños desiguales, entre 2 y 6 personas. Para hacer visible el efecto del diseño, la probabilidad individual de desempleo varía suavemente con el tamaño del hogar, pero se centra de manera que el promedio esperado de la población siga siendo cercano a <code>theta</code>. Luego se calcula <code>theta_population</code>, que es la proporción real de desempleo en esa población específica. En cada repetición, <code>S.piPS()</code> selecciona UPMs con probabilidades proporcionales al tamaño; después se calculan la media de las medias de las UPMs seleccionadas y el promedio simple de las personas observadas. La salida compara ambos estimadores con <code>theta_population</code>. El sesgo de Monte Carlo de <code>expected_pps</code> es cercano a cero, mientras que el de <code>expected_simple</code> no lo es, mostrando resultado de ignorar el diseño en este ejercicio.</p>
+</section>
+<section id="la-integracion-de-ambas-inferencias" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="la-integracion-de-ambas-inferencias"><span class="header-section-number">9.2</span> La integración de ambas inferencias</h2>
+<p>No obstante, en muchas aplicaciones ambos marcos inferenciales no se presentan como enfoques excluyentes, sino como componentes complementarios de un mismo problema. En particular, puede considerarse que la muestra ha sido obtenida mediante un diseño probabilístico complejo y que, al mismo tiempo, los valores de la variable de interés responden a un modelo de superpoblación. Esta formulación, discutida por <span class="citation" data-cites="binder2011estimating">David A. Binder (<a href="references.html#ref-binder2011estimating" role="doc-biblioref">2011</a>)</span>, conduce a un esquema de inferencia doble, en el cual la incertidumbre no proviene de una única fuente, sino de la combinación entre el mecanismo que genera los valores poblacionales (modelo de superpoblación) y el mecanismo que determina qué unidades son observadas (diseño de muestreo).</p>
+<p>Formalmente, intervienen dos medidas de probabilidad: <span class="math inline">\(\xi\)</span>, asociada al proceso generador de los valores <span class="math inline">\(Y_k\)</span>, y <span class="math inline">\(p(\cdot)\)</span>, asociada al diseño muestral que selecciona la muestra <span class="math inline">\(s\)</span>. Por tanto, las propiedades de los estimadores deben evaluarse considerando simultáneamente ambas fuentes de variación. Bajo este marco, la esperanza combinada puede expresarse como</p>
+<p><span class="math display">\[
+E_{\xi p}(\hat{\theta})
+= E_{\xi}\{E_p(\hat{\theta}\mid U)\},
+\]</span></p>
+<p>donde primero se evalúa el comportamiento del estimador bajo el diseño, condicionado a la población finita generada, y luego se promedia sobre el modelo de superpoblación. En este contexto, la verosimilitud conjunta completa puede resultar intratable, especialmente cuando las probabilidades de inclusión dependen de variables relacionadas con la respuesta. Las ecuaciones de estimación ponderadas de <span class="citation" data-cites="binder1983variances">David A. Binder (<a href="references.html#ref-binder1983variances" role="doc-biblioref">1983</a>)</span> fundamentan la máxima pseudo-verosimilitud (MPV), que pondera las contribuciones de cada unidad por el inverso de su probabilidad de inclusión; <span class="citation" data-cites="pfeffermann1993role">Pfeffermann (<a href="references.html#ref-pfeffermann1993role" role="doc-biblioref">1993</a>)</span> examina las condiciones y los objetivos bajo los cuales resulta pertinente incorporar esos pesos en modelos para datos de encuestas.</p>
+<section id="sec-mv" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="sec-mv"><span class="header-section-number">9.2.1</span> Método de la máxima verosimilitud</h3>
+<p>El método de máxima verosimilitud, presentado formalmente por <span class="citation" data-cites="CasellaBerger2002">Casella y Berger (<a href="references.html#ref-CasellaBerger2002" role="doc-biblioref">2002</a>)</span>, parte de una muestra aleatoria <span class="math inline">\(y_1,\ldots,y_n\)</span> generada por una distribución con densidad o función de probabilidad <span class="math inline">\(f(y;\theta)\)</span>. Si las observaciones son independientes e idénticamente distribuidas (IID), la función de verosimilitud se define como</p>
+<p><span class="math display">\[
+L(\theta)
+= \prod_{k=1}^{n} f(y_k;\theta).
+\]</span></p>
+<p>El límite superior correcto es el tamaño muestral <span class="math inline">\(n\)</span>, no el tamaño poblacional <span class="math inline">\(N\)</span>. Como los productos pueden ser difíciles de manipular, se utiliza la log-verosimilitud:</p>
+<p><span class="math display">\[
+\ell(\theta)
+= \sum_{k=1}^{n}\log f(y_k;\theta)
+\]</span></p>
+<p>El estimador de máxima verosimilitud <span class="math inline">\(\hat{\theta}\)</span> es el valor de <span class="math inline">\(\theta\)</span> que maximiza <span class="math inline">\(\ell(\theta)\)</span>. Si la función es diferenciable, este valor satisface las ecuaciones de score:</p>
+<p><span class="math display">\[
+U(\theta)
+= \frac{\partial \ \ell(\theta)}{\partial \ \theta}
+= \sum_{k=1}^{N} u_k(\theta)
+= 0
+\]</span></p>
+<p>donde <span class="math inline">\(u_k(\theta) = \frac{\partial}{\partial\theta}\log f(y_k;\theta)\)</span> es la contribución de la unidad <span class="math inline">\(k\)</span> al score total. Para una distribución Bernoulli con parámetro <span class="math inline">\(\theta\)</span>, la función de probabilidad es <span class="math inline">\(f(y_k;\theta) = \theta^{y_k}(1-\theta)^{1-y_k}\)</span>, para <span class="math inline">\(y_k \in \{0,1\}\)</span>. La log-verosimilitud es</p>
+<p><span class="math display">\[
+\ell(\theta)
+= \sum_{k=1}^{N}
+\left[
+y_k\log(\theta)
++(1-y_k)\log(1-\theta)
+\right]
+\]</span></p>
+<p>Al derivar e igualar a cero y despejar, se obtiene el estimador MV, definido por:</p>
+<p><span class="math display">\[
+\hat{\theta}_{MV}
+= \frac{1}{n}\sum_{k=1}^{n}y_k
+\]</span></p>
+<p>Así, la proporción muestral es el estimador natural del parámetro Bernoulli. El punto clave es que este resultado depende del supuesto de que las observaciones tienen igual distribución y no provienen de un diseño con probabilidades desiguales.</p>
+<p>Por otro lado, en un modelo de regresión lineal múltiple con errores normales, se tiene que <span class="math inline">\(\mathbf{y} \sim N(\mathbf{X}\boldsymbol{\beta},\sigma^2 I)\)</span>. En este caso, la log-verosimilitud, omitiendo constantes, puede escribirse como</p>
+<p><span class="math display">\[
+\ell(\boldsymbol{\beta},\sigma^2) = -\frac{n}{2}\log(\sigma^2) -\frac{1}{2\sigma^2}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})'(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})
+\]</span></p>
+<p>Maximizar esta expresión respecto de <span class="math inline">\(\beta\)</span> equivale a minimizar la suma de cuadrados de los residuos. Por ello, el estimador de máxima verosimilitud de <span class="math inline">\(\beta\)</span> coincide con el estimador de mínimos cuadrados ordinarios <span class="math inline">\(\hat{\boldsymbol{\beta}}_{MV} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{y}\)</span>. Este resultado es importante porque muestra que muchos procedimientos estadísticos usuales pueden interpretarse como máxima verosimilitud bajo supuestos de modelo específicos. Sin embargo, si los datos provienen de una encuesta compleja, la matriz <span class="math inline">\(\mathbf{X}'\mathbf{X}\)</span> no refleja por sí sola el mecanismo de selección de la muestra.</p>
+</section>
+<section id="sec-mpv-formal" class="level3" data-number="9.2.2">
+<h3 data-number="9.2.2" class="anchored" data-anchor-id="sec-mpv-formal"><span class="header-section-number">9.2.2</span> Método de máxima pseudo-verosimilitud</h3>
+<p>Cuando el diseño muestral es complejo, los datos observados no satisfacen necesariamente los supuestos de independencia e idéntica distribución. Algunas unidades pueden representar a muchas personas de la población y otras a pocas. Además, dos unidades seleccionadas dentro del mismo conglomerado pueden estar correlacionadas. En este contexto, usar directamente la log-verosimilitud ordinaria puede producir estimaciones que describen la muestra, pero no la población objetivo.</p>
+<p>La máxima pseudo-verosimilitud, desarrollada a partir de los resultados de <span class="citation" data-cites="binder1983variances">David A. Binder (<a href="references.html#ref-binder1983variances" role="doc-biblioref">1983</a>)</span>, incorpora los pesos de muestreo en la log-verosimilitud. Para unidades observadas <span class="math inline">\(k \in s\)</span>, se define</p>
+<p><span class="math display">\[
+\ell_p(\theta)
+= \sum_{k \in s} w_k \log f(y_k;\theta)
+\]</span></p>
+<p>En la notación de esta sección, el peso <span class="math inline">\(w_k=1/\pi_k\)</span> indica cuántas unidades de la población representa la observación <span class="math inline">\(y_k\)</span>. Por eso, la contribución de una unidad con baja probabilidad de inclusión se amplifica en la pseudo-verosimilitud. Las ecuaciones de estimación resultantes son</p>
+<p><span class="math display">\[
+U_p(\theta)
+= \sum_{k \in s} w_k \ u_k(\theta)
+= 0
+\]</span></p>
+<p>La estimación MPV conserva la lógica de máxima verosimilitud, pero reemplaza el <em>score</em> ordinario por un <em>score</em> ponderado. La solución <span class="math inline">\(\hat{\theta}_{MPV}\)</span> es el valor que hace que la suma ponderada de contribuciones individuales sea igual a cero. Para una distribución Bernoulli, la pseudo-log-verosimilitud es</p>
+<p><span class="math display">\[
+\ell_p(\theta)
+= \sum_{k \in s} w_k
+\left[
+y_k\log(\theta)
++(1-y_k)\log(1-\theta)
+\right].
+\]</span></p>
+<p>Al derivar e igualar a cero, se obtiene que:</p>
+<p><span class="math display">\[
+\frac{\partial \ell_p(\theta)}{\partial \theta}
+=
+\sum_{k \in s} w_k
+\left[
+\frac{y_k}{\theta}
+-\frac{1-y_k}{1-\theta}
+\right]
+=0
+\]</span></p>
+<p>Cuya solución es:</p>
+<p><span class="math display">\[
+\hat{\theta}_{MPV}
+=
+\frac{\sum_{k \in s}w_k y_k}
+     {\sum_{k \in s}w_k}
+= \hat{p}_d
+\]</span></p>
+<p>Por tanto, para una variable binaria, la MPV conduce al estimador ponderado de la proporción, equivalente al estimador de Hájek. Este resultado conecta directamente la teoría de pseudo-verosimilitud con los estimadores de proporciones presentados en los capítulos de variables categóricas.</p>
+<p>Asimismo, para un modelo de regresión lineal múltiple, la pseudo-log-verosimilitud ponderada implica minimizar una suma de cuadrados ponderada:</p>
+<p><span class="math display">\[
+(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})'\mathbf{W}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta}),
+\]</span></p>
+<p>donde</p>
+<p><span class="math display">\[
+\mathbf{W}=
+\begin{pmatrix}
+w_1 &amp; 0 &amp; \cdots &amp; 0\\
+0 &amp; w_2 &amp; \cdots &amp; 0\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+0 &amp; 0 &amp; \cdots &amp; w_n
+\end{pmatrix}.
+\]</span></p>
+<p>La solución es el estimador de mínimos cuadrados ponderados:</p>
+<p><span class="math display">\[
+\hat{\boldsymbol{\beta}}_{MPV}
+= (\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'\mathbf{W}\mathbf{y}
+\]</span></p>
+<p>Este resultado extiende de manera natural el estimador ordinario al contexto de encuestas complejas: cada observación contribuye al ajuste del modelo en proporción a su peso muestral. No obstante, para la inferencia no basta con ponderar la estimación puntual; también se requiere estimar correctamente la varianza considerando estratos, conglomerados y pesos, como explican <span class="citation" data-cites="binder1983variances">David A. Binder (<a href="references.html#ref-binder1983variances" role="doc-biblioref">1983</a>)</span> y <span class="citation" data-cites="heeringa2017applied">Heeringa et&nbsp;al. (<a href="references.html#ref-heeringa2017applied" role="doc-biblioref">2017</a>)</span>.</p>
+<p>La siguiente simulación de Monte Carlo anidada ilustra la inferencia doble. En el ciclo externo se genera una nueva población bajo el modelo Bernoulli. En el ciclo interno se seleccionan muchas muestras por diseño y se comparan el estimador que incorpora el diseño y el promedio simple de la muestra.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>population_size <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>n_sim_population <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>expected_design_estimates <span class="ot">&lt;-</span> expected_simple_estimates <span class="ot">&lt;-</span> population_means <span class="ot">&lt;-</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep</span>(<span class="cn">NA</span>, n_sim_population)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>cluster_size <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">5</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(cluster_size)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>cluster_id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq_len</span>(n_clusters), cluster_size)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>size_center <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(cluster_size, cluster_size)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>prob_person <span class="ot">&lt;-</span> theta <span class="sc">+</span> <span class="fu">rep</span>((cluster_size <span class="sc">-</span> size_center) <span class="sc">/</span> <span class="dv">12</span>, cluster_size)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>sampled_cluster_count <span class="ot">&lt;-</span> <span class="fu">floor</span>(n_clusters <span class="sc">*</span> <span class="fl">0.3</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (population_sim <span class="cf">in</span> <span class="fu">seq_len</span>(n_sim_population)) {</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  outcome <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(population_size, <span class="dv">1</span>, prob_person)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  population_means[population_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(outcome)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  cluster_totals <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, sum)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  cluster_means <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, mean)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  design_estimates <span class="ot">&lt;-</span> simple_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">100</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (sample_sim <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="dv">100</span>)) {</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    pps_sample <span class="ot">&lt;-</span> <span class="fu">S.piPS</span>(sampled_cluster_count, cluster_size)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    sampled_clusters <span class="ot">&lt;-</span> pps_sample[, <span class="dv">1</span>]</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    sampled_cluster_size <span class="ot">&lt;-</span> cluster_size[sampled_clusters]</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    sampled_cluster_total <span class="ot">&lt;-</span> cluster_totals[sampled_clusters]</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    sampled_cluster_mean <span class="ot">&lt;-</span> cluster_means[sampled_clusters]</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    design_estimates[sample_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sampled_cluster_mean)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    simple_estimates[sample_sim] <span class="ot">&lt;-</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(sampled_cluster_total) <span class="sc">/</span> <span class="fu">sum</span>(sampled_cluster_size)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  expected_design_estimates[population_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(design_estimates)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  expected_simple_estimates[population_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(simple_estimates)</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  theta,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_population =</span> <span class="fu">mean</span>(population_means),</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_pps =</span> <span class="fu">mean</span>(expected_design_estimates),</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_pps =</span> <span class="fu">mean</span>(expected_design_estimates) <span class="sc">-</span> theta,</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_simple =</span> <span class="fu">mean</span>(expected_simple_estimates),</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_simple =</span> <span class="fu">mean</span>(expected_simple_estimates) <span class="sc">-</span> theta</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     theta mean_population expected_pps bias_pps expected_simple bias_simple
+[1,]   0.3           0.304        0.302  0.00248           0.332      0.0317</code></pre>
+</div>
+</div>
+<p>El código reproduce las dos fuentes de aleatoriedad. El ciclo externo representa el modelo <span class="math inline">\(\xi\)</span>, porque genera nuevas poblaciones finitas con <code>rbinom()</code>. El ciclo interno representa el diseño <span class="math inline">\(p\)</span>, porque para cada población se seleccionan múltiples muestras con <code>S.piPS()</code>. La salida incluye <code>mean_population</code>, que es el promedio de las medias poblacionales generadas; <code>expected_pps</code>, que resume el comportamiento del estimador que incorpora el diseño; y <code>expected_simple</code>, que resume el promedio simple de la muestra seleccionada. Cuando el diseño se incorpora correctamente, el sesgo Monte Carlo respecto de <code>theta</code> debe ser pequeño. La comparación con <code>expected_simple</code> muestra por qué la inferencia basada en encuestas requiere pesos y varianzas de diseño, incluso cuando se parte de un modelo estadístico sencillo.</p>
+<p>En síntesis, la máxima verosimilitud ordinaria es adecuada cuando las observaciones pueden tratarse como IID bajo un modelo probabilístico. En encuestas complejas, la máxima pseudo-verosimilitud ofrece una extensión natural: conserva la estructura de las ecuaciones de estimación, pero pondera cada contribución individual por su peso muestral. La ponderación protege frente a ciertos diseños informativos o a determinadas especificaciones incorrectas, pero su necesidad y sus propiedades dependen del diseño y del modelo, como advierte <span class="citation" data-cites="pfeffermann1993role">Pfeffermann (<a href="references.html#ref-pfeffermann1993role" role="doc-biblioref">1993</a>)</span>. Así, los modelos estadísticos se ajustan de manera más coherente con la población que la encuesta busca representar.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-binder1983variances" class="csl-entry" role="listitem">
+Binder, David A. 1983. <span>«On the variances of asymptotically normal estimators from complex surveys»</span>. <em>International Statistical Review/Revue Internationale de Statistique</em>, 279-92.
+</div>
+<div id="ref-binder2011estimating" class="csl-entry" role="listitem">
+Binder, David A. 2011. <span>«Estimating model parameters from a complex survey under a model-design randomization framework»</span>. <em>Pakistan Journal of Statistics</em> 27 (4).
+</div>
+<div id="ref-CasellaBerger2002" class="csl-entry" role="listitem">
+Casella, George, y Roger L. Berger. 2002. <em>Statistical Inference</em>. 2.ª ed. Pacific Grove, CA: Duxbury.
+</div>
+<div id="ref-cochran1977sampling" class="csl-entry" role="listitem">
+Cochran, William Gemmell. 1977. <em>Sampling techniques</em>. John Wiley &amp; Sons.
+</div>
+<div id="ref-heeringa2017applied" class="csl-entry" role="listitem">
+Heeringa, Steven G, Brady T West, Steve G Heeringa, y Patricia A Berglund. 2017. <em>Applied survey data analysis</em>. chapman; hall/CRC.
+</div>
+<div id="ref-HorvitzThompson1952" class="csl-entry" role="listitem">
+Horvitz, Daniel G., y Donovan J. Thompson. 1952. <span>«A Generalization of Sampling Without Replacement from a Finite Universe»</span>. <em>Journal of the American Statistical Association</em> 47 (260): 663-85. <a href="https://doi.org/10.1080/01621459.1952.10483446">https://doi.org/10.1080/01621459.1952.10483446</a>.
+</div>
+<div id="ref-kish1987statistical" class="csl-entry" role="listitem">
+Kish, Leslie. 1987. <em>Statistical Design for Research</em>. New York: John Wiley &amp; Sons.
+</div>
+<div id="ref-pfeffermann1993role" class="csl-entry" role="listitem">
+Pfeffermann, Danny. 1993. <span>«The Role of Sampling Weights When Modeling Survey Data»</span>. <em>International Statistical Review</em> 61 (2): 317-37. <a href="https://doi.org/10.2307/1403631">https://doi.org/10.2307/1403631</a>.
+</div>
+<div id="ref-sarndal2003model" class="csl-entry" role="listitem">
+Särndal, Carl-Erik, Bengt Swensson, y Jan Wretman. 2003. <em>Model assisted survey sampling</em>. Springer Science &amp; Business Media.
+</div>
+<div id="ref-skinner1989analysis" class="csl-entry" role="listitem">
+Skinner, Chris J., David Holt, y Tom M. F. Smith, eds. 1989. <em>Analysis of complex surveys</em>. New York: John Wiley &amp; Sons.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const labels = {
+    note: "Nota",
+    tip: "Consejo",
+    important: "Importante",
+    warning: "Advertencia",
+    caution: "Precaución"
+  };
+
+  Object.keys(labels).forEach(function (type) {
+    document.querySelectorAll(".callout-" + type).forEach(function (callout, index) {
+      const title = callout.querySelector(".callout-title-container");
+      if (!title || title.dataset.numbered === "true") {
+        return;
+      }
+
+      const text = title.textContent.trim();
+      if (!text || text === labels[type]) {
+        title.textContent = labels[type] + " " + (index + 1);
+      } else if (!new RegExp("^" + labels[type] + "\\s+\\d+").test(text)) {
+        title.textContent = labels[type] + " " + (index + 1) + ". " + text;
+      }
+      title.dataset.numbered = "true";
+    });
+  });
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/A1-TidyVerse.html" class="pagination-link" aria-label="Manejo de bases de datos con `R`">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Manejo de bases de datos con <code>R</code></span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/references.html" class="pagination-link" aria-label="Referencias">
+        <span class="nav-page-text">Referencias</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Análisis de encuestas de hogares usando R</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

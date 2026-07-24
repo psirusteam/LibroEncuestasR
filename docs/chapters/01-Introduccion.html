@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; Introducción – &lt;span style='font-weight: 700'&gt;Análisis de Encuestas de Hogares&lt;/span&gt;&lt;br/&gt;&lt;i style='color: #00b7ff'&gt;usando R&lt;/i&gt;</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/02-Conceptos.html" rel="next">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      E: "\\mathbb{E}",
+      Var: "\\operatorname{Var}",
+      Cov: "\\operatorname{Cov}",
+      Corr: "\\operatorname{Corr}",
+      Pr: "\\operatorname{Pr}",
+      deff: "\\operatorname{deff}",
+      bold: ["\\boldsymbol{#1}", 1]
+    }
+  }
+};
+</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-Introduccion.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../"><span style="font-weight: 700">Análisis de Encuestas de Hogares</span><br><i style="color: #00b7ff">usando R</i></a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefacio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-Introduccion.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-Conceptos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Conceptos básicos en encuestas de hogares</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-Continuas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis de las variables continuas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-Categoricas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de variables categóricas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-Regresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modelos de regresión</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-GLM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modelos lineales generalizados</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-Multinivel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modelos multinivel</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Anexos</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/A1-TidyVerse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Manejo de bases de datos con <code>R</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/A2-MPVbinder.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Inferencia en poblaciones finitas</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referencias</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#justificacion" id="toc-justificacion" class="nav-link active" data-scroll-target="#justificacion"><span class="header-section-number">1.1</span> Justificación</a></li>
+  <li><a href="#uso-del-software-r-para-el-analisis-de-encuestas" id="toc-uso-del-software-r-para-el-analisis-de-encuestas" class="nav-link" data-scroll-target="#uso-del-software-r-para-el-analisis-de-encuestas"><span class="header-section-number">1.2</span> Uso del software <code>R</code> para el análisis de encuestas</a></li>
+  <li><a href="#estructura-del-documento" id="toc-estructura-del-documento" class="nav-link" data-scroll-target="#estructura-del-documento"><span class="header-section-number">1.3</span> Estructura del documento</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="cap1" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>El análisis de encuestas con diseños complejos cuenta con una trayectoria consolidada en la literatura estadística, sustentada en el enfoque de inferencia basado en el diseño de muestreo. Como señalan <span class="citation" data-cites="sarndal2003model">Särndal, Swensson, y Wretman (<a href="references.html#ref-sarndal2003model" role="doc-biblioref">2003</a>)</span> y <span class="citation" data-cites="Gutierrez2016">Gutiérrez (<a href="references.html#ref-Gutierrez2016" role="doc-biblioref">2016</a>)</span>, este enfoque reconoce a la distribución de probabilidad inducida por el proceso de selección de la muestra como el único mecanismo probabilístico que rige la inferencia. Bajo este paradigma, las propiedades estadísticas de los estimadores —como el insesgamiento, la precisión y la consistencia— se evalúan con respecto a la distribución de todas las posibles muestras que el diseño puede generar, sin imponer supuestos distribucionales sobre la variable de interés.</p>
+<p>En este marco, la estimación de varianzas ha ocupado un lugar central y ha evolucionado en torno a tres grandes familias metodológicas complementarias. La primera, el método del último conglomerado descrito por <span class="citation" data-cites="hansen1953sample">Hansen et&nbsp;al. (<a href="references.html#ref-hansen1953sample" role="doc-biblioref">1953</a>)</span>, simplifica la estructura multinivel al concentrar la variabilidad en las unidades primarias de muestreo (UPM), tratando la selección como si se realizara con reemplazo. La segunda, la linealización de Taylor desarrollada por <span class="citation" data-cites="binder1983variances">Binder (<a href="references.html#ref-binder1983variances" role="doc-biblioref">1983</a>)</span>, extiende este principio a parámetros no lineales —como medias, proporciones y razones— mediante una aproximación de primer orden que reduce el problema de estimación de la varianza al de un total. Finalmente, según <span class="citation" data-cites="Wolter2007Variance">Wolter (<a href="references.html#ref-Wolter2007Variance" role="doc-biblioref">2007</a>)</span>, la tercera familia, los métodos de replicación (jackknife, bootstrap y balanced repeated replication), estima la varianza a partir de la dispersión entre estimaciones obtenidas mediante réplicas sistemáticas de la muestra.</p>
+<p>Paralelamente, en el ámbito de la modelización estadística, <span class="citation" data-cites="nelder1972generalized">Nelder y Wedderburn (<a href="references.html#ref-nelder1972generalized" role="doc-biblioref">1972</a>)</span> formularon el marco de los modelos lineales generalizados. Contribuciones posteriores como las de <span class="citation" data-cites="kish1974inference">Kish y Frankel (<a href="references.html#ref-kish1974inference" role="doc-biblioref">1974</a>)</span>, <span class="citation" data-cites="fuller1975regression">Fuller (<a href="references.html#ref-fuller1975regression" role="doc-biblioref">1975</a>)</span> y <span class="citation" data-cites="binder1983variances">Binder (<a href="references.html#ref-binder1983variances" role="doc-biblioref">1983</a>)</span> sentaron las bases de la regresión ponderada y de la estimación de varianzas de coeficientes en diseños estratificados y de múltiples etapas. Sobre este desarrollo, <span class="citation" data-cites="pfeffermann1993role">Pfeffermann (<a href="references.html#ref-pfeffermann1993role" role="doc-biblioref">1993</a>)</span> revisó críticamente y sistematizó distintas formas de incorporar los pesos muestrales en la modelización, incluida la pseudo-verosimilitud, que incorpora los pesos muestrales en la función de log-verosimilitud para producir estimadores consistentes bajo el diseño y extender esos modelos al contexto de encuestas con diseño complejo.</p>
+<p>Más recientemente, <span class="citation" data-cites="heeringa2017applied">Heeringa et&nbsp;al. (<a href="references.html#ref-heeringa2017applied" role="doc-biblioref">2017</a>)</span> han sintetizado estas contribuciones en un marco analítico unificado que integra de manera coherente el diseño muestral, la ponderación y la modelización, constituyéndose en una referencia estándar para la práctica contemporánea del análisis de encuestas complejas.</p>
+<p>Este documento está dirigido a lectores con formación en estadística o ciencia de datos, o con experiencia profesional equivalente. Está especialmente pensado para quienes cuentan con conocimientos de los fundamentos de la teoría de muestreo —como probabilidades de inclusión, estimadores e intervalos de confianza—, de modelos de regresión lineal y logística, y con un manejo introductorio del lenguaje de programación <code>R</code>.</p>
+<p>En este contexto, el documento se posiciona como un texto de nivel intermedio-avanzado, orientado a profundizar y consolidar estos conocimientos, facilitando su aplicación rigurosa en contextos complejos y de alta exigencia técnica. Su propósito es acompañar al investigador en la transición desde los fundamentos hacia su implementación adecuada en la producción de estadísticas oficiales, la investigación académica en ciencias sociales, la evaluación de políticas públicas y el análisis de datos bajo estándares internacionales de calidad.</p>
+<section id="justificacion" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="justificacion"><span class="header-section-number">1.1</span> Justificación</h2>
+<p>A pesar de la riqueza metodológica disponible en la literatura especializada, persiste una brecha significativa entre el estado del arte y la práctica cotidiana del análisis de encuestas en la región. Una de las principales manifestaciones de esta brecha se relaciona con el acceso y uso del software estadístico. Algunos textos de referencia ampliamente reconocidos en análisis de encuestas, como <span class="citation" data-cites="cochran1977sampling">Cochran (<a href="references.html#ref-cochran1977sampling" role="doc-biblioref">1977</a>)</span>, <span class="citation" data-cites="sarndal2003model">Särndal, Swensson, y Wretman (<a href="references.html#ref-sarndal2003model" role="doc-biblioref">2003</a>)</span>, <span class="citation" data-cites="Lumley2010">Lumley (<a href="references.html#ref-Lumley2010" role="doc-biblioref">2010</a>)</span> y <span class="citation" data-cites="heeringa2017applied">Heeringa et&nbsp;al. (<a href="references.html#ref-heeringa2017applied" role="doc-biblioref">2017</a>)</span>, constituyen fuentes fundamentales desde el punto de vista teórico o computacional; sin embargo, su cobertura computacional es heterogénea: algunas obras son principalmente teóricas, otras emplean software con licencia, como <code>SAS</code>, <code>Stata</code> o <code>SPSS</code>, y las anteriores al ecosistema actual de <code>R</code> no pueden integrarlo plenamente. En contraste, muchos tutoriales disponibles en línea sobre análisis de encuestas en <code>R</code> suelen privilegiar los aspectos operativos del software, pero rara vez alcanzan el nivel de profundidad conceptual necesario para un uso adecuado y responsable en la producción de estadísticas oficiales.</p>
+<p>Adicionalmente, de acuerdo con <span class="citation" data-cites="Seidenberg2023PRICSSA">Seidenberg, Moser, y West (<a href="references.html#ref-Seidenberg2023PRICSSA" role="doc-biblioref">2023</a>)</span>, existe una fragmentación metodológica importante entre los distintos componentes que intervienen en el análisis de encuestas complejas. Con frecuencia, los fundamentos del diseño muestral, la gestión computacional de los datos, la estimación de parámetros descriptivos e inferenciales con corrección por diseño y el tratamiento de la no respuesta son abordados de manera separada, dificultando la construcción de flujos de trabajo integrales y reproducibles. En este contexto, el presente texto propone una integración coherente de estos elementos dentro de un único marco analítico implementado completamente en <code>R</code>.</p>
+<p>Otro aspecto relevante corresponde a la contextualización regional de los ejemplos y aplicaciones. Varios de los textos de referencia utilizan bases de datos y ejemplos provenientes de encuestas de países anglosajones, lo que limita parcialmente su aplicabilidad inmediata en América Latina. Con el propósito de acercar los contenidos a las realidades estadísticas de la región, este documento emplea una base de datos nativa de <code>R</code>, diseñada para replicar la estructura tradicional de las encuestas de hogares latinoamericanas y, por tanto, proporcionar ejemplos más cercanos a los problemas enfrentados por las oficinas nacionales de estadística y los equipos técnicos de la región.</p>
+<p>Finalmente, siguiendo el enfoque de investigación reproducible de <span class="citation" data-cites="Xie2016bookdown">Xie (<a href="references.html#ref-Xie2016bookdown" role="doc-biblioref">2016</a>)</span> y <span class="citation" data-cites="Xie2018RMarkdown">Xie, Allaire, y Grolemund (<a href="references.html#ref-Xie2018RMarkdown" role="doc-biblioref">2018</a>)</span>, este documento constituye en sí mismo un ejercicio de investigación reproducible. Todo su contenido, incluyendo tablas, figuras, ecuaciones y resultados numéricos, es generado íntegramente mediante código en <code>R</code> incorporado directamente en los capítulos. De esta manera, el lector no solo puede estudiar los métodos presentados, sino también replicarlos, modificarlos y adaptarlos a sus propios contextos y bases de datos, fortaleciendo así las capacidades analíticas y la transparencia en la producción estadística.</p>
+</section>
+<section id="uso-del-software-r-para-el-analisis-de-encuestas" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="uso-del-software-r-para-el-analisis-de-encuestas"><span class="header-section-number">1.2</span> Uso del software <code>R</code> para el análisis de encuestas</h2>
+<p>La elección de <code>R</code> como entorno computacional para este documento no es arbitraria. <code>R</code> reúne al menos tres características que lo convierten en una opción idónea para el análisis de encuestas de hogares en el contexto latinoamericano.</p>
+<p>En primer lugar, su condición de acceso libre. A diferencia de otros programas con costos de licencia que pueden resultar prohibitivos para muchas oficinas nacionales de estadística en países en desarrollo, según <span class="citation" data-cites="RProject2026">R Core Team (<a href="references.html#ref-RProject2026" role="doc-biblioref">2026</a>)</span>, <code>R</code> se distribuye bajo licencia GNU, lo que favorece que los métodos presentados en este documento sean accesibles y replicables, aunque su adopción institucional también puede requerir infraestructura, capacitación y mantenimiento, independientemente de las restricciones presupuestarias de las instituciones.</p>
+<p>En segundo lugar, destaca su ecosistema especializado. El paquete <code>survey</code>, descrito inicialmente por <span class="citation" data-cites="Lumley2004">Lumley (<a href="references.html#ref-Lumley2004" role="doc-biblioref">2004</a>)</span>, se encuentra disponible desde 2003 y en constante evolución. Paquetes complementarios como <code>TeachingSampling</code> y <code>convey</code> amplían sus posibilidades. En sus versiones actuales, <code>survey</code>, documentado por <span class="citation" data-cites="Lumley2026">Lumley et&nbsp;al. (<a href="references.html#ref-Lumley2026" role="doc-biblioref">2026</a>)</span>, implementa una amplia gama de métodos de estimación para diseños complejos: estimadores de Horvitz–Thompson, técnicas de calibración, linealización de Taylor, métodos de replicación, modelos de regresión ponderados y pruebas de hipótesis ajustadas al diseño (como Rao-Scott), entre otros. A su vez, el paquete <code>srvyr</code>, documentado por <span class="citation" data-cites="FreedmanEllis2026">Freedman Ellis y Schneider (<a href="references.html#ref-FreedmanEllis2026" role="doc-biblioref">2026</a>)</span>, extiende estas capacidades al incorporar la sintaxis del ecosistema <code>tidyverse</code>, facilitando una transición fluida entre el análisis exploratorio y el inferencial y consolidando un entorno analítico difícil de igualar en otros lenguajes.</p>
+<p>De acuerdo con <span class="citation" data-cites="UnitedNations2014FPOS">United Nations General Assembly (<a href="references.html#ref-UnitedNations2014FPOS" role="doc-biblioref">2014</a>)</span> y <span class="citation" data-cites="UnitedNations2019NQAF">United Nations (<a href="references.html#ref-UnitedNations2019NQAF" role="doc-biblioref">2019</a>)</span>, la trazabilidad y la transparencia metodológica son requisitos fundamentales en el ámbito de la estadística oficial.</p>
+<p>En este contexto, como muestran <span class="citation" data-cites="Xie2016bookdown">Xie (<a href="references.html#ref-Xie2016bookdown" role="doc-biblioref">2016</a>)</span> y <span class="citation" data-cites="Xie2018RMarkdown">Xie, Allaire, y Grolemund (<a href="references.html#ref-Xie2018RMarkdown" role="doc-biblioref">2018</a>)</span>, <code>R</code> ofrece una sólida integración con herramientas de reproducibilidad científica. En particular, su combinación con <code>R</code> Markdown y el sistema <code>bookdown</code> permite generar documentos en los que resultados, tablas y figuras se producen directamente a partir del código fuente.</p>
+</section>
+<section id="estructura-del-documento" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="estructura-del-documento"><span class="header-section-number">1.3</span> Estructura del documento</h2>
+<p>Este documento está organizado siguiendo una progresión lógica que va desde los fundamentos conceptuales del muestreo hasta las aplicaciones más avanzadas de modelamiento estadístico y tratamiento de la no respuesta. Esta secuencia no es arbitraria: cada nivel de conocimiento constituye un requisito necesario para comprender el siguiente, de modo que el lector pueda transitar de los principios básicos hacia herramientas analíticas más sofisticadas de manera coherente.</p>
+<p>En primer lugar, se abordan los fundamentos del diseño muestral. De acuerdo con <span class="citation" data-cites="sarndal2003model">Särndal, Swensson, y Wretman (<a href="references.html#ref-sarndal2003model" role="doc-biblioref">2003</a>)</span> y <span class="citation" data-cites="ONUDeff">Naciones Unidas (<a href="references.html#ref-ONUDeff" role="doc-biblioref">2009</a>)</span>, el análisis adecuado de una encuesta comienza necesariamente con la comprensión de su diseño probabilístico. Antes de estimar cualquier parámetro, el analista debe familiarizarse con tres elementos constitutivos: la población objetivo, entendida como el conjunto de unidades sobre las cuales se desean hacer inferencias; el marco de muestreo, que corresponde a la enumeración operacional de dichas unidades; y las unidades de muestreo en cada etapa del diseño. Estos componentes determinan tanto la validez como el alcance de las inferencias posteriores.</p>
+<p>A continuación, se introducen los elementos computacionales que permiten materializar estos conceptos en un entorno aplicado. El documento incorpora el manejo y transformación de variables mediante un ambiente de programación adecuado para la incorporación del diseño de muestreo, que constituye el eje central del flujo de análisis y garantiza que todas las operaciones estadísticas respeten dicha estructura.</p>
+<p>Con el diseño correctamente especificado, el documento avanza hacia la estimación de parámetros descriptivos. Esta sección cubre los estimadores más utilizados en el análisis de encuestas para variables continuas, tales como ingresos, gastos o activos, incluyendo totales, medias y razones. Asimismo, se presentan sus correspondientes medidas de precisión (varianzas, errores estándar e intervalos de confianza) ajustadas a la complejidad del diseño muestral.</p>
+<p>Posteriormente, se desarrolla el modelamiento estadístico, extendiendo el análisis más allá de la estadística descriptiva hacia un enfoque analítico e inferencial. En particular, se abordan los modelos de regresión lineal bajo diseños complejos, donde, como explican <span class="citation" data-cites="binder1983variances">Binder (<a href="references.html#ref-binder1983variances" role="doc-biblioref">1983</a>)</span> y <span class="citation" data-cites="pfeffermann1993role">Pfeffermann (<a href="references.html#ref-pfeffermann1993role" role="doc-biblioref">1993</a>)</span>, la incorporación explícita de los pesos muestrales puede ser necesaria cuando el diseño es informativo o el parámetro objetivo es poblacional, pero no garantiza universalmente estimadores insesgados ni sustituye la estimación de varianza ajustada al diseño. Este contexto pone de manifiesto la discusión entre el enfoque basado en el diseño, que prioriza las propiedades estadísticas a nivel poblacional, y el enfoque basado en los modelos, que depende de la correcta especificación funcional. En consecuencia, se enfatiza la importancia de evaluar la sensibilidad de los resultados mediante comparaciones entre estimaciones con y sin ponderación. Adicionalmente, se introducen los modelos lineales generalizados y los modelos multinivel, que amplían el alcance del análisis a variables respuesta no normales, como variables binarias (regresión logística), conteos (regresión de Poisson) y proporciones.</p>
+<p>La organización de los capítulos sigue la arquitectura conceptual descrita anteriormente, avanzando de los fundamentos hacia las aplicaciones más complejas. De esta forma, el capítulo 2 presenta los conceptos básicos para el análisis de encuestas de hogares, destacando que la validez de las estimaciones depende de incorporar adecuadamente el diseño muestral. Se explican los elementos centrales de una encuesta, como la población objetivo, el marco muestral, las unidades de muestreo, la estratificación, la conglomeración y los pesos de muestreo. Además, el capítulo introduce los principales estimadores de muestreo para totales, medias y otros parámetros poblacionales y desarrolla los fundamentos para estimar la varianza e intervalos de confianza.</p>
+<p>En el capítulo 3 se aborda la estimación rigurosa de parámetros descriptivos para variables numéricas bajo diseños complejos y se desarrollan técnicas para estimar totales y medias, junto con la estimación de varianzas mediante el método del último conglomerado y la construcción de intervalos de confianza con grados de libertad ajustados. Asimismo, se presentan enfoques alternativos para la estimación de la varianza, como la linealización de Taylor, las ecuaciones de estimación y los métodos de replicación, incluyendo bootstrap y jackknife. El capítulo también cubre la estimación de cuantiles ponderados, el análisis de desigualdad mediante indicadores como el índice de Gini y la curva de Lorenz, la estimación en dominios y subpoblaciones, y la visualización de resultados con intervalos de confianza.</p>
+<p>En el capítulo 4 se aborda el análisis de variables categóricas bajo diseños complejos, incluyendo la evaluación de asociaciones entre categorías mediante métodos que incorporan adecuadamente el diseño muestral. Se desarrollan técnicas para estimar tamaños poblacionales y proporciones a partir de ponderaciones, junto con la estimación de su variabilidad mediante linealización y la construcción de intervalos de confianza, incluyendo enfoques robustos para proporciones extremas. Asimismo, se presentan tablas de contingencia ponderadas con sus respectivas frecuencias y proporciones, así como pruebas de independencia que ajustan la estadística clásica para reflejar el efecto del diseño. El capítulo también cubre la estimación e interpretación de medidas de asociación como la razón de odds, el análisis de diferencias de proporciones entre subpoblaciones mediante contrastes, y diversas estrategias de visualización, incluyendo gráficos de barras con intervalos de confianza y mapas.</p>
+<p>El capítulo 5 se enfoca en analizar relaciones entre variables y construir modelos predictivos o explicativos válidos bajo diseños complejos, cuando los supuestos clásicos de independencia e idéntica distribución no se cumplen. Se presenta la evolución del problema desde los aportes iniciales hasta los desarrollos más recientes, y discute las implicaciones de trabajar con datos de encuestas en el contexto de los modelos de regresión, incluyendo la violación de los supuestos del modelo lineal clásico. Se contrasta el enfoque basado en el diseño con el basado en los modelos. El capítulo también aborda la realización de pruebas de hipótesis con ajustes apropiados, el diagnóstico de residuales y la identificación de observaciones influyentes.</p>
+<p>En el capítulo 6 se extiende la modelación estadística a variables que no siguen una distribución normal (como variables binarias, multinomiales y estrictamente positivas) en el contexto de diseños de muestreo complejo. Para ello, se construye un marco unificado basado en los modelos lineales generalizados, incorporando sus componentes fundamentales y se discute la dualidad inferencial en poblaciones finitas, donde coexisten la medida de probabilidad del modelo y la del diseño muestral. Asimismo, se contrasta el enfoque clásico de máxima verosimilitud con el de máxima pseudo-verosimilitud, basado en ecuaciones de estimación ponderadas que incorporan los pesos muestrales, y se estudia la estimación de la varianza mediante técnicas de linealización.</p>
+<p>En el capítulo 7 se revisan los modelos multinivel, también llamados jerárquicos o de efectos mixtos, para analizar datos con estructura anidada incorporando simultáneamente variables a nivel individual y contextual. A través de ejemplos de regresión (con interceptos y pendientes que varían por estrato), se muestra que ignorar la estructura jerárquica puede llevar a inferencias incorrectas, mientras que modelarla explícitamente permite capturar heterogeneidad entre grupos y aprovechar la información compartida. El enfoque se formaliza con el modelo nulo, que descompone la varianza en componentes dentro y entre estratos y, de acuerdo con <span class="citation" data-cites="pfeffermann1998weighting">Pfeffermann et&nbsp;al. (<a href="references.html#ref-pfeffermann1998weighting" role="doc-biblioref">1998</a>)</span>, <span class="citation" data-cites="rabehesketh2006multilevel">Rabe-Hesketh y Skrondal (<a href="references.html#ref-rabehesketh2006multilevel" role="doc-biblioref">2006</a>)</span> y <span class="citation" data-cites="snijders2011">Snijders y Bosker (<a href="references.html#ref-snijders2011" role="doc-biblioref">2011</a>)</span>, permite calcular la correlación intraclase (ICC), indicador clave para cuantificar la dependencia intragrupo.</p>
+<p>Adicionalmente, el primer apéndice introduce el manejo de bases de datos en <code>R</code> mediante el entorno <code>tidyverse</code>, con énfasis en el paquete <code>dplyr</code>. A partir de la base de datos <code>BigCity</code>, se presenta un flujo básico de trabajo que incluye la carga de librerías, la inspección inicial de la base, el uso del operador de encadenamiento <code>%&gt;%</code> y la aplicación de los principales verbos de <code>dplyr</code>: <code>filter()</code>, <code>select()</code>, <code>arrange()</code>, <code>mutate()</code>, <code>summarise()</code> y <code>group_by()</code>. El capítulo muestra cómo seleccionar registros y variables, ordenar datos, crear nuevas variables y producir resúmenes descriptivos, explicando tanto la lógica de los códigos como la interpretación de sus salidas.</p>
+<p>Finalmente, el segundo apéndice aborda la inferencia en poblaciones finitas y la diferencia entre la inferencia basada en modelos y la inferencia basada en el diseño muestral. A partir de ejemplos de simulación, muestra que, como explican <span class="citation" data-cites="binder1983variances">Binder (<a href="references.html#ref-binder1983variances" role="doc-biblioref">1983</a>)</span> y <span class="citation" data-cites="pfeffermann1993role">Pfeffermann (<a href="references.html#ref-pfeffermann1993role" role="doc-biblioref">1993</a>)</span>, en encuestas complejas la aleatoriedad proviene principalmente de la selección de la muestra y que, por tanto, las estimaciones deben incorporar las probabilidades de inclusión y los pesos muestrales. Se presenta el método de máxima verosimilitud como punto de partida para modelos estadísticos bajo supuestos de observaciones independientes, y luego presenta la máxima pseudo-verosimilitud como una extensión adecuada para datos de encuestas, donde cada contribución individual se pondera según el diseño.</p>
+<p>El lector que recorra los capítulos en orden habrá construido la capacidad de tomar cualquier encuesta de hogares latinoamericana, entender su diseño, procesar sus datos, estimar los indicadores de interés con la precisión estadística correcta, modelar las relaciones entre variables de manera válida bajo el diseño complejo, y reconocer los problemas derivados de la no respuesta, cuyo tratamiento específico deberá incorporarse en el capítulo correspondiente. Esa capacidad es, en esencia, lo que la producción rigurosa de estadísticas sociales exige.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-binder1983variances" class="csl-entry" role="listitem">
+Binder, David A. 1983. <span>«On the variances of asymptotically normal estimators from complex surveys»</span>. <em>International Statistical Review/Revue Internationale de Statistique</em>, 279-92.
+</div>
+<div id="ref-cochran1977sampling" class="csl-entry" role="listitem">
+Cochran, William Gemmell. 1977. <em>Sampling techniques</em>. John Wiley &amp; Sons.
+</div>
+<div id="ref-FreedmanEllis2026" class="csl-entry" role="listitem">
+Freedman Ellis, Greg, y Ben Schneider. 2026. <em>srvyr: ’dplyr’-Like Syntax for Summary Statistics of Survey Data</em>. <a href="https://doi.org/10.32614/CRAN.package.srvyr">https://doi.org/10.32614/CRAN.package.srvyr</a>.
+</div>
+<div id="ref-fuller1975regression" class="csl-entry" role="listitem">
+Fuller, Wayne A. 1975. <span>«Regression analysis for sample survey»</span>. <em>Sankhya, Series C</em> 37: 117-32.
+</div>
+<div id="ref-Gutierrez2016" class="csl-entry" role="listitem">
+Gutiérrez, Hugo Andrés. 2016. <em>Estrategias de muestreo: diseño de encuestas y estimación de parámetros</em>. Segunda edición. Ediciones de la U.
+</div>
+<div id="ref-hansen1953sample" class="csl-entry" role="listitem">
+Hansen, Morris H, William N Hurwitz, William G Madow, et&nbsp;al. 1953. <span>«Sample survey methods and theory»</span>.
+</div>
+<div id="ref-heeringa2017applied" class="csl-entry" role="listitem">
+Heeringa, Steven G, Brady T West, Steve G Heeringa, y Patricia A Berglund. 2017. <em>Applied survey data analysis</em>. chapman; hall/CRC.
+</div>
+<div id="ref-kish1974inference" class="csl-entry" role="listitem">
+Kish, Leslie, y Martin R. Frankel. 1974. <span>«Inference from complex samples»</span>. <em>Journal of the Royal Statistical Society, Series B</em> 36: 1-37.
+</div>
+<div id="ref-Lumley2004" class="csl-entry" role="listitem">
+Lumley, Thomas. 2004. <span>«Analysis of Complex Survey Samples»</span>. <em>Journal of Statistical Software</em> 9 (1): 1-19.
+</div>
+<div id="ref-Lumley2010" class="csl-entry" role="listitem">
+———. 2010. <em>Complex Surveys: A Guide to Analysis Using R: A Guide to Analysis Using R</em>. John Wiley; Sons.
+</div>
+<div id="ref-Lumley2026" class="csl-entry" role="listitem">
+Lumley, Thomas, Peter Gao, Ben Schneider, y Stas Kolenikov. 2026. <em>survey: Analysis of Complex Survey Samples</em>. <a href="https://doi.org/10.32614/CRAN.package.survey">https://doi.org/10.32614/CRAN.package.survey</a>.
+</div>
+<div id="ref-ONUDeff" class="csl-entry" role="listitem">
+Naciones Unidas. 2009. <em>Diseño de Muestras para Encuestas de Hogares: Directrices Prácticas.</em> Estudios de Métodos, Serie F 98. Nueva York: Naciones Unidas. <a href="https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf">https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf</a>.
+</div>
+<div id="ref-nelder1972generalized" class="csl-entry" role="listitem">
+Nelder, John A., y Robert W. M. Wedderburn. 1972. <span>«Generalized Linear Models»</span>. <em>Journal of the Royal Statistical Society: Series A (General)</em> 135 (3): 370-84. <a href="https://doi.org/10.2307/2344614">https://doi.org/10.2307/2344614</a>.
+</div>
+<div id="ref-pfeffermann1993role" class="csl-entry" role="listitem">
+Pfeffermann, Danny. 1993. <span>«The Role of Sampling Weights When Modeling Survey Data»</span>. <em>International Statistical Review</em> 61 (2): 317-37. <a href="https://doi.org/10.2307/1403631">https://doi.org/10.2307/1403631</a>.
+</div>
+<div id="ref-pfeffermann1998weighting" class="csl-entry" role="listitem">
+Pfeffermann, Danny, Chris J. Skinner, David J. Holmes, Harvey Goldstein, y Jon Rasbash. 1998. <span>«Weighting for Unequal Selection Probabilities in Multilevel Models»</span>. <em>Journal of the Royal Statistical Society: Series B</em> 60 (1): 23-40. <a href="https://doi.org/10.1111/1467-9868.00106">https://doi.org/10.1111/1467-9868.00106</a>.
+</div>
+<div id="ref-RProject2026" class="csl-entry" role="listitem">
+R Core Team. 2026. <span>«What is R?»</span> <a href="https://www.r-project.org/about.html">https://www.r-project.org/about.html</a>.
+</div>
+<div id="ref-rabehesketh2006multilevel" class="csl-entry" role="listitem">
+Rabe-Hesketh, Sophia, y Anders Skrondal. 2006. <span>«Multilevel Modelling of Complex Survey Data»</span>. <em>Journal of the Royal Statistical Society: Series A</em> 169 (4): 805-27. <a href="https://doi.org/10.1111/j.1467-985X.2006.00426.x">https://doi.org/10.1111/j.1467-985X.2006.00426.x</a>.
+</div>
+<div id="ref-sarndal2003model" class="csl-entry" role="listitem">
+Särndal, Carl-Erik, Bengt Swensson, y Jan Wretman. 2003. <em>Model assisted survey sampling</em>. Springer Science &amp; Business Media.
+</div>
+<div id="ref-Seidenberg2023PRICSSA" class="csl-entry" role="listitem">
+Seidenberg, Andrew B., Richard P. Moser, y Brady T. West. 2023. <span>«Preferred Reporting Items for Complex Sample Survey Analysis (PRICSSA)»</span>. <em>Journal of Survey Statistics and Methodology</em> 11 (4): 743-57. <a href="https://doi.org/10.1093/jssam/smac040">https://doi.org/10.1093/jssam/smac040</a>.
+</div>
+<div id="ref-snijders2011" class="csl-entry" role="listitem">
+Snijders, Tom AB, y Roel Bosker. 2011. <span>«Multilevel analysis: An introduction to basic and advanced multilevel modeling»</span>.
+</div>
+<div id="ref-UnitedNations2019NQAF" class="csl-entry" role="listitem">
+United Nations. 2019. <span>«United Nations National Quality Assurance Frameworks Manual for Official Statistics»</span>. New York: United Nations Statistics Division. <a href="https://unstats.un.org/unsd/methodology/dataquality/references/1902216-UNNQAFManual-WEB.pdf">https://unstats.un.org/unsd/methodology/dataquality/references/1902216-UNNQAFManual-WEB.pdf</a>.
+</div>
+<div id="ref-UnitedNations2014FPOS" class="csl-entry" role="listitem">
+United Nations General Assembly. 2014. <span>«Fundamental Principles of Official Statistics»</span>. <a href="https://unstats.un.org/fpos">https://unstats.un.org/fpos</a>.
+</div>
+<div id="ref-Wolter2007Variance" class="csl-entry" role="listitem">
+Wolter, Kirk M. 2007. <em>Introduction to Variance Estimation</em>. Springer.
+</div>
+<div id="ref-Xie2016bookdown" class="csl-entry" role="listitem">
+Xie, Yihui. 2016. <em>bookdown: Authoring Books and Technical Documents with R Markdown</em>. Boca Raton: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/bookdown/">https://bookdown.org/yihui/bookdown/</a>.
+</div>
+<div id="ref-Xie2018RMarkdown" class="csl-entry" role="listitem">
+Xie, Yihui, J. J. Allaire, y Garrett Grolemund. 2018. <em>R Markdown: The Definitive Guide</em>. Boca Raton: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/rmarkdown/">https://bookdown.org/yihui/rmarkdown/</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const labels = {
+    note: "Nota",
+    tip: "Consejo",
+    important: "Importante",
+    warning: "Advertencia",
+    caution: "Precaución"
+  };
+
+  Object.keys(labels).forEach(function (type) {
+    document.querySelectorAll(".callout-" + type).forEach(function (callout, index) {
+      const title = callout.querySelector(".callout-title-container");
+      if (!title || title.dataset.numbered === "true") {
+        return;
+      }
+
+      const text = title.textContent.trim();
+      if (!text || text === labels[type]) {
+        title.textContent = labels[type] + " " + (index + 1);
+      } else if (!new RegExp("^" + labels[type] + "\\s+\\d+").test(text)) {
+        title.textContent = labels[type] + " " + (index + 1) + ". " + text;
+      }
+      title.dataset.numbered = "true";
+    });
+  });
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link" aria-label="Prefacio">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Prefacio</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/02-Conceptos.html" class="pagination-link" aria-label="Conceptos básicos en encuestas de hogares">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Conceptos básicos en encuestas de hogares</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Análisis de encuestas de hogares usando R</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
