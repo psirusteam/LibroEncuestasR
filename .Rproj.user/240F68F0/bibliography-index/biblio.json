@@ -4,7 +4,7 @@
             "URL": "https://unstats.un.org/unsd/publication/seriesf/seriesf_96e.pdf",
             "author": [
                 {
-                    "literal": "NacionesUnidas"
+                    "literal": "Naciones Unidas"
                 }
             ],
             "collection-number": "Series F No. 96",
@@ -17,7 +17,7 @@
                     ]
                 ]
             },
-            "publisher": "NacionesUnidas",
+            "publisher": "Naciones Unidas",
             "publisher-place": "New York",
             "title": "Household sample surveys in developing and transition countries",
             "type": "book"
@@ -26,7 +26,7 @@
             "URL": "https://unstats.un.org/unsd/statcom/decisions-ref/?code=49%2F106",
             "author": [
                 {
-                    "literal": "NacionesUnidas"
+                    "literal": "Naciones Unidas"
                 }
             ],
             "id": "UnitedNations2018HouseholdSDG",
@@ -91,7 +91,7 @@
             "URL": "https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf",
             "author": [
                 {
-                    "literal": "NacionesUnidas"
+                    "literal": "Naciones Unidas"
                 }
             ],
             "collection-number": "98",
@@ -104,7 +104,7 @@
                     ]
                 ]
             },
-            "publisher": "NacionesUnidas",
+            "publisher": "Naciones Unidas",
             "publisher-place": "Nueva York",
             "title": "Diseño de muestras para encuestas de hogares: Directrices prácticas.",
             "title-short": "Diseño de muestras para encuestas de hogares",
@@ -566,7 +566,7 @@
             "URL": "https://unstats.un.org/fpos",
             "author": [
                 {
-                    "literal": "NacionesUnidas"
+                    "literal": "Naciones Unidas"
                 }
             ],
             "id": "UnitedNations2014FPOS",
@@ -585,7 +585,7 @@
             "URL": "https://unstats.un.org/unsd/methodology/dataquality/references/1902216-UNNQAFManual-WEB.pdf",
             "author": [
                 {
-                    "literal": "NacionesUnidas"
+                    "literal": "Naciones Unidas"
                 }
             ],
             "id": "UnitedNations2019NQAF",
@@ -596,9 +596,9 @@
                     ]
                 ]
             },
-            "publisher": "NacionesUnidas",
+            "publisher": "Naciones Unidas",
             "publisher-place": "New York",
-            "title": "NacionesUnidas national quality assurance frameworks manual for official statistics",
+            "title": "Naciones unidas national quality assurance frameworks manual for official statistics",
             "type": "report"
         },
         {
@@ -710,7 +710,7 @@
                 ]
             },
             "note": "LC/PUB.2023/14-P",
-            "publisher": "NacionesUnidas",
+            "publisher": "Naciones Unidas",
             "publisher-place": "Santiago",
             "title": "Diseño y análisis estadístico de las encuestas de hogares de américa latina",
             "type": "book"
@@ -718,7 +718,7 @@
         {
             "author": [
                 {
-                    "literal": "NacionesUnidas"
+                    "literal": "Naciones Unidas"
                 }
             ],
             "id": "UNhandbook",
@@ -729,7 +729,7 @@
                     ]
                 ]
             },
-            "publisher": "NacionesUnidas",
+            "publisher": "Naciones Unidas",
             "title": "Handbook of surveys on households and individuals foundations and emerging approaches",
             "type": "book"
         },

@@ -6,14 +6,9 @@ knitr::opts_chunk$set(
   fig.align = "center",
   fig.width = 6,
   fig.height = 4,
-  out.width = "70%"
+  out.width = "70%",
+  fig.path = "../figures/"
 )
-
-if (knitr::is_latex_output()) {
-  knitr::opts_chunk$set(fig.path = "../figures/")
-} else {
-  knitr::opts_chunk$set(fig.path = "../figures/")
-}
 
 options(scipen = 999, digits = 3)
 source("../_tabla_helper.R")
@@ -21,9 +16,9 @@ source("../_tabla_helper.R")
 
 # Modelos lineales generalizados  {#cap6}
 
-Este enfoque fue introducido por @nelder1972generalized, quienes demostraron que diversos métodos estadísticos ampliamente utilizados, como la regresión logística, los modelos log-lineales para datos de conteo y ciertos modelos avanzados de regresión para variables continuas, podían integrarse dentro de un mismo marco teórico unificado. Esta formulación permitió extender las herramientas de regresión más allá de los escenarios en los que la variable respuesta sigue una distribución normal. Cuando la variable de interés no es continua o los supuestos del modelo lineal clásico no se satisfacen, los modelos lineales generalizados constituyen, como explican @McCullaghNelder1989, una alternativa adecuada para modelar las relaciones de interés.
+@nelder1972generalized introdujeron los modelos lineales generalizados como un marco capaz de integrar diversos métodos estadísticos ampliamente utilizados, como la regresión logística, los modelos log-lineales para datos de conteo y ciertos modelos avanzados de regresión para variables continuas. Posteriormente, @McCullaghNelder1989 sistematizaron esta formulación, que permitió extender las herramientas de regresión más allá de los escenarios en los que la variable respuesta sigue una distribución normal. Cuando la variable de interés no es continua o los supuestos del modelo lineal clásico no se satisfacen, los modelos lineales generalizados constituyen una alternativa adecuada para modelar las relaciones de interés.
 
-La necesidad de esta generalización surge porque los modelos lineales clásicos asumen, entre otras cosas, normalidad y homogeneidad de varianza en la variable respuesta, condiciones que rara vez se cumplen cuando se analizan variables categóricas, proporciones o conteos. En este tipo de situaciones, @McCullaghNelder1989 muestran que los modelos lineales generalizados ofrecen un marco flexible para modelar adecuadamente la relación entre las variables mediante la selección de una distribución de probabilidad apropiada para la respuesta y una función de enlace que conecte la media de dicha distribución con el predictor lineal.
+La necesidad de esta generalización surge porque los modelos lineales clásicos asumen, entre otras cosas, normalidad y homogeneidad de varianza en la variable respuesta, condiciones que rara vez se cumplen cuando se analizan variables categóricas, proporciones o conteos. En este tipo de situaciones, los modelos lineales generalizados ofrecen un marco flexible para modelar adecuadamente la relación entre las variables mediante la selección de una distribución de probabilidad apropiada para la respuesta y una función de enlace que conecte la media de dicha distribución con el predictor lineal [@McCullaghNelder1989].
 
 Para ilustrar los modelos presentados en este capítulo se utilizan la base de datos `survey_data` y la población `BigCity`, siguiendo la misma estructura utilizada en capítulos anteriores. Después de cargar `tidyverse`, `survey`, `srvyr`, `broom` y `jtools`, el siguiente bloque de código crea dos nuevas variables categóricas (`poor` y `unemployed`) a partir de las variables originales `Poverty` y `Employment`, respectivamente.
 
@@ -63,9 +58,9 @@ survey_design <- survey_design %>%
 
 ## Modelo de regresión logística {#sec-logistica}
 
-Cuando la variable de interés es dicotómica, tomando valores de cero o uno, el modelo lineal clásico no resulta adecuado debido a que puede generar predicciones fuera del intervalo $(0,1)$ y porque la varianza de la respuesta depende de su media. Para abordar estas limitaciones, @McCullaghNelder1989 y @Agresti2019Intro presentan el modelo de regresión logística, uno de los modelos lineales generalizados más utilizados para analizar variables binarias. En el contexto de encuestas de hogares, la regresión logística puede emplearse para analizar la asociación entre una condición de interés, como la pobreza, y características sociodemográficas de los individuos o los hogares.
+Cuando la variable de interés es dicotómica, tomando valores de cero o uno, el modelo lineal clásico no resulta adecuado debido a que puede generar predicciones fuera del intervalo $(0,1)$ y porque la varianza de la respuesta depende de su media. Para abordar estas limitaciones, el modelo de regresión logística constituye uno de los modelos lineales generalizados más utilizados para analizar variables binarias. En el contexto de encuestas de hogares, la regresión logística puede emplearse para analizar la asociación entre una condición de interés, como la pobreza, y características sociodemográficas de los individuos o los hogares [@McCullaghNelder1989; @Agresti2019Intro].
 
-Considere, siguiendo a @Agresti2019Intro, una variable dicotómica $Y_k \in \{0,1\}$, cuya esperanza es $\theta_k=Pr(Y_k=1)$. El modelo de regresión logística relaciona dicha probabilidad con un conjunto de variables explicativas mediante la función de enlace logit, definida como
+Considere, una variable dicotómica $Y_k \in \{0,1\}$, cuya esperanza es $\theta_k=Pr(Y_k=1)$. El modelo de regresión logística relaciona dicha probabilidad con un conjunto de variables explicativas mediante la función de enlace logit, definida como [@Agresti2019Intro]
 
 $$
 \log\left(\frac{\theta_k}{1-\theta_k}\right)
@@ -86,7 +81,7 @@ Pr(Y_k = 1 \mid \mathbf{x}_k)
 $$
 
 De manera equivalente, la probabilidad de que la unidad no presente la característica de interés es $Pr(Y_k = 0 \mid \mathbf{x}_k) = 1-\theta_k$. Bajo esta parametrización, cada coeficiente de $\boldsymbol{\beta}$ representa el efecto de una covariable sobre el logaritmo de la razón de probabilidades de que ocurra el evento de interés, manteniendo constantes las demás variables del modelo.
-La estimación de los parámetros puede realizarse mediante el enfoque de pseudo-máxima verosimilitud. Este método incorpora los factores de expansión en la función de verosimilitud convencional con el fin de obtener estimadores consistentes respecto de la población objetivo. Siguiendo a @heeringa2017applied, la función de pseudo-verosimilitud para el modelo logístico se define como
+La estimación de los parámetros puede realizarse mediante el enfoque de pseudo-máxima verosimilitud. Este método incorpora los factores de expansión en la función de verosimilitud convencional con el fin de obtener estimadores consistentes respecto de la población objetivo. La función de pseudo-verosimilitud para el modelo logístico se define como [@heeringa2017applied]
 
 $$
 PL(\boldsymbol{\beta})
@@ -119,13 +114,13 @@ $$
 
 Esta expresión constituye la función objetivo utilizada por los algoritmos de optimización numérica para obtener el estimador de los parámetros del modelo. Es importante señalar que la función anterior no corresponde a una verosimilitud en sentido estricto bajo el diseño complejo de la encuesta. Por esta razón, se utiliza el término *pseudo-verosimilitud* y los estimadores obtenidos mediante su maximización son conocidos como estimadores de pseudo-máxima verosimilitud (*Pseudo Maximum Likelihood Estimators*, PMLE).
 
-Según @molina1992pseudo y @ChambersSkinner2003, bajo condiciones de regularidad, estos estimadores son consistentes y asintóticamente normales, constituyendo la base de procedimientos de inferencia para el análisis de datos de encuestas complejas.
+Bajo condiciones de regularidad, estos estimadores son consistentes y asintóticamente normales, constituyendo la base de procedimientos de inferencia para el análisis de datos de encuestas complejas [@molina1992pseudo; @ChambersSkinner2003].
 
-Una vez obtenidos los estimadores de pseudo-máxima verosimilitud, sus varianzas se estiman, siguiendo a @binder1983variances, mediante técnicas de linealización de Taylor, las cuales incorporan explícitamente las características del diseño complejo de muestreo. La matriz de varianzas y covarianzas de los parámetros estimados, denotada por $\text{Var}(\hat{\boldsymbol{\beta}})=\boldsymbol{\Sigma}$, se obtiene a partir de una aproximación lineal de las ecuaciones de estimación alrededor del verdadero valor de los parámetros.
+Una vez obtenidos los estimadores de pseudo-máxima verosimilitud, sus varianzas se estiman, mediante técnicas de linealización de Taylor, las cuales incorporan explícitamente las características del diseño complejo de muestreo. La matriz de varianzas y covarianzas de los parámetros estimados, denotada por $\text{Var}(\hat{\boldsymbol{\beta}})=\boldsymbol{\Sigma}$, se obtiene a partir de una aproximación lineal de las ecuaciones de estimación alrededor del verdadero valor de los parámetros [@binder1983variances].
 
 Esta matriz describe la precisión de los estimadores, ya que sus elementos diagonales corresponden a las varianzas de cada coeficiente, mientras que los elementos fuera de la diagonal representan las covarianzas entre pares de coeficientes. Su estimación constituye la base para el cálculo de errores estándar, la construcción de intervalos de confianza y la realización de pruebas de hipótesis sobre los parámetros del modelo.
 
-Como los datos provienen de un diseño muestral complejo, es necesario, de acuerdo con @heeringa2017applied, incorporar adecuadamente las ponderaciones, la estratificación y la conglomeración para obtener estimadores consistentes de los parámetros y de sus errores estándar. En `R`, esta tarea puede realizarse mediante la función `svyglm()` del paquete `survey`, la cual extiende los modelos lineales generalizados al contexto de encuestas complejas.
+Como los datos provienen de un diseño muestral complejo, es necesario incorporar adecuadamente las ponderaciones, la estratificación y la conglomeración para obtener estimadores consistentes de los parámetros y de sus errores estándar. En `R`, esta tarea puede realizarse mediante la función `svyglm()` del paquete `survey`, la cual extiende los modelos lineales generalizados al contexto de encuestas complejas [@heeringa2017applied].
 
 Siguiendo con la encuesta de ejemplo, y con el fin de analizar los factores asociados a la condición de pobreza, se ajusta un modelo de regresión logística utilizando como variables explicativas el gasto, la situación en el empleo y el sexo. Dado que los datos provienen de una encuesta con diseño muestral complejo, la estimación se realiza mediante la función `svyglm()` del paquete `survey`, especificando `family = binomial` para indicar que la variable respuesta es dicotómica y que se utilizará la función de enlace logit. Los resultados del ajuste se presentan en la @tbl-ic-logistica.
 
@@ -157,7 +152,7 @@ logit_results %>%
 
 La @fig-logistica-base presenta la distribución de los estimadores de los coeficientes de regresión. Se observa que, para todas las covariables excepto el sexo, los intervalos de confianza no incluyen el valor cero, lo que proporciona evidencia de una asociación estadísticamente significativa. En contraste, el intervalo de confianza asociado a la variable sexo contiene el valor cero, por lo que no se encuentra evidencia suficiente para concluir que esta variable tenga un efecto significativo una vez controladas las demás covariables incluidas en el modelo.
 
-Para visualizar la distribución de los coeficientes se emplea `ggstance`, documentado por @ggstance2024, para la geometría horizontal de los intervalos, junto con `plot_summs()` del paquete `jtools`, documentado por @jtools2026.
+Para visualizar la distribución de los coeficientes se emplea `ggstance` para la geometría horizontal de los intervalos, junto con `plot_summs()` del paquete `jtools` [@ggstance2024; @jtools2026].
 
 ```{r fig-logistica-base, fig.cap="Distribución de los parámetros del modelo logístico base", out.width="80%"}
 library(ggstance)
@@ -168,7 +163,7 @@ plot_summs(logit_model,
 ```
 
 
-El modelo puede ampliarse, como explica @Agresti2019Intro, incorporando términos de interacción para evaluar si el efecto de una variable explicativa depende de los valores que toma otra. En este caso, se incluye una interacción entre el sexo y la situación laboral mediante el término `Sex:Employment`, con el objetivo de analizar si la relación entre el estado ocupacional y la probabilidad de pobreza es la misma para hombres y mujeres. Sin este término, el modelo asume que el efecto de la situación laboral sobre la pobreza es idéntico para ambos sexos. En cambio, al incorporar la interacción, se permite que dicho efecto varíe entre hombres y mujeres, capturando posibles diferencias en la forma en que la condición laboral se asocia con la pobreza en cada grupo. Los resultados del modelo ajustado se presentan en la @tbl-logistica-interaccion.
+El modelo puede ampliarse incorporando términos de interacción para evaluar si el efecto de una variable explicativa depende de los valores que toma otra. En este caso, se incluye una interacción entre el sexo y la situación laboral mediante el término `Sex:Employment`, con el objetivo de analizar si la relación entre el estado ocupacional y la probabilidad de pobreza es la misma para hombres y mujeres. Sin este término, el modelo asume que el efecto de la situación laboral sobre la pobreza es idéntico para ambos sexos. En cambio, al incorporar la interacción, se permite que dicho efecto varíe entre hombres y mujeres, capturando posibles diferencias en la forma en que la condición laboral se asocia con la pobreza en cada grupo. Los resultados del modelo ajustado se presentan en la @tbl-logistica-interaccion [@Agresti2019Intro].
 
 ```{r mod-logistico-interaccion, echo = TRUE, eval = TRUE}
 interaction_logit_model <- svyglm(
@@ -193,7 +188,7 @@ interaction_logit_results %>%
   tabla_fmt()
 ```
 
-Al incorporar la interacción entre sexo y situación laboral, el gasto continúa mostrando una asociación negativa y estadísticamente significativa con la probabilidad de pobreza, manteniéndose como la covariable con mayor evidencia explicativa dentro del modelo. En contraste, los efectos principales de la situación laboral pierden importancia estadística una vez que se incluyen los términos de interacción, lo que sugiere una mayor incertidumbre en la estimación de sus efectos. Por su parte, ni el efecto principal del sexo ni los coeficientes asociados a las interacciones entre sexo y situación laboral resultan estadísticamente significativos al nivel del 5%. Estos resultados individuales no bastan para afirmar que la interacción no aporta información; esa conclusión requiere una prueba conjunta de los términos de interacción ajustada al diseño, como explican @heeringa2017applied.
+Al incorporar la interacción entre sexo y situación laboral, el gasto continúa mostrando una asociación negativa y estadísticamente significativa con la probabilidad de pobreza, manteniéndose como la covariable con mayor evidencia explicativa dentro del modelo. En contraste, los efectos principales de la situación laboral pierden importancia estadística una vez que se incluyen los términos de interacción, lo que sugiere una mayor incertidumbre en la estimación de sus efectos. Por su parte, ni el efecto principal del sexo ni los coeficientes asociados a las interacciones entre sexo y situación laboral resultan estadísticamente significativos al nivel del 5%. Estos resultados individuales no bastan para afirmar que la interacción no aporta información; esa conclusión requiere una prueba conjunta de los términos de interacción ajustada al diseño [@heeringa2017applied].
 
 La @fig-comparacion-logistica presenta una comparación de las estimaciones de los coeficientes y sus respectivos intervalos de confianza para los modelos con y sin interacción. Se observa que la incorporación de los términos de interacción incrementa la incertidumbre asociada a varios de los parámetros, lo que se refleja en intervalos de confianza más amplios. Asimismo, los coeficientes de interacción presentan estimaciones cercanas a cero y amplios intervalos de confianza que incluyen dicho valor, lo que coincide con la falta de evidencia estadística para concluir que el efecto de la situación laboral sobre la probabilidad de pobreza difiere entre hombres y mujeres.
 
@@ -207,11 +202,11 @@ plot_summs(interaction_logit_model, logit_model,
 
 ## Modelo de regresión multinomial {#sec-multinomial}
 
-En las encuestas de hogares es frecuente encontrar variables de respuesta con más de dos categorías, como la situación laboral, cuyos posibles estados incluyen empleado, desempleado e inactivo. Cuando estas categorías son mutuamente excluyentes y no poseen un orden natural, @McCullaghNelder1989 y @Agresti2019Intro presentan la regresión logística multinomial como una herramienta adecuada para modelar su relación con un conjunto de covariables y como una extensión de la regresión logística binaria.
+En las encuestas de hogares es frecuente encontrar variables de respuesta con más de dos categorías, como la situación laboral, cuyos posibles estados incluyen empleado, desempleado e inactivo. Cuando estas categorías son mutuamente excluyentes y no poseen un orden natural, la regresión logística multinomial ofrece una herramienta adecuada para modelar su relación con un conjunto de covariables y puede entenderse como una extensión de la regresión logística binaria [@McCullaghNelder1989; @Agresti2019Intro].
 
-Este modelo permite estimar la probabilidad de pertenecer a cada categoría de la variable respuesta en función de variables explicativas de naturaleza continua o categórica. Su aplicación requiere que las categorías de respuesta sean exhaustivas y mutuamente excluyentes y que no exista multicolinealidad severa entre las covariables. Además, para las covariables continuas, se asume una relación lineal entre estas y el logaritmo de las razones de probabilidades (*log-odds*) de cada categoría respecto a una categoría de referencia. El logit multinomial de categoría base también implica la independencia de alternativas irrelevantes; @Agresti2019Intro recomienda valorar si ese supuesto es razonable para las categorías analizadas.
+Este modelo permite estimar la probabilidad de pertenecer a cada categoría de la variable respuesta en función de variables explicativas de naturaleza continua o categórica. Su aplicación requiere que las categorías de respuesta sean exhaustivas y mutuamente excluyentes y que no exista multicolinealidad severa entre las covariables. Además, para las covariables continuas, se asume una relación lineal entre estas y el logaritmo de las razones de probabilidades (*log-odds*) de cada categoría respecto a una categoría de referencia. El logit multinomial de categoría base también implica la independencia de alternativas irrelevantes, por lo que conviene valorar si ese supuesto es razonable para las categorías analizadas [@Agresti2019Intro].
 
-El modelo logístico multinomial especifica, siguiendo a @Agresti2019Intro, la probabilidad $\theta_{k(j)}$ de que la unidad $k$ pertenezca a la categoría $j$, con $j=1,\ldots,J$, dado el vector de covariables $\mathbf{x}_k$, mediante la siguiente expresión:
+El modelo logístico multinomial especifica, la probabilidad $\theta_{k(j)}$ de que la unidad $k$ pertenezca a la categoría $j$, con $j=1,\ldots,J$, dado el vector de covariables $\mathbf{x}_k$, mediante la siguiente expresión [@Agresti2019Intro]:
 
 $$
 Pr(Y_{k} = j \mid \mathbf{x}_{k})
@@ -222,9 +217,9 @@ Pr(Y_{k} = j \mid \mathbf{x}_{k})
      {\sum_{l=1}^{J} \exp(\mathbf{x}_{k}\boldsymbol{\beta}_l)}
 $$
 
-En donde $\boldsymbol{\beta}_j$ es el vector de coeficientes de regresión para la $j$-ésima categoría. Para identificar el modelo debe fijarse el vector de una categoría de referencia en cero; de ese modo, la expresión produce $J-1$ conjuntos de coeficientes estimables, como explica @Agresti2019Intro. Esta formulación expresa directamente las probabilidades de pertenencia a cada categoría, y en la práctica resulta más conveniente reescribir el modelo utilizando una categoría de referencia. Hay parametrizaciones alternativas que facilitan la interpretación de los parámetros, ya que cada conjunto de coeficientes describe el efecto de las covariables sobre el logaritmo de las razones de probabilidades (*log-odds*) de pertenecer a una determinada categoría en comparación con la categoría de referencia.
+En donde $\boldsymbol{\beta}_j$ es el vector de coeficientes de regresión para la $j$-ésima categoría. Para identificar el modelo debe fijarse el vector de una categoría de referencia en cero; de ese modo, la expresión produce $J-1$ conjuntos de coeficientes estimables. Esta formulación expresa directamente las probabilidades de pertenencia a cada categoría, y en la práctica resulta más conveniente reescribir el modelo utilizando una categoría de referencia. Hay parametrizaciones alternativas que facilitan la interpretación de los parámetros, ya que cada conjunto de coeficientes describe el efecto de las covariables sobre el logaritmo de las razones de probabilidades (*log-odds*) de pertenecer a una determinada categoría en comparación con la categoría de referencia [@Agresti2019Intro].
 
-La estimación de los parámetros del modelo se realiza mediante el enfoque de pseudo-máxima verosimilitud. Siguiendo a @heeringa2017applied, la función de pseudo-verosimilitud multinomial se define como
+La estimación de los parámetros del modelo se realiza mediante el enfoque de pseudo-máxima verosimilitud. La función de pseudo-verosimilitud multinomial se define como [@heeringa2017applied]
 
 
 $$
@@ -247,7 +242,7 @@ y_{k(j)}
 \log(\theta_{k(j)})
 $$
 
-La inferencia estadística para los parámetros de interés se basa, de acuerdo con @binder1983variances, en estimaciones de varianza obtenidas mediante técnicas de linealización de Taylor que incorporan explícitamente las características del diseño muestral complejo, permitiendo calcular errores estándar, intervalos de confianza y pruebas de hipótesis apropiados para datos de encuestas. Como se mencionó anteriormente, @molina1992pseudo muestran que los estimadores obtenidos mediante este procedimiento son consistentes y asintóticamente normales bajo condiciones regulares.
+La inferencia estadística para los parámetros de interés se basa en estimaciones de varianza obtenidas mediante técnicas de linealización de Taylor que incorporan explícitamente las características del diseño muestral complejo, permitiendo calcular errores estándar, intervalos de confianza y pruebas de hipótesis apropiados para datos de encuestas. Bajo condiciones regulares, los estimadores obtenidos mediante este procedimiento son consistentes y asintóticamente normales [@molina1992pseudo; @binder1983variances].
 
 Para el ajuste del modelo usando `R`, como referencia inicial, se estiman las proporciones de personas por estado de empleo, restringiendo las unidades de interés a mayores de 15 años, como se presenta en la @tbl-prop-empleo-15.
 
@@ -272,7 +267,7 @@ employment_proportion %>%
   tabla_fmt()
 ```
 
-Para modelar una variable de respuesta multinomial se emplea la función `svy_vglm()` del paquete `svyVGAM`, documentada por @svyVGAM2026, que permite ajustar modelos de regresión multinomial incorporando explícitamente las características del diseño complejo de la encuesta. En este ejemplo, se especifica un modelo donde la condición de actividad se explica en función de la edad, el sexo y la zona de residencia. A diferencia de los modelos multinomiales convencionales, `svy_vglm()` calcula las varianzas de los estimadores considerando la complejidad del diseño muestral, incluyendo la estratificación, la conglomeración y los pesos de expansión. De esta forma, tanto las estimaciones puntuales como sus errores estándar e inferencias asociadas son consistentes con el diseño de la encuesta.
+Para modelar una variable de respuesta multinomial se emplea la función `svy_vglm()` del paquete `svyVGAM`, que permite ajustar modelos de regresión multinomial incorporando explícitamente las características del diseño complejo de la encuesta. En este ejemplo, se especifica un modelo donde la condición de actividad se explica en función de la edad, el sexo y la zona de residencia. A diferencia de los modelos multinomiales convencionales, `svy_vglm()` calcula las varianzas de los estimadores considerando la complejidad del diseño muestral, incluyendo la estratificación, la conglomeración y los pesos de expansión. De esta forma, tanto las estimaciones puntuales como sus errores estándar e inferencias asociadas son consistentes con el diseño de la encuesta [@svyVGAM2026].
 
 ```{r mod-multinomial, echo = TRUE, eval = TRUE}
 library(svyVGAM)
@@ -333,7 +328,7 @@ multinomial_results %>%
   tabla_fmt()
 ```
 
-La @fig-multinomial-ic muestra los intervalos de confianza de los coeficientes estimados para cada ecuación del modelo multinomial. Se usa `gtools::stars.pval()`, documentada por @gtools2025, para codificar la significación estadística, y la visualización se construye con `dotwhisker::dwplot()`, documentada por @dotwhisker2025, que permite comparar coeficientes e intervalos en una escala común. Las covariables cuyos intervalos no incluyen el valor cero presentan evidencia de asociación estadística significativa con la variable respuesta, mientras que aquellos cuyos intervalos contienen el cero no muestran efectos significativos al nivel de confianza considerado.
+La @fig-multinomial-ic muestra los intervalos de confianza de los coeficientes estimados para cada ecuación del modelo multinomial. Se usa `gtools::stars.pval()` para codificar la significación estadística, y la visualización se construye con `dotwhisker::dwplot()`, lo que permite comparar coeficientes e intervalos en una escala común. Las covariables cuyos intervalos no incluyen el valor cero presentan evidencia de asociación estadística significativa con la variable respuesta, mientras que aquellos cuyos intervalos contienen el cero no muestran efectos significativos al nivel de confianza considerado [@gtools2025; @dotwhisker2025].
 
 ```{r fig-multinomial-ic, fig.cap="Intervalos de confianza para los coeficientes del modelo multinomial", eval = TRUE, echo = TRUE, out.width="75%"}
 multinomial_results %>%
@@ -352,9 +347,9 @@ multinomial_results %>%
 
 ## Modelo de regresión Gamma {#sec-gamma}
 
-La regresión Gamma, presentada por @McCullaghNelder1989, constituye una extensión de los modelos lineales generalizados adecuada para variables respuesta continuas, estrictamente positivas y cuya variabilidad aumenta con la media. Este comportamiento es frecuente en variables económicas y sociales, como los ingresos de los hogares o los gastos en consumo.
+La regresión Gamma constituye una extensión de los modelos lineales generalizados adecuada para variables respuesta continuas, estrictamente positivas y cuya variabilidad aumenta con la media. Este comportamiento es frecuente en variables económicas y sociales, como los ingresos de los hogares o los gastos en consumo [@McCullaghNelder1989].
 
-Si $Y_{k}$, la variable de interés observada para la unidad $k$, sigue una distribución Gamma con media $\mu_{k}$ y parámetro de dispersión $\phi$, el modelo relaciona el valor esperado de la variable respuesta con un conjunto de covariables mediante una función de enlace. El enlace logarítmico es una opción frecuente y garantiza predicciones positivas, aunque @McCullaghNelder1989 señalan que el enlace canónico de la familia Gamma es el inverso. En este caso, el modelo se expresa como
+Si $Y_{k}$, la variable de interés observada para la unidad $k$, sigue una distribución Gamma con media $\mu_{k}$ y parámetro de dispersión $\phi$, el modelo relaciona el valor esperado de la variable respuesta con un conjunto de covariables mediante una función de enlace. Como señalan @McCullaghNelder1989, el enlace logarítmico es una opción frecuente y garantiza predicciones positivas, aunque el enlace canónico de la familia Gamma es el inverso. En este caso, el modelo se expresa como
 
 $$
 \log(\mu_{k})
@@ -371,7 +366,7 @@ $$
 \exp(\mathbf{x}_{k}\boldsymbol{\beta}),
 $$
 
-Con el enlace logarítmico, cada parámetro puede interpretarse, de acuerdo con @McCullaghNelder1989, como el efecto de una covariable sobre el logaritmo de la media esperada, de manera que $\exp(\beta_j)$ representa el cambio multiplicativo asociado a un incremento unitario en la covariable correspondiente, manteniendo constantes las demás variables del modelo. Bajo la distribución Gamma, la función de densidad condicional de $Y_{k}$ puede escribirse como
+Con el enlace logarítmico, cada parámetro puede interpretarse como el efecto de una covariable sobre el logaritmo de la media esperada, de manera que $\exp(\beta_j)$ representa el cambio multiplicativo asociado a un incremento unitario en la covariable correspondiente, manteniendo constantes las demás variables del modelo. Bajo la distribución Gamma, la función de densidad condicional de $Y_{k}$ puede escribirse como [@McCullaghNelder1989]
 
 $$
 f(y_{k}\mid \mu_{k},\phi)

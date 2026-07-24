@@ -3,18 +3,13 @@
 knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
-  cache = TRUE,
+  cache = FALSE,
   fig.align = "center",
   fig.width = 6,
   fig.height = 4,
-  out.width = "70%"
+  out.width = "70%",
+  fig.path = "../figures/"
 )
-
-if (knitr::is_latex_output()) {
-  knitr::opts_chunk$set(fig.path = "../figures/")
-} else {
-  knitr::opts_chunk$set(fig.path = "../figures/")
-}
 
 options(scipen = 999, digits = 3)
 source("../_tabla_helper.R")
@@ -22,13 +17,13 @@ source("../_tabla_helper.R")
 
 # Análisis de las variables continuas {#cap3}
 
-Como documentan @Lumley2010 y @HeeringaWestBerglund2017, el análisis estadístico de encuestas ha evolucionado de manera constante, impulsado por el desarrollo de nuevas metodologías y enfoques que buscan mejorar la precisión y la representatividad de los resultados. En general, estos avances surgen en el ámbito académico y, con el tiempo, son adoptados por instituciones públicas, empresas privadas y organismos estadísticos, que demandan su incorporación en los principales programas de análisis de datos.
+El análisis estadístico de encuestas ha evolucionado de manera constante, impulsado por el desarrollo de nuevas metodologías y enfoques que buscan mejorar la precisión y la representatividad de los resultados. En general, estos avances surgen en el ámbito académico y, con el tiempo, son adoptados por instituciones públicas, empresas privadas y organismos estadísticos, que demandan su incorporación en los principales programas de análisis de datos [@Lumley2010; @HeeringaWestBerglund2017].
 
 Este capítulo presenta los principales procedimientos para el análisis estadístico de variables continuas utilizando `R`, incorporando adecuadamente las características del diseño muestral, tales como los pesos de expansión, la estratificación y la conglomeración. A lo largo del capítulo se ilustran métodos para estimar parámetros poblacionales, medir su precisión y realizar inferencias válidas a partir de datos provenientes de encuestas complejas. Asimismo, se introducen funciones y herramientas del paquete `survey`, uno de los recursos más utilizados en `R` para el análisis de encuestas.
 
-Las bases de datos utilizadas en el análisis de encuestas pueden encontrarse en una amplia variedad de formatos (.xlsx, .dat, .csv, .parquet, .sas7bdat, .sav, .txt, entre otros). Sin embargo, de acuerdo con @RCoreSerialization2026, una buena práctica consiste en importar la información desde cualquiera de estos formatos y guardarla inmediatamente en un archivo con extensión `.rds`, que es un formato nativo de `R`.
+Las bases de datos utilizadas en el análisis de encuestas pueden encontrarse en una amplia variedad de formatos (.xlsx,.dat,.csv,.parquet,.sas7bdat,.sav,.txt, entre otros). Sin embargo una buena práctica consiste en importar la información desde cualquiera de estos formatos y guardarla inmediatamente en un archivo con extensión `.rds`, que es un formato nativo de `R` [@RCoreSerialization2026].
 
-De acuerdo con @RCoreSerialization2026, los archivos `.rds` permiten almacenar cualquier objeto o información en `R`, como marcos de datos, vectores, matrices o listas. Otro formato propio de `R` es `.RData`, el cual permite guardar múltiples objetos en un solo archivo. En contraste, los archivos `.rds` almacenan únicamente un objeto, lo que hace su uso más controlado y reproducible. Por esta razón, se recomienda trabajar preferentemente con el formato `.rds` al documentar proyectos o reproducir análisis.
+Los archivos `.rds` permiten almacenar cualquier objeto o información en `R`, como marcos de datos, vectores, matrices o listas. Otro formato propio de `R` es `.RData`, el cual permite guardar múltiples objetos en un solo archivo. En contraste, los archivos `.rds` almacenan únicamente un objeto, lo que hace su uso más controlado y reproducible. Por esta razón, se recomienda trabajar preferentemente con el formato `.rds` al documentar proyectos o reproducir análisis [@RCoreSerialization2026].
 
 Para ilustrar la sintaxis computacional que se utilizará a lo largo del capítulo, se empleará la misma base del capítulo anterior, que contiene una muestra de 2.605 registros que proviene de un muestreo complejo. A continuación, se muestra cómo cargar un archivo con extensión `.rds`:
 
@@ -38,7 +33,7 @@ library(tidyverse)
 survey_data <- readRDS("../Data/encuesta.rds")
 ```
 
-De acuerdo con @ONUDeff[sección 7.8], es fundamental que la estructura del diseño muestral sea tenida en cuenta en el proceso de inferencia al estimar estadísticas oficiales basadas en encuestas de hogares. Como se ha insistido en este documento, ignorar este aspecto puede generar estimaciones sesgadas y errores de muestreo subestimados. En este sentido, como explica @HeeringaWestBerglund2017[apéndice A], los programas estadísticos incorporan funcionalidades específicas para manejar datos provenientes de encuestas con diseños complejos.
+Es fundamental que la estructura del diseño muestral sea tenida en cuenta en el proceso de inferencia al estimar estadísticas oficiales basadas en encuestas de hogares. Como se ha insistido en este documento, ignorar este aspecto puede generar estimaciones sesgadas y errores de muestreo subestimados. En este sentido los programas estadísticos incorporan funcionalidades específicas para manejar datos provenientes de encuestas con diseños complejos [@ONUDeff, sección 7.8; @HeeringaWestBerglund2017, apéndice A].
 
 Una vez cargada la muestra de hogares en `R`, el siguiente paso es definir el diseño muestral del cual proviene dicha muestra. Para ello se utilizará el paquete `srvyr`, que surge como un complemento del paquete `survey`. Estas librerías permiten definir objetos tipo `survey.design`, a los que se aplican las funciones de estimación y análisis de encuestas, y que pueden ser combinadas con la programación del paquete `tidyverse`. A continuación, se muestra un ejemplo en el que se define un objeto de tipo `survey_design` para la encuesta:
 
@@ -57,13 +52,13 @@ survey_design <- survey_data %>%
 )
 ```
 
-De acuerdo con la documentación de @Lumley2026, la opción `options(survey.lonely.psu = "adjust")` define cómo el paquete `survey` debe tratar los estratos que contienen una sola UPM en la muestra. En estos estratos no es posible calcular directamente la variabilidad entre UPM, porque no existe una segunda unidad con la cual realizar la comparación. Con el método `"adjust"`, la contribución de la UPM solitaria a la varianza se calcula centrando su estimación en la media general de las UPM de la muestra, en lugar de utilizar la media del propio estrato. Este ajuste evita que la contribución del estrato sea omitida o quede indefinida y suele producir una estimación conservadora de la varianza. La opción no modifica las estimaciones puntuales, sino únicamente sus varianzas, errores estándar e intervalos de confianza. Su aplicación debe distinguirse del caso de una UPM seleccionada con certeza, cuya contribución a la varianza debe especificarse mediante la información apropiada del diseño.
+La opción `options(survey.lonely.psu = "adjust")` define cómo el paquete `survey` debe tratar los estratos que contienen una sola UPM en la muestra. En estos estratos no es posible calcular directamente la variabilidad entre UPM, porque no existe una segunda unidad con la cual realizar la comparación. Con el método `"adjust"`, la contribución de la UPM solitaria a la varianza se calcula centrando su estimación en la media general de las UPM de la muestra, en lugar de utilizar la media del propio estrato. Este ajuste evita que la contribución del estrato sea omitida o quede indefinida y suele producir una estimación conservadora de la varianza. La opción no modifica las estimaciones puntuales, sino únicamente sus varianzas, errores estándar e intervalos de confianza. Su aplicación debe distinguirse del caso de una UPM seleccionada con certeza, cuya contribución a la varianza debe especificarse mediante la información apropiada del diseño [@Lumley2026].
 
-De acuerdo con la documentación de @FreedmanEllis2026, en este código, `survey_data` corresponde a la base de datos que contiene la muestra seleccionada. A partir de estos datos, la función `as_survey_design()` convierte la información en un objeto de clase `tbl_svy`, el cual almacena todos los elementos necesarios para describir el diseño muestral de la encuesta. Entre ellos se incluyen la variable de estratificación (`strata`), que identifica los estratos definidos en el diseño, y la variable especificada en `ids`, que representa las unidades primarias de muestreo (UPM) o conglomerados seleccionados en la primera etapa del muestreo. Asimismo, el argumento `weights` define la variable que contiene los factores de expansión asociados a cada observación. Finalmente, la opción `nest = TRUE` vuelve únicos dentro de cada estrato los identificadores de conglomerado que pudieran repetirse entre estratos, de acuerdo con @Lumley2026.
+En este código, `survey_data` corresponde a la base de datos que contiene la muestra seleccionada. A partir de estos datos, la función `as_survey_design()` convierte la información en un objeto de clase `tbl_svy`, el cual almacena todos los elementos necesarios para describir el diseño muestral de la encuesta. Entre ellos se incluyen la variable de estratificación (`strata`), que identifica los estratos definidos en el diseño, y la variable especificada en `ids`, que representa las unidades primarias de muestreo (UPM) o conglomerados seleccionados en la primera etapa del muestreo. Asimismo, el argumento `weights` define la variable que contiene los factores de expansión asociados a cada observación. Finalmente, la opción `nest = TRUE` vuelve únicos dentro de cada estrato los identificadores de conglomerado que pudieran repetirse entre estratos [@FreedmanEllis2026; @Lumley2026].
 
 ## Estimación de parámetros descriptivos {#estimacion-de-parametros-descriptivos}
 
-Como explican @sarndal2003model y @HeeringaWestBerglund2017, en las encuestas de hogares es común estimar parámetros descriptivos asociados a variables numéricas, tales como totales, medias, razones y desviaciones estándar. Estas medidas permiten caracterizar distintos fenómenos sociales y económicos de la población, por ejemplo el ingreso, el gasto, las horas trabajadas o el tamaño de los hogares. En esta sección se presentan la lógica detrás de la sintaxis utilizada para este tipo de estimación, junto con sus correspondientes medidas de precisión.
+En las encuestas de hogares es común estimar parámetros descriptivos asociados a variables numéricas, tales como totales, medias, razones y desviaciones estándar. Estas medidas permiten caracterizar distintos fenómenos sociales y económicos de la población, por ejemplo el ingreso, el gasto, las horas trabajadas o el tamaño de los hogares. En esta sección se presentan la lógica detrás de la sintaxis utilizada para este tipo de estimación, junto con sus correspondientes medidas de precisión [@sarndal2003model; @HeeringaWestBerglund2017].
 
 ### Estimación del total {#estimacion-del-total}
 
@@ -99,7 +94,7 @@ survey_design %>%
   tabla_fmt()
 ```
 
-De la tabla, se obtiene que la estimación del total poblacional para el ingreso total es de 85.793.667. Este valor corresponde al estimador puntual obtenido a partir de la encuesta, incorporando los factores de expansión y las características del diseño muestral. El error estándar asociado a esta estimación es de 4.778.674, lo que refleja la variabilidad muestral del estimador. A partir de este valor se construye un intervalo de confianza del 95%, cuyos límites inferior y superior son 76.331.414 y 95.255.920, respectivamente. De acuerdo con la interpretación de @kish1965survey, el efecto de diseño (`deff`) es igual a 11, lo cual sugiere una pérdida importante de precisión asociada principalmente a las características del diseño complejo. En consecuencia, aunque el tamaño muestral nominal pueda ser grande, el tamaño muestral efectivo resultaría considerablemente menor debido al efecto combinado de la ponderación, la estratificación y la conglomeración; este valor no puede atribuirse exclusivamente a la correlación entre observaciones dentro de los conglomerados.
+De la tabla, se obtiene que la estimación del total poblacional para el ingreso total es de 85.793.667. Este valor corresponde al estimador puntual obtenido a partir de la encuesta, incorporando los factores de expansión y las características del diseño muestral. El error estándar asociado a esta estimación es de 4.778.674, lo que refleja la variabilidad muestral del estimador. A partir de este valor se construye un intervalo de confianza del 95%, cuyos límites inferior y superior son 76.331.414 y 95.255.920, respectivamente. El efecto de diseño (`deff`) es igual a 11, lo cual sugiere una pérdida importante de precisión asociada principalmente a las características del diseño complejo. En consecuencia, aunque el tamaño muestral nominal pueda ser grande, el tamaño muestral efectivo resultaría considerablemente menor debido al efecto combinado de la ponderación, la estratificación y la conglomeración; este valor no puede atribuirse exclusivamente a la correlación entre observaciones dentro de los conglomerados [@kish1965survey].
 
 Para continuar ilustrando el uso de la función `survey_total()` dentro del enfoque de `srvyr`, estimemos el total de gastos de los hogares, pero ahora calculando el intervalo de confianza al 90%. El siguiente código realiza esta estimación, presentada en la @tbl-total-gasto:
 
@@ -148,13 +143,13 @@ Como se observa en los códigos anteriores, una forma práctica de obtener las e
 
 ### Estimación de la media {#estimacion-de-la-media}
 
-La estimación de la media poblacional ocupa un lugar central en las encuestas de hogares, ya que muchos de los indicadores utilizados para el análisis socioeconómico corresponden a valores promedio, como el ingreso medio del hogar, el gasto per cápita o las horas promedio trabajadas. Este tipo de parámetros permite resumir el comportamiento general de las variables de interés y describir las tendencias centrales de la población objetivo. De acuerdo con @Gutierrez2016, el estimador de la media poblacional puede expresarse como una razón no lineal entre dos totales poblacionales, los cuales se estiman de la siguiente manera:
+La estimación de la media poblacional ocupa un lugar central en las encuestas de hogares, ya que muchos de los indicadores utilizados para el análisis socioeconómico corresponden a valores promedio, como el ingreso medio del hogar, el gasto per cápita o las horas promedio trabajadas. Este tipo de parámetros permite resumir el comportamiento general de las variables de interés y describir las tendencias centrales de la población objetivo. El estimador de la media poblacional puede expresarse como una razón no lineal entre dos totales poblacionales, los cuales se estiman de la siguiente manera [@Gutierrez2016]:
 
 $$
 \hat{\bar{y}}=  \frac{\hat{t}_y}{\hat{N}}  =  \frac{\sum_{h}\sum_{i}\sum_{k} w_{h i k} \ y_{hik}}{\sum_{h}\sum_{i}\sum_{k} w_{h i k}}
 $$
 
-Como explican @sarndal2003model y @Gutierrez2016, dado que $\hat{\bar{y}}$ no es una estadística lineal, su varianza suele estimarse mediante una aproximación. Por esta razón, es necesario recurrir a métodos de remuestreo o a la linealización de Taylor para aproximar su varianza. En este caso particular, utilizando series de Taylor, la varianza se define como:
+Dado que $\hat{\bar{y}}$ no es una estadística lineal, su varianza suele estimarse mediante una aproximación. Por esta razón, es necesario recurrir a métodos de remuestreo o a la linealización de Taylor para aproximar su varianza. En este caso particular, utilizando series de Taylor, la varianza se define como [@sarndal2003model; @Gutierrez2016]:
 
 $$
 \widehat{Var}\left(\hat{\bar{y}}\right)  \approx  \frac{\widehat{Var}\left(\hat{t}_y\right)+\hat{\bar{y}}^{2}\ \widehat{Var}\left(\hat{N}\right)-2\ \hat{\bar{y}} \  \widehat{Cov}\left(\hat{t}_y,\hat{N}\right)}{\hat{N}^{2}}
@@ -283,9 +278,9 @@ survey_design %>%
 
 ### Estimación de razones {#estimacion-de-razones}
 
-De acuerdo con @sarndal2003model y @Gutierrez2016, un caso particular de funciones no lineales de totales es la razón poblacional, definida como el cociente entre dos totales poblacionales asociados a características de interés. Las razones permiten expresar la relación entre dos variables, lo cual resulta especialmente útil para construir indicadores comparativos y de seguimiento.
+Un caso particular de funciones no lineales de totales es la razón poblacional, definida como el cociente entre dos totales poblacionales asociados a características de interés. Las razones permiten expresar la relación entre dos variables, lo cual resulta especialmente útil para construir indicadores comparativos y de seguimiento [@sarndal2003model; @Gutierrez2016].
 
-De acuerdo con @bautista1998, dado que la razón corresponde al cociente entre dos parámetros poblacionales desconocidos, tanto el numerador como el denominador deben ser estimados a partir de la muestra. Este tipo de parámetro es ampliamente utilizado en encuestas de hogares para construir indicadores relativos, por ejemplo, la cantidad de hombres por cada mujer, la proporción de personas ocupadas respecto a la población en edad de trabajar o la prevalencia de la subalimentación, cuya formulación documenta @FAO2026PoU. Siendo $Y$ el total de la variable $y$ y $X$ el total de la variable $x$, la razón poblacional se define como $R = \frac{t_y}{t_x}$ y su estimador puntual en el marco de un muestreo complejo se expresa como:
+Dado que la razón corresponde al cociente entre dos parámetros poblacionales desconocidos, tanto el numerador como el denominador deben ser estimados a partir de la muestra. Este tipo de parámetro es ampliamente utilizado en encuestas de hogares para construir indicadores relativos, por ejemplo, la cantidad de hombres por cada mujer, la proporción de personas ocupadas respecto a la población en edad de trabajar o la prevalencia de la subalimentación [@FAO2026PoU]. Siendo $Y$ el total de la variable $y$ y $X$ el total de la variable $x$, la razón poblacional se define como $R = \frac{t_y}{t_x}$ y su estimador puntual en el marco de un muestreo complejo se expresa como [@bautista1998]:
 
 $$
 \hat{R} = \frac{\hat{t}_y}{\hat{t}_x}
@@ -293,7 +288,7 @@ $$
        {\sum_{h}\sum_{i}\sum_{k} w_{hik} \ x_{hik}}
 $$
 
-Sin embargo, dado que $\hat{R}$ es un cociente entre dos estimadores, es decir, dos variables aleatorias, el cálculo de su varianza no es trivial. Para ello se emplea la linealización de Taylor, como lo muestra @Gutierrez2016, o bien métodos de remuestreo. En particular, la función `survey_ratio()` implementa la estimación de razones y sus varianzas en el marco de encuestas complejas.
+Sin embargo, dado que $\hat{R}$ es un cociente entre dos estimadores, es decir, dos variables aleatorias, el cálculo de su varianza no es trivial. Para ello se emplea la linealización de Taylor o bien métodos de remuestreo. En particular, la función `survey_ratio()` implementa la estimación de razones y sus varianzas en el marco de encuestas complejas [@Gutierrez2016].
 
 Un ejemplo directo en encuestas de hogares es la razón entre el gasto y el ingreso, que ayuda a identificar patrones de consumo y niveles de sostenibilidad económica de los hogares. A continuación, se ilustra cómo estimar la razón entre el gasto y el ingreso de los hogares, presentada en la @tbl-razon-gasto-ingreso:
 
@@ -438,7 +433,7 @@ male_subset %>%
 
 ### Estimación de la dispersión {#estimacion-de-la-dispersion}
 
-Como explican @Gutierrez2016 y @HeeringaWestBerglund2017, en las encuestas de hogares también es fundamental estimar medidas de dispersión de las variables estudiadas, ya que estas permiten evaluar el grado de heterogeneidad existente en la población. Por ejemplo, conocer qué tan dispersos son los ingresos de los hogares resulta clave para analizar desigualdades económicas y orientar el diseño de políticas públicas. Entre las medidas de dispersión más utilizadas se encuentra la desviación estándar, la cual cuantifica qué tan alejados se encuentran los valores observados respecto a su media. A continuación, se presenta el estimador de este parámetro:
+En las encuestas de hogares también es fundamental estimar medidas de dispersión de las variables estudiadas, ya que estas permiten evaluar el grado de heterogeneidad existente en la población. Por ejemplo, conocer qué tan dispersos son los ingresos de los hogares resulta clave para analizar desigualdades económicas y orientar el diseño de políticas públicas. Entre las medidas de dispersión más utilizadas se encuentra la desviación estándar, la cual cuantifica qué tan alejados se encuentran los valores observados respecto a su media. A continuación, se presenta el estimador de este parámetro [@Gutierrez2016; @HeeringaWestBerglund2017]:
 
 $$
 \hat s_y  =  \sqrt{\frac{n}{n-1}\frac{\sum_{h}\sum_{i}\sum_{k} w_{hik} \ \left(y_{hik}-\hat{\bar{y}}\right)^{2}}{\sum_{h}\sum_{i}\sum_{k} w_{hik}}}
@@ -530,9 +525,9 @@ survey_design %>%
 
 ### Estimación de percentiles {#estimacion-de-percentiles}
 
-De acuerdo con @SchulzeWaltrupKauermann2016 y @HeeringaWestBerglund2017, las medidas de posición no central, como los percentiles y la mediana, permiten identificar puntos específicos de la distribución de una variable de interés distintos de su valor promedio. En las encuestas de hogares, este tipo de medidas resulta especialmente útil para caracterizar la distribución de variables económicas y sociales, como el ingreso, el gasto o las horas trabajadas. La mediana, por ejemplo, corresponde al valor que divide a la población en dos partes iguales: el 50% de las observaciones se encuentra por debajo de dicho valor y el otro 50% por encima. A diferencia de la media, la mediana es poco sensible a valores extremos, razón por la cual suele considerarse una medida robusta de tendencia central.
+Las medidas de posición no central, como los percentiles y la mediana, permiten identificar puntos específicos de la distribución de una variable de interés distintos de su valor promedio. En las encuestas de hogares, este tipo de medidas resulta especialmente útil para caracterizar la distribución de variables económicas y sociales, como el ingreso, el gasto o las horas trabajadas. La mediana, por ejemplo, corresponde al valor que divide a la población en dos partes iguales: el 50% de las observaciones se encuentra por debajo de dicho valor y el otro 50% por encima. A diferencia de la media, la mediana es poco sensible a valores extremos, razón por la cual suele considerarse una medida robusta de tendencia central [@SchulzeWaltrupKauermann2016; @HeeringaWestBerglund2017].
 
-De manera similar, los percentiles permiten identificar segmentos específicos de la distribución poblacional. Por ejemplo, los percentiles de ingreso pueden utilizarse para identificar a la población perteneciente al 10% superior de la distribución con fines tributarios, o para focalizar subsidios dirigidos a los hogares ubicados en los percentiles más bajos. Según @SchulzeWaltrupKauermann2016, la estimación de cuantiles en encuestas complejas se basa en el uso de estimadores ponderados y en la estimación de la función de distribución acumulada (FDA) de la población. Para una población finita de tamaño $N$, un estimador de esta distribución está dado por:
+De manera similar, los percentiles permiten identificar segmentos específicos de la distribución poblacional. Por ejemplo, los percentiles de ingreso pueden utilizarse para identificar a la población perteneciente al 10% superior de la distribución con fines tributarios, o para focalizar subsidios dirigidos a los hogares ubicados en los percentiles más bajos. La estimación de cuantiles en encuestas complejas se basa en el uso de estimadores ponderados y en la estimación de la función de distribución acumulada (FDA) de la población. Para una población finita de tamaño $N$, un estimador de esta distribución está dado por [@SchulzeWaltrupKauermann2016]:
 
 $$
 \hat{F}\left(x\right) = \frac{\sum_{h} \sum_{i} \sum_{k} w_{hik} \ I\left(y_{k}\leq x\right)}{\sum_{h}\sum_{i}\sum_{k} w_{hik}}
@@ -540,13 +535,13 @@ $$
 
 en donde la función $I\left(y_{k}\leq x\right)$ es una variable indicadora que toma el valor uno si $y_k \leq x$ y cero en otro caso.
 
-Una vez estimada la FDA utilizando los pesos del diseño muestral, el cuantil $q$-ésimo de una variable $y$ se define como el menor valor de $y$ para el cual la FDA es mayor o igual que $q$. En particular, la mediana corresponde al valor para el cual la FDA alcanza o supera 0.5; por tanto, la mediana estimada es el valor donde la FDA estimada es mayor o igual a 0.5. De esta forma, siguiendo las recomendaciones de @SchulzeWaltrupKauermann2016 y @HeeringaWestBerglund2017 para la estimación de cuantiles en encuestas complejas, se ordenan las observaciones en orden ascendente (estadísticas de orden) de forma que $y_{(1)} \leq y_{(2)} \leq \ldots \leq y_{(n)}$ y se identifica el valor de $j$ $(j=1,\ldots,n)$ tal que:
+Una vez estimada la FDA utilizando los pesos del diseño muestral, el cuantil $q$-ésimo de una variable $y$ se define como el menor valor de $y$ para el cual la FDA es mayor o igual que $q$. En particular, la mediana corresponde al valor para el cual la FDA alcanza o supera 0.5; por tanto, la mediana estimada es el valor donde la FDA estimada es mayor o igual a 0.5. Para la estimación de cuantiles en encuestas complejas, se ordenan las observaciones en orden ascendente (estadísticas de orden) de forma que $y_{(1)} \leq y_{(2)} \leq \ldots \leq y_{(n)}$ y se identifica el valor de $j$ $(j=1,\ldots,n)$ tal que [@SchulzeWaltrupKauermann2016; @HeeringaWestBerglund2017]:
 
 $$
 \hat{F}\left(y_{(j)}\right)\leq q\leq\hat{F}\left(y_{(j+1)}\right)
 $$
 
-Bajo esta condición, el estimador del cuantil $q$-ésimo se obtiene mediante interpolación lineal, la cual permite obtener estimaciones más estables y precisas de los cuantiles, especialmente cuando la FDA presenta saltos importantes asociados al uso de pesos muestrales. @Woodruff1952 proporciona el fundamento del método de inversión de la FDA utilizado para construir intervalos de confianza de cuantiles. En cuanto a la estimación de la varianza de percentiles y medianas, así como a la construcción de intervalos de confianza, @kovar1988 realizaron un estudio de simulación en el contexto de diseños complejos y recomiendan el uso de métodos de replicación debido a su buen desempeño para este tipo de parámetros no lineales.
+Bajo esta condición, el estimador del cuantil $q$-ésimo se obtiene mediante interpolación lineal, la cual permite obtener estimaciones más estables y precisas de los cuantiles, especialmente cuando la FDA presenta saltos importantes asociados al uso de pesos muestrales. @Woodruff1952 fundamenta el método de inversión de la FDA como base para construir intervalos de confianza de cuantiles. En el caso de la varianza de percentiles y medianas, así como de la construcción de intervalos de confianza, los métodos de replicación presentan buen desempeño para este tipo de parámetros no lineales en diseños complejos [@kovar1988].
 
 Tanto los estimadores de cuantiles como los métodos para estimar sus varianzas se encuentran implementados en `R`. En particular, la función `survey_median()` permite obtener la mediana junto con su error estándar e intervalo de confianza. A continuación, se presenta la sintaxis para estimar la mediana del gasto de los hogares utilizando la base de datos de ejemplo, cuyos resultados se muestran en la @tbl-mediana-gasto.
 
@@ -625,7 +620,7 @@ survey_design %>%
   tabla_fmt()
 ```
 
-@DorfmanValliant1993 advierten que el método basado en una prueba *score* puede producir resultados menos satisfactorios que otros procedimientos disponibles. El argumento `interval_type = "score"` no calcula el intervalo de confianza a partir de la función de influencia del percentil; en su lugar, obtiene los límites buscando los valores del parámetro que no serían rechazados por una prueba *score* robusta, como explican @FreedmanEllis2026 y @Lumley2026. Aquí se utiliza para mantener la coherencia con el código presentado. De manera análoga, la estimación del percentil 25 puede obtenerse para distintos subgrupos de la población, como sexo o zona geográfica, utilizando `group_by()`, tal como se muestra en la @tbl-cuantil-gasto-zona-sexo.
+El método basado en una prueba *score* puede producir resultados menos satisfactorios que otros procedimientos disponibles. El argumento `interval_type = "score"` no calcula el intervalo de confianza a partir de la función de influencia del percentil; en su lugar, obtiene los límites buscando los valores del parámetro que no serían rechazados por una prueba *score* robusta. Aquí se utiliza para mantener la coherencia con el código presentado. De manera análoga, la estimación del percentil 25 puede obtenerse para distintos subgrupos de la población, como sexo o zona geográfica, utilizando `group_by()`, tal como se muestra en la @tbl-cuantil-gasto-zona-sexo [@FreedmanEllis2026; @Lumley2026; @DorfmanValliant1993].
 
 
 ```{r cod-cuantil-gasto-zona-sexo, eval=FALSE}
@@ -657,11 +652,11 @@ survey_design %>%
 
 ### Estimación del coeficiente de Gini {#estimacion-del-coeficiente-de-gini}
 
-Como señalan @BinderKovacevic1995, el tema sobre desigualdad económica trasciende el ámbito estrictamente estadístico y constituye uno de los temas centrales del análisis social contemporáneo. Existe un amplio consenso respecto a la importancia de comprender cómo las desigualdades económicas condicionan las oportunidades, el bienestar y la calidad de vida de las personas. En este sentido, la medición rigurosa de la desigualdad representa un insumo fundamental para el diseño, seguimiento y evaluación de políticas públicas orientadas a la equidad social.
+El tema sobre desigualdad económica trasciende el ámbito estrictamente estadístico y constituye uno de los temas centrales del análisis social contemporáneo. Existe un amplio consenso respecto a la importancia de comprender cómo las desigualdades económicas condicionan las oportunidades, el bienestar y la calidad de vida de las personas. En este sentido, la medición rigurosa de la desigualdad representa un insumo fundamental para el diseño, seguimiento y evaluación de políticas públicas orientadas a la equidad social [@BinderKovacevic1995].
 
-De acuerdo con @LangelTille2013, entre los indicadores más ampliamente utilizados para cuantificar la desigualdad económica se encuentra el coeficiente de Gini ($G$), el cual mide el grado de concentración del ingreso comparando la distribución observada con una situación hipotética de igualdad perfecta. Este coeficiente toma valores entre 0 y 1, donde $G = 0$ representa igualdad perfecta y $G = 1$ corresponde al máximo nivel de desigualdad posible. Valores más elevados indican una mayor concentración del ingreso en un grupo reducido de la población.
+Entre los indicadores más ampliamente utilizados para cuantificar la desigualdad económica se encuentra el coeficiente de Gini ($G$), el cual mide el grado de concentración del ingreso comparando la distribución observada con una situación hipotética de igualdad perfecta. Este coeficiente toma valores entre 0 y 1, donde $G = 0$ representa igualdad perfecta y $G = 1$ corresponde al máximo nivel de desigualdad posible. Valores más elevados indican una mayor concentración del ingreso en un grupo reducido de la población [@LangelTille2013].
 
-En el contexto de las encuestas de hogares, la estimación del coeficiente de Gini debe incorporar adecuadamente las características del diseño muestral, incluyendo los factores de expansión, la estratificación y la conglomeración. En muchos casos, los pesos muestrales son previamente normalizados con el fin de simplificar los procedimientos de estimación y facilitar el procesamiento computacional. De acuerdo con @LangelTille2013, el estimador del coeficiente de Gini puede expresarse como:
+En el contexto de las encuestas de hogares, la estimación del coeficiente de Gini debe incorporar adecuadamente las características del diseño muestral, incluyendo los factores de expansión, la estratificación y la conglomeración. En muchos casos, los pesos muestrales son previamente normalizados con el fin de simplificar los procedimientos de estimación y facilitar el procesamiento computacional. El estimador del coeficiente de Gini puede expresarse como [@LangelTille2013]:
 
 $$
 \hat{G} = \frac{2\sum_{h}\sum_{i}\sum_{k}w_{hik}^{*}
@@ -670,7 +665,7 @@ $$
 
 donde $w_{hik}^{*}=\dfrac{w_{hik}}{\sum_{h}\sum_{i}\sum_{k}w_{hik}}$ corresponde al peso muestral normalizado, $\hat{F}_{hik}$ representa la función de distribución acumulada (FDA) estimada para la observación $k$ dentro del conglomerado $i$ del estrato $h$, y $\hat{\bar{y}}$ denota la media ponderada de la variable de ingreso en la población.
 
-Autores como @osier2009variance y @LangelTille2013 profundizan en aspectos técnicos adicionales, especialmente en lo relacionado con la estimación de la varianza del coeficiente de Gini bajo diseños complejos. De acuerdo con @convey2024, el paquete `convey` implementa los procedimientos recomendados para calcular el coeficiente de Gini y su varianza en encuestas de hogares. Primero, se prepara el diseño muestral mediante `convey_prep()`. Luego, la función `svygini()` calcula el índice de Gini utilizando la variable de ingreso y el diseño de encuesta complejo especificado. A continuación se muestra la sintaxis para estimarlo en la base de datos de ejemplo, presentada en la @tbl-gini:
+La literatura especializada profundiza en aspectos técnicos adicionales, especialmente en lo relacionado con la estimación de la varianza del coeficiente de Gini bajo diseños complejos. El paquete `convey` implementa procedimientos para calcular el coeficiente de Gini y su varianza en encuestas de hogares. Primero, se prepara el diseño muestral mediante `convey_prep()`. Luego, la función `svygini()` calcula el índice de Gini utilizando la variable de ingreso y el diseño de encuesta complejo especificado. A continuación se muestra la sintaxis para estimarlo en la base de datos de ejemplo, presentada en la @tbl-gini [@convey2024; @osier2009variance; @LangelTille2013]:
 
 ```{r cod-gini, eval=FALSE}
 library(convey)
@@ -699,7 +694,7 @@ data.frame(Gini = coef(gini),
 ```
 
 
-Si el interés se centra en la estimación de la curva de Lorenz, es importante recordar que, de acuerdo con @kovacevic1997, esta representa la relación entre el porcentaje acumulado de la población (ordenada desde los hogares con menores ingresos hasta aquellos con mayores ingresos) y la proporción acumulada del ingreso total que concentra dicha población. La línea diagonal de 45 grados corresponde a una situación hipotética de igualdad perfecta, en la cual todos los individuos participan proporcionalmente del ingreso total.
+Si el interés se centra en la estimación de la curva de Lorenz, es importante recordar que esta representa la relación entre el porcentaje acumulado de la población (ordenada desde los hogares con menores ingresos hasta aquellos con mayores ingresos) y la proporción acumulada del ingreso total que concentra dicha población. La línea diagonal de 45 grados corresponde a una situación hipotética de igualdad perfecta, en la cual todos los individuos participan proporcionalmente del ingreso total [@kovacevic1997].
 
 El área comprendida entre la curva de Lorenz y la diagonal de igualdad se conoce como el área de Lorenz, y el coeficiente de Gini puede interpretarse como el doble de esta área relativa. En consecuencia, cuanto más cercana se encuentre la curva de Lorenz a la diagonal, mayor será el nivel de equidad en la distribución del ingreso; por el contrario, curvas más alejadas reflejan mayores niveles de desigualdad económica.
 
@@ -710,7 +705,8 @@ clorenz <- svylorenz(
   formula = ~Income,
   design = gini_design,
   quantiles = seq(0, 1, .05),
-  alpha = .01
+  alpha = .01,
+  plot = TRUE
 )
 ```
 
@@ -718,11 +714,11 @@ El argumento `formula = ~Income` especifica la variable de ingreso sobre la cual
 
 ### Estimación de la correlación {#estimacion-de-la-correlacion}
 
-De acuerdo con @HeeringaWestBerglund2017 y @Long2026Svycor, en el estudio de encuestas de hogares, además de describir variables de forma individual, resulta fundamental analizar cómo se relacionan entre sí. Una de las herramientas más utilizadas para este propósito es el coeficiente de correlación de Pearson, el cual mide la fuerza y la dirección de la relación lineal entre dos variables numéricas. Este coeficiente toma valores entre –1 y 1. Un valor positivo indica que ambas variables tienden a aumentar simultáneamente, mientras que un valor negativo señala que cuando una variable aumenta, la otra tiende a disminuir. Por su parte, valores cercanos a cero sugieren la ausencia de una relación lineal fuerte entre las variables analizadas.
+En el estudio de encuestas de hogares, además de describir variables de forma individual, resulta fundamental analizar cómo se relacionan entre sí. Una de las herramientas más utilizadas para este propósito es el coeficiente de correlación de Pearson, el cual mide la fuerza y la dirección de la relación lineal entre dos variables numéricas. Este coeficiente toma valores entre –1 y 1. Un valor positivo indica que ambas variables tienden a aumentar simultáneamente, mientras que un valor negativo señala que cuando una variable aumenta, la otra tiende a disminuir. Por su parte, valores cercanos a cero sugieren la ausencia de una relación lineal fuerte entre las variables analizadas [@HeeringaWestBerglund2017; @Long2026Svycor].
 
 Por ejemplo, en una encuesta de hogares puede ser de interés estudiar si existe una asociación entre el ingreso de los hogares y su nivel de gasto, así como evaluar la magnitud de dicha relación. Este tipo de análisis permite comprender mejor los patrones económicos y sociales observados en la población.
 
-De acuerdo con @sarndal2003model y @HeeringaWestBerglund2017, en encuestas complejas, es necesario incorporar los pesos muestrales para que la estimación sea representativa de la población, además de las variables de estratificación y conglomeración, que intervienen principalmente en la estimación de la incertidumbre de los estimadores. El cálculo ponderado implica evaluar la covarianza entre las dos variables y dividirla entre el producto de sus desviaciones estándar ponderadas, eliminando así la influencia de las unidades de medida. Asumiendo que $\hat{\bar{x}}$ es una estimación de la media poblacional de la variable $x$, entonces el coeficiente de correlación de Pearson ajustado por pesos se expresa como:
+En encuestas complejas, es necesario incorporar los pesos muestrales para que la estimación sea representativa de la población, además de las variables de estratificación y conglomeración, que intervienen principalmente en la estimación de la incertidumbre de los estimadores. El cálculo ponderado implica evaluar la covarianza entre las dos variables y dividirla entre el producto de sus desviaciones estándar ponderadas, eliminando así la influencia de las unidades de medida. Asumiendo que $\hat{\bar{x}}$ es una estimación de la media poblacional de la variable $x$, entonces el coeficiente de correlación de Pearson ajustado por pesos se expresa como [@sarndal2003model; @HeeringaWestBerglund2017]:
 
 $$
 \hat{\rho}_{xy} = \frac{\displaystyle \sum_{h} \sum_{i} \sum_{k} w_{hik} (y_{hik} - \hat{\bar{y}})(x_{hik} - \hat{\bar{x}})} {\sqrt{\displaystyle \sum_{h} \sum_{i} \sum_{k} w_{hik} (y_{hik} - \hat{\bar{y}})^2} \sqrt{\displaystyle \sum_{h} \sum_{i} \sum_{k} w_{hik} (x_{hik} - \hat{\bar{x}})^2}}
@@ -759,7 +755,7 @@ sd_y <- sqrt(cov_matrix[2, 2])
 weighted_cor <- cov_xy / (sd_x * sd_y)
 weighted_cor
 ```
-Si además se desea realizar inferencia estadística sobre la correlación, por ejemplo obtener errores estándar o intervalos de confianza, pueden utilizarse métodos de replicación (bootstrap/jackknife) compatibles con el paquete `survey`. Según @Long2026Svycor, otra opción es utilizar la función `svycor()` del paquete `jtools` para estimar directamente la correlación:
+Si además se desea realizar inferencia estadística sobre la correlación, por ejemplo obtener errores estándar o intervalos de confianza, pueden utilizarse métodos de replicación (bootstrap/jackknife) compatibles con el paquete `survey`. Otra opción es utilizar la función `svycor()` del paquete `jtools` para estimar directamente la correlación [@Long2026Svycor]:
 
 ```{r cod-correlacion-jtools}
 library(jtools)
@@ -771,7 +767,7 @@ svycor(~Income + Expenditure, design = survey_design)
 
 En el análisis de datos provenientes de encuestas de hogares no basta con estudiar cada variable de manera aislada, como estimar el ingreso medio de hombres y mujeres en un país. También es fundamental comparar grupos y evaluar si las diferencias observadas entre ellos reflejan desigualdades reales en la población o si podrían explicarse simplemente por el error de muestreo. Por ejemplo, una pregunta frecuente consiste en determinar si existen diferencias estadísticamente significativas en el ingreso medio entre hogares dirigidos por hombres y hogares dirigidos por mujeres. Este tipo de análisis permite identificar brechas sociales y económicas, además de generar evidencia útil para el diseño y evaluación de políticas públicas.
 
-De acuerdo con @HeeringaWestBerglund2017, para responder este tipo de interrogantes se utilizan pruebas de hipótesis, es decir, procedimientos estadísticos que permiten contrastar afirmaciones sobre parámetros poblacionales utilizando la información observada en la muestra. En el contexto de encuestas de hogares, estas pruebas deben incorporar adecuadamente las características del diseño muestral con el fin de garantizar inferencias válidas y resultados confiables.
+Para responder este tipo de interrogantes se utilizan pruebas de hipótesis, es decir, procedimientos estadísticos que permiten contrastar afirmaciones sobre parámetros poblacionales utilizando la información observada en la muestra. En el contexto de encuestas de hogares, estas pruebas deben incorporar adecuadamente las características del diseño muestral con el fin de garantizar inferencias válidas y resultados confiables [@HeeringaWestBerglund2017].
 
 Las pruebas de hipótesis constituyen una herramienta fundamental para evaluar afirmaciones sobre parámetros poblacionales a partir de la información observada en una muestra. En términos generales, toda prueba de hipótesis se basa en el contraste entre dos proposiciones opuestas: la hipótesis nula, denotada por $H_0$, y la hipótesis alternativa, denotada por $H_1$. En el caso más común de una prueba bilateral, estas hipótesis se expresan como:
 
@@ -796,7 +792,7 @@ $$
 \hat{\Delta} = \hat{\bar{y}}_1 - \hat{\bar{y}}_2
 $$
 
-De acuerdo con @HeeringaWestBerglund2017, su error estándar se estima mediante la siguiente expresión:
+Su error estándar se estima mediante la siguiente expresión [@HeeringaWestBerglund2017]:
 
 $$
 \widehat{se}(\hat{\Delta}) =
@@ -817,7 +813,7 @@ t =
 {\widehat{se}(\hat{\Delta})} \sim t_{df}
 $$
 
-Según @HeeringaWestBerglund2017, este estadístico sigue aproximadamente una distribución $t$ de Student con $(df)$ grados de libertad. En la práctica, estos grados de libertad suelen aproximarse mediante $df = n_I - H$, donde $n_I$ representa el número de unidades primarias de muestreo y $H$ el número de estratos. Bajo la hipótesis nula, valores absolutos elevados del estadístico $t$ constituyen evidencia en contra de $H_0$. De manera complementaria, también puede construirse un intervalo de confianza para el parámetro $\Delta$. Para un nivel de confianza de $(1-\alpha)100\%$, dicho intervalo está dado por:
+Este estadístico sigue aproximadamente una distribución $t$ de Student con $(df)$ grados de libertad. En la práctica, estos grados de libertad suelen aproximarse mediante $df = n_I - H$, donde $n_I$ representa el número de unidades primarias de muestreo y $H$ el número de estratos. Bajo la hipótesis nula, valores absolutos elevados del estadístico $t$ constituyen evidencia en contra de $H_0$. De manera complementaria, también puede construirse un intervalo de confianza para el parámetro $\Delta$. Para un nivel de confianza de $(1-\alpha)100\%$, dicho intervalo está dado por [@HeeringaWestBerglund2017]:
 
 $$
 \hat{\Delta}
@@ -881,13 +877,13 @@ df_res %>%
 ```
 
 
-De acuerdo con @Gutierrez2016 y @HeeringaWestBerglund2017, el procedimiento descrito no se limita a las medias, sino que también puede aplicarse a proporciones, totales, razones o cualquier función diferenciable de totales. En todos los casos, el contraste se fundamenta en la estimación puntual, su varianza (incluyendo covarianzas cuando corresponde) y la comparación con la distribución $t$ ajustada al diseño muestral.
+El procedimiento descrito no se limita a las medias, sino que también puede aplicarse a proporciones, totales, razones o cualquier función diferenciable de totales. En todos los casos, el contraste se fundamenta en la estimación puntual, su varianza (incluyendo covarianzas cuando corresponde) y la comparación con la distribución $t$ ajustada al diseño muestral [@Gutierrez2016; @HeeringaWestBerglund2017].
 
 ## Estimación de contrastes {#estimacion-de-contrastes}
 
 En el análisis de encuestas de hogares es frecuente que el interés no se limite a comparar únicamente dos poblaciones, sino varias de manera simultánea. Por ejemplo, puede ser necesario comparar los ingresos medios de los hogares entre distintas regiones, áreas geográficas o grupos poblacionales, con el propósito de identificar diferencias y establecer patrones de desigualdad entre ellos. En este tipo de situaciones, las pruebas de diferencia de medias presentadas anteriormente resultan limitadas, ya que están diseñadas para comparar únicamente pares de poblaciones.
 
-De acuerdo con @HeeringaWestBerglund2017, para abordar comparaciones más generales se utilizan los contrastes, que constituyen una herramienta flexible para evaluar combinaciones lineales de parámetros poblacionales. En términos generales, un contraste se define como:
+Para abordar comparaciones más generales se utilizan los contrastes, que constituyen una herramienta flexible para evaluar combinaciones lineales de parámetros poblacionales. En términos generales, un contraste se define como [@HeeringaWestBerglund2017]:
 
 $$
 f\left(\theta_1,\theta_2,\ldots,\theta_J\right)
@@ -897,7 +893,7 @@ $$
 
 donde los coeficientes $a_j$ son constantes conocidas y $\theta_j$ representan los parámetros de interés. Este enfoque permite formular y evaluar una amplia variedad de comparaciones entre grupos, incluyendo diferencias entre medias, comparaciones múltiples y combinaciones más complejas de parámetros.
 
-De acuerdo con @HeeringaWestBerglund2017, los contrastes permiten comparar combinaciones lineales de parámetros estimados en diseños de muestreo complejos. En `R`, estos procedimientos se encuentran disponibles mediante la función `svycontrast()` del paquete `survey`. Por ejemplo, si se quiere comparar los ingresos medios de dos subpoblaciones particulares (las regiones Norte y Sur) se puede usar el contraste $\bar{y}_{Norte} - \bar{y}_{Sur}$. Dado que la muestra cubre cinco regiones en total, el contraste debe construirse asignando coeficientes únicamente a las regiones involucradas en la comparación y dejando coeficientes iguales a cero para las demás regiones. De esta manera, el contraste se define como:
+Los contrastes permiten comparar combinaciones lineales de parámetros estimados en diseños de muestreo complejos. En `R`, estos procedimientos se encuentran disponibles mediante la función `svycontrast()` del paquete `survey`. Por ejemplo, si se quiere comparar los ingresos medios de dos subpoblaciones particulares (las regiones Norte y Sur) se puede usar el contraste $\bar{y}_{Norte} - \bar{y}_{Sur}$. Dado que la muestra cubre cinco regiones en total, el contraste debe construirse asignando coeficientes únicamente a las regiones involucradas en la comparación y dejando coeficientes iguales a cero para las demás regiones. De esta manera, el contraste se define como [@HeeringaWestBerglund2017]:
 
 $$
 1\times\hat{\bar{y}}_{Norte}+\left(-1\right)\times\hat{\bar{y}}_{Sur}+0\times\hat{\bar{y}}_{Centro}+0\times\hat{\bar{y}}_{Occidente}+0\times\hat{\bar{y}}_{Oriente}.
@@ -976,7 +972,12 @@ Nótese que estos mismos resultados podrían obtenerse realizando explícitament
 
 ```{r cod-diferencia-norte-sur, eval=TRUE}
 # Paso 1: diferencia de las estimaciones (Norte - Sur)
-552.4 - 625.8
+region_income_mean <- setNames(
+  as.numeric(region_mean_contrast[["Income"]]),
+  region_mean_contrast[["Region"]]
+)
+
+region_income_mean["Norte"] - region_income_mean["Sur"]
 ```
 
 El paso siguiente es calcular la matriz de varianzas y covarianzas y de allí extraer las varianzas y covarianzas de las regiones Norte y Sur, presentada en la @tbl-vcov-region:
@@ -1170,9 +1171,9 @@ df_res %>%
 
 ## Visualización de variables continuas {#viz-continuas}
 
-De acuerdo con @wilkinson2005grammar, la representación gráfica de variables continuas es un componente esencial en el análisis de encuestas de hogares. Los gráficos bien diseñados permiten identificar distribuciones, tendencias y relaciones entre variables, facilitando la interpretación de los hallazgos y su comunicación a distintos públicos. Un aspecto fundamental en este contexto es que los gráficos deben incorporar los pesos muestrales para reflejar la distribución de la población de interés.
+La representación gráfica de variables continuas es un componente esencial en el análisis de encuestas de hogares. Los gráficos bien diseñados permiten identificar distribuciones, tendencias y relaciones entre variables, facilitando la interpretación de los hallazgos y su comunicación a distintos públicos. Un aspecto fundamental en este contexto es que los gráficos deben incorporar los pesos muestrales para reflejar la distribución de la población de interés [@wilkinson2005grammar].
 
-En esta sección se utilizan el paquete `patchwork`, documentado por @patchwork, y el paquete `ggplot2`, documentado por @ggplot22026, para la composición y construcción de gráficos. Estas herramientas se combinan con `survey` y `srvyr`, respectivamente.
+En esta sección se utilizan los paquetes `patchwork` y `ggplot2` para la composición y construcción de gráficos. Estas herramientas se combinan con `survey` y `srvyr`, respectivamente [@patchwork; @ggplot22026].
 
 ```{r setup-graficos-continuas, message=FALSE, warning=FALSE}
 library(ggplot2)
@@ -1226,7 +1227,7 @@ weighted_income_hist + geom_density(fill = "blue", alpha = 0.3) |
 
 ### Diagramas de caja (*boxplots*) {#diagramas-de-caja-boxplots}
 
-Los diagramas de caja (*boxplots*) permiten identificar valores atípicos y evaluar la dispersión de la distribución. Introducidos por @Tukey1977EDA, son una representación gráfica que resume la distribución de una variable mediante estadísticas basadas en cuartiles, permitiendo identificar la mediana, la dispersión de los datos y la presencia de valores atípicos. En el contexto de encuestas de hogares, este tipo de gráfico resulta útil para comparar distribuciones entre distintos grupos poblacionales de manera compacta y visualmente intuitiva.
+Introducidos por @Tukey1977EDA, los diagramas de caja (*boxplots*) permiten identificar valores atípicos y evaluar la dispersión de la distribución. Son una representación gráfica que resume una variable mediante estadísticas basadas en cuartiles, permitiendo identificar la mediana, la dispersión de los datos y la presencia de valores atípicos. En el contexto de encuestas de hogares, este tipo de gráfico resulta útil para comparar distribuciones entre distintos grupos poblacionales de manera compacta y visualmente intuitiva.
 
 Para construir *boxplots* ponderados en `ggplot2` se utiliza la función `geom_boxplot()`, como se muestra en la @fig-boxplot-zona-sexo. En este caso, la función `ggplot()` inicia la construcción del gráfico utilizando la base de datos `survey_data`, donde `x = Income` define la variable numérica analizada y `weight = wk` incorpora los pesos muestrales para representar la distribución estimada en la población. Posteriormente, `geom_boxplot()` genera los diagramas de caja y, mediante `aes(fill = Zone)` o `aes(fill = Sex)`, asigna colores diferentes a cada categoría de las variables `Zone` y `Sex`, respectivamente, facilitando la comparación visual entre grupos. La función `coord_flip()` invierte los ejes para presentar los *boxplots* de forma horizontal, mejorando así su legibilidad. Por su parte, `scale_fill_manual()` permite definir manualmente los colores asociados a cada categoría mediante los vectores `zone_colors` y `sex_colors`.
 
@@ -1251,6 +1252,7 @@ weighted_zone_boxplot | weighted_sex_boxplot
 Además de las herramientas disponibles en `ggplot2`, las funciones especializadas `svyhist()` y `svyboxplot()` del paquete `survey` incorporan directamente las características del diseño muestral complejo en la construcción de los gráficos. Estas funciones permiten obtener representaciones gráficas coherentes con el diseño de la encuesta, facilitando el análisis exploratorio de las variables numéricas. Un ejemplo de su aplicación se presenta en la @fig-svyhist-svybox.
 
 ```{r fig-svyhist-svybox, fig.cap="Histograma y boxplot del ingreso ajustados al diseño muestral complejo", fig.align='center', out.width='80%'}
+old_par <- par(no.readonly = TRUE)
 par(mfrow = c(1, 2))
 svyhist(~Income, survey_design,
   main = "Household income",
@@ -1260,6 +1262,7 @@ svyhist(~Income, survey_design,
 svyboxplot(Income ~ Zone, survey_design,
   col  = "grey80",
   ylab = "Income", xlab = "Zone")
+par(old_par)
 ```
 
 ### Diagramas de dispersión {#diagramas-de-dispersion}

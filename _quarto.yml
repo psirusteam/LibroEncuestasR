@@ -1,8 +1,11 @@
 project:
   type: book
   output-dir: docs
+  post-render:
+    - scripts/post-render-figures.R
   resources:
     - .nojekyll
+    - figures/
 
 book:
   title: "<span style='font-weight: 700'>Análisis de Encuestas de Hogares</span><br/><i style='color: #00b7ff'>usando R</i>"
