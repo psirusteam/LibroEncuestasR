@@ -7,7 +7,7 @@ project:
 book:
   title: "<span style='font-weight: 700'>Análisis de Encuestas de Hogares</span><br/><i style='color: #00b7ff'>usando R</i>"
   subtitle: "Análisis de Encuestas de Hogares usando R"
-  author: "Andrés Gutiérrez y otros"
+  author: "Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa y Cristian Téllez"
   search: true
   page-navigation: true
   sidebar:

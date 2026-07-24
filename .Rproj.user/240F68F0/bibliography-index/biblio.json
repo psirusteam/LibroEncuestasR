@@ -4,7 +4,7 @@
             "URL": "https://unstats.un.org/unsd/publication/seriesf/seriesf_96e.pdf",
             "author": [
                 {
-                    "literal": "United Nations"
+                    "literal": "NacionesUnidas"
                 }
             ],
             "collection-number": "Series F No. 96",
@@ -17,7 +17,7 @@
                     ]
                 ]
             },
-            "publisher": "United Nations",
+            "publisher": "NacionesUnidas",
             "publisher-place": "New York",
             "title": "Household sample surveys in developing and transition countries",
             "type": "book"
@@ -26,7 +26,7 @@
             "URL": "https://unstats.un.org/unsd/statcom/decisions-ref/?code=49%2F106",
             "author": [
                 {
-                    "literal": "United Nations Statistical Commission"
+                    "literal": "NacionesUnidas"
                 }
             ],
             "id": "UnitedNations2018HouseholdSDG",
@@ -45,7 +45,7 @@
             "URL": "https://repositorio.cepal.org/server/api/core/bitstreams/e369edef-a10b-412a-9df1-951b23133551/content",
             "author": [
                 {
-                    "literal": "Comisión Económica para América Latina y el Caribe"
+                    "literal": "CEPAL"
                 }
             ],
             "id": "CEPAL2025BADEHOG",
@@ -56,7 +56,7 @@
                     ]
                 ]
             },
-            "publisher": "Comisión Económica para América Latina y el Caribe",
+            "publisher": "CEPAL",
             "publisher-place": "Santiago",
             "title": "Nota metodológica: Indicadores en CEPALSTAT estimados a partir del banco de datos de encuestas de hogares (BADEHOG)",
             "title-short": "Nota metodológica",
@@ -91,7 +91,7 @@
             "URL": "https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf",
             "author": [
                 {
-                    "literal": "Naciones Unidas"
+                    "literal": "NacionesUnidas"
                 }
             ],
             "collection-number": "98",
@@ -104,7 +104,7 @@
                     ]
                 ]
             },
-            "publisher": "Naciones Unidas",
+            "publisher": "NacionesUnidas",
             "publisher-place": "Nueva York",
             "title": "Diseño de muestras para encuestas de hogares: Directrices prácticas.",
             "title-short": "Diseño de muestras para encuestas de hogares",
@@ -172,8 +172,7 @@
             "ISBN": "978-958-762-586-8",
             "author": [
                 {
-                    "family": "Gutiérrez",
-                    "given": "Hugo Andrés"
+                    "literal": "Andrés Gutiérrez"
                 }
             ],
             "edition": "Segunda edición",
@@ -567,7 +566,7 @@
             "URL": "https://unstats.un.org/fpos",
             "author": [
                 {
-                    "literal": "United Nations General Assembly"
+                    "literal": "NacionesUnidas"
                 }
             ],
             "id": "UnitedNations2014FPOS",
@@ -586,7 +585,7 @@
             "URL": "https://unstats.un.org/unsd/methodology/dataquality/references/1902216-UNNQAFManual-WEB.pdf",
             "author": [
                 {
-                    "literal": "United Nations"
+                    "literal": "NacionesUnidas"
                 }
             ],
             "id": "UnitedNations2019NQAF",
@@ -597,9 +596,9 @@
                     ]
                 ]
             },
-            "publisher": "United Nations Statistics Division",
+            "publisher": "NacionesUnidas",
             "publisher-place": "New York",
-            "title": "United nations national quality assurance frameworks manual for official statistics",
+            "title": "NacionesUnidas national quality assurance frameworks manual for official statistics",
             "type": "report"
         },
         {
@@ -697,7 +696,7 @@
             "URL": "https://repositorio.cepal.org/server/api/core/bitstreams/14d443ec-8f1e-44a7-b22b-9f124f205abe/content",
             "author": [
                 {
-                    "literal": "Comisión Económica para América Latina y el Caribe"
+                    "literal": "CEPAL"
                 }
             ],
             "collection-number": "5",
@@ -711,7 +710,7 @@
                 ]
             },
             "note": "LC/PUB.2023/14-P",
-            "publisher": "Naciones Unidas",
+            "publisher": "NacionesUnidas",
             "publisher-place": "Santiago",
             "title": "Diseño y análisis estadístico de las encuestas de hogares de américa latina",
             "type": "book"
@@ -719,7 +718,7 @@
         {
             "author": [
                 {
-                    "literal": "United Nations Statistics Division"
+                    "literal": "NacionesUnidas"
                 }
             ],
             "id": "UNhandbook",
@@ -730,7 +729,7 @@
                     ]
                 ]
             },
-            "publisher": "United Nations",
+            "publisher": "NacionesUnidas",
             "title": "Handbook of surveys on households and individuals foundations and emerging approaches",
             "type": "book"
         },
@@ -1036,8 +1035,7 @@
             "URL": "https://repositorio.cepal.org/server/api/core/bitstreams/feb8c8be-6434-41f2-8fd9-f12f71a0739a/content",
             "author": [
                 {
-                    "family": "Gutiérrez",
-                    "given": "Hugo Andrés"
+                    "literal": "Andrés Gutiérrez"
                 },
                 {
                     "family": "Babativa-Márquez",
@@ -1055,7 +1053,7 @@
                 ]
             },
             "number": "106",
-            "publisher": "Comisión Económica para América Latina y el Caribe (CEPAL), Naciones Unidas",
+            "publisher": "CEPAL",
             "publisher-place": "Santiago",
             "title": "Efectos de diseño para indicadores sociales en américa latina: Función generalizada de varianza para estimadores directos provenientes de encuestas de hogares",
             "title-short": "Efectos de diseño para indicadores sociales en américa latina",
@@ -1295,7 +1293,7 @@
             "URL": "https://www.fao.org/sustainable-development-goals-data-portal/data/indicators/2.1.1-prevalence-of-undernourishment/es",
             "author": [
                 {
-                    "literal": "Organización de las Naciones Unidas para la Alimentación y la Agricultura"
+                    "literal": "FAO"
                 }
             ],
             "id": "FAO2026PoU",
@@ -3078,8 +3076,7 @@
             "URL": "https://CRAN.R-project.org/package=TeachingSampling",
             "author": [
                 {
-                    "family": "Gutiérrez",
-                    "given": "Hugo Andrés"
+                    "literal": "Andrés Gutiérrez"
                 }
             ],
             "id": "GutierrezT2020",
