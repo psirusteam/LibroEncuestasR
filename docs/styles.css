@@ -69,12 +69,30 @@ a:hover {
 
 #TOC {
   border-left: 3px solid var(--aehr-blue);
+  background: transparent !important;
+  box-shadow: none !important;
   padding-left: 0.85rem;
 }
 
-#TOC .active {
-  color: var(--aehr-blue-dark);
-  font-weight: 700;
+#quarto-margin-sidebar,
+#quarto-margin-sidebar .sidebar,
+#TOC .nav-link {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+#TOC .nav-link.active {
+  background: transparent !important;
+  border-left-color: #2761e3 !important;
+  box-shadow: none !important;
+  color: #2761e3 !important;
+  font-weight: 700 !important;
+}
+
+#TOC .nav-link:focus,
+#TOC .nav-link:focus-visible {
+  box-shadow: none !important;
 }
 
 main.content h1,

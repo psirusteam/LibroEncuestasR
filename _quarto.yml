@@ -48,7 +48,9 @@ format:
     theme: cosmo
     css: styles.css
     include-in-header: scripts/mathjax-macros.html
-    include-after-body: scripts/number-callouts.html
+    include-after-body:
+      - scripts/number-callouts.html
+      - scripts/toc-scrollspy.html
     toc: true
     toc-depth: 3
     toc-location: right

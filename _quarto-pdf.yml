@@ -1,0 +1,34 @@
+project:
+  output-dir: output/pdf
+
+book:
+  title: "Análisis de Encuestas de Hogares"
+  subtitle: "usando R"
+  output-file: "Libro"
+
+format:
+  pdf:
+    documentclass: scrbook
+    classoption:
+      - oneside
+      - open=any
+    pdf-engine: xelatex
+    papersize: letter
+    fontsize: 11pt
+    toc: true
+    toc-depth: 3
+    lof: true
+    lot: true
+    number-sections: true
+    colorlinks: true
+    link-citations: true
+    code-overflow: wrap
+    keep-tex: true
+    geometry:
+      - top=25mm
+      - bottom=25mm
+      - left=25mm
+      - right=25mm
+
+execute:
+  freeze: false

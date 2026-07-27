@@ -1,0 +1,98 @@
+<script>
+(() => {
+  const initTocScrollspy = () => {
+    const toc = document.querySelector("#TOC.toc-active");
+
+    if (!toc || toc.dataset.aehrScrollspy === "true") {
+      return;
+    }
+
+    const links = Array.from(
+      toc.querySelectorAll("a[data-scroll-target]")
+    );
+
+    const entries = links
+      .map((link) => {
+        const target = link.getAttribute("data-scroll-target");
+
+        if (!target || !target.startsWith("#")) {
+          return null;
+        }
+
+        let id;
+        try {
+          id = decodeURIComponent(target.slice(1));
+        } catch {
+          id = target.slice(1);
+        }
+
+        const section = document.getElementById(id);
+        return section ? { link, section } : null;
+      })
+      .filter(Boolean);
+
+    if (entries.length === 0) {
+      return;
+    }
+
+    const nestedLists = Array.from(toc.querySelectorAll("ul ul"));
+    let scheduled = false;
+
+    const updateNestedLists = (activeLink) => {
+      nestedLists.forEach((list) => {
+        const parentLink = Array.from(list.parentElement.children).find(
+          (element) => element.matches("a[data-scroll-target]")
+        );
+        const shouldOpen =
+          parentLink === activeLink || list.contains(activeLink);
+
+        list.classList.toggle("collapse", !shouldOpen);
+      });
+    };
+
+    const updateActiveLink = () => {
+      scheduled = false;
+
+      const position = window.scrollY + 200;
+      let activeEntry = entries[0];
+
+      entries.forEach((entry) => {
+        if (entry.section.offsetTop <= position) {
+          activeEntry = entry;
+        }
+      });
+
+      const atPageEnd =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+
+      if (atPageEnd) {
+        activeEntry = entries[entries.length - 1];
+      }
+
+      links.forEach((link) => {
+        link.classList.toggle("active", link === activeEntry.link);
+      });
+      updateNestedLists(activeEntry.link);
+    };
+
+    const scheduleUpdate = () => {
+      if (!scheduled) {
+        scheduled = true;
+        window.requestAnimationFrame(updateActiveLink);
+      }
+    };
+
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate, { passive: true });
+    toc.dataset.aehrScrollspy = "true";
+    updateActiveLink();
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initTocScrollspy);
+  } else {
+    initTocScrollspy();
+  }
+})();
+</script>
