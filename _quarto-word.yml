@@ -1,0 +1,16 @@
+project:
+  output-dir: output/word
+
+book:
+  title: "Análisis de Encuestas de Hogares"
+  subtitle: "usando R"
+  output-file: "Libro"
+
+format:
+  docx:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+
+execute:
+  freeze: false

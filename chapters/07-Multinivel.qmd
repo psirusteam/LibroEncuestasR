@@ -16,23 +16,23 @@ source("../_tabla_helper.R")
 
 # Modelos multinivel  {#cap7}
 
-Los modelos multinivel, también conocidos como modelos jerárquicos, son una técnica estadística diseñada para el análisis de datos con estructura jerárquica, como los que provienen de encuestas de hogares, en donde las unidades de observación no son independientes entre sí. Los individuos pertenecen a hogares, los hogares se ubican en áreas geográficas específicas (UPMs) y estas, a su vez, forman parte de unidades territoriales más amplias (estratos o dominios). Como consecuencia, las observaciones que comparten un mismo contexto suelen presentar características más similares entre sí que aquellas pertenecientes a contextos diferentes. Esta estructura de dependencia viola uno de los supuestos fundamentales de los modelos de regresión convencionales y puede conducir a estimaciones ineficientes e inferencias incorrectas [@goldstein2011multilevel; @rabehesketh2012multilevel].
+ De acuerdo con @goldstein2011multilevel y @rabehesketh2012multilevel, los modelos multinivel, también conocidos como modelos jerárquicos, son una técnica estadística diseñada para el análisis de datos con estructura jerárquica, como los que provienen de encuestas de hogares, en donde las unidades de observación no son independientes entre sí. Los individuos pertenecen a hogares, los hogares se ubican en áreas geográficas específicas (UPMs) y estas, a su vez, forman parte de unidades territoriales más amplias (estratos o dominios). Como consecuencia, las observaciones que comparten un mismo contexto suelen presentar características más similares entre sí que aquellas pertenecientes a contextos diferentes. Esta estructura de dependencia viola uno de los supuestos fundamentales de los modelos de regresión convencionales y puede conducir a estimaciones ineficientes e inferencias incorrectas.
 
 A diferencia de los modelos de regresión convencionales, los modelos multinivel reconocen que las observaciones pueden estar agrupadas en distintos niveles y que cada uno de ellos puede contribuir a explicar la variabilidad observada. En consecuencia, permiten representar simultáneamente los efectos asociados a las características de las unidades de análisis y aquellos derivados del entorno o contexto en el que estas se encuentran. Esta formulación resulta especialmente útil cuando se busca estudiar fenómenos determinados tanto por factores individuales como por características de los hogares, comunidades o áreas geográficas.
 
-Otra característica relevante de los modelos multinivel es que permiten cuantificar la proporción de la variabilidad asociada a cada nivel de agrupación presente en los datos. Mientras los efectos fijos resumen la relación promedio entre la variable respuesta y las covariables incluidas en el modelo, los efectos aleatorios representan las diferencias sistemáticas entre los grupos que no son explicadas por dichas covariables. Gracias a esta estructura, es posible modelar explícitamente la dependencia entre observaciones pertenecientes a un mismo grupo y obtener inferencias más adecuadas cuando los datos presentan organización jerárquica [@goldstein2011multilevel; @snijders2011].
+Como explica @snijders2011, otra característica relevante de los modelos multinivel es que permiten cuantificar la proporción de la variabilidad asociada a cada nivel de agrupación presente en los datos. Mientras los efectos fijos resumen la relación promedio entre la variable respuesta y las covariables incluidas en el modelo, los efectos aleatorios representan las diferencias sistemáticas entre los grupos que no son explicadas por dichas covariables. Gracias a esta estructura, es posible modelar explícitamente la dependencia entre observaciones pertenecientes a un mismo grupo y obtener inferencias más adecuadas cuando los datos presentan organización jerárquica.
 
-El desarrollo teórico y metodológico de los modelos multinivel ha sido ampliamente documentado en la literatura de muestreo. Sus fundamentos conceptuales, estrategias de estimación y aplicaciones en contextos sociales y demográficos se encuentran consolidados en distintas referencias especializadas [@gelman2006data; @goldstein2011multilevel; @rabehesketh2012multilevel].
+De acuerdo con @gelman2006data, el desarrollo teórico y metodológico de los modelos multinivel ha sido ampliamente documentado en la literatura de muestreo. Sus fundamentos conceptuales, estrategias de estimación y aplicaciones en contextos sociales y demográficos se encuentran consolidados en distintas referencias especializadas.
 
-Por otra parte, la comparación entre enfoques de estimación para modelos jerárquicos permite evaluar diferencias entre los métodos basados en máxima verosimilitud y los enfoques bayesianos [@browne2006comparison].
+Como muestra @browne2006comparison, por otra parte, la comparación entre enfoques de estimación para modelos jerárquicos permite evaluar diferencias entre los métodos basados en máxima verosimilitud y los enfoques bayesianos.
 
-En el ámbito de la epidemiología social, los modelos multinivel resultan útiles para estudiar fenómenos contextuales, mostrando cómo factores asociados al entorno pueden contribuir a explicar desigualdades en salud y otros resultados de interés poblacional [@merlo2006brief].
+Según @merlo2006brief, en el ámbito de la epidemiología social, los modelos multinivel resultan útiles para estudiar fenómenos contextuales, mostrando cómo factores asociados al entorno pueden contribuir a explicar desigualdades en salud y otros resultados de interés poblacional.
 
 Como advierten @pfeffermann1998weighting y @Carle2009, es necesario distinguir entre la jerarquía sustantiva que se desea modelar y la estructura del diseño muestral: una UPM, un estrato de diseño o un dominio no constituye automáticamente un contexto intercambiable susceptible de representarse mediante un efecto aleatorio. Esa decisión requiere una justificación conceptual y suficiente información en cada grupo.
 
 ## Motivación {#sec-motivacionMult}
 
-Para iniciar este capítulo, se cargan `tidyverse` para la manipulación de datos y la generación de gráficos, y `lme4` para la estimación de modelos multinivel. Asimismo, se importa la base de datos que será utilizada a lo largo de los ejemplos. Los títulos matemáticos de algunas figuras se formatean con `latex2exp`, llamado de forma explícita en el código [@BatesEtAl2015].
+De acuerdo con @BatesEtAl2015, para iniciar este capítulo, se cargan `tidyverse` para la manipulación de datos y la generación de gráficos, y `lme4` para la estimación de modelos multinivel. Asimismo, se importa la base de datos que será utilizada a lo largo de los ejemplos. Los títulos matemáticos de algunas figuras se formatean con `latex2exp`, llamado de forma explícita en el código.
 
 ```{r multinivel-setup, include=TRUE}
 library(tidyverse)
@@ -77,7 +77,7 @@ ggplot(data = plot_data,
   )
 ```
 
-Si bien este modelo resulta útil como referencia inicial, sus supuestos suelen ser poco realistas en el contexto de encuestas de hogares. En particular, la independencia entre observaciones puede verse comprometida cuando los hogares pertenecen a estratos que comparten características socioeconómicas, demográficas o geográficas similares. Asimismo, es posible que los niveles promedio de ingreso difieran sistemáticamente entre estratos, aun cuando la relación entre ingreso y gasto sea semejante. Ignorar esta estructura jerárquica puede conducir a estimaciones incorrectas de los errores estándar y, en consecuencia, a inferencias estadísticas poco confiables [@finch2019multilevel].
+Como explica @finch2019multilevel, si bien este modelo resulta útil como referencia inicial, sus supuestos suelen ser poco realistas en el contexto de encuestas de hogares. En particular, la independencia entre observaciones puede verse comprometida cuando los hogares pertenecen a estratos que comparten características socioeconómicas, demográficas o geográficas similares. Asimismo, es posible que los niveles promedio de ingreso difieran sistemáticamente entre estratos, aun cuando la relación entre ingreso y gasto sea semejante. Ignorar esta estructura jerárquica puede conducir a estimaciones incorrectas de los errores estándar y, en consecuencia, a inferencias estadísticas poco confiables.
 
 Con fines exclusivamente ilustrativos, se incorpora gradualmente la estructura jerárquica de los datos al proceso de modelación. Para ello, se ajusta inicialmente un modelo que permite que cada estrato tenga su propio intercepto, mientras mantiene una pendiente común para todas las observaciones. Esta especificación resulta útil para visualizar cómo los niveles promedio de ingreso pueden diferir entre estratos, aun cuando la relación entre ingreso y gasto se considere constante.
 
@@ -165,19 +165,19 @@ ggplot(data = plot_data,
 
 Aunque esta última especificación ofrece una representación más flexible de los datos y permite capturar las particularidades de cada estrato, presenta una limitación importante: los parámetros se estiman de manera completamente independiente para cada grupo. Como consecuencia, no se aprovecha la información compartida entre estratos que podrían presentar patrones similares, lo que puede generar estimaciones inestables, especialmente en aquellos grupos con un número reducido de observaciones.
 
-Los modelos multinivel superan esta dificultad mediante un mecanismo conocido como encogimiento (*shrinkage*), en el cual las estimaciones específicas de cada grupo se obtienen combinando la información propia del grupo con la información proveniente del conjunto de la población. De esta manera, se logra un equilibrio entre la representación de las diferencias entre estratos y la eficiencia estadística de las estimaciones [@gelman2006data; @goldstein2011multilevel].
+Según @gelman2006data y @goldstein2011multilevel, los modelos multinivel superan esta dificultad mediante un mecanismo conocido como encogimiento (*shrinkage*), en el cual las estimaciones específicas de cada grupo se obtienen combinando la información propia del grupo con la información proveniente del conjunto de la población. De esta manera, se logra un equilibrio entre la representación de las diferencias entre estratos y la eficiencia estadística de las estimaciones.
 
 ## Pesos *q-weighted* {#pesos-q-weighted}
 
-En relación con la incorporación de pesos de muestreo en modelos multinivel, existen enfoques basados en pseudo-máxima verosimilitud, en particular mediante procedimientos de mínimos cuadrados generalizados ponderados, así como métodos basados en algoritmos EM para la estimación de modelos jerárquicos con ponderaciones. La incorporación de los pesos resulta importante cuando el muestreo es informativo, aunque no existe una única estrategia metodológica para su implementación [@pfeffermann1998weighting; @asparouhov2006general; @rabehesketh2006multilevel; @Carle2009; @cai2013investigation].
+De acuerdo con @pfeffermann1998weighting, @asparouhov2006general, @rabehesketh2006multilevel, @Carle2009 y @cai2013investigation, en relación con la incorporación de pesos de muestreo en modelos multinivel, existen enfoques basados en pseudo-máxima verosimilitud, en particular mediante procedimientos de mínimos cuadrados generalizados ponderados, así como métodos basados en algoritmos EM para la estimación de modelos jerárquicos con ponderaciones. La incorporación de los pesos resulta importante cuando el muestreo es informativo, aunque no existe una única estrategia metodológica para su implementación.
 
-Desde una perspectiva general, el enfoque de máxima verosimilitud consiste en estimar los parámetros del modelo identificando aquellos valores que maximizan la probabilidad de observar los datos disponibles bajo la especificación asumida. Una extensión importante de este enfoque es la máxima verosimilitud restringida (REML), la cual mejora la estimación de los componentes de varianza al considerar la pérdida de grados de libertad debida a la estimación de los efectos fijos, produciendo en muchos casos estimaciones menos sesgadas que la máxima verosimilitud convencional [@kreft1998introducing; @BatesEtAl2015].
+Según @kreft1998introducing y @BatesEtAl2015, desde una perspectiva general, el enfoque de máxima verosimilitud consiste en estimar los parámetros del modelo identificando aquellos valores que maximizan la probabilidad de observar los datos disponibles bajo la especificación asumida. Una extensión importante de este enfoque es la máxima verosimilitud restringida (REML), la cual mejora la estimación de los componentes de varianza al considerar la pérdida de grados de libertad debida a la estimación de los efectos fijos, produciendo en muchos casos estimaciones menos sesgadas que la máxima verosimilitud convencional.
 
-En el contexto de los modelos multinivel con datos provenientes de encuestas, una dificultad adicional radica en la incorporación coherente de los pesos de muestreo a través de los distintos niveles de la jerarquía. La estructura agrupada de los datos implica que las observaciones no son independientes, por lo que la función de log-verosimilitud no puede descomponerse como una suma simple de contribuciones individuales. En su lugar, es necesario considerar explícitamente la dependencia entre los distintos niveles del diseño muestral para lograr inferencias adecuadas [@pfeffermann1998weighting].
+En el contexto de los modelos multinivel con datos provenientes de encuestas, una dificultad adicional radica en la incorporación coherente de los pesos de muestreo a través de los distintos niveles de la jerarquía. La estructura agrupada de los datos implica que las observaciones no son independientes, por lo que la función de log-verosimilitud no puede descomponerse como una suma simple de contribuciones individuales. En su lugar, es necesario considerar explícitamente la dependencia entre los distintos niveles del diseño muestral para lograr inferencias adecuadas.
 
-Para ajustar modelos multinivel con datos provenientes de encuestas complejas, una alternativa consiste en utilizar el enfoque de pesos *q-weighted*. La idea central de este método es eliminar de los pesos muestrales la componente sistemática explicada por las covariables incluidas en el modelo, de modo que los pesos resultantes conserven únicamente la parte residual atribuible al mecanismo de selección [@pfeffermann2011modelling].
+Como explica @pfeffermann2011modelling, para ajustar modelos multinivel con datos provenientes de encuestas complejas, una alternativa consiste en utilizar el enfoque de pesos *q-weighted*. La idea central de este método es eliminar de los pesos muestrales la componente sistemática explicada por las covariables incluidas en el modelo, de modo que los pesos resultantes conserven únicamente la parte residual atribuible al mecanismo de selección.
 
-No obstante, este no es el único enfoque disponible para la estimación de modelos multinivel con datos de encuestas complejas y tampoco sustituye el uso de pesos condicionales o de pesos escalados en cada etapa del diseño, requeridos por algunos métodos de pseudo-verosimilitud multinivel. El procedimiento para construir los pesos *q-weighted* se resume en los siguientes pasos [@pfeffermann1998weighting; @Carle2009]:
+No obstante, este no es el único enfoque disponible para la estimación de modelos multinivel con datos de encuestas complejas y tampoco sustituye el uso de pesos condicionales o de pesos escalados en cada etapa del diseño, requeridos por algunos métodos de pseudo-verosimilitud multinivel. El procedimiento para construir los pesos *q-weighted* se resume en los siguientes pasos:
 
 1. Ajustar un modelo de regresión para los factores de expansión finales de la encuesta, utilizando como variables explicativas el mismo conjunto de covariables que será empleado en el modelo multinivel. Siendo $w_k$ el factor de expansión original de la unidad $k$ y $\mathbf{x}_k$ el vector de covariables. Entonces se ajusta el modelo
 
@@ -224,9 +224,9 @@ Los modelos multinivel más utilizados en la práctica corresponden a extensione
 
 ### Modelo nulo {#sec-multinivel-muestras-complejas}
 
-En el análisis de regresión multinivel, se distinguen dos tipos de parámetros: los coeficientes de regresión, conocidos como parámetros fijos, y los componentes de varianza asociados a los efectos aleatorios. Una etapa inicial fundamental en este tipo de análisis consiste en descomponer la variabilidad total de la variable dependiente en los distintos niveles de la estructura jerárquica. En el contexto del ejemplo anterior, esta descomposición permite separar la variación del ingreso en una componente atribuible a diferencias dentro de los estratos y otra asociada a diferencias entre estratos [@goldstein2011multilevel; @rabehesketh2012multilevel].
+De acuerdo con @goldstein2011multilevel y @rabehesketh2012multilevel, en el análisis de regresión multinivel, se distinguen dos tipos de parámetros: los coeficientes de regresión, conocidos como parámetros fijos, y los componentes de varianza asociados a los efectos aleatorios. Una etapa inicial fundamental en este tipo de análisis consiste en descomponer la variabilidad total de la variable dependiente en los distintos niveles de la estructura jerárquica. En el contexto del ejemplo anterior, esta descomposición permite separar la variación del ingreso en una componente atribuible a diferencias dentro de los estratos y otra asociada a diferencias entre estratos.
 
-El punto de partida para esta descomposición es, el denominado modelo nulo, el cual no incorpora variables explicativas y se expresa como [@snijders2011]
+Según @snijders2011, el punto de partida para esta descomposición es, el denominado modelo nulo, el cual no incorpora variables explicativas y se expresa como
 
 $$
 y_{kj} = \beta_{0j} + \epsilon_{kj}
@@ -252,7 +252,7 @@ $$
 \epsilon_{kj} \sim N\left(0, \sigma_{\epsilon}^{2}\right),
 $$
 
-Donde $\sigma_{\epsilon}^{2}$ representa la variabilidad residual dentro de los estratos. A partir de este modelo se define el coeficiente de correlación intraclase (ICC, por sus siglas en inglés), que cuantifica la proporción de la varianza total explicada por las diferencias entre estratos [@goldstein2011multilevel; @snijders2011]:
+Donde $\sigma_{\epsilon}^{2}$ representa la variabilidad residual dentro de los estratos. A partir de este modelo se define el coeficiente de correlación intraclase (ICC, por sus siglas en inglés), que cuantifica la proporción de la varianza total explicada por las diferencias entre estratos:
 
 $$
 \rho = \frac{\sigma_{\tau}^{2}}{\sigma_{\tau}^{2} + \sigma_{\epsilon}^{2}}
@@ -263,9 +263,9 @@ Un valor elevado del ICC indica que una proporción importante de la variabilida
 
 Siguiendo con el análisis de la encuesta de ejemplo, cuando la variable de interés es el ingreso, el modelo nulo constituye el punto de partida para cuantificar qué proporción de la variabilidad total se debe a diferencias entre estratos y qué proporción corresponde a diferencias entre hogares dentro de un mismo estrato.
 
-La estimación de modelos multinivel en `R` se realiza mediante el paquete `lme4`. En particular, la función `lmer()` permite especificar los efectos aleatorios mediante expresiones de la forma `(efecto | grupo)`. En este contexto, la expresión `(1 | Stratum)` indica que el modelo incluye un intercepto aleatorio para cada estrato. El valor `1` representa el intercepto del modelo, mientras que `Stratum` identifica la variable de agrupación [@BatesEtAl2015].
+De acuerdo con @BatesEtAl2015, la estimación de modelos multinivel en `R` se realiza mediante el paquete `lme4`. En particular, la función `lmer()` permite especificar los efectos aleatorios mediante expresiones de la forma `(efecto | grupo)`. En este contexto, la expresión `(1 | Stratum)` indica que el modelo incluye un intercepto aleatorio para cada estrato. El valor `1` representa el intercepto del modelo, mientras que `Stratum` identifica la variable de agrupación.
 
-En `lme4`, el argumento `weights` representa pesos previos que modifican la contribución residual, pero no implementa por sí solo la pseudo-verosimilitud multinivel con pesos de diseño por etapa ni la estimación de varianza del diseño. Por tanto, los modelos ponderados con `qk` que siguen deben interpretarse como una ilustración modelada, no como una solución general para inferencia de encuestas complejas; para ese propósito se requieren pesos escalados y software que los incorpore expresamente en la estimación multinivel [@Carle2009].
+Como advierte @Carle2009, en `lme4`, el argumento `weights` representa pesos previos que modifican la contribución residual, pero no implementa por sí solo la pseudo-verosimilitud multinivel con pesos de diseño por etapa ni la estimación de varianza del diseño. Por tanto, los modelos ponderados con `qk` que siguen deben interpretarse como una ilustración modelada, no como una solución general para inferencia de encuestas complejas; para ese propósito se requieren pesos escalados y software que los incorpore expresamente en la estimación multinivel.
 
 ```{r modelos-nulos-setup, echo = TRUE, eval = TRUE}
 mod_null <- lmer(
@@ -293,7 +293,7 @@ coef_mod_null %>%
 ```
 
 
-A partir de los componentes de varianza estimados en el modelo nulo, la correlación intraclase se calcula mediante la función `icc()` del paquete `performance`. Este indicador cuantifica la proporción de la variabilidad total del ingreso que puede atribuirse a diferencias entre estratos, constituyendo una medida de la dependencia existente entre observaciones pertenecientes a un mismo grupo. Los resultados obtenidos se presentan en la @tbl-icc-nulo [@performance2026].
+De acuerdo con @performance2026, a partir de los componentes de varianza estimados en el modelo nulo, la correlación intraclase se calcula mediante la función `icc()` del paquete `performance`. Este indicador cuantifica la proporción de la variabilidad total del ingreso que puede atribuirse a diferencias entre estratos, constituyendo una medida de la dependencia existente entre observaciones pertenecientes a un mismo grupo. Los resultados obtenidos se presentan en la @tbl-icc-nulo.
 
 ```{r cod-icc-nulo, eval = FALSE}
 performance::icc(mod_null) %>%
@@ -312,7 +312,7 @@ La correlación intraclase estimada de 32% indica que aproximadamente un tercio 
 
 ### Modelo con intercepto aleatorio {#sec-intercepto-aleatorio}
 
-El modelo multinivel más simple que incorpora covariables corresponde al modelo de intercepto aleatorio. En esta especificación, se asume que los efectos de las variables explicativas son comunes a todos los estratos, mientras que el nivel promedio de la variable respuesta puede variar entre ellos. El modelo se expresa como [@goldstein2011multilevel; @rabehesketh2012multilevel]
+De acuerdo con @goldstein2011multilevel y @rabehesketh2012multilevel, el modelo multinivel más simple que incorpora covariables corresponde al modelo de intercepto aleatorio. En esta especificación, se asume que los efectos de las variables explicativas son comunes a todos los estratos, mientras que el nivel promedio de la variable respuesta puede variar entre ellos. El modelo se expresa como
 
 $$
 y_{kj} = \beta_{0j} + \mathbf{x}_{kj}\boldsymbol{\beta} + \epsilon_{kj}
@@ -335,7 +335,7 @@ random_intercept_model <- lmer(
 performance::icc(random_intercept_model)
 ```
 
-La correlación intraclase ajustada de 0.196 indica que, después de controlar por el gasto del hogar (`Expenditure`), aproximadamente el 20% de la variabilidad residual del ingreso sigue siendo atribuible a diferencias entre estratos. Aunque este valor evidencia agrupamiento residual, el ICC por sí solo no justifica una especificación multinivel concreta; también deben considerarse la definición sustantiva de los grupos, el ajuste y los diagnósticos del modelo. Los coeficientes estimados por estrato se presentan en la @tbl-coef-intercepto-aleatorio [@snijders2011]:
+Según @snijders2011, la correlación intraclase ajustada de 0.196 indica que, después de controlar por el gasto del hogar (`Expenditure`), aproximadamente el 20% de la variabilidad residual del ingreso sigue siendo atribuible a diferencias entre estratos. Aunque este valor evidencia agrupamiento residual, el ICC por sí solo no justifica una especificación multinivel concreta; también deben considerarse la definición sustantiva de los grupos, el ajuste y los diagnósticos del modelo. Los coeficientes estimados por estrato se presentan en la @tbl-coef-intercepto-aleatorio:
 
 ```{r cod-coef-intercepto-aleatorio, eval = FALSE}
 coef(random_intercept_model)$Stratum %>%
@@ -381,7 +381,7 @@ ggplot(data = plot_data,
 
 ### Modelo con intercepto y pendiente aleatoria {#sec-intercepto-pendiente-aleatorios}
 
-Una extensión natural del modelo anterior es el modelo de intercepto y pendiente aleatorios. En esta especificación, no sólo se permite que el nivel promedio de la variable respuesta varíe entre estratos, sino también que el efecto de una o más covariables difiera entre grupos. De esta manera, cada estrato puede tener su propia recta de regresión, tanto en términos de intercepto como de pendiente. El modelo puede expresarse como [@goldstein2011multilevel; @snijders2011]
+De acuerdo con @goldstein2011multilevel y @snijders2011, una extensión natural del modelo anterior es el modelo de intercepto y pendiente aleatorios. En esta especificación, no sólo se permite que el nivel promedio de la variable respuesta varíe entre estratos, sino también que el efecto de una o más covariables difiera entre grupos. De esta manera, cada estrato puede tener su propia recta de regresión, tanto en términos de intercepto como de pendiente. El modelo puede expresarse como
 
 $$
 y_{kj} = \beta_{0j} + x_{kj}\beta_{1j} + \mathbf{z}_{kj}\boldsymbol{\beta} + \epsilon_{kj},
@@ -477,7 +477,7 @@ ggplot(data = plot_data,
 
 ## Modelo logístico multinivel {#sec-logistica-multinivel}
 
-Los modelos logísticos multinivel constituyen una extensión de los modelos multinivel para variables continuas al caso en que la variable respuesta es dicotómica. En lugar de modelar directamente el valor esperado de una variable continua, estos modelos estiman la probabilidad de ocurrencia de un evento, incorporando simultáneamente covariables individuales y efectos aleatorios asociados a los grupos de pertenencia. En el contexto de encuestas de hogares, esta formulación es especialmente útil cuando se analizan resultados binarios, como encontrarse o no en condición de pobreza, acceder o no a un servicio, participar o no en el mercado laboral, o presentar determinada característica sociodemográfica [@snijders2011; @rabehesketh2012multilevel].
+De acuerdo con @snijders2011 y @rabehesketh2012multilevel, los modelos logísticos multinivel constituyen una extensión de los modelos multinivel para variables continuas al caso en que la variable respuesta es dicotómica. En lugar de modelar directamente el valor esperado de una variable continua, estos modelos estiman la probabilidad de ocurrencia de un evento, incorporando simultáneamente covariables individuales y efectos aleatorios asociados a los grupos de pertenencia. En el contexto de encuestas de hogares, esta formulación es especialmente útil cuando se analizan resultados binarios, como encontrarse o no en condición de pobreza, acceder o no a un servicio, participar o no en el mercado laboral, o presentar determinada característica sociodemográfica.
 
 Al igual que en los modelos multinivel para variables continuas, el punto de partida consiste en reconocer que las unidades de observación no son independientes cuando pertenecen a un mismo grupo sustantivo. Como se advirtió al inicio, un estrato, conglomerado o dominio del diseño solo debe emplearse como nivel aleatorio cuando corresponda al contexto que se desea modelar y el supuesto de efectos intercambiables sea defendible. Sin embargo, en el caso logístico la respuesta no se representa mediante una distribución normal con un error residual aditivo, sino mediante una distribución Bernoulli condicional a la probabilidad de ocurrencia del evento. Esta probabilidad se vincula con los predictores a través de la función logit, lo que permite expresar el modelo en una escala lineal.
 
@@ -512,7 +512,7 @@ La curva ajustada resume la asociación marginal entre el gasto y la condición 
 
 ### Modelo nulo logístico {#modelo-nulo-logistico}
 
-Como en el caso de variables continuas, el modelo nulo logístico constituye el punto de partida para estudiar la estructura jerárquica de la variable respuesta. Este modelo no incorpora covariables y permite evaluar si la probabilidad promedio del evento varía entre estratos. En el ejemplo considerado, el evento de interés corresponde a la condición de pobreza, de modo que el modelo permite separar la heterogeneidad atribuible a diferencias entre estratos de la variación individual propia de una respuesta binaria [@snijders2011].
+Según @snijders2011, como en el caso de variables continuas, el modelo nulo logístico constituye el punto de partida para estudiar la estructura jerárquica de la variable respuesta. Este modelo no incorpora covariables y permite evaluar si la probabilidad promedio del evento varía entre estratos. En el ejemplo considerado, el evento de interés corresponde a la condición de pobreza, de modo que el modelo permite separar la heterogeneidad atribuible a diferencias entre estratos de la variación individual propia de una respuesta binaria.
 
 En el modelo nulo, la variable de interés sigue la siguiente distribución Bernoulli:
 
@@ -538,7 +538,7 @@ $$
 \tau_{0j} \sim N(0,\sigma_{\tau}^{2})
 $$
 
-A diferencia del modelo lineal multinivel, aquí no se incorpora un término residual aditivo $\epsilon_{kj}$ en la ecuación del nivel individual. La variabilidad interna en el grupo está determinada por la distribución Bernoulli de la respuesta. Para cuantificar la dependencia entre unidades pertenecientes al mismo estrato, puede utilizarse el enfoque de variable latente, bajo el cual esta varianza residual se aproxima por la varianza de la distribución logística estándar, es decir, $\pi^2/3$. Así, la correlación intraclase del modelo logístico se expresa como [@merlo2006brief; @snijders2011]
+De acuerdo con @merlo2006brief, a diferencia del modelo lineal multinivel, aquí no se incorpora un término residual aditivo $\epsilon_{kj}$ en la ecuación del nivel individual. La variabilidad interna en el grupo está determinada por la distribución Bernoulli de la respuesta. Para cuantificar la dependencia entre unidades pertenecientes al mismo estrato, puede utilizarse el enfoque de variable latente, bajo el cual esta varianza residual se aproxima por la varianza de la distribución logística estándar, es decir, $\pi^2/3$. Así, la correlación intraclase del modelo logístico se expresa como
 
 $$
 \rho =
@@ -546,7 +546,7 @@ $$
 {\sigma_\tau^2 + \frac{\pi^2}{3}}
 $$
 
-Un valor elevado de $\rho$ indica que la probabilidad del evento presenta una estructura de agrupamiento importante, es decir, que dos unidades pertenecientes al mismo estrato tienden a parecerse más entre sí que dos unidades tomadas de estratos distintos. En contraste, un valor bajo sugiere que la mayor parte de la variación se concentra a nivel individual. Este ICC es una medida en escala latente y no equivale directamente a una correlación de respuestas binarias observadas. El ajuste en `R`, mediante `glmer()`, se realiza de la siguiente manera [@merlo2006brief; @BatesEtAl2015]:
+De acuerdo con @BatesEtAl2015, un valor elevado de $\rho$ indica que la probabilidad del evento presenta una estructura de agrupamiento importante, es decir, que dos unidades pertenecientes al mismo estrato tienden a parecerse más entre sí que dos unidades tomadas de estratos distintos. En contraste, un valor bajo sugiere que la mayor parte de la variación se concentra a nivel individual. Este ICC es una medida en escala latente y no equivale directamente a una correlación de respuestas binarias observadas. El ajuste en `R`, mediante `glmer()`, se realiza de la siguiente manera:
 
 ```{r mod-logit-nulo-setup, echo = TRUE, eval = TRUE}
 logistic_null_model <- glmer(
@@ -581,7 +581,7 @@ performance::icc(logistic_null_model)
 
 ### Modelo logístico con intercepto aleatorio {#modelo-logistico-con-intercepto-aleatorio}
 
-El modelo logístico con intercepto aleatorio incorpora covariables individuales o del hogar, permitiendo que el nivel base del evento varíe entre estratos. Su lógica es paralela a la del modelo con intercepto aleatorio para variables continuas: los efectos de las covariables se consideran comunes a todos los grupos, mientras que cada estrato puede tener su propio intercepto. En este caso, las diferencias entre interceptos se interpretan como diferencias en los *log-odds* base del evento [@snijders2011; @rabehesketh2012multilevel].
+De acuerdo con @snijders2011 y @rabehesketh2012multilevel, el modelo logístico con intercepto aleatorio incorpora covariables individuales o del hogar, permitiendo que el nivel base del evento varíe entre estratos. Su lógica es paralela a la del modelo con intercepto aleatorio para variables continuas: los efectos de las covariables se consideran comunes a todos los grupos, mientras que cada estrato puede tener su propio intercepto. En este caso, las diferencias entre interceptos se interpretan como diferencias en los *log-odds* base del evento.
 
 El modelo se expresa como $y_{kj} \mid \pi_{kj} \sim \text{Bernoulli}(\pi_{kj})$. En donde $\text{logit}(\pi_{kj}) = \beta_{0j} + \mathbf{x}_{kj}\boldsymbol{\beta}$ y $\beta_{0j} = \gamma_{00} + \tau_{0j}$. En este caso, $\mathbf{x}_{kj}$ representa el vector de covariables de la unidad $k$ en el estrato $j$, $\boldsymbol{\beta}$ es el vector de efectos fijos comunes a todos los estratos y $\tau_{0j}$ captura la desviación específica del estrato respecto al intercepto promedio global. Como antes, se asume que $\tau_{0j} \sim N(0,\sigma_{\tau}^{2})$.
 
@@ -664,7 +664,7 @@ random_slope_logit_model <- glmer(
 performance::icc(random_slope_logit_model)
 ```
 
-La estimación del modelo con intercepto y pendiente aleatoria indica una heterogeneidad mucho más marcada entre estratos. En este caso, tanto los interceptos como las pendientes asociadas al gasto pueden cambiar entre grupos. Antes de interpretar una correlación intraclase muy alta en este modelo debe verificarse que el ajuste haya convergido y que la matriz de efectos aleatorios no sea singular; una estructura aleatoria demasiado compleja puede producir estimaciones de frontera. Los coeficientes del modelo por estrato se muestran en la @tbl-coef-logit-pendiente [@BatesEtAl2015].
+De acuerdo con @BatesEtAl2015, la estimación del modelo con intercepto y pendiente aleatoria indica una heterogeneidad mucho más marcada entre estratos. En este caso, tanto los interceptos como las pendientes asociadas al gasto pueden cambiar entre grupos. Antes de interpretar una correlación intraclase muy alta en este modelo debe verificarse que el ajuste haya convergido y que la matriz de efectos aleatorios no sea singular; una estructura aleatoria demasiado compleja puede producir estimaciones de frontera. Los coeficientes del modelo por estrato se muestran en la @tbl-coef-logit-pendiente.
 
 ```{r cod-coef-logit-pendiente, eval = FALSE}
 coef(random_slope_logit_model)$Stratum %>%

@@ -151,7 +151,7 @@ La interpretación de un DEFF alto debe hacerse con precaución, ya que no siemp
 
 ## Fundamentos teóricos {#fundamentos-teoricos}
 
-Tal como destacan @heeringa2017applied, el cálculo de totales y medias poblacionales, junto con sus varianzas, ha sido esencial para el desarrollo de la teoría del muestreo probabilístico y la interpretación adecuada de los resultados de encuestas de hogares. La determinación de los totales poblacionales constituye uno de los pilares fundamentales del análisis de encuestas. Tanto las medias como las proporciones y las razones se derivan de estos totales. Un total se define como la suma de una variable específica (por ejemplo, ingreso o gasto) a nivel de toda la población.
+Tal como destacan @HeeringaWestBerglund2017, el cálculo de totales y medias poblacionales, junto con sus varianzas, ha sido esencial para el desarrollo de la teoría del muestreo probabilístico y la interpretación adecuada de los resultados de encuestas de hogares. La determinación de los totales poblacionales constituye uno de los pilares fundamentales del análisis de encuestas. Tanto las medias como las proporciones y las razones se derivan de estos totales. Un total se define como la suma de una variable específica (por ejemplo, ingreso o gasto) a nivel de toda la población.
 
 Con encuestas de hogares, el análisis de datos numéricoséricos  implica con frecuencia calcular estadísticas descriptivas como medias, totales y razones, ya que estas permiten sintetizar las principales características de la población y sirven de base para la toma de decisiones. Dichas estimaciones pueden calcularse para la población en su conjunto o para subgrupos específicos, según los objetivos de la investigación.
 

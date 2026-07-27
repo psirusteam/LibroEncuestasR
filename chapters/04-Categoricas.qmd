@@ -18,13 +18,13 @@ source("../_tabla_helper.R")
 # Análisis de variables categóricas  {#cap4}
 
 
-En el análisis de encuestas de hogares, uno de los productos más habituales es la estimación de parámetros descriptivos asociados a variables categóricas, los cuales permiten sintetizar las principales características de la población. Estas medidas facilitan una representación clara y comprensible de fenómenos sociales a partir de información recolectada mediante muestras probabilísticas [@HeeringaWestBerglund2017; @CEPAL2023Diseno].
+De acuerdo con @HeeringaWestBerglund2017 y @CEPAL2023Diseno, en el análisis de encuestas de hogares, uno de los productos más habituales es la estimación de parámetros descriptivos asociados a variables categóricas, los cuales permiten sintetizar las principales características de la población. Estas medidas facilitan una representación clara y comprensible de fenómenos sociales a partir de información recolectada mediante muestras probabilísticas.
 
-Entre los indicadores descriptivos más utilizados para analizar variables categóricas se encuentran las frecuencias y las proporciones. Las frecuencias indican cuántas personas u hogares pertenecen a cada categoría, por ejemplo, el número de personas en condición de pobreza, mientras que las proporciones expresan el peso relativo de cada categoría dentro del conjunto poblacional [@HeeringaWestBerglund2017; @Agresti2019Intro].
+Como explica @Agresti2019Intro, entre los indicadores descriptivos más utilizados para analizar variables categóricas se encuentran las frecuencias y las proporciones. Las frecuencias indican cuántas personas u hogares pertenecen a cada categoría, por ejemplo, el número de personas en condición de pobreza, mientras que las proporciones expresan el peso relativo de cada categoría dentro del conjunto poblacional.
 
 Aunque el análisis descriptivo de variables categóricas suele apoyarse en estos parámetros básicos, también es posible combinarlas con medidas derivadas de variables numéricas, como cuantiles o indicadores de desigualdad, las cuales se abordaron en el capítulo anterior. No obstante, en este capítulo nos concentraremos exclusivamente en la descripción y estimación de parámetros asociados a variables categóricas, empleando diseños muestrales complejos.
 
-El análisis comienza con la definición del diseño de muestreo, siguiendo los lineamientos explicados en capítulos anteriores y utilizando la misma base de datos. Este paso es fundamental porque permite incorporar adecuadamente las características del diseño complejo de la encuesta, tales como los factores de expansión, las unidades primarias de muestreo y los estratos de selección. La correcta especificación de estos elementos garantiza que las estimaciones obtenidas sean representativas de la población objetivo y que las medidas de precisión reflejen apropiadamente la variabilidad introducida por el esquema de muestreo [@HeeringaWestBerglund2017; @CEPAL2023Diseno].
+El análisis comienza con la definición del diseño de muestreo, siguiendo los lineamientos explicados en capítulos anteriores y utilizando la misma base de datos. Este paso es fundamental porque permite incorporar adecuadamente las características del diseño complejo de la encuesta, tales como los factores de expansión, las unidades primarias de muestreo y los estratos de selección. La correcta especificación de estos elementos garantiza que las estimaciones obtenidas sean representativas de la población objetivo y que las medidas de precisión reflejen apropiadamente la variabilidad introducida por el esquema de muestreo.
 
 ```{r cargar-datos-categoricas, eval=TRUE}
 
@@ -79,23 +79,23 @@ male_subset <- survey_design %>%
 
 ## Estimación del tamaño poblacional {#estimacion-del-tamano-poblacional}
 
-En el análisis de encuestas de hogares, es fundamental estimar el tamaño de las subpoblaciones, entendido como el número de personas u hogares que pertenecen a categorías específicas y la proporción que representan dentro de la población. Estas estimaciones, basadas en variables categóricas, permiten caracterizar el perfil demográfico y socioeconómico de la población, información clave para orientar la asignación de recursos, diseñar políticas públicas y formular programas sociales. Por ejemplo, estimar cuántas personas se encuentran por debajo de la línea de pobreza, cuántas están desempleadas o cuántas alcanzaron determinado nivel educativo es esencial para identificar brechas y evaluar condiciones de bienestar [@CEPAL2023Diseno].
+Según @CEPAL2023Diseno, en el análisis de encuestas de hogares, es fundamental estimar el tamaño de las subpoblaciones, entendido como el número de personas u hogares que pertenecen a categorías específicas y la proporción que representan dentro de la población. Estas estimaciones, basadas en variables categóricas, permiten caracterizar el perfil demográfico y socioeconómico de la población, información clave para orientar la asignación de recursos, diseñar políticas públicas y formular programas sociales. Por ejemplo, estimar cuántas personas se encuentran por debajo de la línea de pobreza, cuántas están desempleadas o cuántas alcanzaron determinado nivel educativo es esencial para identificar brechas y evaluar condiciones de bienestar.
 
-La estimación del tamaño de una población o subpoblación se realiza a partir de variables categóricas, que segmentan a la población en grupos mutuamente excluyentes (particiones). El tamaño poblacional hace referencia al número total de individuos u hogares que, en la base de datos de la encuesta, pertenecen a una categoría determinada. Estas categorías pueden corresponder, por ejemplo, a estados de ocupación o niveles educativos alcanzados. Para obtener estas estimaciones, se combinan las respuestas de los encuestados con los pesos muestrales, que indican cuántas personas u hogares representa cada unidad de la muestra dentro de la población total [@Gutierrez2016; @CEPAL2023Diseno].
+Como explica @Gutierrez2016, la estimación del tamaño de una población o subpoblación se realiza a partir de variables categóricas, que segmentan a la población en grupos mutuamente excluyentes (particiones). El tamaño poblacional hace referencia al número total de individuos u hogares que, en la base de datos de la encuesta, pertenecen a una categoría determinada. Estas categorías pueden corresponder, por ejemplo, a estados de ocupación o niveles educativos alcanzados. Para obtener estas estimaciones, se combinan las respuestas de los encuestados con los pesos muestrales, que indican cuántas personas u hogares representa cada unidad de la muestra dentro de la población total.
 
-El estimador del tamaño de la población, se define como [@sarndal2003model; @Gutierrez2016]:
+De acuerdo con @sarndal2003model, el estimador del tamaño de la población, se define como:
 
 $$
 \hat{N} = \sum_{h} \sum_{i} \sum_{k} w_{hik}
 $$
 
-En donde, $w_{hik}$ es el peso o factor de expansión de la unidad $k$ en la UPM $i$ del estrato $h$. Asimismo, la estimación del tamaño de una subpoblación sigue el mismo principio, pero se enmarca en un subconjunto definido por una característica específica. Para determinar cuántas personas pertenecen a una categoría particular, se identifica dicho grupo en la base de datos y se suman sus pesos muestrales. Esto permite cuantificar grupos de interés específicos y conocer su tamaño dentro de la población [@Gutierrez2016]:
+En donde, $w_{hik}$ es el peso o factor de expansión de la unidad $k$ en la UPM $i$ del estrato $h$. Asimismo, la estimación del tamaño de una subpoblación sigue el mismo principio, pero se enmarca en un subconjunto definido por una característica específica. Para determinar cuántas personas pertenecen a una categoría particular, se identifica dicho grupo en la base de datos y se suman sus pesos muestrales. Esto permite cuantificar grupos de interés específicos y conocer su tamaño dentro de la población:
 
 $$
 \hat{N}_d = \sum_{h} \sum_{i} \sum_{k} w_{hik} \ I(y_{hik}=d)
 $$
 
-En donde $I(y_{hik}=d)$ es una variable binaria que toma el valor de 1 si la unidad $k$ de la UPM $i$ en el estrato $h$ pertenece a la categoría $d$ de la variable de interés $y$, y 0 en caso contrario. Nótese además que, si $d$ fue utilizada en la calibración de los pesos, el valor de $\hat{N}_d$ coincidirá con el control externo aplicado [@DevilleSarndal1992; @sarndal2003model].
+Como señalan @DevilleSarndal1992, en donde $I(y_{hik}=d)$ es una variable binaria que toma el valor de 1 si la unidad $k$ de la UPM $i$ en el estrato $h$ pertenece a la categoría $d$ de la variable de interés $y$, y 0 en caso contrario. Nótese además que, si $d$ fue utilizada en la calibración de los pesos, el valor de $\hat{N}_d$ coincidirá con el control externo aplicado.
 
 En `R`, y utilizando el diseño muestral definido previamente, es posible, generar resúmenes de la información de la encuesta para cada categoría de la variable `Zone`. Para ello, los datos se agrupan según la zona geográfica, lo que permite obtener resultados independientes para cada uno de estos dominios de estudio. A partir de este procedimiento se producen dos tipos principales de resultados. En primer lugar, se calcula el número de observaciones efectivamente recolectadas en la muestra, sin considerar los factores de expansión, lo que corresponde al tamaño muestral disponible en cada zona. En segundo lugar, se estima el tamaño poblacional asociado a cada dominio incorporando la información del diseño de muestreo.
 
@@ -195,23 +195,23 @@ survey_design %>%
 
 ## Estimación de proporciones {#estimacion-de-proporciones}
 
-Las proporciones permiten expresar el peso relativo que tienen determinados grupos dentro de la población. Por ejemplo, conocer el porcentaje de hogares que se encuentran por debajo de la línea de pobreza es esencial para evaluar desigualdades y caracterizar condiciones de bienestar. Para obtener este tipo de indicadores, se calcula el promedio ponderado de la variable dicotómica, lo que asegura que la estimación represente adecuadamente la distribución poblacional. Al convertir las categorías originales en variables indicadoras, la proporción estimada se calcula como [@KornGraubard1999; @HeeringaWestBerglund2017]:
+De acuerdo con @KornGraubard1999 y @HeeringaWestBerglund2017, las proporciones permiten expresar el peso relativo que tienen determinados grupos dentro de la población. Por ejemplo, conocer el porcentaje de hogares que se encuentran por debajo de la línea de pobreza es esencial para evaluar desigualdades y caracterizar condiciones de bienestar. Para obtener este tipo de indicadores, se calcula el promedio ponderado de la variable dicotómica, lo que asegura que la estimación represente adecuadamente la distribución poblacional. Al convertir las categorías originales en variables indicadoras, la proporción estimada se calcula como:
 
 $$
 \hat{p}_d = \frac{\hat{N}_d}{\hat{N}} = \frac{\displaystyle\sum_{h} \sum_{i} \sum_{k} w_{hik} \ I(y_{hik}=d)} {\displaystyle\sum_{h} \sum_{i} \sum_{k} w_{hik}}
 $$
 
-Si bien este estimador es conceptualmente sencillo, corresponde a una función no lineal de los totales poblacionales. Por esta razón, para derivar sus propiedades estadísticas, particularmente su varianza y error estándar, es necesario recurrir a métodos de aproximación como la linealización de Taylor. En este contexto, se utiliza la función $z_{hik}=I(y_{hik}=d)-\hat{p}_d$. En la práctica, los programas estadísticos implementan automáticamente estos procedimientos y generan las estimaciones de proporciones junto con sus respectivos errores estándar e intervalos de confianza [@Gutierrez2016; @HeeringaWestBerglund2017].
+Como explica @Gutierrez2016, si bien este estimador es conceptualmente sencillo, corresponde a una función no lineal de los totales poblacionales. Por esta razón, para derivar sus propiedades estadísticas, particularmente su varianza y error estándar, es necesario recurrir a métodos de aproximación como la linealización de Taylor. En este contexto, se utiliza la función $z_{hik}=I(y_{hik}=d)-\hat{p}_d$. En la práctica, los programas estadísticos implementan automáticamente estos procedimientos y generan las estimaciones de proporciones junto con sus respectivos errores estándar e intervalos de confianza.
 
-Como advierten @KornGraubard1999, cuando las proporciones toman valores muy cercanos a 0 o a 1, la precisión de las estimaciones puede verse afectada, por lo que en muchos casos es necesario contar con tamaños muestrales mayores para obtener resultados estables y confiables. Esta situación es especialmente relevante en el análisis de fenómenos poco frecuentes o altamente concentrados, donde pequeñas variaciones en la muestra pueden producir cambios importantes en las estimaciones.
+Cuando las proporciones toman valores muy cercanos a 0 o a 1, la precisión de las estimaciones puede verse afectada, por lo que en muchos casos es necesario contar con tamaños muestrales mayores para obtener resultados estables y confiables. Esta situación es especialmente relevante en el análisis de fenómenos poco frecuentes o altamente concentrados, donde pequeñas variaciones en la muestra pueden producir cambios importantes en las estimaciones.
 
-Adicionalmente, los intervalos de confianza construidos mediante aproximaciones normales pueden presentar límites inferiores menores que 0 o superiores mayores que 1, lo que dificulta su interpretación al tratarse de proporciones. Para evitar este problema, una alternativa ampliamente utilizada consiste en aplicar la transformación logit antes de construir los intervalos de confianza. Este procedimiento garantiza que, al regresar a la escala original, los límites obtenidos permanezcan dentro del rango válido de las proporciones [@KornGraubard1999; @Agresti2019Intro].
+Adicionalmente, como explica @Agresti2019Intro, los intervalos de confianza construidos mediante aproximaciones normales pueden presentar límites inferiores menores que 0 o superiores mayores que 1, lo que dificulta su interpretación al tratarse de proporciones. Para evitar este problema, una alternativa ampliamente utilizada consiste en aplicar la transformación logit antes de construir los intervalos de confianza. Este procedimiento garantiza que, al regresar a la escala original, los límites obtenidos permanezcan dentro del rango válido de las proporciones.
 
 $$
 CI(\hat{p}_d; 1-\alpha) = \frac{exp \left[ln\left(\frac{\hat{p}_d}{1-\hat{p}_d}\right) \pm \frac{\widehat{me}}{\hat{p}_d(1-\hat{p}_d)}\right]}{1 + exp \left[ln\left(\frac{\hat{p}_d}{1-\hat{p}_d}\right) \pm \frac{\widehat{me}}{\hat{p}_d(1-\hat{p}_d)}\right]}
 $$
 
-En donde $\widehat{me}$ corresponde al margen de error estimado y se obtiene a partir del producto entre el valor crítico de la distribución $t$ de Student y el error estándar estimado de la proporción $\hat{p}_d$. El término $t_{1-\alpha/2, df}$ representa el percentil asociado al nivel de confianza seleccionado, considerando $df$ grados de libertad. En el contexto de encuestas complejas, estos grados de libertad suelen definirse como la diferencia entre el número de unidades primarias de muestreo (UPM) y el número de estratos presentes en el subgrupo o dominio de análisis [@KornGraubard1999; @HeeringaWestBerglund2017].
+En donde $\widehat{me}$ corresponde al margen de error estimado y se obtiene a partir del producto entre el valor crítico de la distribución $t$ de Student y el error estándar estimado de la proporción $\hat{p}_d$. El término $t_{1-\alpha/2, df}$ representa el percentil asociado al nivel de confianza seleccionado, considerando $df$ grados de libertad. En el contexto de encuestas complejas, estos grados de libertad suelen definirse como la diferencia entre el número de unidades primarias de muestreo (UPM) y el número de estratos presentes en el subgrupo o dominio de análisis.
 
 A diferencia de otros programas estadísticos que presentan los resultados en porcentaje, `R` reporta las proporciones en la escala [0,1]. Las funciones utilizadas permiten calcular directamente las estimaciones, sus errores estándar e intervalos de confianza, lo que facilita el análisis de variables categóricas en encuestas de hogares. A continuación se ilustra cómo obtener la proporción de personas por zona usando el diseño muestral previamente definido, presentada en la @tbl-prop-zona:
 
@@ -237,7 +237,7 @@ survey_design %>%
 ```
 
 
-En este ejemplo, la función `survey_mean()` se utiliza para calcular la estimación de proporciones poblacionales y, mediante el argumento `proportion = TRUE`, se especifica que el interés se centra en estimar la distribución relativa de la población entre las distintas categorías de la variable analizada. Los resultados indican que aproximadamente el 47.9% de las personas reside en la zona rural, con un intervalo de confianza del 95% entre 45.2% y 50.7%, mientras que el 52.0% corresponde a población residente en la zona urbana, con un intervalo de confianza entre 49.2% y 54.7% [@FreedmanEllis2026].
+De acuerdo con @FreedmanEllis2026, en este ejemplo, la función `survey_mean()` se utiliza para calcular la estimación de proporciones poblacionales y, mediante el argumento `proportion = TRUE`, se especifica que el interés se centra en estimar la distribución relativa de la población entre las distintas categorías de la variable analizada. Los resultados indican que aproximadamente el 47.9% de las personas reside en la zona rural, con un intervalo de confianza del 95% entre 45.2% y 50.7%, mientras que el 52.0% corresponde a población residente en la zona urbana, con un intervalo de confianza entre 49.2% y 54.7%.
 
 La librería `srvyr` también dispone de la función `survey_prop()`, diseñada específicamente para la estimación de proporciones en encuestas complejas. Esta función produce resultados equivalentes a los obtenidos con `survey_mean()`, facilitando además una sintaxis más directa e intuitiva cuando el objetivo del análisis es exclusivamente el cálculo de proporciones. Los resultados obtenidos mediante esta alternativa se presentan en la @tbl-prop-zona2.
 
@@ -336,9 +336,9 @@ male_subset %>%
   tabla_fmt()
 ```
 
-A partir de los resultados obtenidos se observa que, en la zona rural, el 19.7% de los hombres se encuentra en situación de pobreza extrema, mientras que en la zona urbana esta proporción corresponde al 11.3%. Aunque las estimaciones puntuales sugieren una mayor incidencia de pobreza extrema en la ruralidad, la superposición de los intervalos de confianza individuales no constituye por sí sola una prueba formal de igualdad; la significación de la diferencia debe evaluarse mediante un contraste que incorpore su error estándar [@KornGraubard1999; @HeeringaWestBerglund2017].
+A partir de los resultados obtenidos se observa que, en la zona rural, el 19.7% de los hombres se encuentra en situación de pobreza extrema, mientras que en la zona urbana esta proporción corresponde al 11.3%. Aunque las estimaciones puntuales sugieren una mayor incidencia de pobreza extrema en la ruralidad, la superposición de los intervalos de confianza individuales no constituye por sí sola una prueba formal de igualdad; la significación de la diferencia debe evaluarse mediante un contraste que incorpore su error estándar.
 
-También es posible categorizar variables cuantitativas para facilitar su análisis conjunto con otras variables categóricas. Por ejemplo, la edad puede agruparse en rangos etarios específicos y posteriormente cruzarse con variables relacionadas con la situación en el empleo. Este tipo de procedimiento resulta útil para identificar diferencias en la participación laboral entre distintos grupos de edad [@Agresti2019Intro].
+También es posible categorizar variables cuantitativas para facilitar su análisis conjunto con otras variables categóricas. Por ejemplo, la edad puede agruparse en rangos etarios específicos y posteriormente cruzarse con variables relacionadas con la situación en el empleo. Este tipo de procedimiento resulta útil para identificar diferencias en la participación laboral entre distintos grupos de edad.
 
 A continuación, la variable edad se clasifica en dos categorías para la población femenina: mujeres entre 18 y 35 años, y mujeres pertenecientes a otros rangos de edad. Posteriormente, estas categorías se analizan en conjunto con la variable de empleabilidad, permitiendo estimar la distribución de la condición laboral según grupo etario. Los resultados correspondientes se presentan en la @tbl-prop-edad-rango-empleo-mujer.
 
@@ -369,9 +369,9 @@ female_subset %>%
 
 ## Contrastes y diferencias de proporciones {#contrastes-y-diferencias-de-proporciones}
 
-Las proporciones obtenidas en las filas de una tabla de doble entrada pueden interpretarse como estimaciones para distintas subpoblaciones, definidas a partir de los niveles de una variable categórica. En este contexto, no solo resulta relevante estimar las proporciones asociadas a cada grupo, sino también evaluar las diferencias existentes entre ellas mediante contrastes lineales [@KornGraubard1999; @HeeringaWestBerglund2017].
+De acuerdo con @KornGraubard1999 y @HeeringaWestBerglund2017, las proporciones obtenidas en las filas de una tabla de doble entrada pueden interpretarse como estimaciones para distintas subpoblaciones, definidas a partir de los niveles de una variable categórica. En este contexto, no solo resulta relevante estimar las proporciones asociadas a cada grupo, sino también evaluar las diferencias existentes entre ellas mediante contrastes lineales.
 
-Por ejemplo, suponga que el interés está en comparar la proporción de mujeres en condición de pobreza con la proporción de hombres en esta misma situación. Formalmente, este contraste puede expresarse como $\hat{p}_F - \hat{p}_M$, donde $\hat{p}_F$ representa la proporción estimada de mujeres en pobreza y $\hat{p}_M$ la proporción estimada de hombres en dicha condición. Para construir este contraste, primero se estiman las proporciones de hombres y mujeres en estado de pobreza utilizando el mismo procedimiento descrito en capítulos anteriores. Los resultados correspondientes se presentan en la @tbl-svyby-pobreza-sexo2 [@HeeringaWestBerglund2017]:
+Por ejemplo, suponga que el interés está en comparar la proporción de mujeres en condición de pobreza con la proporción de hombres en esta misma situación. Formalmente, este contraste puede expresarse como $\hat{p}_F - \hat{p}_M$, donde $\hat{p}_F$ representa la proporción estimada de mujeres en pobreza y $\hat{p}_M$ la proporción estimada de hombres en dicha condición. Para construir este contraste, primero se estiman las proporciones de hombres y mujeres en estado de pobreza utilizando el mismo procedimiento descrito en capítulos anteriores. Los resultados correspondientes se presentan en la @tbl-svyby-pobreza-sexo2:
 
 ```{r cod-prop-pobreza-sexo}
 sex_poverty_proportion <- survey_design %>%
@@ -410,7 +410,7 @@ sex_poverty_estimate <- setNames(
 sex_poverty_estimate["Female"] - sex_poverty_estimate["Male"]
 ```
 
-Para calcular correctamente la variabilidad asociada a esta diferencia, no basta con considerar únicamente las varianzas de cada estimación por separado. También es necesario incorporar la covarianza entre ambas proporciones, dado que las estimaciones provienen de una misma muestra y, por tanto, no son independientes. La matriz de varianzas y covarianzas puede obtenerse mediante la función `vcov`, cuyos resultados se presentan en la @tbl-vcov-sex-pobreza [@HeeringaWestBerglund2017]:
+Para calcular correctamente la variabilidad asociada a esta diferencia, no basta con considerar únicamente las varianzas de cada estimación por separado. También es necesario incorporar la covarianza entre ambas proporciones, dado que las estimaciones provienen de una misma muestra y, por tanto, no son independientes. La matriz de varianzas y covarianzas puede obtenerse mediante la función `vcov`, cuyos resultados se presentan en la @tbl-vcov-sex-pobreza:
 
 ```{r cod-vcov-pobreza-sexo}
 sex_poverty_vcov <- vcov(sex_poverty_contrast)
@@ -427,7 +427,7 @@ sex_poverty_vcov %>%
   tabla_fmt(digits = 10)
 ```
 
-A partir de esta matriz, el error estándar de la diferencia de proporciones se estima, utilizando la expresión general para la varianza de una diferencia entre estimadores, la cual corresponde a la suma de las varianzas de cada estimación menos dos veces la covarianza entre ellas. Para evitar inconsistencias derivadas del redondeo de los valores presentados en la @tbl-vcov-sex-pobreza, la verificación se realiza directamente con las entradas de la matriz estimada [@KornGraubard1999; @HeeringaWestBerglund2017]:
+A partir de esta matriz, el error estándar de la diferencia de proporciones se estima, utilizando la expresión general para la varianza de una diferencia entre estimadores, la cual corresponde a la suma de las varianzas de cada estimación menos dos veces la covarianza entre ellas. Para evitar inconsistencias derivadas del redondeo de los valores presentados en la @tbl-vcov-sex-pobreza, la verificación se realiza directamente con las entradas de la matriz estimada:
 
 ```{r cod-se-diferencia-pobreza-sexo}
 sqrt(
@@ -479,7 +479,7 @@ region_unemployment_proportion %>%
   tabla_fmt()
 ```
 
-Una vez estimadas las proporciones de desempleo por región, el siguiente paso consiste en evaluar si existen diferencias estadísticamente significativas entre algunas de estas proporciones mediante contrastes lineales. En particular, el interés se centra en comparar las diferencias entre las proporciones estimadas de desempleo de distintas regiones. Los contrastes considerados corresponden a $\hat{p}_{Norte} - \hat{p}_{Centro} = 0.01004$, $\hat{p}_{Sur} - \hat{p}_{Centro} = 0.02691$ y $\hat{p}_{Occidente} - \hat{p}_{Oriente} = 0.01046$. De manera matricial, estos contrastes entre regiones pueden escribirse así [@HeeringaWestBerglund2017]:
+Una vez estimadas las proporciones de desempleo por región, el siguiente paso consiste en evaluar si existen diferencias estadísticamente significativas entre algunas de estas proporciones mediante contrastes lineales. En particular, el interés se centra en comparar las diferencias entre las proporciones estimadas de desempleo de distintas regiones. Los contrastes considerados corresponden a $\hat{p}_{Norte} - \hat{p}_{Centro} = 0.01004$, $\hat{p}_{Sur} - \hat{p}_{Centro} = 0.02691$ y $\hat{p}_{Occidente} - \hat{p}_{Oriente} = 0.01046$. De manera matricial, estos contrastes entre regiones pueden escribirse así:
 
 $$
 \left[\begin{array}{ccccc}
@@ -507,7 +507,7 @@ region_unemployment_vcov %>%
   tabla_fmt(digits = 7)
 ```
 
-Nótese que las covarianzas entre las estimaciones regionales son iguales a cero debido a que las muestras seleccionadas en cada región son independientes entre sí. Por tanto, el error estándar de cada contraste se obtiene aplicando la expresión de la varianza para la diferencia entre dos estimadores. Para verificar los resultados sin introducir errores de redondeo, los cálculos siguientes toman las varianzas y covarianzas directamente de la matriz presentada en la @tbl-vcov-desempleo-region [@HeeringaWestBerglund2017]:
+Nótese que las covarianzas entre las estimaciones regionales son iguales a cero debido a que las muestras seleccionadas en cada región son independientes entre sí. Por tanto, el error estándar de cada contraste se obtiene aplicando la expresión de la varianza para la diferencia entre dos estimadores. Para verificar los resultados sin introducir errores de redondeo, los cálculos siguientes toman las varianzas y covarianzas directamente de la matriz presentada en la @tbl-vcov-desempleo-region:
 
 ```{r cod-se-contrastes-desempleo-region}
 # Norte - Centro
@@ -549,9 +549,9 @@ svycontrast(
 
 ## Tablas cruzadas {#tablas-cruzadas}
 
-Además de analizar cada variable de manera individual, resulta especialmente relevante estudiar si existe asociación entre dos variables categóricas. Este tipo de análisis permite identificar patrones y relaciones que aportan información valiosa para la toma de decisiones y la comprensión de fenómenos sociales. Por ejemplo, en el ámbito de las políticas públicas es posible relacionar educación y empleo para diseñar estrategias orientadas al mercado laboral; en la evaluación de programas sociales, analizar diferencias en el acceso a servicios de salud según el nivel de ingresos; y en investigación social, estudiar cómo variables demográficas y condiciones de vida se relacionan entre sí para comprender dinámicas y tendencias de la población [@HeeringaWestBerglund2017; @Agresti2019Intro].
+De acuerdo con @HeeringaWestBerglund2017 y @Agresti2019Intro, además de analizar cada variable de manera individual, resulta especialmente relevante estudiar si existe asociación entre dos variables categóricas. Este tipo de análisis permite identificar patrones y relaciones que aportan información valiosa para la toma de decisiones y la comprensión de fenómenos sociales. Por ejemplo, en el ámbito de las políticas públicas es posible relacionar educación y empleo para diseñar estrategias orientadas al mercado laboral; en la evaluación de programas sociales, analizar diferencias en el acceso a servicios de salud según el nivel de ingresos; y en investigación social, estudiar cómo variables demográficas y condiciones de vida se relacionan entre sí para comprender dinámicas y tendencias de la población.
 
-Formalmente, sean $x$ y $y$ dos variables categóricas con $R$ categorías para las filas y $C$ categorías para las columnas, respectivamente. En el contexto de encuestas por muestreo, el interés suele centrarse en estimar la distribución conjunta de ambas variables, es decir, la proporción de unidades poblacionales que pertenecen simultáneamente a cada combinación posible de categorías. Para ello, las entradas de una tabla cruzada, también conocida como tabla de contingencia, se estiman mediante frecuencias ponderadas obtenidas a partir de los factores de expansión y del diseño muestral. La estimación del total poblacional asociado a cada celda $(r,c)$ se define como [@HeeringaWestBerglund2017]:
+Formalmente, sean $x$ y $y$ dos variables categóricas con $R$ categorías para las filas y $C$ categorías para las columnas, respectivamente. En el contexto de encuestas por muestreo, el interés suele centrarse en estimar la distribución conjunta de ambas variables, es decir, la proporción de unidades poblacionales que pertenecen simultáneamente a cada combinación posible de categorías. Para ello, las entradas de una tabla cruzada, también conocida como tabla de contingencia, se estiman mediante frecuencias ponderadas obtenidas a partir de los factores de expansión y del diseño muestral. La estimación del total poblacional asociado a cada celda $(r,c)$ se define como:
 
 $$
 \hat{N}_{rc} = \sum_{h} \sum_{i} \sum_{k} w_{hik} \ I(x_{hik}=r,\ y_{hik}=c),
@@ -559,7 +559,7 @@ $$
 
 donde $w_{hik}$ representa el factor de expansión asociado al elemento $k$ de la UPM $i$ perteneciente al estrato $h$, mientras que $I(x_{hik}=r,\ y_{hik}=c)$ corresponde a una función indicadora que toma el valor de uno cuando la unidad observada pertenece simultáneamente a la categoría $r$ de la variable $x$ y a la categoría $c$ de la variable $y$, y toma el valor de cero en cualquier otro caso.
 
-Además de las frecuencias conjuntas, también es posible estimar los tamaños marginales por filas y columnas, definidos respectivamente como $\hat{N}_{r+} = \sum_{c=1}^{C} \hat{N}_{rc}$ y $\hat{N}_{+c} = \sum_{r=1}^{R} \hat{N}_{rc}$. Mientras que el total general se expresa como $\hat{N}_{++} = \sum_{r=1}^{R}\sum_{c=1}^{C} \hat{N}_{rc}$. La estructura general de una tabla de contingencia con $R$ filas y $C$ columnas se presenta en la @tbl-estructura-contingencia [@Agresti2019Intro]:
+Además de las frecuencias conjuntas, también es posible estimar los tamaños marginales por filas y columnas, definidos respectivamente como $\hat{N}_{r+} = \sum_{c=1}^{C} \hat{N}_{rc}$ y $\hat{N}_{+c} = \sum_{r=1}^{R} \hat{N}_{rc}$. Mientras que el total general se expresa como $\hat{N}_{++} = \sum_{r=1}^{R}\sum_{c=1}^{C} \hat{N}_{rc}$. La estructura general de una tabla de contingencia con $R$ filas y $C$ columnas se presenta en la @tbl-estructura-contingencia:
 
 | Variable 2        | Variable 1 |               | $\cdots$ |               | Marginal fila |
 |-------------------|-------------|---------------|-----------|---------------|----------------|
@@ -572,7 +572,7 @@ Además de las frecuencias conjuntas, también es posible estimar los tamaños m
 
 : Estructura general de una tabla de contingencia con $R$ filas y $C$ columnas {#tbl-estructura-contingencia}
 
-De manera tradicional, las tablas de contingencia suelen representarse como arreglos bidimensionales de dimensión $R \times C$. Sin embargo, también pueden extenderse para incorporar una o más variables adicionales, generando subconjuntos o subtablas que permiten estudiar relaciones más complejas entre variables categóricas. A partir de los tamaños estimados, también pueden estimarse proporciones para cada celda de la tabla de contingencia, de la siguiente manera [@Agresti2019Intro]:
+De manera tradicional, las tablas de contingencia suelen representarse como arreglos bidimensionales de dimensión $R \times C$. Sin embargo, también pueden extenderse para incorporar una o más variables adicionales, generando subconjuntos o subtablas que permiten estudiar relaciones más complejas entre variables categóricas. A partir de los tamaños estimados, también pueden estimarse proporciones para cada celda de la tabla de contingencia, de la siguiente manera:
 
 $$
 \hat{p}_{rc}=\frac{\hat{N}_{rc}}{\hat{N}_{++}}
@@ -698,11 +698,11 @@ De lo anterior se puede concluir que, en la región Norte, el 35% de las persona
 
 ## La razón de *odds* {#la-razon-de-odds}
 
-La razón de *odds* es una medida ampliamente utilizada para estudiar la asociación entre dos variables categóricas, especialmente cuando el interés se centra en comparar la probabilidad de ocurrencia de un evento entre distintos grupos poblacionales. Su interpretación se basa en comparar las ventajas relativas (*odds*) de ocurrencia de un evento entre dos categorías de análisis [@DiazMoralesLeon2018; @Agresti2019Intro].
+De acuerdo con @DiazMoralesLeon2018 y @Agresti2019Intro, la razón de *odds* es una medida ampliamente utilizada para estudiar la asociación entre dos variables categóricas, especialmente cuando el interés se centra en comparar la probabilidad de ocurrencia de un evento entre distintos grupos poblacionales. Su interpretación se basa en comparar las ventajas relativas (*odds*) de ocurrencia de un evento entre dos categorías de análisis.
 
-En este sentido, este parámetro permite evaluar cómo cambia dicha ventaja entre diferentes grupos de interés y constituye una herramienta fundamental en estudios sociales, económicos y de salud; además, esta medida también puede utilizarse para cuantificar la relación entre los niveles de una variable y un factor categórico, comparando las ventajas relativas de ocurrencia del evento en cada grupo [@HeeringaWestBerglund2017].
+Como explican @HeeringaWestBerglund2017, en este sentido, este parámetro permite evaluar cómo cambia dicha ventaja entre diferentes grupos de interés y constituye una herramienta fundamental en estudios sociales, económicos y de salud; además, esta medida también puede utilizarse para cuantificar la relación entre los niveles de una variable y un factor categórico, comparando las ventajas relativas de ocurrencia del evento en cada grupo.
 
-Por ejemplo, suponga que se desea estudiar la asociación entre el sexo de las personas y la condición de pobreza. En particular, interesa evaluar si la ventaja relativa de pertenecer al grupo de personas no pobres frente al grupo de personas pobres es diferente entre mujeres y hombres. Para ello, puede expresarse la siguiente razón de *odds* [@Agresti2019Intro]:
+Por ejemplo, suponga que se desea estudiar la asociación entre el sexo de las personas y la condición de pobreza. En particular, interesa evaluar si la ventaja relativa de pertenecer al grupo de personas no pobres frente al grupo de personas pobres es diferente entre mujeres y hombres. Para ello, puede expresarse la siguiente razón de *odds*:
 
 $$
 \mathit{OR} =
@@ -719,7 +719,7 @@ $$
 
 La expresión del numerador representa, entre las mujeres, la ventaja relativa de encontrarse en condición de no pobreza respecto de encontrarse en pobreza. De manera análoga, el denominador representa esa misma ventaja entre los hombres. Por tanto, la razón de odds compara ambas ventajas relativas y permite cuantificar si la asociación entre sexo y pobreza favorece más a un grupo que a otro.
 
-Un valor igual a uno indicaría ausencia de asociación entre las variables, es decir, que la relación entre sexo y condición de pobreza es similar para hombres y mujeres. Valores superiores a uno indicarían una mayor ventaja relativa para las mujeres en comparación con los hombres, mientras que valores inferiores a uno sugerirían una mayor ventaja relativa para los hombres. En el contexto de encuestas de hogares, este tipo de medidas resulta especialmente útil para estudiar desigualdades sociodemográficas y brechas en condiciones de bienestar entre distintos grupos poblacionales [@DiazMoralesLeon2018; @Agresti2019Intro].
+Un valor igual a uno indicaría ausencia de asociación entre las variables, es decir, que la relación entre sexo y condición de pobreza es similar para hombres y mujeres. Valores superiores a uno indicarían una mayor ventaja relativa para las mujeres en comparación con los hombres, mientras que valores inferiores a uno sugerirían una mayor ventaja relativa para los hombres. En el contexto de encuestas de hogares, este tipo de medidas resulta especialmente útil para estudiar desigualdades sociodemográficas y brechas en condiciones de bienestar entre distintos grupos poblacionales.
 
 El procedimiento para realizarlo en `R` sería primero estimar las proporciones de la tabla cruzada entre las variables sexo y pobreza, presentada en la @tbl-interaccion-sexo-pobreza:
 
@@ -764,9 +764,9 @@ Obteniendo que el *odds* estimado de que una mujer no se encuentre en situación
 
 ## Prueba de independencia $\chi^{2}$ {#prueba-de-independencia-chi}
 
-Como se introdujo en los capítulos anteriores, una prueba de hipótesis es un procedimiento estadístico utilizado para evaluar si la evidencia observada en una muestra es compatible con una afirmación acerca de la población. En el contexto de tablas de contingencia, las pruebas de independencia permiten analizar si existe asociación entre dos variables categóricas [@Agresti2019Intro].
+Como explica @Agresti2019Intro, y como se introdujo en los capítulos anteriores, una prueba de hipótesis es un procedimiento estadístico utilizado para evaluar si la evidencia observada en una muestra es compatible con una afirmación acerca de la población. En el contexto de tablas de contingencia, las pruebas de independencia permiten analizar si existe asociación entre dos variables categóricas.
 
-En este caso, la hipótesis nula ($H_{0}$) establece que ambas variables son independientes; es decir, que la distribución de una variable no depende de las categorías de la otra. Bajo este supuesto, las diferencias observadas en la muestra se atribuyen únicamente a la variabilidad muestral y no a una relación real entre las variables en la población. Matemáticamente, esta hipótesis puede expresarse como [@HeeringaWestBerglund2017; @Agresti2019Intro]:
+De acuerdo con @HeeringaWestBerglund2017, en este caso, la hipótesis nula ($H_{0}$) establece que ambas variables son independientes; es decir, que la distribución de una variable no depende de las categorías de la otra. Bajo este supuesto, las diferencias observadas en la muestra se atribuyen únicamente a la variabilidad muestral y no a una relación real entre las variables en la población. Matemáticamente, esta hipótesis puede expresarse como:
 
 $$
 H_0: p_{rc}^0 = p_{r+} \times p_{+c}, \quad \text{para todo } r = 1,\ldots,R \text{ y } c = 1,\ldots,C
@@ -776,9 +776,9 @@ En donde $p_{rc}^0$ representa la proporción esperada en la celda $(r,c)$ bajo 
 
 En consecuencia, la prueba de independencia consiste en comparar las proporciones observadas o estimadas $\hat{p}_{rc}$ con las proporciones esperadas $p_{rc}^0$ bajo la hipótesis nula. Cuando las diferencias entre ambas son pequeñas, la evidencia empírica resulta consistente con el supuesto de independencia. Por el contrario, discrepancias suficientemente grandes sugieren la existencia de asociación entre las variables y conducen al rechazo de $H_0$.
 
-En las encuestas de hogares, características propias del diseño muestral complejo, como la estratificación, la selección por conglomerados y el uso de factores de expansión, afectan la variabilidad de los estimadores en comparación con la que se obtendría bajo un muestreo aleatorio simple. Como consecuencia, la prueba clásica de independencia $\chi^2$ de Pearson no resulta adecuada para analizar tablas de contingencia provenientes de este tipo de diseños, ya que puede subestimar o sobreestimar la variabilidad real de las estimaciones [@RaoScott1981; @HeeringaWestBerglund2017].
+Como explican @RaoScott1981, en las encuestas de hogares, características propias del diseño muestral complejo, como la estratificación, la selección por conglomerados y el uso de factores de expansión, afectan la variabilidad de los estimadores en comparación con la que se obtendría bajo un muestreo aleatorio simple. Como consecuencia, la prueba clásica de independencia $\chi^2$ de Pearson no resulta adecuada para analizar tablas de contingencia provenientes de este tipo de diseños, ya que puede subestimar o sobreestimar la variabilidad real de las estimaciones.
 
-Con el propósito de corregir este problema, los primeros ajustes al estadístico chi-cuadrado de Pearson se basaron en el efecto de diseño generalizado ($GDEFF$) [@fay1979contingency; @fellegi1980approximate; @thomas1987chisquare]. Posteriormente, @RaoScott1981 y @rao1984chisquare ampliaron y formalizaron el marco teórico de estas correcciones, dando origen a lo que actualmente se conoce como la prueba de Rao-Scott, considerada el procedimiento de referencia para el análisis de datos categóricos obtenidos mediante encuestas complejas.
+Con el propósito de corregir este problema, @fay1979contingency, @fellegi1980approximate y @thomas1987chisquare propusieron los primeros ajustes al estadístico chi-cuadrado de Pearson, basados en el efecto de diseño generalizado ($GDEFF$). Posteriormente, @rao1984chisquare amplió y formalizó el marco teórico de estas correcciones, dando origen a lo que actualmente se conoce como la prueba de Rao-Scott, considerada el procedimiento de referencia para el análisis de datos categóricos obtenidos mediante encuestas complejas.
 
 La idea central del ajuste de primer orden consiste en adaptar la prueba clásica de independencia mediante la incorporación del efecto de diseño generalizado, obteniendo así un estadístico robusto frente a las complejidades del diseño muestral:
 
@@ -786,13 +786,13 @@ $$
 \chi_{RS}^2 = \frac{n_{++}}{GDEFF} \sum_r \sum_c \frac{(\hat{p}_{rc} - p_{rc}^0)^2}{p_{rc}^0}
 $$
 
-Esta expresión resume la corrección de primer orden. La opción `statistic = "F"` utilizada más adelante en `svychisq()` corresponde a la corrección de segundo orden de Rao-Scott expresada mediante una aproximación basada en la distribución $F$; por ello, no debe interpretarse como una aplicación numéricamente idéntica de la fórmula anterior [@Lumley2026].
+Como explica @Lumley2026, esta expresión resume la corrección de primer orden. La opción `statistic = "F"` utilizada más adelante en `svychisq()` corresponde a la corrección de segundo orden de Rao-Scott expresada mediante una aproximación basada en la distribución $F$; por ello, no debe interpretarse como una aplicación numéricamente idéntica de la fórmula anterior.
 
 donde $n_{++}$ representa el tamaño total de la muestra, $\hat{p}_{rc}$ corresponde a la proporción estimada en la celda $(r,c)$ de la tabla de contingencia y $p_{rc}^0$ denota la proporción esperada bajo la hipótesis nula de independencia, calculada a partir del producto de las proporciones marginales de filas y columnas.
 
-El término $GDEFF$ representa el efecto de diseño generalizado y mide cuánto se incrementa o disminuye la variabilidad de las estimaciones como consecuencia del diseño complejo de la encuesta respecto a la variabilidad que se observaría bajo un muestreo aleatorio simple. De esta manera, el ajuste de Rao--Scott permite que las inferencias derivadas de la prueba de independencia reflejen adecuadamente la estructura del diseño muestral [@HeeringaWestBerglund2017].
+El término $GDEFF$ representa el efecto de diseño generalizado y mide cuánto se incrementa o disminuye la variabilidad de las estimaciones como consecuencia del diseño complejo de la encuesta respecto a la variabilidad que se observaría bajo un muestreo aleatorio simple. De esta manera, el ajuste de Rao--Scott permite que las inferencias derivadas de la prueba de independencia reflejen adecuadamente la estructura del diseño muestral.
 
-Bajo la hipótesis nula $H_0$, el estadístico $\chi_{RS}^2$ sigue aproximadamente una distribución $\chi^2$ con $(R-1)(C-1)$ grados de libertad, donde $R$ y $C$ corresponden al número de categorías de las filas y columnas, respectivamente. En situaciones de muestras pequeñas o con pocos grados de libertad, es frecuente utilizar ajustes basados en la distribución $F$, los cuales mejoran la precisión de la inferencia estadística. Las pruebas de Rao-Scott constituyen el estándar para el análisis de asociación entre variables categóricas en encuestas complejas [@RaoScott1981; @rao1984chisquare; @HeeringaWestBerglund2017].
+Bajo la hipótesis nula $H_0$, el estadístico $\chi_{RS}^2$ sigue aproximadamente una distribución $\chi^2$ con $(R-1)(C-1)$ grados de libertad, donde $R$ y $C$ corresponden al número de categorías de las filas y columnas, respectivamente. En situaciones de muestras pequeñas o con pocos grados de libertad, es frecuente utilizar ajustes basados en la distribución $F$, los cuales mejoran la precisión de la inferencia estadística. Las pruebas de Rao-Scott constituyen el estándar para el análisis de asociación entre variables categóricas en encuestas complejas.
 
 El paquete `survey` en `R` implementa este tipo de pruebas mediante la función `svychisq()`, la cual incorpora automáticamente los ajustes de Rao-Scott para tener en cuenta las características del diseño muestral complejo. Esta función permite evaluar la existencia de asociación entre dos variables categóricas utilizando tablas de contingencia ponderadas y corrigiendo adecuadamente la variabilidad de los estimadores. A modo de ejemplo, para evaluar si la condición de pobreza es independiente del sexo, se ejecuta el siguiente código:
 
@@ -816,7 +816,7 @@ Por otro lado, esta prueba de independencia entre las variables `Region` y `poor
 
 ## Visualización de variables categóricas {#viz-categoricas}
 
-La visualización de variables categóricas es fundamental en el análisis de encuestas de hogares, ya que permite comunicar de manera clara la distribución de grupos poblacionales y las comparaciones entre ellos. Al igual que en el análisis de variables continuas, los gráficos deben incorporar los pesos muestrales para que la representación visual corresponda a estimaciones válidas a nivel poblacional. Cuando la precisión estadística es relevante, es recomendable acompañar las barras con intervalos de confianza, que comunican tanto el valor central como la incertidumbre asociada al proceso de estimación [@Wickham2016ggplot2; @HeeringaWestBerglund2017].
+De acuerdo con @Wickham2016ggplot2 y @HeeringaWestBerglund2017, la visualización de variables categóricas es fundamental en el análisis de encuestas de hogares, ya que permite comunicar de manera clara la distribución de grupos poblacionales y las comparaciones entre ellos. Al igual que en el análisis de variables continuas, los gráficos deben incorporar los pesos muestrales para que la representación visual corresponda a estimaciones válidas a nivel poblacional. Cuando la precisión estadística es relevante, es recomendable acompañar las barras con intervalos de confianza, que comunican tanto el valor central como la incertidumbre asociada al proceso de estimación.
 
 En esta sección se utiliza el paquete `ggplot2`.
 
@@ -951,9 +951,9 @@ En síntesis, los gráficos de barras junto con sus correspondientes errores est
 
 ### Mapas {#viz-mapas}
 
-Los mapas temáticos constituyen una herramienta de visualización especialmente útil en el análisis de encuestas de hogares, ya que permiten representar la distribución territorial de indicadores sociales y demográficos. En este contexto, las estimaciones de proporciones calculadas en secciones anteriores —como el porcentaje de pobreza o desempleo por región— pueden proyectarse directamente sobre unidades geográficas, facilitando así la identificación de patrones espaciales y desigualdades regionales [@Tennekes2018tmap].
+Como explica @Tennekes2018tmap, los mapas temáticos constituyen una herramienta de visualización especialmente útil en el análisis de encuestas de hogares, ya que permiten representar la distribución territorial de indicadores sociales y demográficos. En este contexto, las estimaciones de proporciones calculadas en secciones anteriores —como el porcentaje de pobreza o desempleo por región— pueden proyectarse directamente sobre unidades geográficas, facilitando así la identificación de patrones espaciales y desigualdades regionales.
 
-Para construir este tipo de mapas en `R` se requiere información geoespacial en formato *shapefile*, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo `shapeBigCity/BigCity.shp`, cuyas regiones corresponden a las definidas en la base de datos `BigCity`. Los paquetes `sf` y `tmap` permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta [@sf2026; @tmap2026; @Pebesma2018sf].
+De acuerdo con @sf2026, @tmap2026 y @Pebesma2018sf, para construir este tipo de mapas en `R` se requiere información geoespacial en formato *shapefile*, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo `shapeBigCity/BigCity.shp`, cuyas regiones corresponden a las definidas en la base de datos `BigCity`. Los paquetes `sf` y `tmap` permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta.
 
 El siguiente código carga los paquetes necesarios para trabajar con información geoespacial y visualización cartográfica en `R`. La librería `sf` permite leer y manipular objetos espaciales modernos, mientras que `tmap` proporciona herramientas para elaborar mapas temáticos. La instrucción `tmap_mode("plot")` establece el modo de visualización estática de los mapas, apropiado para documentos y reportes. Finalmente, la función `read_sf()` importa el archivo geográfico `BigCity.shp`, almacenándolo en el objeto `bigcity_shape`, el cual contiene los polígonos correspondientes a las regiones de análisis.
 
@@ -1025,9 +1025,9 @@ shape_cv_map +
   tm_layout(asp = 0)
 ```
 
-Los polígonos con tonos más oscuros corresponden a regiones donde la estimación del ingreso presenta mayor variabilidad relativa. Un coeficiente de variación elevado indica menor precisión relativa, pero no permite atribuirla únicamente a un tamaño muestral insuficiente, pues también puede reflejar la ponderación y otras características del diseño [@CEPAL2023Diseno].
+Los polígonos con tonos más oscuros corresponden a regiones donde la estimación del ingreso presenta mayor variabilidad relativa. Un coeficiente de variación elevado indica menor precisión relativa, pero no permite atribuirla únicamente a un tamaño muestral insuficiente, pues también puede reflejar la ponderación y otras características del diseño.
 
-Cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando `ggplot2` junto con los paquetes `biscale` y `cowplot`. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la @fig-mapa-bivariante. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado [@biscale2025; @cowplot2025].
+De acuerdo con @biscale2025 y @cowplot2025, cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando `ggplot2` junto con los paquetes `biscale` y `cowplot`. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la @fig-mapa-bivariante. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.
 
 ```{r mapas-bivar-setup, echo=TRUE, eval=TRUE}
 region_sex_poverty_proportion <- survey_design %>%
@@ -1037,9 +1037,9 @@ region_sex_poverty_proportion <- survey_design %>%
 ```
 
 
-El siguiente código construye un mapa bivariado que permite visualizar simultáneamente la proporción de pobreza femenina rural y el coeficiente de variación asociado a dicha estimación por región. En primer lugar, se integran las estimaciones contenidas en `region_sex_poverty_proportion` con la información geográfica del shapefile mediante `left_join()`. Posteriormente, la función `bi_class()` del paquete `biscale` clasifica conjuntamente las variables `proportion` y `proportion_cv` en una cuadrícula de \(3 \times 3\) categorías (`dim = 3`), empleando el método de clasificación de Fisher (`style = "fisher"`). Luego, con `ggplot2` y `geom_sf()`, se genera el mapa temático utilizando colores bivariados definidos por `bi_scale_fill()`, mientras que `bi_theme()` aplica un estilo minimalista y se elimina la leyenda predeterminada [@biscale2025].
+El siguiente código construye un mapa bivariado que permite visualizar simultáneamente la proporción de pobreza femenina rural y el coeficiente de variación asociado a dicha estimación por región. En primer lugar, se integran las estimaciones contenidas en `region_sex_poverty_proportion` con la información geográfica del shapefile mediante `left_join()`. Posteriormente, la función `bi_class()` del paquete `biscale` clasifica conjuntamente las variables `proportion` y `proportion_cv` en una cuadrícula de \(3 \times 3\) categorías (`dim = 3`), empleando el método de clasificación de Fisher (`style = "fisher"`). Luego, con `ggplot2` y `geom_sf()`, se genera el mapa temático utilizando colores bivariados definidos por `bi_scale_fill()`, mientras que `bi_theme()` aplica un estilo minimalista y se elimina la leyenda predeterminada.
 
-A continuación, la función `bi_legend()` crea una leyenda especializada que permite interpretar simultáneamente ambas dimensiones del mapa: el coeficiente de variación y la pobreza femenina rural. Finalmente, mediante las funciones `ggdraw()` y `draw_plot()` del paquete `cowplot`, se combinan el mapa y la leyenda en una única visualización [@biscale2025; @cowplot2025].
+A continuación, la función `bi_legend()` crea una leyenda especializada que permite interpretar simultáneamente ambas dimensiones del mapa: el coeficiente de variación y la pobreza femenina rural. Finalmente, mediante las funciones `ggdraw()` y `draw_plot()` del paquete `cowplot`, se combinan el mapa y la leyenda en una única visualización.
 
 
 ```{r fig-mapa-bivariante, fig.cap="Mapa bivariante: proporción de pobreza femenina rural y su coeficiente de variación por región", fig.align='center', out.width='80%', echo=TRUE}
