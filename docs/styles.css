@@ -1,206 +1,214 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,700;1,300&display=swap");
+
 :root {
-  --aehr-blue: #00b7ff;
-  --aehr-blue-dark: #0077a8;
-  --aehr-ink: #1f2933;
-  --aehr-muted: #5b6770;
-  --aehr-border: #d9e2ec;
-  --aehr-soft: #f6f9fb;
+  --book-accent: #00b7ff;
+  --book-accent-dark: #00a5e6;
+  --book-ink: #343a40;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
+/* Match the typography and color system used by Causal Inference: The Mixtape. */
 body {
-  color: var(--aehr-ink);
+  color: var(--book-ink);
+  font-family: "Lato", sans-serif;
   font-size: 1rem;
-  line-height: 1.65;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--book-ink);
+  font-family: "Roboto", sans-serif;
+  letter-spacing: normal;
+}
+
+h1,
+h1.title {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h2 {
+  border-bottom: 0;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  padding-bottom: 0;
+}
+
+h3 {
+  font-size: 1.25rem;
 }
 
 a {
-  color: var(--aehr-blue-dark);
+  color: var(--book-accent);
+  text-underline-offset: initial;
 }
 
-a:hover {
-  color: var(--aehr-blue);
+a:hover,
+a:focus,
+div.sidebar-item-container .active,
+div.sidebar-item-container .show > .nav-link,
+div.sidebar-item-container .sidebar-link > code {
+  color: var(--book-accent-dark) !important;
 }
 
-#title-block-header {
-  border-bottom: 1px solid var(--aehr-border);
-  margin-bottom: 2rem;
-  padding-bottom: 1.4rem;
-}
-
-#title-block-header .title {
-  color: var(--aehr-ink);
-  font-size: clamp(2.1rem, 4vw, 3.8rem);
-  line-height: 1.04;
-  margin-bottom: 0.5rem;
-}
-
-#title-block-header .subtitle {
-  color: var(--aehr-muted);
-  font-size: 1.15rem;
-  font-weight: 400;
-  margin-top: 0.35rem;
-}
-
-#title-block-header .quarto-title-meta {
-  color: var(--aehr-muted);
-  font-size: 0.92rem;
-  margin-top: 1.1rem;
-}
-
-.sidebar-title {
-  font-weight: 700;
-  line-height: 1.08;
-}
-
-.sidebar nav[role="doc-toc"] ul > li > a.active,
-.sidebar nav[role="doc-toc"] ul > li > ul > li > a.active,
-#quarto-sidebar .sidebar-item-container .active {
-  color: var(--aehr-blue-dark);
-  font-weight: 700;
+/* Reproduce Mixtape's wide floating three-column grid on desktop. */
+@media (min-width: 1240px) {
+  body.floating .page-columns {
+    display: grid;
+    gap: 0;
+    grid-template-columns:
+      [screen-start] 1.5em
+      [screen-start-inset] 5fr
+      [page-start] minmax(25px, 50px)
+      [page-start-inset] minmax(50px, 150px)
+      [body-start-outset] minmax(25px, 50px)
+      [body-start] 4em
+      [body-content-start] minmax(500px, calc(800px - 3em))
+      [body-content-end] 4em
+      [body-end] minmax(25px, 50px)
+      [body-end-outset] minmax(50px, 150px)
+      [page-end-inset] minmax(25px, 50px)
+      [page-end] 5fr
+      [screen-end-inset] 1.5em
+      [screen-end];
+  }
 }
 
 #quarto-sidebar {
-  border-right: 1px solid var(--aehr-border);
+  border-right: 0;
 }
 
-#TOC {
-  border-left: 3px solid var(--aehr-blue);
-  background: transparent !important;
-  box-shadow: none !important;
-  padding-left: 0.85rem;
+.sidebar-title {
+  color: var(--book-ink);
+  font-family: "Lato", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.23;
+  padding-bottom: 0;
 }
 
-#quarto-margin-sidebar,
-#quarto-margin-sidebar .sidebar,
+.sidebar-title a {
+  color: var(--book-ink);
+  font-weight: 400;
+}
+
+.sidebar-navigation .sidebar-item a {
+  border-left: 0;
+  color: #595959;
+  font-family: "Lato", sans-serif;
+  font-size: 0.925rem;
+  font-weight: 400;
+  line-height: 1.081081;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.sidebar-navigation .sidebar-item a.active {
+  border-left: 0;
+  color: var(--book-accent-dark);
+  font-weight: 400;
+}
+
+#quarto-margin-sidebar {
+  border-left: 0;
+  padding-left: 0;
+}
+
+#toc-title,
 #TOC .nav-link {
-  background: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
+  font-family: "Lato", sans-serif;
 }
 
+#toc-title {
+  color: var(--book-ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+#TOC .nav-link {
+  color: var(--book-ink);
+  font-size: 0.875rem;
+  line-height: 1.257143;
+  padding: 0.2rem 0 0.2rem 0.6rem;
+}
+
+#TOC .nav-link:hover,
 #TOC .nav-link.active {
-  background: transparent !important;
-  border-left-color: #2761e3 !important;
-  box-shadow: none !important;
   color: #2761e3 !important;
-  font-weight: 700 !important;
 }
 
-#TOC .nav-link:focus,
-#TOC .nav-link:focus-visible {
-  box-shadow: none !important;
+main.content {
+  max-width: none;
 }
 
-main.content h1,
-main.content h2,
-main.content h3 {
-  color: var(--aehr-ink);
-  font-weight: 700;
-  letter-spacing: 0;
+#title-block-header {
+  border-bottom: 0;
+  margin: -1px 0 1rem;
+  padding-bottom: 0;
 }
 
-main.content h2 {
-  border-bottom: 1px solid var(--aehr-border);
-  padding-bottom: 0.35rem;
+main.content p,
+main.content ul,
+main.content ol {
+  margin-bottom: 1rem;
 }
 
-main.content h2::after {
-  background: var(--aehr-blue);
-  content: "";
-  display: block;
-  height: 3px;
-  margin-top: 0.45rem;
-  width: 4rem;
+.citation-box {
+  border: 2px solid #9e9e9e;
+  border-radius: 4px;
+  margin: 1rem 0 2rem;
+  padding: 0.5rem 1rem;
 }
 
-.chapter-number,
-.header-section-number {
-  color: var(--aehr-blue-dark);
-  font-weight: 700;
+.citation-box h3 {
+  font-size: 1.15rem;
+  margin: 0.35rem 0 0.65rem;
 }
 
-.sourceCode,
-pre.sourceCode {
-  border: 1px solid var(--aehr-border);
-  border-radius: 0.35rem;
+.citation-box p:last-child {
+  margin-bottom: 0.5rem;
 }
 
-div.cell-output,
-div.cell-output-stdout,
-div.cell-output-display {
-  border-left: 3px solid var(--aehr-border);
-  padding-left: 0.75rem;
+blockquote {
+  border-left: 0.25rem solid #e9ecef;
+  color: var(--book-ink);
+  font-size: inherit;
+  margin: 0 0 1rem;
+  padding: 0 1rem;
 }
 
-table {
-  font-size: 0.94rem;
-}
-
-.table,
-.dataTable,
-.cell-output table {
-  border-color: var(--aehr-border);
-}
-
-.cell-output table thead,
-table thead {
-  border-bottom: 2px solid var(--aehr-blue);
-}
-
-.cell-output table th,
-.cell-output table td,
-table th,
-table td {
-  padding: 0.42rem 0.55rem;
-}
-
-.callout {
-  border-left-width: 0.35rem;
-  border-radius: 0.25rem;
-}
-
-.callout-title-container {
-  font-weight: 700;
-}
-
-.quarto-figure,
-.cell-output-display {
-  margin-bottom: 1.4rem;
-}
-
-.figure-caption,
-.table-caption,
-figcaption {
-  color: var(--aehr-muted);
-  font-size: 0.92rem;
-}
-
-.nav-page {
-  border-top: 1px solid var(--aehr-border);
+.page-navigation {
+  border-top: 0;
   margin-top: 2rem;
-  padding-top: 1rem;
+  padding-top: 0;
 }
 
-.nav-page a {
-  color: var(--aehr-blue-dark);
-  font-weight: 700;
+.nav-page-text,
+.nav-page .bi {
+  color: var(--book-accent);
 }
 
-.footer {
-  color: var(--aehr-muted);
-  font-size: 0.9rem;
+/* Use one consistent size for every MathJax expression. */
+mjx-container {
+  font-size: 16px !important;
+}
+
+mjx-container[jax="CHTML"][display="true"],
+.math.display {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.1rem 0;
 }
 
 @media (max-width: 991.98px) {
-  #title-block-header .title {
-    font-size: 2.15rem;
-  }
-
-  main.content h2::after {
-    width: 3rem;
+  main.content {
+    max-width: none;
   }
 }
