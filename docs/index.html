@@ -24,7 +24,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -242,7 +261,7 @@ window.MathJax = {
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">27 de julio de 2026</p>
+      <p class="date">28 de julio de 2026</p>
     </div>
   </div>
   
@@ -262,12 +281,16 @@ window.MathJax = {
 </section>
 <section id="resumen" class="level1 unnumbered">
 <h1 class="unnumbered">Resumen</h1>
-<p>Las encuestas de hogares son la principal fuente de información cuantitativa para medir indicadores sociales y económicos (pobreza, desigualdad, empleo, educación, entreo muchos otros) en América Latina y en el mundo. A partir de ellas se estiman indicadores que orientan el diseño, la evaluación y el seguimiento de políticas públicas, y también constituyen una fuente principal de información para el monitoreo de los Objetivos de Desarrollo Sostenible en el marco de la Agenda 2030 de las Naciones Unidas. La Comisión Económica para América Latina y el Caribe (CEPAL) gestionan repositorios de microdatos, entre ellos el Banco de Datos de Encuestas de Hogares (BADEHOG), que reúnen, armonizan y documentan encuestas de más de 18 países de la región desde el año 2000, precisamente porque la información que producen estas fuentes es de vital importancia para la toma de decisiones basada en evidencia.</p>
-<p>Sin embargo, detrás de este aparente acceso democratizado a los datos existe un problema técnico estructural que con frecuencia pasa inadvertido, y es que la mayoría de las encuestas de hogares no proviene de muestras simples. Por el contrario, están sustentadas en diseños de muestreo complejos que incorporan estratificación, múltiples etapas, probabilidades de selección desiguales y ajustes de ponderación derivados de la calibración. Cuando un analista aplica los métodos estadísticos tradicionales diseñados para muestras independientes e idénticamente distribuidas sobre datos que no poseen esas características, las consecuencias son estimaciones sesgadas, errores estándar subestimados, intervalos de confianza demasiado estrechos y pruebas de hipótesis con tasas de error de tipo infladas.</p>
-<p>A manera de ejemplo ilustrativo, suponga una población con dos regiones de tamaños muy distintos y con ingresos medios muy diferentes. Una encuesta que selecciona igual número de personas en cada región y analiza los datos sin ponderación producirá un estimador del ingreso medio nacional con un sesgo estructural, porque las unidades de la región pequeña tienen un peso empírico en la muestra superior a su peso real en la población. Este error se propaga también hacia la varianza. Un analista que calcule la varianza ignorando la estructura por conglomerados tratará a hogares del mismo sector censal como observaciones independientes, cuando en realidad comparten características comunes que reducen la información efectiva de la muestra.</p>
-<p>Este documento busca cerrar esa brecha y proporcionar al investigador los fundamentos teóricos y las herramientas computacionales necesarias para trabajar adecuadamente con encuestas provenientes de diseños complejos. A lo largo del texto se abordan de manera integrada aspectos prácticos que van desde la definición del diseño de muestreo hasta la estimación de indicadores —como totales, tamaños, medias y proporciones—, la construcción de sus respectivos intervalos de confianza, la formulación de pruebas de hipótesis, la modelación mediante técnicas de regresión avanzadas y el tratamiento de problemas habituales de imputación.</p>
+<p>Las encuestas de hogares constituyen una fuente fundamental de información para medir indicadores sociales y económicos (como la pobreza, la desigualdad, el empleo y la educación) y para monitorear el avance hacia los Objetivos de Desarrollo Sostenible <span class="citation" data-cites="unitednations2021householdsurveys">(<a href="chapters/references.html#ref-unitednations2021householdsurveys" role="doc-biblioref">Naciones Unidas 2021</a>)</span>. La Comisión Económica para América Latina y el Caribe (CEPAL) gestiona repositorios de microdatos de encuestas de hogares que reúnen, armonizan y documentan encuestas de más de 18 países de la región desde el año 2000, precisamente porque la información que producen estas fuentes es de vital importancia para la toma de decisiones basada en evidencia.</p>
+<p>Sin embargo, en el análisis de las encuestas de hogares existe una realidad técnica estructural que con frecuencia pasa inadvertida: la mayoría de estas encuestas no se basa en muestras simples. Por el contrario, están sustentadas en diseños de muestreo complejos que incorporan estratificación, múltiples etapas, probabilidades de selección desiguales y ajustes de ponderación derivados de la calibración. Cuando un analista aplica los métodos estadísticos tradicionales diseñados para muestras independientes e idénticamente distribuidas sobre datos que no poseen esas características, las consecuencias son estimaciones sesgadas, errores estándar subestimados, intervalos de confianza demasiado estrechos y pruebas de hipótesis con tasas de error infladas.</p>
+<p>Este documento busca proporcionar al investigador los fundamentos teóricos y las herramientas computacionales necesarias para trabajar adecuadamente con encuestas provenientes de diseños complejos. A lo largo del texto se abordan de manera integrada aspectos prácticos que van desde la definición del diseño de muestreo hasta la estimación de indicadores (como totales, tamaños, medias y proporciones), la construcción de sus respectivos intervalos de confianza, la formulación de pruebas de hipótesis, la modelación mediante técnicas de regresión avanzadas y la correcta visualización de los datos.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-unitednations2021householdsurveys" class="csl-entry" role="listitem">
+Naciones Unidas. 2021. <em>Report of the Intersecretariat Working Group on Household Surveys</em>. E/CN.3/2021/16. United Nations Statistical Commission.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
