@@ -260,7 +260,7 @@
 \subtitle{usando R}
 \author{Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa y Cristian
 Téllez}
-\date{27 de julio de 2026}
+\date{29 de julio de 2026}
 \begin{document}
 \frontmatter
 \maketitle
@@ -301,56 +301,38 @@ Estadísticas de la CEPAL.
 
 \markboth{Resumen}{Resumen}
 
-Las encuestas de hogares son la principal fuente de información
-cuantitativa para medir indicadores sociales y económicos (pobreza,
-desigualdad, empleo, educación, entreo muchos otros) en América Latina y
-en el mundo. A partir de ellas se estiman indicadores que orientan el
-diseño, la evaluación y el seguimiento de políticas públicas, y también
-constituyen una fuente principal de información para el monitoreo de los
-Objetivos de Desarrollo Sostenible en el marco de la Agenda 2030 de las
-Naciones Unidas. La Comisión Económica para América Latina y el Caribe
-(CEPAL) gestionan repositorios de microdatos, entre ellos el Banco de
-Datos de Encuestas de Hogares (BADEHOG), que reúnen, armonizan y
-documentan encuestas de más de 18 países de la región desde el año 2000,
+Las encuestas de hogares constituyen una fuente fundamental de
+información para medir indicadores sociales y económicos (como la
+pobreza, la desigualdad, el empleo y la educación) y para monitorear el
+avance hacia los Objetivos de Desarrollo Sostenible. La Comisión
+Económica para América Latina y el Caribe (CEPAL) gestiona repositorios
+de microdatos de encuestas de hogares que reúnen, armonizan y documentan
+encuestas de más de 18 países de la región desde el año 2000,
 precisamente porque la información que producen estas fuentes es de
 vital importancia para la toma de decisiones basada en evidencia.
 
-Sin embargo, detrás de este aparente acceso democratizado a los datos
-existe un problema técnico estructural que con frecuencia pasa
-inadvertido, y es que la mayoría de las encuestas de hogares no proviene
-de muestras simples. Por el contrario, están sustentadas en diseños de
-muestreo complejos que incorporan estratificación, múltiples etapas,
-probabilidades de selección desiguales y ajustes de ponderación
-derivados de la calibración. Cuando un analista aplica los métodos
-estadísticos tradicionales diseñados para muestras independientes e
-idénticamente distribuidas sobre datos que no poseen esas
-características, las consecuencias son estimaciones sesgadas, errores
-estándar subestimados, intervalos de confianza demasiado estrechos y
-pruebas de hipótesis con tasas de error de tipo infladas.
+Sin embargo, en el análisis de las encuestas de hogares existe una
+realidad técnica estructural que con frecuencia pasa inadvertida: la
+mayoría de estas encuestas no se basa en muestras simples. Por el
+contrario, están sustentadas en diseños de muestreo complejos que
+incorporan estratificación, múltiples etapas, probabilidades de
+selección desiguales y ajustes de ponderación derivados de la
+calibración. Cuando un analista aplica los métodos estadísticos
+tradicionales diseñados para muestras independientes e idénticamente
+distribuidas sobre datos que no poseen esas características, las
+consecuencias son estimaciones sesgadas, errores estándar subestimados,
+intervalos de confianza demasiado estrechos y pruebas de hipótesis con
+tasas de error infladas.
 
-A manera de ejemplo ilustrativo, suponga una población con dos regiones
-de tamaños muy distintos y con ingresos medios muy diferentes. Una
-encuesta que selecciona igual número de personas en cada región y
-analiza los datos sin ponderación producirá un estimador del ingreso
-medio nacional con un sesgo estructural, porque las unidades de la
-región pequeña tienen un peso empírico en la muestra superior a su peso
-real en la población. Este error se propaga también hacia la varianza.
-Un analista que calcule la varianza ignorando la estructura por
-conglomerados tratará a hogares del mismo sector censal como
-observaciones independientes, cuando en realidad comparten
-características comunes que reducen la información efectiva de la
-muestra.
-
-Este documento busca cerrar esa brecha y proporcionar al investigador
-los fundamentos teóricos y las herramientas computacionales necesarias
-para trabajar adecuadamente con encuestas provenientes de diseños
-complejos. A lo largo del texto se abordan de manera integrada aspectos
-prácticos que van desde la definición del diseño de muestreo hasta la
-estimación de indicadores ---como totales, tamaños, medias y
-proporciones---, la construcción de sus respectivos intervalos de
-confianza, la formulación de pruebas de hipótesis, la modelación
-mediante técnicas de regresión avanzadas y el tratamiento de problemas
-habituales de imputación.
+Este documento busca proporcionar al investigador los fundamentos
+teóricos y las herramientas computacionales necesarias para trabajar
+adecuadamente con encuestas provenientes de diseños complejos. A lo
+largo del texto se abordan de manera integrada aspectos prácticos que
+van desde la definición del diseño de muestreo hasta la estimación de
+indicadores (como totales, tamaños, medias y proporciones), la
+construcción de sus respectivos intervalos de confianza, la formulación
+de pruebas de hipótesis, la modelación mediante técnicas de regresión
+avanzadas y la correcta visualización de los datos.
 
 \bookmarksetup{startatroot}
 
@@ -364,65 +346,60 @@ Särndal et~al. (\citeproc{ref-sarndal2003model}{2003}) y Gutiérrez
 distribución de probabilidad inducida por el proceso de selección de la
 muestra como el único mecanismo probabilístico que rige la inferencia.
 Bajo este paradigma, las propiedades estadísticas de los estimadores
----como el insesgamiento, la precisión y la consistencia--- se evalúan
-con respecto a la distribución de todas las posibles muestras que el
-diseño puede generar, sin imponer supuestos distribucionales sobre la
-variable de interés.
+(como el insesgamiento, la precisión y la consistencia) se evalúan con
+respecto a la distribución de todas las posibles muestras que el diseño
+puede generar, sin imponer supuestos distribucionales sobre la variable
+de interés.
 
 En este marco, la estimación de varianzas ha ocupado un lugar central y
 ha evolucionado en torno a tres grandes familias metodológicas
 complementarias. La primera, el método del último conglomerado
 (\citeproc{ref-hansen1953sample}{{Hansen et~al.} 1953}), simplifica la
-estructura multinivel al concentrar la variabilidad en las unidades
-primarias de muestreo (UPM), tratando la selección como si se realizara
-con reemplazo. La segunda, la linealización de Taylor
-(\citeproc{ref-binder1983variances}{Binder 1983}), extiende este
-principio a parámetros no lineales ---como medias, proporciones y
-razones--- mediante una aproximación de primer orden que reduce el
-problema de estimación de la varianza al de un total. Finalmente, la
-tercera familia, los métodos de replicación (jackknife, bootstrap y
-balanced repeated replication), estima la varianza a partir de la
-dispersión entre estimaciones obtenidas mediante réplicas sistemáticas
-de la muestra.
+estructura multietápica de los diseños de muestreo al concentrar la
+variabilidad del estimador en las unidades primarias de muestreo (UPM),
+tratando la selección como si se realizara con reemplazo. La segunda, la
+linealización de Taylor (\citeproc{ref-woodruff1971simple}{Woodruff
+1971}; \citeproc{ref-binder1983variances}{Binder 1983}), extiende este
+principio a parámetros no lineales (como medias, proporciones y razones)
+mediante una aproximación de primer orden que reduce el problema de
+estimación de la varianza al de un total. Finalmente, los métodos de
+replicación (\citeproc{ref-RustRao1996}{Rust y Rao 1996}) estiman la
+varianza a partir de la dispersión entre estimaciones obtenidas mediante
+réplicas sistemáticas de la muestra.
 
 Paralelamente, en el ámbito de la modelización estadística,
 contribuciones fundamentales como las de Kish y Frankel
 (\citeproc{ref-kish1974inference}{1974}), Fuller
 (\citeproc{ref-fuller1975regression}{1975}) y Binder
 (\citeproc{ref-binder1983variances}{1983}) sentaron las bases de la
-regresión ponderada y de la estimación de varianzas de coeficientes en
-diseños estratificados y de múltiples etapas. Sobre este desarrollo,
-Pfeffermann (\citeproc{ref-pfeffermann1993role}{1993}) formalizó el
-método de máxima pseudo-verosimilitud (MPV), que incorpora los pesos
-muestrales en la función de log-verosimilitud para producir estimadores
-consistentes bajo el diseño, extendiendo así los modelos lineales
-generalizados de Nelder y Wedderburn
+regresión ponderada y de la estimación de varianzas de coeficientes de
+regresión en diseños estratificados y de múltiples etapas. Sobre este
+desarrollo, el método de máxima pseudo-verosimilitud (MPV)
+(\citeproc{ref-skinner1989analysis}{Skinner et~al. 1989};
+\citeproc{ref-pfeffermann1993role}{Pfeffermann 1993}) incorporó los
+pesos muestrales en la función de log-verosimilitud para producir
+estimadores consistentes bajo el diseño de muestreo, extendiendo así los
+modelos lineales generalizados de Nelder y Wedderburn
 (\citeproc{ref-nelder1972generalized}{1972}) al contexto de encuestas
-con diseño complejo.
+complejas.
 
-Más recientemente, Heeringa et~al.
-(\citeproc{ref-HeeringaWestBerglund2017}{2017}) han sintetizado estas
-contribuciones en un marco analítico unificado que integra de manera
-coherente el diseño muestral, la ponderación y la modelización,
-constituyéndose en una referencia estándar para la práctica
+Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}) y
+Valliant et~al. (\citeproc{ref-Valliant_Dever_Kreuter_2018}{2018}) han
+sintetizado estas contribuciones en un marco analítico unificado que
+integra de manera coherente el diseño muestral, la ponderación y la
+modelización, constituyéndose en referencias estándar para la práctica
 contemporánea del análisis de encuestas complejas.
 
 Este documento está dirigido a lectores con formación en estadística o
 ciencia de datos, o con experiencia profesional equivalente. Está
 especialmente pensado para quienes cuentan con conocimientos de los
-fundamentos de la teoría de muestreo ---como probabilidades de
-inclusión, estimadores e intervalos de confianza---, de modelos de
-regresión lineal y logística, y con un manejo introductorio del lenguaje
-de programación R.
-
-En este contexto, el documento se posiciona como un texto de nivel
-intermedio-avanzado, orientado a profundizar y consolidar estos
-conocimientos, facilitando su aplicación rigurosa en contextos complejos
-y de alta exigencia técnica. Su propósito es acompañar al investigador
-en la transición desde los fundamentos hacia su implementación adecuada
-en la producción de estadísticas oficiales, la investigación académica
-en ciencias sociales, la evaluación de políticas públicas y el análisis
-de datos bajo estándares internacionales de calidad.
+fundamentos de la teoría de muestreo, de modelos de regresión lineal y
+logística, y con un manejo introductorio del lenguaje de programación R.
+En este contexto, el documento está orientado a profundizar y consolidar
+estos conocimientos, facilitando su aplicación rigurosa en contextos
+complejos y de alta exigencia técnica. Su propósito es acompañar al
+investigador en la transición desde los fundamentos teóricos hacia su
+implementación adecuada en la producción de estadísticas oficiales.
 
 \section{Justificación}\label{justificacion}
 
@@ -431,17 +408,17 @@ especializada, persiste una brecha significativa entre el estado del
 arte y la práctica cotidiana del análisis de encuestas en la región. Una
 de las principales manifestaciones de esta brecha se relaciona con el
 acceso y uso del software estadístico. Algunos textos de referencia
-ampliamente reconocidos en análisis de encuestas, como Heeringa et~al.
-(\citeproc{ref-HeeringaWestBerglund2017}{2017}), Cochran
+ampliamente reconocidos en el análisis de encuestas, como Cochran
 (\citeproc{ref-cochran1977sampling}{1977}) y Särndal et~al.
 (\citeproc{ref-sarndal2003model}{2003}), constituyen fuentes
-fundamentales desde el punto de vista teórico; sin embargo, están
-orientados principalmente hacia software con licencia, como
+fundamentales desde el punto de vista teórico; sin embargo, no presentan
+ejemplos de aplicación real con software estadístico. Otros documentos
+están orientados principalmente hacia software con licencia, como
 \texttt{SAS}, \texttt{Stata} o \texttt{SPSS}, o bien no logran
-integrarse plenamente con el ecosistema computacional de \texttt{R}. En
-contraste, muchos tutoriales disponibles en línea sobre análisis de
-encuestas en \texttt{R} suelen privilegiar los aspectos operativos del
-software, pero rara vez alcanzan el nivel de profundidad conceptual
+integrarse plenamente con un ecosistema computacional de software libre
+como \texttt{R}. En contraste, muchos tutoriales disponibles en línea
+sobre análisis de encuestas suelen privilegiar los aspectos operativos
+del software, pero rara vez alcanzan el nivel de profundidad conceptual
 necesario para un uso adecuado y responsable en la producción de
 estadísticas oficiales.
 
@@ -458,74 +435,74 @@ en \texttt{R}.
 
 Otro aspecto relevante corresponde a la contextualización regional de
 los ejemplos y aplicaciones. Una proporción considerable de los textos
-de referencia utiliza bases de datos y ejemplos provenientes de
-encuestas de países anglosajones, lo que limita parcialmente su
-aplicabilidad inmediata en América Latina. Con el propósito de acercar
-los contenidos a las realidades estadísticas de la región, este
-documento emplea una base de datos nativa de \texttt{R}, diseñada para
-replicar la estructura tradicional de las encuestas de hogares
-latinoamericanas y, por tanto, proporcionar ejemplos más cercanos a los
-problemas enfrentados por las oficinas nacionales de estadística y los
-equipos técnicos de la región.
+de referencia utiliza bases de datos foraneas, lo que limita
+parcialmente su aplicabilidad inmediata en América Latina. Con el
+propósito de acercar los contenidos a las realidades estadísticas de la
+región, este documento emplea una base de datos nativa de \texttt{R},
+diseñada para replicar la estructura tradicional de las encuestas de
+hogares latinoamericanas y, por tanto, proporcionar ejemplos más
+cercanos a los problemas enfrentados por las oficinas nacionales de
+estadística y los equipos técnicos de la región.
 
 Finalmente, este documento constituye en sí mismo un ejercicio de
 investigación reproducible. Todo su contenido, incluyendo tablas,
 figuras, ecuaciones y resultados numéricos, es generado íntegramente
-mediante código en R incorporado directamente en los capítulos. De esta
-manera, el lector no solo puede estudiar los métodos presentados, sino
-también replicarlos, modificarlos y adaptarlos a sus propios contextos y
-bases de datos, fortaleciendo así las capacidades analíticas y la
-transparencia en la producción estadística.
+mediante código en \texttt{R} incorporado directamente en los capítulos.
+De esta manera, el lector no solo puede estudiar los métodos
+presentados, sino también replicarlos, modificarlos y adaptarlos a sus
+propios contextos y bases de datos, fortaleciendo así las capacidades
+analíticas y la transparencia en la producción estadística.
 
 \section{Uso del software R para el análisis de
 encuestas}\label{uso-del-software-r-para-el-analisis-de-encuestas}
 
-La elección de R como entorno computacional para este documento no es
-arbitraria. R reúne al menos tres características que lo convierten en
-una opción idónea para el análisis de encuestas de hogares en el
-contexto latinoamericano.
+La elección de \texttt{R} como entorno computacional para este documento
+no es arbitraria. \texttt{R} reúne al menos tres características que lo
+convierten en una opción idónea para el análisis de encuestas de hogares
+en el contexto latinoamericano.
 
 En primer lugar, su condición de acceso libre. A diferencia de otros
 programas con costos de licencia que pueden resultar prohibitivos para
-muchas oficinas nacionales de estadística en países en desarrollo, R se
-distribuye bajo licencia GNU, lo que garantiza que los métodos
-presentados en este documento sean plenamente accesibles y replicables,
-independientemente de las restricciones presupuestarias de las
-instituciones.
+muchas oficinas nacionales de estadística en países en desarrollo,
+\texttt{R} se distribuye bajo licencia GNU, lo que garantiza que los
+métodos presentados en este documento sean plenamente accesibles y
+replicables, independientemente de las restricciones presupuestarias que
+algunas veces aquejan a las instituciones públicas.
 
 En segundo lugar, destaca su ecosistema especializado. El paquete
-\texttt{survey} (\citeproc{ref-Lumley2026}{Lumley et~al. 2026}),
-disponible desde 2004 y en constante evolución, implementa una amplia
-gama de métodos de estimación para diseños complejos: estimadores de
-Horvitz--Thompson, técnicas de calibración, linealización de Taylor,
-métodos de replicación, modelos de regresión ponderados y pruebas de
-hipótesis ajustadas al diseño (como Rao-Scott), entre otros. A su vez,
-el paquete \texttt{srvyr} (\citeproc{ref-FreedmanEllis2026}{Freedman
-Ellis y Schneider 2026}) extiende estas capacidades al incorporar la
-sintaxis del ecosistema \texttt{tidyverse}, facilitando una transición
-fluida entre el análisis exploratorio y el inferencial. Paquetes
-complementarios como \texttt{TeachingSampling}
-(\citeproc{ref-GutierrezT2020}{Gutiérrez 2020}) y \texttt{convey}
-(\citeproc{ref-convey2024}{Jacob et~al. 2024}) consolidan un entorno
-analítico difícil de igualar en otros lenguajes.
+\texttt{survey} (\citeproc{ref-Lumley2026}{Lumley et~al. 2026}), en
+constante evolución, implementa una amplia gama de métodos de estimación
+para diseños complejos: estimadores de Horvitz--Thompson, técnicas de
+calibración, linealización de Taylor, métodos de replicación, modelos de
+regresión ponderados y pruebas de hipótesis ajustadas al diseño, entre
+otros. A su vez, el paquete \texttt{srvyr}
+(\citeproc{ref-FreedmanEllis2026}{Freedman Ellis y Schneider 2026})
+extiende estas capacidades al incorporar la sintaxis del ecosistema
+\texttt{tidyverse}, facilitando una transición fluida entre el análisis
+exploratorio y el inferencial. Paquetes complementarios como
+\texttt{TeachingSampling} (\citeproc{ref-GutierrezT2020}{Gutiérrez
+2020}) y \texttt{convey} (\citeproc{ref-convey2024}{Jacob et~al. 2024})
+consolidan un entorno analítico difícil de igualar en otros lenguajes.
 
-Finalmente, R ofrece una sólida integración con herramientas de
-reproducibilidad científica. En particular, su combinación con R
-Markdown y el sistema \texttt{bookdown} permite generar documentos en
-los que resultados, tablas y figuras se producen directamente a partir
-del código fuente. Esta capacidad resulta especialmente relevante en el
-ámbito de la estadística oficial, donde la trazabilidad y la
-transparencia metodológica son requisitos fundamentales.
+Finalmente, \texttt{R} ofrece una sólida integración con herramientas de
+reproducibilidad científica. En particular, su combinación con
+\texttt{Quarto} y con el ecosistema de \texttt{R\ Markdown}, que incluye
+herramientas como \texttt{bookdown}, permite generar documentos
+reproducibles en los que los resultados, las tablas y las figuras se
+generan directamente a partir del código fuente. Esta capacidad resulta
+especialmente relevante en el ámbito de las estadísticas oficiales,
+donde la trazabilidad y la transparencia metodológica son requisitos
+fundamentales.
 
 \section{Estructura del documento}\label{estructura-del-documento}
 
 Este documento está organizado siguiendo una progresión lógica que va
-desde los fundamentos conceptuales del muestreo hasta las aplicaciones
-más avanzadas de modelamiento estadístico y tratamiento de la no
-respuesta. Esta secuencia no es arbitraria: cada nivel de conocimiento
-constituye un requisito necesario para comprender el siguiente, de modo
-que el lector pueda transitar de los principios básicos hacia
-herramientas analíticas más sofisticadas de manera coherente.
+desde los fundamentos conceptuales del muestreo hasta aplicaciones más
+avanzadas del modelamiento estadístico. Esta secuencia no es arbitraria:
+cada nivel de conocimiento constituye un requisito necesario para
+comprender el siguiente, de modo que el lector pueda transitar de los
+principios básicos hacia herramientas analíticas más sofisticadas de
+manera coherente.
 
 En primer lugar, se abordan los fundamentos del diseño muestral. El
 análisis adecuado de una encuesta comienza necesariamente con la
@@ -533,154 +510,121 @@ comprensión de su diseño probabilístico. Antes de estimar cualquier
 parámetro, el analista debe familiarizarse con tres elementos
 constitutivos: la población objetivo, entendida como el conjunto de
 unidades sobre las cuales se desean hacer inferencias; el marco de
-muestreo, que corresponde a la enumeración operacional de dichas
-unidades; y las unidades de muestreo en cada etapa del diseño. Estos
-componentes determinan tanto la validez como el alcance de las
-inferencias posteriores.
+muestreo, que corresponde al dispositivo que permite ubicar e
+identificar dichas unidades; y las unidades de muestreo en cada etapa
+del diseño. Estos componentes determinan tanto la validez como el
+alcance de las inferencias posteriores. A continuación, se introducen
+los elementos computacionales que permiten materializar estos conceptos
+en un entorno aplicado. El documento introduce el manejo y
+transformación de variables mediante un ambiente de programación
+adecuado para la incorporación del diseño de muestreo, que constituye el
+eje central del flujo de análisis y garantiza que todas las operaciones
+estadísticas respeten dicha estructura.
 
-A continuación, se introducen los elementos computacionales que permiten
-materializar estos conceptos en un entorno aplicado. El documento
-incorpora el manejo y transformación de variables mediante un ambiente
-de programación adecuado para la incorporación del diseño de muestreo,
-que constituye el eje central del flujo de análisis y garantiza que
-todas las operaciones estadísticas respeten dicha estructura.
-
-Con el diseño correctamente especificado, el documento avanza hacia la
-estimación de parámetros descriptivos. Esta sección cubre los
-estimadores más utilizados en el análisis de encuestas para variables
-continuas, tales como ingresos, gastos o activos, incluyendo totales,
-medias y razones. Asimismo, se presentan sus correspondientes medidas de
-precisión (varianzas, errores estándar e intervalos de confianza)
+Con el diseño de muestreo correctamente especificado, el documento
+avanza hacia la estimación de parámetros descriptivos. Esta sección
+cubre los estimadores más utilizados en el análisis de encuestas para
+variables continuas. Asimismo, se presentan sus correspondientes medidas
+de precisión (varianzas, errores estándar e intervalos de confianza)
 ajustadas a la complejidad del diseño muestral.
 
-Posteriormente, se desarrolla el modelamiento estadístico, extendiendo
-el análisis más allá de la estadística descriptiva hacia un enfoque
-analítico e inferencial. En particular, se abordan los modelos de
-regresión lineal bajo diseños complejos, donde la incorporación
-explícita de los pesos muestrales resulta fundamental para obtener
-estimadores insesgados respecto al diseño. Este contexto pone de
-manifiesto la discusión entre el enfoque basado en el diseño, que
-prioriza las propiedades estadísticas a nivel poblacional, y el enfoque
-basado en los modelos, que depende de la correcta especificación
-funcional. En consecuencia, se enfatiza la importancia de evaluar la
-sensibilidad de los resultados mediante comparaciones entre estimaciones
-con y sin ponderación. Adicionalmente, se introducen los modelos
+Posteriormente, se desarrolla el análisis de relaciones entre variables
+a través del modelamiento estadístico, yendo más allá de la estadística
+descriptiva hacia un enfoque analítico e inferencial. En particular, se
+abordan los modelos de regresión lineal bajo diseños complejos, donde la
+incorporación explícita de los pesos muestrales resulta fundamental para
+obtener estimadores insesgados respecto al diseño. Este contexto pone de
+manifiesto la discusión entre el enfoque basado en el diseño y el
+enfoque basado en los modelos. Adicionalmente, se introducen los modelos
 lineales generalizados y los modelos multinivel, que amplían el alcance
-del análisis a variables respuesta no normales, como variables binarias
-(regresión logística), conteos (regresión de Poisson) y proporciones.
+del análisis a variables de respuesta no normales, como variables
+binarias y conteos.
 
 La organización de los capítulos sigue la arquitectura conceptual
-descrita anteriormente, avanzando de los fundamentos hacia las
+descrita anteriormente, avanzando desde los fundamentos hacia las
 aplicaciones más complejas. De esta forma, el capítulo 2 presenta los
-conceptos básicos para el análisis de encuestas de hogares, destacando
-que la validez de las estimaciones depende de incorporar adecuadamente
-el diseño muestral. Se explican los elementos centrales de una encuesta,
-como la población objetivo, el marco muestral, las unidades de muestreo,
-la estratificación, la conglomeración y los pesos de muestreo. Además,
-el capítulo introduce los principales estimadores de muestreo para
-totales, medias y otros parámetros poblacionales y desarrolla los
-fundamentos para estimar la varianza e intervalos de confianza.
+conceptos básicos para el análisis de encuestas de hogares, se explican
+los elementos centrales de un diseño de muestreo (estratificación,
+conglomeración y pesos de muestreo desiguales) y se introduce los
+principales estimadores de muestreo para totales, desarrollando los
+fundamentos para estimar su varianza y obtener intervalos de confianza.
 
 En el capítulo 3 se aborda la estimación rigurosa de parámetros
-descriptivos para variables numéricas bajo diseños complejos y se
-desarrollan técnicas para estimar totales y medias, junto con la
-estimación de varianzas mediante el método del último conglomerado y la
-construcción de intervalos de confianza con grados de libertad
-ajustados. Asimismo, se presentan enfoques alternativos para la
-estimación de la varianza, como la linealización de Taylor, las
-ecuaciones de estimación y los métodos de replicación, incluyendo
-bootstrap y jackknife. El capítulo también cubre la estimación de
-cuantiles ponderados, el análisis de desigualdad mediante indicadores
-como el índice de Gini y la curva de Lorenz, la estimación en dominios y
-subpoblaciones, y la visualización de resultados con intervalos de
-confianza.
+descriptivos para variables numéricas bajo diseños de muestreo complejos
+y se desarrolla la teoría para estimar totales, medias y razones. El
+capítulo también cubre la estimación de percentiles, y medidas de
+desigualdad mediante indicadores como el índice de Gini y la curva de
+Lorenz. Se presentan los elemento principales para realizar pruebas de
+hipótesis y contrastes, así como la correcta visualización de variables
+continuas.
 
 En el capítulo 4 se aborda el análisis de variables categóricas bajo
-diseños complejos, incluyendo la evaluación de asociaciones entre
-categorías mediante métodos que incorporan adecuadamente el diseño
-muestral. Se desarrollan técnicas para estimar tamaños poblacionales y
-proporciones a partir de ponderaciones, junto con la estimación de su
-variabilidad mediante linealización y la construcción de intervalos de
-confianza, incluyendo enfoques robustos para proporciones extremas.
-Asimismo, se presentan tablas de contingencia ponderadas con sus
-respectivas frecuencias y proporciones, así como pruebas de
-independencia que ajustan la estadística clásica para reflejar el efecto
-del diseño. El capítulo también cubre la estimación e interpretación de
-medidas de asociación como la razón de odds, el análisis de diferencias
-de proporciones entre subpoblaciones mediante contrastes, y diversas
-estrategias de visualización, incluyendo gráficos de barras con
-intervalos de confianza y mapas.
+diseños complejos. Se desarrollan técnicas para estimar tamaños
+poblacionales y proporciones. Asimismo, se presentan tablas de
+contingencia ponderadas con sus respectivas frecuencias y proporciones,
+así como pruebas de independencia que ajustan la estadística clásica
+para reflejar el efecto del diseño. El capítulo también cubre la
+estimación e interpretación de medidas de asociación como la razón de
+Odds, el análisis de diferencias de proporciones entre subpoblaciones
+mediante contrastes, y diversas estrategias de visualización, incluyendo
+gráficos de barras con intervalos de confianza y mapas.
 
 El capítulo 5 se enfoca en analizar relaciones entre variables y
-construir modelos predictivos o explicativos válidos bajo diseños
-complejos, cuando los supuestos clásicos de independencia e idéntica
-distribución no se cumplen. Se presenta la evolución del problema desde
-los aportes iniciales hasta los desarrollos más recientes, y discute las
+construir modelos estadísticos válidos bajo diseños complejos, cuando
+los supuestos tradicionales de independencia e idéntica distribución no
+se cumplen. Se presenta la evolución del problema desde los aportes
+iniciales hasta los desarrollos más recientes, y discute las
 implicaciones de trabajar con datos de encuestas en el contexto de los
-modelos de regresión, incluyendo la violación de los supuestos del
-modelo lineal clásico. Se contrasta el enfoque basado en el diseño con
-el basado en los modelos. El capítulo también aborda la realización de
-pruebas de hipótesis con ajustes apropiados, el diagnóstico de
-residuales y la identificación de observaciones influyentes.
+modelos de regresión. El capítulo también aborda la realización de
+pruebas de hipótesis, el diagnóstico de residuales y la identificación
+de observaciones influyentes.
 
 En el capítulo 6 se extiende la modelación estadística a variables que
 no siguen una distribución normal (como variables binarias,
-multinomiales y estirctamente positivas) en el contexto de diseños de
-muestreo complejo. Para ello, se construye un marco unificado basado en
-los modelos lineales generalizados, incorporando sus componentes
-fundamentales y se discute la dualidad inferencial en poblaciones
-finitas, donde coexisten la medida de probabilidad del modelo y la del
-diseño muestral. Asimismo, se contrasta el enfoque clásico de máxima
-verosimilitud con el de máxima pseudo-verosimilitud, basado en
-ecuaciones de estimación ponderadas que incorporan los pesos muestrales,
-y se estudia la estimación de la varianza mediante técnicas de
-linealización.
+multinomiales y estrictamente positivas). Para ello, se presenta un
+marco unificado basado en los modelos lineales generalizados, y se
+contrasta el enfoque clásico de máxima verosimilitud con el de máxima
+pseudo-verosimilitud, basado en ecuaciones de estimación ponderadas que
+incorporan los pesos muestrales.
 
-En el capítulo 7 se revisan los modelos multinivel, también llamados
-jerárquicos o de efectos mixtos, para analizar datos con estructura
-anidada incorporando simultáneamente variables a nivel individual y
-contextual. A través de ejemplos de regresión (con interceptos y
-pendientes que varían por estrato), se muestra que ignorar la estructura
-jerárquica puede llevar a inferencias incorrectas, mientras que
-modelarla explícitamente permite capturar heterogeneidad entre grupos y
-aprovechar información compartida mediante. El enfoque se formaliza con
-el modelo nulo, que descompone la varianza en componentes dentro y entre
-estratos, y permite calcular la correlación intraclase (ICC), indicador
-clave para cuantificar la dependencia intragrupo.
+En el capítulo 7 se revisan los modelos multinivel (también llamados
+jerárquicos), para analizar datos con estructura anidada, incorporando
+simultáneamente variables a nivel individual y contextual. A través de
+ejemplos de regresión (con interceptos y pendientes que varían por
+estrato), se muestra que ignorar la estructura jerárquica puede llevar a
+inferencias incorrectas, mientras que modelarla explícitamente permite
+capturar la heterogeneidad entre grupos.
 
 Adicionalmente, el primer apéndice introduce el manejo de bases de datos
 en \texttt{R} mediante el entorno \texttt{tidyverse}, con énfasis en el
 paquete \texttt{dplyr}. A partir de la base de datos \texttt{BigCity},
 se presenta un flujo básico de trabajo que incluye la carga de
 librerías, la inspección inicial de la base, el uso del operador de
-encadenamiento \texttt{\%\textgreater{}\%} y la aplicación de los
-principales verbos de \texttt{dplyr}: \texttt{filter()},
-\texttt{select()}, \texttt{arrange()}, \texttt{mutate()},
-\texttt{summarise()} y \texttt{group\_by()}. El capítulo muestra cómo
-seleccionar registros y variables, ordenar datos, crear nuevas variables
-y producir resúmenes descriptivos, explicando tanto la lógica de los
-códigos como la interpretación de sus salidas.
+encadenamiento \texttt{\%\textgreater{}\%} (\emph{pipeline}) y la
+aplicación de los principales verbos de \texttt{dplyr}:
+\texttt{filter()}, \texttt{select()}, \texttt{arrange()},
+\texttt{mutate()}, \texttt{summarise()} y \texttt{group\_by()}. El
+capítulo muestra cómo seleccionar registros y variables, ordenar datos,
+crear nuevas variables y producir resúmenes descriptivos, explicando
+tanto la lógica de los códigos como la interpretación de sus salidas.
 
 Finalmente, el segundo apéndice aborda la inferencia en poblaciones
 finitas y la diferencia entre la inferencia basada en modelos y la
 inferencia basada en el diseño muestral. A partir de ejemplos de
-simulación, muestra que en encuestas complejas la aleatoriedad proviene
-principalmente de la selección de la muestra y que, por tanto, las
-estimaciones deben incorporar las probabilidades de inclusión y los
-pesos muestrales. Se presenta el método de máxima verosimilitud como
-punto de partida para modelos estadísticos bajo supuestos de
-observaciones independientes, y luego presenta la máxima
-pseudo-verosimilitud como una extensión adecuada para datos de
-encuestas, donde cada contribución individual se pondera según el
-diseño.
+simulación, muestra que en las encuestas complejas la aleatoriedad
+proviene principalmente de la selección de la muestra y que, por tanto,
+las estimaciones deben incorporar las probabilidades de inclusión y los
+pesos muestrales. Se presenta el método de máxima pseudo-verosimilitud
+como una extensión adecuada para datos de encuestas, donde cada
+contribución individual se pondera según sus probabilidades de
+inclusión.
 
-El lector que los recorra en orden los capítulos habrá construido la
-capacidad de tomar cualquier encuesta de hogares latinoamericana,
-entender su diseño, procesar sus datos, estimar los indicadores de
-interés con la precisión estadística correcta, modelar las relaciones
-entre variables de manera válida bajo el diseño complejo, y manejar la
-no respuesta con métodos apropiados. Esa capacidad es, en esencia, lo
-que la producción rigurosa de estadísticas sociales exige.
+El lector que recorra en orden los capítulos estará en la capacidad de
+analizar una encuesta de hogares, al entender su diseño, procesar sus
+datos, estimar los indicadores de interés con la precisión estadística
+correcta y modelar las relaciones entre variables de manera válida bajo
+el diseño complejo. Esa capacidad es, en esencia, lo que la producción
+rigurosa de estadísticas sociales exige.
 
 \bookmarksetup{startatroot}
 
@@ -692,116 +636,52 @@ partir de ellas se obtiene información esencial sobre las condiciones de
 vida, el empleo, la educación, la salud y otros aspectos que orientan la
 formulación de políticas públicas y la toma de decisiones basadas en
 evidencia. El análisis riguroso de estas encuestas es fundamental para
-estudiar la realidad social, económica y demográfica de una población.
-Sin embargo, la validez de los resultados no depende únicamente del
-tamaño de la muestra o de la calidad de la recolección de datos, sino
-también de la manera en que la encuesta fue diseñada y de cómo dicho
-diseño se incorpora en el análisis estadístico. Ignorar el diseño
-muestral y aplicar métodos de análisis tradicionales que asumen una
-muestra aleatoria simple puede conducir a estimaciones sesgadas, errores
-en la inferencia y conclusiones equivocadas. Por esta razón, el análisis
-de las encuestas de hogares no puede desligarse de su diseño de
-selección, ya que este constituye el fundamento que sustenta la validez
-y representatividad de la información producida.
+estudiar la realidad social, económica y demográfica de una población,
+así como para monitorear el progreso de los países en el cumplimiento de
+la Agenda 2030 y los Objetivos de Desarrollo Sostenible
+(\citeproc{ref-unitednations2021householdsurveys}{Naciones Unidas
+2021}). Sin embargo, la validez de los análisis no depende únicamente
+del tamaño de la muestra o de la calidad de la recolección de datos,
+sino también de la manera en que la encuesta fue diseñada y de cómo
+dicho diseño se incorpora en el análisis estadístico. Ignorar el diseño
+de muestreo y aplicar métodos de análisis tradicionales (que asumen una
+muestra aleatoria simple) puede conducir a estimaciones sesgadas,
+errores en la inferencia y por ende conclusiones equivocadas.
 
-En la práctica, las encuestas de hogares suelen utilizar diseños
-complejos que combinan la estratificación con la selección de
-informantes en varias etapas. Este tipo de diseños busca optimizar
-recursos y mejorar la precisión de las estimaciones, aunque puede
-generar probabilidades de inclusión desiguales. Ignorar estas
-características puede conducir a estimaciones sesgadas, errores estándar
-incorrectos y conclusiones erróneas. Como señalan Särndal et~al.
-(\citeproc{ref-sarndal2003model}{2003}) y Gutiérrez
-(\citeproc{ref-Gutierrez2016}{2016}), toda encuesta parte de tres
-conceptos fundamentales: la población objetivo, el marco muestral y la
-muestra seleccionada. Estos elementos constituyen la base del diseño de
-la encuesta y son esenciales para garantizar la validez de las
-inferencias y la representatividad de los resultados.
-
-En este contexto, un aspecto fundamental es la adecuada consideración
-del diseño muestral. Para obtener conclusiones válidas sobre la
-población, es necesario adoptar un enfoque de inferencia basado en el
-diseño, el cual reconoce que la muestra no proviene de una selección
-aleatoria cualquiera, sino de un plan probabilístico cuidadosamente
-definido. En este esquema, cada unidad de la población posee una
-probabilidad conocida y distinta de cero de ser seleccionada, lo que
-constituye la principal garantía de que los resultados puedan
-generalizarse a la población de referencia.
-
-Bajo este enfoque, es posible demostrar que las estimaciones son
-insesgadas (o aproximadamente insesgadas), con respecto al esquema de
-muestreo, sin necesidad de asumir distribuciones específicas para la
-variable de interés. Esta característica confiere a la inferencia basada
-en el diseño un carácter robusto y ampliamente aceptado en el análisis
-de encuestas de hogares. Un componente central de este proceso son los
-pesos de muestreo, los cuales indican cuántas unidades de la población
-representa cada unidad seleccionada. Estos pesos permiten ajustar las
-estimaciones a las particularidades del diseño, garantizando que los
-resultados reflejen adecuadamente la estructura de la población.
-
-Como muestran Korn y Graubard (\citeproc{ref-korn1995analysis}{1995}),
-las estimaciones ponderadas y no ponderadas pueden diferir
-sustancialmente, lo que evidencia la importancia de utilizar métodos de
-análisis coherentes con el diseño de la encuesta. En consecuencia,
-considerar adecuadamente los pesos de muestreo, la estratificación y las
-unidades de selección no constituye un aspecto técnico secundario, sino
-un requisito esencial para garantizar la credibilidad de los resultados.
-
-Naciones Unidas (\citeproc{ref-UNhandbook}{2026}) menciona el siguiente
-ejemplo. Suponga un país conformado por dos regiones: la Región A, con
-100 habitantes e ingreso promedio de \$10.000, y la Región B, con 900
-habitantes e ingreso promedio de \$2.000. El ingreso promedio verdadero
-de la población es:
-
-\[
-\theta = \frac{(100 \times 10.000) + (900 \times 2.000)}{100 + 900} = 2.800
-\]
-
-Si se seleccionan 50 personas en cada región y se ignora el diseño de
-muestreo, asignando el mismo peso a todas las observaciones, el promedio
-estimado sería:
-
-\[
-\hat{\theta} = \frac{(50 \times 10.000) + (50 \times 2.000)}{100} = 6.000
-\]
-
-En este caso, la estimación sobrestima considerablemente el ingreso
-nacional, ya que la Región A, que representa únicamente el 10\% de la
-población, termina influyendo tanto como la Región B, que concentra el
-90\%. En cambio, al aplicar pesos proporcionales al tamaño poblacional
-(1 para la Región A y 9 para la Región B), se obtiene la siguiente
-estimación:
-
-\[
-\hat{\theta} = \frac{(1 \times 50 \times 10.000) + (9 \times 50 \times 2.000)}{(1 \times 50) + (9 \times 50)} = 2.800
-\]
-
-Este resultado coincide con el valor verdadero de la población y muestra
-cómo el uso adecuado de los pesos corrige el sesgo introducido por un
-análisis que ignora el diseño muestral.
+En la práctica, las encuestas de hogares suelen utilizar diseños de
+muestreo complejos que combinan la estratificación, junto con la
+selección de informantes en varias etapas y ajustes a los factores de
+expansión que generan ponderadores desiguales. Este tipo de diseños
+busca optimizar recursos y mejorar la precisión de las estimaciones, e
+ignorar estas características invalida la representatividad de la
+información producida. Por ende, para obtener conclusiones válidas sobre
+la población, es necesario reconocer que la muestra no proviene de una
+selección aleatoria cualquiera, sino de un plan probabilístico
+cuidadosamente definido.
 
 \section{Población objetivo y unidades de
 muestreo}\label{poblacion-objetivo-y-unidades-de-muestreo}
 
 Gambino y Nascimento Silva (\citeproc{ref-gambino2009sampling}{2009})
 menciona que, desde la popularización de las encuestas de hogares en la
-década de 1940, se han evidenciado diversas tendencias asociadas a los
-avances tecnológicos tanto en las agencias estadísticas como en la
-sociedad en general, las cuales se aceleraron con la introducción del
-computador. En este contexto, el muestreo surge como una respuesta a la
-necesidad de obtener información estadística precisa sobre una población
-objetivo sin recurrir a la realización de un censo completo. Como señala
-Gutiérrez (\citeproc{ref-Gutierrez2016}{2016}), el muestreo consiste en
-realizar investigaciones parciales sobre una población con el propósito
-de inferir resultados para el conjunto total.
+década de 1940, se ha evidenciado diversas tendencias asociadas a los
+avances tecnológicos tanto en las oficinas e institutos nacionales de
+estadística como en la sociedad en general, las cuales se aceleraron con
+la introducción de las herramientas computacionales. En este contexto,
+el muestreo surge como una respuesta a la necesidad de obtener
+información estadística precisa sobre una población objetivo sin
+recurrir a la realización de un censo completo. Como señala Gutiérrez
+(\citeproc{ref-Gutierrez2016}{2016}), una encuesta por muestreo estudia
+una parte de la población con el propósito de realizar inferencias sobre
+su conjunto.
 
-En las últimas décadas, esta metodología se ha consolidado en distintos
-campos, especialmente en el sector gubernamental, mediante la producción
-de estadísticas oficiales que permiten el seguimiento de políticas
-públicas y de los Objetivos de Desarrollo Sostenible. Asimismo, el uso
-del muestreo se ha extendido al ámbito académico, al sector privado y a
-los medios de comunicación, donde constituye una herramienta fundamental
-para la generación y análisis de información.
+En las últimas décadas, la realización de encuestas se ha consolidado en
+distintos campos, especialmente en el sector gubernamental, mediante la
+producción de estadísticas oficiales que permiten el seguimiento de las
+políticas públicas. Asimismo, el uso del muestreo se ha extendido al
+ámbito académico, al sector privado y a los medios de comunicación,
+donde constituye una herramienta fundamental para la generación y el
+análisis de información (\citeproc{ref-Groves2009}{Groves et~al. 2009}).
 
 Toda encuesta se encuentra asociada a una población finita compuesta por
 individuos o elementos sobre los cuales se desea obtener información. El
@@ -811,74 +691,40 @@ encuestas definen unidades de análisis, que corresponden a los distintos
 niveles de desagregación para los cuales se presentan estadísticas de
 interés, como personas, hogares o viviendas.
 
-En las encuestas de hogares de América Latina es común utilizar diseños
-de muestreo en varias etapas. Para ello, se seleccionan diferentes
-unidades de muestreo que permiten llegar finalmente a los hogares que
-harán parte de la muestra. Por ejemplo, las unidades primarias de
-muestreo (UPM) pueden corresponder a sectores censales construidos a
-partir del último censo demográfico, mientras que las unidades
-secundarias de muestreo (USM) pueden ser las viviendas ubicadas dentro
-de dichos sectores.
+\section{Diseños de muestreo}\label{DisenosMuestreo}
 
-Para realizar un proceso de selección sistemática de hogares es
-indispensable contar con un marco muestral que sirva como enlace entre
-las unidades de muestreo y los hogares que conforman la población
-objetivo. Este marco corresponde al conjunto en el que se identifican
-todos los elementos que integran la población de estudio y a partir del
-cual se selecciona la muestra. En las encuestas de hogares con diseños
-muestrales complejos, los marcos de muestreo suelen estar basados en
-áreas geográficas. Es decir, se construyen a partir de estructuras
-espaciales que vinculan a los hogares o personas con zonas delimitadas
-del territorio. Este tipo de marco facilita la organización territorial
-en unidades más manejables y permite implementar procesos de selección
-en varias etapas, manteniendo los principios del muestreo
-probabilístico.
+Las encuestas de hogares suelen basarse en diseños de muestreo
+complejos, caracterizados por tres elementos principales: factores de
+expansión desiguales, selección de unidades mediante conglomerados y
+múltiples etapas, y estratificación de la población. Estas
+características determinan la manera en que cada observación contribuye
+a las estimaciones y afectan tanto la estimación puntual como su
+precisión. Por esta razón, deben incorporarse explícitamente en el
+análisis estadístico de las encuestas.
 
-Otra característica fundamental de las encuestas de hogares es la
-conglomeración. En la práctica, muchas encuestas seleccionan primero
-unidades primarias de muestreo, como sectores censales o áreas de
-enumeración, y posteriormente seleccionan hogares dentro de cada una de
-ellas. Este tipo de diseño permite reducir costos operativos y facilitar
-el trabajo de campo; sin embargo, también tiene implicaciones
-importantes sobre la precisión de las estimaciones. Cuando los hogares
-pertenecientes a un mismo conglomerado comparten características
-similares, la información adicional que aporta cada nueva observación
-dentro del conglomerado disminuye.
+El principio de representatividad
+(\citeproc{ref-Gutierrez2016}{Gutiérrez 2016}) indica que cada unidad de
+la población posee una probabilidad conocida y distinta de cero de ser
+incluida en la muestra. Este paradigma constituye la principal garantía
+de que los resultados puedan generalizarse a la población de referencia.
+Bajo este enfoque, los estimadores de muestreo son insesgados (o
+aproximadamente insesgados) con respecto al diseño de muestreo, y no es
+necesario asumir ningún supuesto sobre distribuciones específicas para
+la variable de interés. Esta característica confiere a la inferencia
+basada en el diseño un carácter robusto y ampliamente aceptado en el
+análisis de encuestas de hogares.
 
-Por ejemplo, supóngase una encuesta que selecciona 100 conglomerados y,
-dentro de cada uno, 10 hogares, obteniendo así una muestra total de
-1.000 hogares. Si los hogares de un mismo conglomerado presentan
-comportamientos muy parecidos (por ejemplo, si todos cuentan con acceso
-a electricidad), la variabilidad efectiva de la muestra se reduce
-considerablemente. En términos prácticos, la precisión obtenida podría
-ser equivalente a la de una muestra aleatoria simple de apenas 100
-hogares. Analizar los 1.000 hogares como si fueran observaciones
-completamente independientes, ignorando la estructura de conglomeración,
-conduce a una subestimación de los errores estándar y, en consecuencia,
-a intervalos de confianza artificialmente estrechos y conclusiones
-potencialmente erróneas sobre la significancia estadística de los
-resultados.
+\subsection{Factores de expansión}\label{factores-de-expansiuxf3n}
 
-\section{Estimadores de muestreo}\label{estimadores-de-muestreo}
-
-Al analizar datos de encuestas, también es imprescindible definir el
-parámetro de interés: un valor numérico fijo que describe una
-característica de toda la población, denotada como \(U\). Entre los
-parámetros más comunes se encuentran las proporciones, los tamaños, los
-totales, las medias y las razones, entre otros. Dado que, en la
-práctica, no es posible observar a toda la población, las encuestas por
-muestreo permiten inferir estos parámetros a partir de una muestra,
-denotada como \(s\).
-
-En el muestreo probabilístico, cada unidad de la población tiene una
-probabilidad de inclusión conocida y mayor que cero de ser seleccionada
-en la muestra. Estas probabilidades constituyen la base para el cálculo
-de los pesos básicos de muestreo, los cuales se utilizan posteriormente
-para estimar los parámetros poblacionales mediante sumas ponderadas de
-los datos recolectados en la encuesta. Cuando el diseño y la selección
-se implementan correctamente, las estimaciones obtenidas son insesgadas,
-es decir, en promedio coinciden con el valor real de la población si el
-proceso de muestreo se repitiera bajo las mismas condiciones.
+Los factores de expansión (ponderadores, o pesos de muestreo) indican
+cuántas unidades de la población representa cada unidad seleccionada. En
+su forma más básica, se obtienen como el inverso multiplicativo de la
+probabilidad de inclusión de un elemento. Por consiguiente, cuando las
+unidades tienen probabilidades de selección diferentes, también reciben
+factores de expansión desiguales. Al especificar correctamente estos
+factores en el análisis, las estimaciones tienen en cuenta las
+particularidades del diseño y reflejan adecuadamente la estructura de la
+población.
 
 No obstante, los pesos básicos de muestreo suelen requerir ajustes
 adicionales con el fin de mejorar la precisión y la robustez de las
@@ -887,39 +733,169 @@ de la no respuesta, mediante el cual los pesos de las unidades que sí
 respondieron se incrementan para representar también a aquellas unidades
 seleccionadas que no participaron en la encuesta, contribuyendo así a
 reducir posibles sesgos. Otro ajuste ampliamente utilizado es la
-calibración, que consiste en modificar los pesos para garantizar que las
-sumas ponderadas de ciertas variables auxiliares, como la edad o el
-sexo, coincidan con totales poblacionales conocidos provenientes de
-censos o proyecciones demográficas. Además de mejorar la consistencia de
-las estimaciones, la calibración constituye una herramienta útil para
-detectar problemas de cobertura o patrones de no respuesta.
+calibración (\citeproc{ref-DevilleSarndal1992}{Deville y Särndal 1992}),
+que consiste en modificar los pesos para garantizar que las sumas
+ponderadas de ciertas variables auxiliares, como la edad o el sexo,
+coincidan con totales poblacionales conocidos provenientes de censos o
+proyecciones demográficas.
 
-Los ajustes de los pesos, y en particular la calibración, desempeñan un
-papel fundamental en el análisis de encuestas con diseños complejos.
-Estos procedimientos no solo corrigen las imperfecciones derivadas de la
-no respuesta o la cobertura incompleta, sino que también fortalecen la
-coherencia entre la muestra y la población objetivo, garantizando que
-las inferencias sean estadísticamente válidas y comparables con otras
-fuentes oficiales (\citeproc{ref-kalton2003weighting}{Kalton y
-Flores-Cervantes 2003}).
+Los ajustes de los pesos no solo corrigen las imperfecciones derivadas
+de la no respuesta o la cobertura incompleta, sino que también
+fortalecen la coherencia entre la muestra y la población objetivo,
+garantizando que las inferencias sean estadísticamente válidas y
+comparables con otras fuentes oficiales
+(\citeproc{ref-kalton2003weighting}{Kalton y Flores-Cervantes 2003}).
+Los pesos calibrados tienden a reducir la varianza de las estimaciones,
+mejorando su precisión sin alterar los totales poblacionales conocidos
+(\citeproc{ref-sarndal2005nonresponse}{Särndal y Lundström 2005}). En
+consecuencia, la calibración no solo corrige, sino que también optimiza
+el uso de la información disponible, permitiendo obtener resultados más
+precisos.
 
-La calibración es especialmente relevante porque permite confrontar las
-estimaciones iniciales de la encuesta con valores de referencia
-externos, generalmente obtenidos de censos, registros administrativos o
-proyecciones demográficas. Esta comparación constituye una herramienta
-poderosa para detectar inconsistencias en la composición de la muestra,
-identificar sesgos potenciales asociados a la no respuesta y evaluar la
-calidad del trabajo de campo.
+Valliant y Dever (\citeproc{ref-Valliant_Dever_2017}{2017}) presentan un
+marco sistemático para construir, ajustar y evaluar los pesos de una
+encuesta compleja, que abarca desde el cálculo de los pesos iniciales
+hasta los ajustes por falta de respuesta, la calibración con información
+auxiliar y su consideración en la estimación de varianzas. En
+consonancia con este enfoque, el paquete \texttt{weightflow} permite
+implementar estas etapas mediante un flujo de trabajo reproducible
+(\citeproc{ref-Ferreira2026weightflow}{Ferreira 2026}).
 
-Además, los pesos calibrados tienden a reducir la varianza de las
-estimaciones, mejorando su precisión sin alterar los totales
-poblacionales conocidos (\citeproc{ref-sarndal2005nonresponse}{Särndal y
-Lundström 2005}). En consecuencia, la calibración no solo corrige, sino
-que también optimiza el uso de la información disponible, permitiendo
-obtener resultados más precisos.
+Como muestran Korn y Graubard (\citeproc{ref-korn1995analysis}{1995}),
+las estimaciones ponderadas y no ponderadas pueden diferir
+sustancialmente, lo que evidencia la importancia de utilizar métodos de
+análisis coherentes con el diseño de la encuesta. Naciones Unidas
+(\citeproc{ref-UNhandbook}{2026, cap. 9}) presenta el siguiente ejemplo.
+Supóngase un país conformado por dos regiones: la Región A, con 100
+habitantes y un ingreso promedio de \$10.000, y la Región B, con 900
+habitantes y un ingreso promedio de \$2.000. El ingreso promedio
+verdadero de la población es:
 
-La estimación de totales en encuestas constituye un paso central en el
-análisis estadístico aplicado a poblaciones finitas. Gran parte de los
+\[\theta =
+\frac{(100 \times 10.000) + (900 \times 2.000)}
+{100 + 900}
+= 2.800\]
+
+Si se seleccionan 50 personas en cada región y se ignora el diseño de
+muestreo, asignando el mismo peso a todas las observaciones, el promedio
+estimado sería:
+
+\[\hat{\theta} =
+\frac{(50 \times 10.000) + (50 \times 2.000)}
+{100}
+= 6.000\]
+
+En este caso, la estimación sobrestima considerablemente el ingreso
+nacional, ya que la Región A, que representa únicamente el 10\% de la
+población, termina influyendo tanto como la Región B, que concentra el
+90\%. En cambio, al aplicar pesos proporcionales a los tamaños
+poblacionales (1 para la Región A y 9 para la Región B), se obtiene la
+siguiente estimación:
+
+\[\hat{\theta} =
+\frac{(1 \times 50 \times 10.000) + (9 \times 50 \times 2.000)}
+{(1 \times 50) + (9 \times 50)}
+= 2.800\]
+
+Este resultado coincide con el valor verdadero de la población y muestra
+cómo el uso adecuado de los pesos corrige el sesgo introducido por un
+análisis que ignora el diseño de muestreo.
+
+\subsection{Conglomeración y selección en múltiples
+etapas}\label{conglomeraciuxf3n-y-selecciuxf3n-en-muxfaltiples-etapas}
+
+En las encuestas de hogares con diseños complejos, los marcos de
+muestreo suelen estar basados en áreas geográficas. Es decir, se
+construyen a partir de estructuras espaciales que vinculan a los hogares
+o personas con zonas delimitadas del territorio. Este tipo de marco de
+áreas facilita la organización territorial en unidades más manejables y
+permite implementar procesos de selección en varias etapas, manteniendo
+los principios del muestreo probabilístico. En estos diseños, las
+unidades primarias de muestreo (UPM) suelen corresponder a sectores
+censales, áreas de enumeración u otras divisiones territoriales, dentro
+de las cuales se construyen o actualizan listados de viviendas para las
+etapas posteriores de selección
+(\citeproc{ref-UnitedNations2005}{Naciones Unidas 2005, cap. 4}).
+
+En la práctica, este tipo de diseños permite reducir los costos
+operativos y facilitar el trabajo de campo; sin embargo, también tiene
+implicaciones importantes sobre la precisión de las estimaciones. Cuando
+los hogares pertenecientes a un mismo conglomerado comparten
+características similares, la información adicional que aporta cada
+nueva observación dentro del conglomerado disminuye.
+
+Por ejemplo, supóngase una encuesta que selecciona 100 conglomerados y,
+dentro de cada uno, 10 hogares, obteniendo así una muestra total de
+1.000 hogares. Si los hogares de un mismo conglomerado presentan
+comportamientos muy parecidos (por ejemplo, niveles de ingreso cercanos,
+o todos cuentan con acceso a electricidad), la variabilidad efectiva de
+los datos en la muestra se reducirá considerablemente. En términos
+prácticos, la precisión obtenida podría ser equivalente a la de una
+muestra aleatoria simple de apenas 100 hogares
+(\citeproc{ref-kish1974inference}{Kish y Frankel 1974}). Analizar los
+1.000 hogares como si fueran observaciones completamente independientes,
+ignorando la estructura de conglomeración, conduce a una subestimación
+de los errores estándar y, en consecuencia, a intervalos de confianza
+artificialmente estrechos y conclusiones potencialmente erróneas.
+
+\subsection{Estratificación}\label{estratificaciuxf3n}
+
+La estratificación consiste en dividir previamente la población en
+grupos mutuamente excluyentes, denominados estratos, y seleccionar una
+muestra independiente dentro de cada uno de ellos
+(\citeproc{ref-sarndal2003model}{Särndal et~al. 2003}). Los estratos
+pueden definirse a partir de criterios geográficos, administrativos,
+demográficos o socioeconómicos. En las encuestas de hogares, es
+frecuente utilizar combinaciones de región, área urbana o rural y
+características socioeconómicas para formar los estratos del diseño
+(\citeproc{ref-CEPAL2023Diseno}{CEPAL 2023}).
+
+Este procedimiento permite garantizar la presencia en la muestra de
+grupos relevantes que podrían quedar insuficientemente representados
+bajo una selección no estratificada. También puede mejorar la precisión
+de las estimaciones cuando las unidades pertenecientes a un mismo
+estrato son relativamente homogéneas y existen diferencias importantes
+entre los estratos. La asignación de la muestra entre ellos puede
+realizarse de manera proporcional a su tamaño o mediante asignaciones no
+proporcionales orientadas a satisfacer objetivos específicos de
+precisión (\citeproc{ref-cochran1977sampling}{Cochran 1977};
+\citeproc{ref-Gutierrez2016}{Gutiérrez 2016}).
+
+La estratificación también puede producir probabilidades de selección
+diferentes entre las unidades. Por ejemplo, una región pequeña puede
+recibir una fracción de muestreo mayor para asegurar un número
+suficiente de observaciones, mientras que una región más poblada puede
+recibir una fracción menor. Esta asignación desigual genera factores de
+expansión diferentes y refuerza la necesidad de considerar conjuntamente
+los estratos y los pesos de muestreo durante el análisis
+(\citeproc{ref-UnitedNations2005}{Naciones Unidas 2005}).
+
+\section{Estimadores de muestreo}\label{estimadores-de-muestreo}
+
+Al analizar datos provenientes de encuestas complejas, es fundamental
+definir con precisión el parámetro de interés. Este corresponde a una
+cantidad fija, aunque generalmente desconocida, que se obtiene a partir
+de los valores de todas las unidades que conforman la población finita,
+denotada por \(U\), y que resume alguna de sus características. Entre
+los parámetros más comunes se encuentran las proporciones, los totales,
+las medias, las razones, entre otros. Dado que, en la práctica, no es
+posible observar a toda la población, las encuestas por muestreo
+permiten inferir estos parámetros a partir de una muestra, denotada como
+\(s\).
+
+En el muestreo probabilístico, cada unidad de la población tiene una
+probabilidad de inclusión conocida y mayor que cero de ser seleccionada
+en la muestra. Estas probabilidades constituyen la base para el cálculo
+de los pesos básicos de muestreo, los cuales se utilizan posteriormente
+para estimar los parámetros poblacionales mediante sumas ponderadas de
+los datos recolectados en la encuesta. Cuando el diseño y la selección
+se implementan correctamente, los estimadores resultantes son insesgados
+respecto del diseño; es decir, su valor esperado, calculado sobre todas
+las muestras posibles, coincide exactamente con el parámetro poblacional
+(\citeproc{ref-sarndal2003model}{Särndal et~al. 2003}).
+
+La estimación de totales constituye un paso central en el análisis
+estadístico aplicado a poblaciones finitas. Gran parte de los
 indicadores de interés para la formulación de políticas públicas (como
 por ejemplo, el número de personas en situación de pobreza, el total de
 ocupados o el gasto agregado de los hogares) se derivan de un total
@@ -930,51 +906,51 @@ la información producida.
 En términos formales, si \(y_k\) denota el valor de una variable de
 interés para la unidad \(k \in U\), el total poblacional se define como
 
-\[
-t_y = \sum_{U} y_k,
-\]
+\[t_y = \sum_{U} y_k\]
 
-Siendo \(N\) el tamano de la población, la media poblacional se define
-como \(\bar{y} = \frac{t_y}{N}\). Dado que en la práctica solo se
-observa una muestra \(s \subset U\), es necesario recurrir a estimadores
-que incorporen el diseño de muestreo. Por ejemplo, el estimador de
-Horvitz--Thompson (HT) se expresa como
+Denotando a \(N\) como el tamano de la población, la media poblacional
+se define como \(\bar{y} = \frac{t_y}{N}\). Dado que en la práctica solo
+se observa una muestra \(s \subset U\), es necesario recurrir a
+estimadores que incorporen el diseño de muestreo. Por ejemplo, el
+estimador de Horvitz--Thompson
+(\citeproc{ref-HorvitzThompson1952}{Horvitz y Thompson 1952}) se expresa
+como
 
-\[
-\hat{t}_{y} = \sum_{s} d_k y_k
-\]
+\begin{equation}\protect\phantomsection\label{eq-HT}{
+\hat{t}_{y} = \sum_{k \in s} d_k y_k
+}\end{equation}
 
-donde \(d_k = 1/\pi_k\) son los pesos básicos provenientes del diseño de
-muestreo y \(\pi_k = \Pr(k \in s)\) son las probabilidades de inclusión
-de primer orden.
-
-En la práctica, los pesos de diseño suelen modificarse para reflejar
-procesos adicionales como el ajuste por no respuesta o la calibración a
-totales poblacionales conocidos, obteniendo así nuevos pesos ajustados,
-denotados como \(w_k\) para todo \(k \in s\). El reemplazo de \(d_k\)
-por \(w_k\) permite mejorar la precisión y reducir sesgos en las
+donde \(d_k = 1/\pi_k\) corresponde al peso básico proveniente del
+diseño de muestreo y \(\pi_k = \Pr(k \in s)\) es la probabilidad de
+inclusión de primer orden asociada al individuo \(k\). En la práctica,
+los pesos básicos \(d_k\) suelen ajustarse para reflejar procesos
+adicionales como el ajuste por no respuesta o la calibración a totales
+poblacionales conocidos, obteniendo así nuevos pesos ajustados,
+denotados como \(w_k\) para todo \(k \in s\). El uso de los pesos
+\(w_k\) permite mejorar la precisión y reducir sesgos en las
 estimaciones, especialmente cuando existen fuentes auxiliares de
-información confiables.
+información confiables (\citeproc{ref-DevilleSarndal1992}{Deville y
+Särndal 1992}).
 
-No obstante, toda estimación a partir de una muestra conlleva
-incertidumbre. Incluso cuando el estimador es insesgado, los resultados
-varían de una muestra a otra debido a la propiedad de aleatoriedad del
-diseño. Esta variabilidad se cuantifica mediante la varianza del
-estimador con la cual se puede calcular el error estándar (\(se\)) o el
-coeficiente de variación (\(cv\)). Estos indicadores son herramientas
-indispensables para evaluar la precisión de los totales estimados y, por
-tanto, para interpretar de manera adecuada la información estadística.
-Bajo el enfoque de diseño, la varianza insesgada del estimador de
-Horvitz--Thompson puede expresarse como:
+Toda estimación a partir de una muestra conlleva incertidumbre, puesto
+que las estimaciones varían de una muestra a otra debido a la propiedad
+de aleatoriedad del diseño. Esta incertidumbre se cuantifica mediante la
+varianza del estimador con la cual se puede calcular el error estándar
+(\(se\)) o el coeficiente de variación (\(cv\)). Estos indicadores son
+herramientas indispensables para evaluar la precisión de los totales
+estimados y, por tanto, para interpretar de manera adecuada la
+información estadística. Por ejemplo, un estimador insesgado para la
+varianza del estimador de Horvitz--Thompson (ecuación~\ref{eq-HT}) puede
+expresarse como:
 
-\[
-\widehat{Var}_p(\hat{t}_{y}) = \sum_{k \in s} \sum_{l \in s} \bigl( d_k d_l - d_{kl} \bigr) y_k y_l,
-\]
+\begin{equation}\protect\phantomsection\label{eq-varHT}{
+\widehat{Var}_p(\hat{t}_{y}) = \sum_{k \in s} \sum_{l \in s} \bigl( d_k d_l - d_{kl} \bigr) y_k y_l
+}\end{equation}
 
-donde \(d_{kl} = 1/\pi_{kl}\) y \(\pi_{kl} = \Pr(k,l \in s)\)
-representan las probabilidades conjuntas de inclusión. Esta expresión
-requiere que el diseño de muestreo cumpla que \(\pi_{kl} > 0\) para todo
-par de unidades \(k,l \in U\).
+En donde \(d_{kl} = 1/\pi_{kl}\) y \(\pi_{kl} = \Pr(k,l \in s)\)
+representan probabilidades de inclusión conjuntas. Para garantizar el
+insesgamiento en ecuación~\ref{eq-varHT}, el diseño muestral debe
+satisfacer \(\pi_{kl}>0\) para todo par de unidades \(k,l\in U\).
 
 Para comprender de manera más concreta la relevancia de considerar el
 diseño muestral en la estimación de totales y de sus varianzas,
@@ -987,50 +963,39 @@ se observan los valores \((y_1=10, y_2=14, y_3=18)\). Bajo este diseño,
 el estimador de Horvitz--Thompson del total poblacional se define como
 la suma de los valores observados divididos por sus probabilidades de
 inclusión, y su varianza estimada se obtiene a partir de las covarianzas
-inducidas por el proceso de selección. De esta forma, la varianza
-estimada del estimador de Horvitz--Thompson se calcula como:
+inducidas por el proceso de selección. De esta forma, la estimación del
+total poblacional es \(\hat{t}_{y}=84\).
 
-\[
-\widehat{Var}_{MAS}(\hat{t}_{y}) = \frac{N^2}{n}\left(1-\frac{n}{N}\right)S_{y_s}^2
-\]
+Como señala Gutiérrez (\citeproc{ref-Gutierrez2016}{2016}), para este
+diseño de muestreo particular, la expresión general de la varianza
+presentada en ecuación~\ref{eq-varHT} se reduce a:
+
+\[\widehat{Var}_{MAS}(\hat{t}_{y}) = \frac{N^2}{n}\left(1-\frac{n}{N}\right)S_{y_s}^2\]
 
 donde \(S_{y_s}^2\) corresponde a la varianza muestral de los valores
-observados. Sustituyendo en la expresión, se obtiene
+observados. Sustituyendo`los valores del ejemplo en la expresión
+anterior, se obtiene \(\widehat{Var}_{MAS}(\hat{t}_{y})=96\). En
+contraste, si se ignoraran las características del diseño muestral y los
+datos se analizaran como si provinieran de una muestra aleatoria simple,
+la varianza se estimaría incorrectamente mediante la expresión
+\(\frac{N^2}{n}S_{y_s}^2 = 192\). Este valor duplica la varianza
+estimada bajo el diseño de muestreo, y conduce, por tanto, a una
+sobreestimación de la incertidumbre asociada al estimador. En
+consecuencia, el intervalo de confianza resultante sería
+innecesariamente más amplio, lo que reduciría la precisión aparente de
+la estimación y podría conducir a conclusiones equivocadas sobre la
+incertidumbre de los resultados.
 
-\[
-\widehat{Var}_p(\hat{t}_{y}) = \frac{36}{3}\left(1-\frac{3}{6}\right)16 = 96
-\]
+\section{El efecto de diseño (DEFF)}\label{el-efecto-de-diseuxf1o-deff}
 
-En contraste, si se ignora el diseño de muestreo, un analista inexperto
-podría calcular erróneamente la varianza mediante la fórmula
-simplificada:
+De acuerdo con Kish (\citeproc{ref-kish1965survey}{1965, 258}), el
+efecto del diseño (\emph{design effect}, DEFF) se define como el
+cociente entre la varianza de un estimador \(\hat{\theta}\) bajo un
+diseño de muestreo complejo y la varianza que tendría ese mismo
+estimador bajo un muestreo aleatorio simple (MAS) con igual tamaño de
+muestra. Su estimación se expresa como:
 
-\[
-\frac{N^2}{n}S_{y_s}^2 = 192,
-\]
-
-lo que conduciría a una sobreestimación de la varianza por no considerar
-las características del diseño muestral. Asimismo, la estimación del
-total poblacional es \(\hat{t}_{y}=84\). El error estándar calculado
-según el diseño de muestreo, es
-
-\[
-\sqrt{\widehat{Var}_p(\hat{t}_{y})} = \sqrt{96} \approx 9.80.
-\]
-
-En cambio, si la varianza se estima usando un método ingenuo que ignore
-el diseño de muestreo, el intervalo de confianza sería más amplio con
-evidentes sesgos, lo que podría conducir a inferencias erróneas.
-
-Por último, de acuerdo con Kish (\citeproc{ref-kish1965survey}{1965,
-258}), el efecto del diseño (DEFF) se define como la razón entre la
-varianza de un estimador obtenida bajo un diseño de muestreo complejo y
-la varianza del mismo estimador bajo un muestreo aleatorio simple (MAS)
-de igual tamaño de muestra. Su estimación se expresa como:
-
-\[
-\widehat{{DEFF}} = \frac{\widehat{Var}_{p}(\hat{\theta})}{\widehat{Var}_{MAS}(\hat{\theta})}
-\]
+\[\widehat{{DEFF}} = \frac{\widehat{Var}_{p}(\hat{\theta})}{\widehat{Var}_{MAS}(\hat{\theta})}\]
 
 En donde, \(\widehat{Var}_{p}(\hat{\theta})\) corresponde a la varianza
 estimada de \(\hat{\theta}\) bajo el diseño complejo \(p(\cdot)\),
@@ -1047,15 +1012,15 @@ una medida de la pérdida relativa de precisión o como una indicación del
 aumento en el tamaño de la muestra que sería necesario en un diseño
 complejo para alcanzar el mismo nivel de varianza que en un MAS. Según
 Park et~al. (\citeproc{ref-Park2003Design}{2003}), el efecto del diseño
-de una encuesta puede deberse a los siguientes tres factores:
+de una encuesta está supeditado a los siguientes tres factores:
 
 \begin{itemize}
 \tightlist
 \item
-  Ponderación desigual: la presencia de pesos muestrales no uniformes
+  Ponderadores desiguales: la presencia de pesos muestrales no uniformes
   suele incrementar ligeramente la varianza; por ello, el uso de pesos
   uniformes resulta ventajoso y explica por qué los diseños
-  auto-ponderados son preferidos en encuestas de hogares.
+  auto-ponderados son preferidos en las encuestas de hogares.
 \item
   Estratificación: cuando se aplica correctamente, puede disminuir la
   varianza, aunque en la práctica su efecto reductor suele ser moderado.
@@ -1065,33 +1030,37 @@ de una encuesta puede deberse a los siguientes tres factores:
   homogéneas entre sí que en comparación con las de otros conglomerados.
 \end{itemize}
 
-En el análisis de encuestas, el efecto del diseño (DEFF) constituye un
-indicador esencial para evaluar la precisión y eficiencia de las
-estimaciones, así como para orientar la planificación de futuros
-estudios. Un valor elevado evidencia que el diseño complejo introduce un
-incremento de la varianza, reduciendo la precisión de los resultados.
-Por el contrario, un valor cercano a uno indica que el diseño tiene un
-efecto mínimo sobre la varianza. Esta información permite a los
-investigadores identificar si es necesario ajustar la ponderación,
-optimizar la estratificación o modificar el tamaño del submuestreo para
-aumentar la eficiencia en levantamientos posteriores.
+En el análisis de encuestas, el DEFF constituye un indicador esencial
+para evaluar la precisión y eficiencia de las estimaciones, así como
+para orientar la planificación de futuros estudios. Un valor elevado
+evidencia que el diseño complejo introduce un incremento de la varianza,
+reduciendo la precisión de los resultados. Por el contrario, un valor
+cercano a uno indica que el diseño tiene un efecto mínimo sobre la
+varianza. Esta información permite a los investigadores identificar si
+es necesario ajustar la ponderación, optimizar la estratificación o
+modificar el tamaño de muestra para aumentar la eficiencia en
+levantamientos posteriores.
 
-La interpretación de un DEFF alto debe hacerse con precaución, ya que no
-siempre implica que el diseño muestral sea inadecuado. Es fundamental
-considerar el contexto de la encuesta: un valor superior a tres podría
-parecer alarmante, pero a menudo se debe a limitaciones prácticas como
-restricciones presupuestales, dificultades logísticas o la necesidad de
-garantizar la participación de los entrevistados. En ciertos
-levantamientos de hogares, puede ser indispensable seleccionar solo una
-fracción de los individuos elegibles en cada hogar. Además, problemas de
-cobertura o tasas de no respuesta pueden aumentar la variabilidad de los
-pesos muestrales y, en consecuencia, elevar los valores del DEFF.
-Gutiérrez y Babativa-Márquez
-(\citeproc{ref-GutierrezBabativa2023}{2023}) realizan un análisis
-detallado de los efectos de diseño en encuestas de hogares en América
-Latina usando los datos de BADEHOG.
+La interpretación de un DEFF elevado debe realizarse con cautela, pues
+no necesariamente indica que el diseño de muestreo sea inadecuado. Su
+magnitud debe evaluarse en función del contexto y de las condiciones
+operativas de la encuesta. Aunque Naciones Unidas
+(\citeproc{ref-UnitedNations2005}{2005}) afirma que un valor superior a
+2.5 o 3 podría considerarse inicialmente preocupante, este puede
+responder a restricciones presupuestarias, dificultades logísticas o
+decisiones orientadas a facilitar la participación de los informantes.
 
-\section{Fundamentos teóricos}\label{fundamentos-teoricos}
+Por ejemplo, en algunas encuestas de hogares puede ser necesario
+seleccionar únicamente a una fracción de las personas elegibles dentro
+de cada vivienda. Asimismo, los problemas de cobertura y las tasas
+elevadas de no respuesta pueden incrementar la variabilidad de los pesos
+muestrales y, por esta vía, aumentar el DEFF. Gutiérrez y
+Babativa-Márquez (\citeproc{ref-GutierrezBabativa2023}{2023}) presentan
+un análisis detallado de los efectos del diseño en las encuestas de
+hogares de América Latina a partir de la información disponible en
+BADEHOG.
+
+\section{Inferencia en encuestas complejas}\label{inferencia-encuestas}
 
 Tal como destacan Heeringa et~al.
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), el cálculo de totales y
@@ -1104,234 +1073,101 @@ razones se derivan de estos totales. Un total se define como la suma de
 una variable específica (por ejemplo, ingreso o gasto) a nivel de toda
 la población.
 
-Con encuestas de hogares, el análisis de datos numéricoséricos implica
-con frecuencia calcular estadísticas descriptivas como medias, totales y
-razones, ya que estas permiten sintetizar las principales
-características de la población y sirven de base para la toma de
-decisiones. Dichas estimaciones pueden calcularse para la población en
-su conjunto o para subgrupos específicos, según los objetivos de la
-investigación.
+En el análisis de encuestas de hogares, es habitual estimar estadísticas
+descriptivas como totales, medias y razones, las cuales permiten
+sintetizar las principales características de la población y
+proporcionan información relevante para la toma de decisiones y
+monitoreo de indicadores. En este apartado se presentan los fundamentos
+teóricos de la inferencia basada en el diseño de muestreo, necesarios
+para estimar adecuadamente los distintos parámetros de interés y evaluar
+la incertidumbre asociada a dichas estimaciones.
 
 \subsection{Estimación puntual}\label{estimacion-puntual}
 
-Una vez definido el objeto del diseño muestral, se procede a realizar
-los procesos de estimación de los parámetros de interés. Para efectos de
-este documento, se iniciará con la estimación del total de ingresos de
-los hogares. Para la estimación de totales en diseños muestrales
-complejos, se denotará a los estratos con la letra \(h\); a las unidades
-primarias de muestreo, las cuales están contenidas dentro de los
-estratos, con la letra \(i\); mientras que las unidades observadas
-(hogares o personas), se denotarán con la letra \(k\). De esta forma, el
-estimador del total puede expresarse como:
+Una vez definidos la población objetivo, las variables de interés y el
+diseño muestral, se procede a estimar los parámetros poblacionales
+correspondientes. Para establecer la notación de libro, se utilizará la
+letra \(h\) para identificar los estratos; la letra \(i\) para
+representar las unidades primarias de muestreo (UPM) contenidas en cada
+estrato; y la letra \(k\) para denotar las unidades finales observadas,
+como hogares o personas. Además, con el propósito de simplificar la
+escritura a lo largo de este documento, a menos que se indique lo
+contrario, \(\sum_{h}\) denotará la suma sobre todos los estratos de la
+población; \(\sum_{i}\) representará la suma sobre todas las UPM
+seleccionadas en la muestra dentro del estrato \(h\); y \(\sum_{k}\)
+corresponderá a la suma sobre todos los elementos observados en la
+muestra de la UPM \(i\), perteneciente al estrato \(h\) de la población
+de interés. Con esta notación, el estimador de un total poblacional
+puede expresarse como:
 
-\[
-\hat{t}_y = \sum_{h} \sum_{i} \sum_{k} w_{hik} \, y_{hik}
-\]
+\[\hat{t}_y = \sum_{h} \sum_{i} \sum_{k} w_{hik} \, y_{hik}\]
 
-En donde, \(w_{hik}\) corresponde al factor de expansión de la unidad
-\(k\), mientras que \(y_{hik}\) corresponde a la observación de la
-variable de interés en esta misma unidad. El cálculo de la estimación
-del total y de su varianza asociada puede resultar complejo, por lo que
-es necesario considerar distintos enfoques metodológicos.
-
-En términos de notación y con el propósito de simplificar la escritura a
-lo largo de este documento, a menos que se indique lo contrario,
-\(\sum_{h}\) denotará la suma sobre todos los estratos de la población;
-\(\sum_{i}\) representará la suma sobre todas las unidades primarias de
-muestreo seleccionadas en la muestra dentro del estrato \(h\); y
-\(\sum_{k}\) corresponderá a la suma sobre todos los elementos
-observados en la muestra de la UPM \(i\), perteneciente al estrato \(h\)
-de la población de interés.
+En esta expresión, \(w_{hik}\) representa el factor de expansión de la
+unidad \(k\), perteneciente a la UPM \(i\) del estrato \(h\), mientras
+que \(y_{hik}\) corresponde al valor observado de la variable de interés
+para esa misma unidad.
 
 \subsection{Estimación de la varianza}\label{estimacion-de-la-varianza}
 
-Al trabajar con encuestas de hogares es fundamental no solo obtener
-estimaciones puntuales, sino también cuantificar la incertidumbre
-asociada a dichas estimaciones. Comprender y estimar esta incertidumbre
-constituye una parte esencial del análisis de los datos de encuestas de
-hogares. Mediante la aplicación de métodos apropiados, los usuarios
-pueden evaluar la precisión de sus estimaciones. Existen diversos
-métodos para estimar dicha precisión y, con el apoyo de software
-moderno, estos enfoques pueden implementarse de manera eficiente para
-respaldar análisis rigurosos y confiables. Entre los principales métodos
-se encuentran:
+Algunos parámetros de interés pueden expresarse como combinaciones
+lineales de varios parámetros poblacionales. Considérese, en particular,
+la función:
 
-\begin{itemize}
-\item
-  Ecuaciones de estimación: proporcionan un marco flexible para estimar
-  totales, medias, razones y otros parámetros, así como sus varianzas
-  correspondientes, integrando una visión unificada de la teoría del
-  muestreo (\citeproc{ref-binder1983variances}{Binder 1983}).
-\item
-  Linealización de Taylor: consiste en aproximar estadísticas no
-  lineales complejas mediante expresiones lineales, y posteriormente
-  estimar la varianza de dicha aproximación.
-\item
-  Método del último conglomerado: utilizado con frecuencia en encuestas
-  basadas en muestreo estratificado en múltiples etapas. Se fundamenta
-  en el cálculo de la varianza a partir de las diferencias entre las
-  estimaciones obtenidas a nivel de las unidades primarias de muestreo
-  (UPM). Este método suele combinarse con la linealización de Taylor
-  para estimar la varianza de estadísticas no lineales, como medias o
-  razones.
-\item
-  Bootstrap y otros métodos de replicación: se fundamentan en tomar
-  repetidas submuestras del conjunto de datos observado, calcular
-  estimaciones para cada réplica y luego utilizar la variabilidad entre
-  estas estimaciones replicadas para inferir la varianza del estimador
-  principal.
-\end{itemize}
+\[f(\theta_1,\ldots,\theta_J)=\sum_{j=1}^J a_j\theta_j,\]
 
-En el contexto de encuestas de hogares, muchos parámetros complejos
-pueden formularse como combinaciones lineales de otros parámetros
-\(f(\theta_1,\ldots,\theta_J)\). En efecto, sea:
+donde \(a_j\) son constantes conocidas y \(\theta_j\) representa el
+\(j\)-ésimo parámetro poblacional. Si \(\hat{\theta}_j\) es un estimador
+de \(\theta_j\), entonces el estimador muestral de
+\(f(\theta_1,\ldots,\theta_J)\) se define como:
 
-\[
-f=f(\theta_1,\ldots,\theta_J) = \sum_{j=1}^J a_j \theta_j,
-\]
-
-donde los coeficientes \(a_j\) son constantes conocidas y \(\theta_j\)
-representan parámetros poblacionales. Si, \(\hat\theta_j\) es un
-estimador de \(\theta_j\), entonces, un estimador muestral de \(f\) se
-define como:
-
-\[
-\hat{f} = \sum_{j=1}^J a_j \hat{\theta}_j,
-\]
+\[\hat{f} = \sum_{j=1}^J a_j \hat{\theta}_j\]
 
 De esta manera, su varianza puede expresarse como:
 
-\[
-Var(\hat{f}) = \sum_{j=1}^J a_j^2 Var(\hat{\theta}_j)
+\[Var(\hat{f}) = \sum_{j=1}^J a_j^2 Var(\hat{\theta}_j)
 \;+\;
 2\sum_{j=1}^{J-1}\sum_{k>j}^J
-a_j a_k \, Cov(\hat{\theta}_j,\hat{\theta}_k).
-\]
+a_j a_k \, Cov(\hat{\theta}_j,\hat{\theta}_k).\]
 
-Este resultado es particularmente importante porque incluye numerosos
-casos de interés práctico que se desarrollarán a lo largo de este
-documento.
-
-\subsubsection{Ecuaciones de estimación}\label{ecuaciones-de-estimacion}
-
-Muchos parámetros poblacionales pueden expresarse como soluciones de
-ecuaciones de estimación que involucran totales poblacionales. Aunque
-los detalles técnicos pueden ser complejos, la idea fundamental es que
-los mismos principios utilizados para estimar totales pueden aplicarse
-también para la estimación de varianzas. Este marco general hace que el
-método sea sencillo y flexible, facilitando su implementación en
-software estadístico especializado. Una ecuación de estimación
-poblacional genérica puede expresarse de la siguiente manera:
-
-\[
-\sum_{k\in U} z_k(\theta)=0,
-\]
-
-donde \(z_k(\cdot)\) es una función de estimación evaluada para la
-unidad \(k\) y \(\theta\) representa el parámetro poblacional de
-interés. Estas ecuaciones proporcionan un marco general para definir y
-calcular diversos parámetros de la población, como totales, medias y
-razones. Por ejemplo, para el total poblacional, se define
-\(z_k(\theta)=y_k-\theta/N\), de manera que la ecuación de estimación es
-\(\sum_{k\in U}(y_k-\theta/N)=0\). La solución de esta ecuación conduce
-a \(\theta=\sum_{k\in U} y_k = Y\), es decir, al total poblacional.
-
-De forma similar, para la media poblacional se utiliza
-\(z_k(\theta)=y_k-\theta\), y la ecuación
-\(\sum_{k\in U}(y_k-\theta)=0\) tiene como solución
-\(\theta=\left(\sum_{k\in U} y_k\right)/N = \overline{Y}\),
-correspondiente a la media de la población. Asimismo, en el caso de las
-razones de totales, se define \(z_k(\theta)=y_k-\theta x_k\). Así, la
-ecuación \(\sum_{k\in U}(y_k-\theta x_k)=0\) conduce a la solución
-\(\theta=\dfrac{\sum_{k\in U} y_k}{\sum_{k\in U} x_k} = R\), que
-corresponde a la razón poblacional entre los totales de las variables
-\(y\) y \(x\). Estas formulaciones muestran cómo distintos parámetros de
-interés pueden expresarse mediante ecuaciones de estimación que
-comparten una estructura común.
-
-La idea de definir parámetros poblacionales como soluciones de
-ecuaciones de estimación a nivel de población conduce naturalmente a un
-método general para obtener los estimadores muestrales. En este caso, se
-utilizan ecuaciones de la forma:
-
-\[
-\sum_{k\in s} w_k\, z_k(\theta)=0,
-\]
-
-donde \(w_k\) son los factores de expansión y \(z_k(\theta)\) la función
-de estimación evaluada para cada unidad de la muestra. Bajo un muestreo
-probabilístico y asumiendo respuesta completa, la suma muestral
-\(\sum_{k\in s} d_k\, z_k(\theta)\) es insesgada respecto a su análoga
-poblacional, lo que garantiza que las soluciones de estas ecuaciones
-sean estimadores consistentes de los parámetros poblacionales.
-
-\subsubsection{Linealización de Taylor}\label{linealizacion-de-taylor}
-
-Esta técnica permite aproximar la varianza de estimadores no lineales.
-El procedimiento consiste en aplicar una expansión de Taylor de primer
-orden alrededor del parámetro estimado, con el fin de reemplazar el
-estimador no lineal por una expresión lineal. De esta manera, se
-facilita el cálculo de varianzas en situaciones donde no existen
-fórmulas exactas o su derivación resulta demasiado compleja. Un
-estimador consistente de la varianza, derivado mediante linealización de
-Taylor para soluciones de ecuaciones de estimación muestrales, puede
-expresarse como:
-
-\[
-\widehat{Var}(\hat{\theta}) \approx [\hat{J}(\hat{\theta})]^{-1} \, \widehat{Var}_p \Bigg[\sum_{k\in s} w_k\, z_k(\hat{\theta})\Bigg] \, [\hat{J}(\hat{\theta})]^{-1}
-\]
-
-donde
-\(\hat{J}(\hat{\theta}) = \sum_{k\in s} w_k \left[ \frac{\partial z_k(\theta)}{\partial \theta} \right]_{\theta=\hat{\theta}}\).
-Este resultado muestra cómo la linealización de Taylor convierte la
-estimación de varianzas de parámetros complejos en un problema de
-estimación de totales, lo que explica su amplia adopción en software
-especializado para el análisis de encuestas.
+Este resultado es especialmente relevante, pues abarca numerosos casos
+de interés práctico que se desarrollarán a lo largo de este documento.
+No obstante, la estimación de la varianza bajo diseños de muestreo
+complejos puede resultar difícil, ya que depende de las características
+particulares de cada diseño. Para abordar esta dificultad, se han
+desarrollado diversos enfoques metodológicos que permiten cuantificar
+adecuadamente la incertidumbre y evaluar la precisión de las
+estimaciones. Con el apoyo de softwares estadísticos especializado,
+estos métodos pueden implementarse de manera eficiente y contribuir a la
+obtención de resultados rigurosos y confiables.
 
 \subsubsection{Último conglomerado}\label{ultimo-conglomerado}
 
-El método del último conglomerado constituye un enfoque directo y
-robusto para estimar la varianza de totales en encuestas que emplean
-diseños de muestreo por conglomerados estratificados en múltiples
-etapas. Propuesto por {Hansen et~al.}
-(\citeproc{ref-hansen1953sample}{1953}), este método simplifica la
-complejidad de los diseños multinivel al centrarse únicamente en la
-variación entre las Unidades Primarias de Muestreo (UPM). Se asume que,
-dentro de cada estrato de muestreo, las UPM fueron seleccionadas de
-manera independiente con reemplazo (posiblemente con probabilidades
-desiguales), aunque en la práctica la selección suele realizarse sin
-reemplazo.
+El método del último conglomerado es un enfoque ampliamente utilizado
+para estimar la varianza de totales en encuestas con diseños de muestreo
+estratificados y multietápicos. Desarrollado por {Hansen et~al.}
+(\citeproc{ref-hansen1953sample}{1953}), este método simplifica el
+tratamiento de las distintas etapas de selección al concentrar la
+estimación de la varianza en las unidades primarias de muestreo (UPM).
+Para su aplicación, se supone que, dentro de cada estrato, las UPM se
+seleccionan de manera independiente y con reemplazo, posiblemente con
+probabilidades desiguales. La aplicación de este método requiere
+disponer de estimadores insesgados del total de la variable de interés
+para cada UPM seleccionada. Asimismo, cuando el diseño incorpora
+estratificación en la primera etapa, es necesario contar con al menos
+dos UPM seleccionadas en cada estrato, para que sea posible estimar la
+variabilidad entre conglomerados dentro de este.
 
-El método se basa en la variación entre las estadísticas calculadas a
-nivel de UPM. Cuando se aplica correctamente, refleja implícitamente
-cualquier submuestreo realizado dentro de las UPM, permitiendo
-estimaciones de varianza más simples pero confiables. Es especialmente
-útil en diseños complejos que incluyen estratificación y probabilidades
-desiguales de selección tanto de UPM como de unidades de niveles
-inferiores (hogares e individuos). Los requisitos para aplicar este
-método incluyen la disponibilidad de estimaciones insesgadas de totales
-para las variables de interés en cada UPM seleccionada. Además, si la
-muestra se estratifica en la primera etapa, es necesario contar con al
-menos dos UPM disponibles por estrato, ya que esto permite estimar
-adecuadamente la variabilidad entre conglomerados dentro de cada
-estrato.
+Considere un diseño de muestreo en múltiples etapas donde se seleccionan
+\(n_h\) UPM en el estrato \(h\), (\(h=1,\dots,H\)). Una estimación del
+total de la variable de interés en la UPM \(i\) del estrato \(h\) es:
 
-De esta forma, considere un diseño de muestreo en múltiples etapas donde
-se seleccionan \(n_h\) UPM en el estrato \(h\), (\(h=1,\dots,H\)). Una
-estimación del total de la variable de interés en la UPM \(i\) del
-estrato \(h\) es:
-
-\[
-\hat{t}_{y_i} = \sum_{k\in s_{hi}} w_{hik} \ y_{hik}
-\]
+\[\hat{t}_{y_i} = \sum_{k\in s_{hi}} w_{hik} \ y_{hik}\]
 
 En donde \(s_{hi}\) corresponde a la muestra de unidades en la UPM \(i\)
 del estrato \(h\); por tanto, un estimador insesgado del total
 poblacional se expresaría como
 
-\[
-\hat{t}_{y}  = \sum_{h}\sum_{i} \hat{t}_{y_i}
-\]
+\[\hat{t}_{y}  = \sum_{h}\sum_{i} \hat{t}_{y_i}\]
 
 Según el método del último conglomerado, suponiendo que
 \(\hat{\bar t}_{y_h}=(1/{n_h}) \sum_{i} \hat{t}_{y_i}\) es la media
@@ -1339,75 +1175,180 @@ muestral de los totales estimados de las UPM en el estrato \(h\), un
 estimador aproximado de la varianza de \(\hat t_y\) se obtiene mediante
 al siguiente expresión:
 
-\[
-\widehat{Var}(\hat{t}_y) = \sum_{h} \frac{n_h}{n_h-1} \sum_{i} (\hat{t}_{y_i} - \hat{\bar t}_{y_h})^2
-\]
+\[\widehat{Var}(\hat{t}_y) = \sum_{h} \frac{n_h}{n_h-1} \sum_{i} (\hat{t}_{y_i} - \hat{\bar t}_{y_h})^2\]
 
-Para más detalles, véase Hansen, {Hansen et~al.}
+Para más detalles, véase {Hansen et~al.}
 (\citeproc{ref-hansen1953sample}{1953, 258}) o Wolter
 (\citeproc{ref-Wolter2007Variance}{2007}). Aunque este método se propuso
 originalmente para calcular varianzas de estimadores de totales, el
-método puede combinarse con linealización de Taylor o ecuaciones de
-estimación para derivar varianzas de otros parámetros poblacionales
-formulables como soluciones de ecuaciones de estimación. Esta
-flexibilidad hace que el método sea aplicable a diversos contextos de
-análisis de encuestas de hogares.
+método puede combinarse con otras técnicas para derivar varianzas de
+otros parámetros poblacionales más complejos. Esta flexibilidad hace que
+el método sea aplicable a diversos contextos de análisis de encuestas de
+hogares.
+
+Aunque los métodos más sofisticados que consideran todas las etapas del
+diseño pueden ofrecer estimaciones de varianza ligeramente más precisas,
+su aplicación requiere información más detallada y mayor complejidad
+computacional. Por el contrario, el método del último conglomerado
+proporciona una aproximación confiable y eficiente, especialmente útil
+al estimar totales o medias en encuestas de hogares.
 
 Un supuesto fundamental de esta técnica es que, dentro de cada estrato,
 las UPM se eligen de forma independiente y con reemplazo. En la
-práctica, la mayoría de las encuestas selecciona UPM sin reemplazo,
+práctica, la mayoría de las encuestas selecciona sus UPM sin reemplazo,
 generando diseños más eficientes. En consecuencia, las varianzas
 calculadas bajo la hipótesis de independencia constituyen aproximaciones
-de las verdaderas varianzas de muestreo. Cuando la fracción muestral es
-pequeña (por ejemplo, inferior al \(5\%\)), dichas aproximaciones suelen
-ser suficientemente precisas para su utilización por parte de las
-oficinas nacionales de estadística o de otros analistas.
+a las verdaderas varianzas de muestreo. Cuando la fracción muestral es
+pequeña, dichas aproximaciones suelen ser suficientemente precisas para
+su utilización por parte de las oficinas nacionales de estadística o de
+otros analistas.
 
-Este método destaca por su simplicidad y robustez, lo que lo hace muy
-atractivo en la práctica. Aunque los métodos más sofisticados que
-consideran todas las etapas del diseño pueden ofrecer estimaciones de
-varianza ligeramente más precisas, su aplicación requiere información
-más detallada y mayor complejidad computacional. Por el contrario, el
-método del último conglomerado proporciona una aproximación confiable y
-eficiente, especialmente útil al estimar totales o medias en encuestas
-de hogares. Para un análisis detallado sobre la precisión de esta
-aproximación y posibles alternativas, véase Särndal et~al.
-(\citeproc{ref-sarndal2003model}{2003}).
+\subsubsection{Ecuaciones de estimación y linealización de
+Taylor}\label{ecuaciones-de-estimacion}
+
+Muchos parámetros poblacionales pueden expresarse como soluciones de
+ecuaciones de estimación que involucran totales poblacionales. Aunque
+los detalles técnicos pueden ser complejos, la idea fundamental es que
+los mismos principios utilizados para estimar totales pueden aplicarse
+también para la estimación de varianzas. Este marco general hace que el
+método sea sencillo y flexible, facilitando su implementación en
+softwares estadísticos como \texttt{R}. Una ecuación de estimación
+poblacional genérica puede expresarse de la siguiente manera:
+
+\[\sum_{k\in U} z_k(\theta)=0,\]
+
+donde \(z_k(\cdot)\) es una función de estimación evaluada para la
+unidad \(k\) y \(\theta\) representa el parámetro poblacional de
+interés. Estas ecuaciones proporcionan un marco general para definir y
+calcular diversos parámetros de la población, como totales, medias y
+razones. Las siguientes formulaciones muestran cómo distintos parámetros
+de interés pueden expresarse mediante ecuaciones de estimación que
+comparten una estructura común.
+
+\begin{itemize}
+\tightlist
+\item
+  Para el total poblacional, se define \(z_k(\theta)=y_k-\theta/N\), de
+  manera que la ecuación de estimación es
+  \(\sum_{k\in U}(y_k-\theta/N)=0\). La solución de esta ecuación
+  conduce a \(\theta=\sum_{k\in U} y_k = t_y\), es decir, al total
+  poblacional.
+\item
+  De forma similar, para la media poblacional se utiliza
+  \(z_k(\theta)=y_k-\theta\), y la ecuación
+  \(\sum_{k\in U}(y_k-\theta)=0\) tiene como solución
+  \(\theta=\left(\sum_{k\in U} y_k\right)/N = \bar{Y}\), correspondiente
+  a la media de la población.
+\end{itemize}
+
+La idea de definir parámetros poblacionales como soluciones de
+ecuaciones de estimación conduce naturalmente a un método general para
+obtener los estimadores de muestreo. Bajo un diseño de muestreo
+probabilístico, la suma poblacional \(\sum_{k\in U} z_k(\theta)\) puede
+estimarse mediante su versión ponderada en la muestra. En particular, si
+\(w_k\) corresponde al factor de expansión de la unidad \(k\), se tiene
+que \(\sum_{k\in s}w_k z_k(\theta)\) es un estimador insesgado, bajo el
+diseño, de la ecuación poblacional. En consecuencia, el estimador de
+muestreo \(\hat{\theta}\) se define como la solución de la ecuación
+muestral ponderada
+
+\[
+\sum_{k\in s}w_k z_k(\hat{\theta})=0.
+\]
+
+Bajo condiciones de regularidad, esta sustitución permite obtener
+estimadores consistentes de una amplia variedad de parámetros
+poblacionales (\citeproc{ref-binder1983variances}{Binder 1983}).
+
+Asimismo, mediante la linealización de Taylor es posible aproximar un
+estimador no lineal por una expresión lineal cuya varianza puede
+calcularse con los métodos habituales para estimadores de totales. Este
+enfoque, introducido tempranamente para el análisis de estadísticas
+complejas (\citeproc{ref-Woodruff1952}{Woodruff 1952}), constituye la
+base de numerosos procedimientos utilizados actualmente para estimar las
+varianzas de medias, razones, proporciones y otros estimadores no
+lineales. El procedimiento consiste en aplicar una expansión de Taylor
+de primer orden a la ecuación de estimación, de modo que el estimador
+original se sustituya por una aproximación lineal. Para un parámetro
+definido como la solución de una ecuación de estimación muestral, un
+estimador consistente de su varianza puede expresarse como:
+
+\begin{equation}\protect\phantomsection\label{eq-EcuZ}{
+\widehat{Var}_p(\hat{\theta}) \approx [\hat{J}(\hat{\theta})]^{-1} \, \widehat{Var}_p \Bigg[\sum_{k\in s} w_k\, z_k(\hat{\theta})\Bigg] \, [\hat{J}(\hat{\theta})]^{-1}
+}\end{equation}
+
+donde
+
+\[
+\hat{J}(\hat{\theta}) = \sum_{k\in s} w_k \left[ \frac{\partial z_k(\theta)}{\partial \theta} \right]_{\theta=\hat{\theta}}
+\]
+
+Este resultado muestra cómo la linealización de Taylor convierte la
+estimación de varianzas de parámetros complejos en un problema de
+estimación de totales. Por ejemplo, para el caso de la razón poblacional
+\(\theta=\frac{t_y}{t_x}\) entre los totales \(t_y\) y \(t_x\), se
+define \(z_k(\theta)=y_k-\theta x_k\). Así, la ecuación de estimación
+muestral toma la siguiente forma
+
+\[
+\sum_{k \in s} w_k z_k(\theta) = \sum_{k \in s} w_k \left(y_k - \theta x_k\right) = 0
+\]
+
+La solución de esta ecuación corresponde al estimador de razón
+
+\[
+\hat{\theta} = \frac{\sum_{k \in s} w_k y_k}{\sum_{k \in s} w_k x_k} = \frac{\hat t_y}{\hat t_x}
+\]
+
+Dado que la derivada de la función de estimación con respecto a
+\(\theta\) es \(\frac{\partial z_k(\theta)}{\partial \theta} = -x_k\),
+entonces
+\(\hat{J}(\hat{\theta}) = -\sum_{k \in s} w_k x_k = -\hat{t}_x\). Al
+sustituir este resultado en la expresión general
+(ecuación~\ref{eq-EcuZ}), se obtiene:
+
+\[
+\widehat{Var}_p(\hat{\theta})
+\approx
+\frac{1}{\hat{t}_x^2}
+\widehat{Var}_p
+\left[
+\sum_{k \in s}
+w_k
+\left(y_k-\hat{\theta}x_k\right)
+\right]
+\]
+
+Esta expresión muestra que la estimación de la varianza de un estimador
+no lineal puede reducirse a la estimación de la varianza de un total
+ponderado de su variable linealizada. En consecuencia, pueden aplicarse
+los procedimientos habituales para estimar la varianza de totales,
+incorporando adecuadamente las características del diseño muestral.
 
 \subsubsection{Bootstrap}\label{bootstrap}
 
-En muchos casos, los microdatos de encuestas públicas omiten información
-esencial del diseño, como identificadores de estratos o de unidades
-primarias de muestreo (UPM), para proteger la confidencialidad de los
-encuestados. Esta omisión limita la capacidad de los usuarios para
-calcular varianzas válidas. En tales situaciones, se recomienda que las
-oficinas nacionales de estadística proporcionen pesos de replicación, lo
-que permite a los analistas estimar errores estándar de manera correcta.
-Sin estos datos, los usuarios secundarios no pueden reproducir los
-errores estándar publicados ni considerar adecuadamente el diseño
-complejo de la encuesta.
-
-Los métodos de replicación estiman la varianza generando subconjuntos de
-la muestra original, calculando estimaciones para cada uno y utilizando
-la variabilidad observada entre estas estimaciones para aproximar la
-varianza del estimador principal. Son particularmente útiles cuando no
-se dispone de información sobre estratos o UPM, situación en la que no
-se puede aplicar el método de Ultimate Cluster.
+Como alternativa a los métodos analíticos, se desarrollaron los métodos
+de replicación, que generan múltiples conjuntos de pesos o réplicas de
+la muestra, calculan el estimador de interés en cada una de ellas y
+utilizan la variabilidad entre las estimaciones replicadas para
+aproximar la varianza del estimador original. Su principal ventaja es
+que pueden aplicarse de manera relativamente uniforme a una amplia
+variedad de parámetros, incluso cuando la derivación analítica de la
+varianza resulta difícil (\citeproc{ref-RustRao1996}{Rust y Rao 1996};
+\citeproc{ref-Wolter2007Variance}{Wolter 2007}).
 
 Por ejemplo, el Bootstrap es una herramienta de replicación robusta y
 versátil. Originalmente introducido por Efron
 (\citeproc{ref-efron1979bootstrap}{1979}) para datos que no provenían de
 encuestas, su adaptación más usada para encuestas de hogares es el
-Bootstrap de Reescalamiento Rao-Wu-Yue
-(\citeproc{ref-rao1992resampling}{Rao et~al. 1992}). Este método se
-ajusta de manera óptima a diseños de muestreo estratificados y
-multietápicos, y es ampliamente empleado para la estimación de varianzas
-en encuestas complejas.
-
-El procedimiento consiste en generar muchas réplicas de la muestra
-original, simulando extracciones repetidas de la población. Cada réplica
-se construye mediante la creación de columnas adicionales de pesos de
-replicación en la base de datos, siguiendo este proceso:
+Bootstrap de Reescalamiento propuesto por Rao et~al.
+(\citeproc{ref-rao1992resampling}{1992}). Este método se ajusta de
+manera óptima a diseños de muestreo estratificados y multietápicos, y es
+ampliamente empleado para la estimación de varianzas en encuestas
+complejas. El procedimiento consiste en generar muchas réplicas de la
+muestra original, simulando extracciones repetidas de la población. Cada
+réplica se construye mediante la creación de columnas adicionales de
+pesos de replicación en la base de datos, siguiendo este proceso:
 
 \begin{itemize}
 \tightlist
@@ -1427,46 +1368,32 @@ replicación en la base de datos, siguiendo este proceso:
   A partir de cada réplica se calculan nuevos pesos bootstrap para todas
   las unidades, reflejando cuántas veces fue seleccionada su UPM. El
   peso de la unidad \(k\) en la réplica \(r\) se calcula como:
+  \[w_{hik}^{(r)} = w_{hik} \times \frac{n_h}{n_h - 1} \times n_{hi}^{(r)}\]
+  Si los pesos originales incluyen ajustes por no respuesta o
+  calibración, estos deben aplicarse también a cada conjunto de pesos
+  bootstrap.
+\item
+  Para cada réplica \(r\), se calcula el parámetro de interés
+  \(\hat{\theta}^{(r)}\) usando los pesos bootstrap \(w_{hik}^{(r)}\).
+  Asumiendo que
+  \(\tilde{\theta} = \frac{1}{R} \sum_{r=1}^{R} \hat{\theta}^{(r)}\),
+  entonces la varianza del estimador se aproxima mediante la
+  variabilidad entre todas las réplicas:
+  \[\widehat{Var}_B(\hat{\theta}) = \frac{1}{R} \sum_{r=1}^{R} \left(\hat{\theta}^{(r)} - \tilde{\theta}\right)^2\]
 \end{itemize}
 
-\[
-w_{hik}^{(r)} = w_{hik} \times \frac{n_h}{n_h - 1} \times n_{hi}^{(r)}
-\]
-
-Si los pesos originales incluyen ajustes por no respuesta o calibración,
-estos deben aplicarse también a cada conjunto de pesos bootstrap.
-
-Cuando se proporciona únicamente pesos de replicación Bootstrap, los
-analistas pueden estimar errores estándar correctamente, aun sin
-identificadores de estratos o UPM. Para cada réplica \(r\), se calcula
-el parámetro de interés \(\hat{\theta}^{(r)}\) usando los pesos
-bootstrap \(w_{hik}^{(r)}\). La varianza del estimador original se
-aproxima mediante la variabilidad entre todas las réplicas:
-
-\[
-\widehat{Var}_B(\hat{\theta}) = \frac{1}{R} \sum_{r=1}^{R} \left(\hat{\theta}^{(r)} - \tilde{\theta}\right)^2, \quad
-\tilde{\theta} = \frac{1}{R} \sum_{r=1}^{R} \hat{\theta}^{(r)}
-\]
-
 Este enfoque asegura que la dispersión entre réplicas capture fielmente
-la incertidumbre del parámetro. El Bootstrap ofrece múltiples ventajas.
-A pesar de requerir un mayor procesamiento computacional, es eficaz para
+la incertidumbre del parámetro. El Bootstrap ofrece múltiples ventajas,
+a pesar de requerir un mayor procesamiento computacional, es eficaz para
 diseños de encuesta complejos y permite estimar parámetros difíciles de
 calcular con métodos tradicionales, como medianas u otras estadísticas
-no lineales. Es especialmente útil para analistas que trabajan con bases
-de datos sin identificadores de estratos y UPM, pero con pesos de
-replicación.
+no lineales. La simplicidad del método facilita su aplicación incluso
+sin software estadístico especializado. No obstante, su uso no es
+recomendable en encuestas repetidas con muestras superpuestas ni en
+situaciones con fracciones de muestreo grandes y tamaños de muestra
+pequeños (\citeproc{ref-bruch2011variance}{Bruch et~al. 2011}).
 
-La simplicidad del método facilita su aplicación incluso sin software
-estadístico especializado. Sin embargo, la mayoría de los paquetes
-estadísticos modernos ya incluyen procedimientos para aplicar Bootstrap
-y calcular varianzas, ampliando su disponibilidad y robustez. No
-obstante, su uso no es recomendable en encuestas repetidas con muestras
-superpuestas ni en situaciones con fracciones de muestreo grandes y
-tamaños de muestra pequeños (\citeproc{ref-bruch2011variance}{Bruch
-et~al. 2011}).
-
-\section{Intervalos de confianza}\label{intervalos-de-confianza}
+\subsection{Intervalos de confianza}\label{intervalos-de-confianza}
 
 Además de producir estimaciones puntuales, uno de los objetivos
 fundamentales de una encuesta es cuantificar la incertidumbre asociada a
@@ -1476,22 +1403,19 @@ poblacional de interés, incorporando explícitamente la variabilidad
 introducida por el diseño muestral. El intervalo de confianza de nivel
 \((1-\alpha)100\%\) para el total poblacional \(Y\) se calcula como:
 
-\[
-\hat{\theta} \pm t_{1-\alpha/2, df} \times \sqrt{\widehat{Var}(\hat{\theta})}
-\]
+\[\hat{\theta} \pm t_{1-\alpha/2, df} \times \sqrt{\widehat{Var}(\hat{\theta})}\]
 
 donde \(\hat{\theta}\) corresponde al estimador por muestreo del
 parámetro poblacional \(\theta\); \(\widehat{Var}(\hat{\theta})\)
 representa el estimador de varianza bajo el diseño complejo de la
 encuesta; y \(t_{1-\alpha/2, df}\) es el cuantil de la distribución
-\(t\) de Student con \(df\) grados de libertad. En encuestas complejas,
-los grados de libertad suelen estar relacionados con la cantidad de
-unidades primarias de muestreo (UPM) y los estratos considerados en el
-diseño. Una aproximación común consiste en calcularlos como:
+\(t\) de Student con \(df\) grados de libertad
+(\citeproc{ref-Fuller2009}{Fuller 2009}). En encuestas complejas, los
+grados de libertad suelen estar relacionados con la cantidad de unidades
+primarias de muestreo (UPM) y los estratos considerados en el diseño.
+Una aproximación común consiste en calcularlos como:
 
-\[
-df = m - H
-\]
+\[df = m - H\]
 
 donde \(m\) representa el número total de UPM observadas en la muestra y
 \(H\) el número de estratos. Esta aproximación refleja la cantidad
@@ -12443,6 +12367,10 @@ of Fit Based on Stratified Multistage Samples»}. \emph{Journal of the
 American Statistical Association} 75 (370): 261-68.
 \url{https://doi.org/10.2307/2287405}.
 
+\bibitem[\citeproctext]{ref-Ferreira2026weightflow}
+Ferreira, Juan Pablo. 2026. \emph{weightflow: Declarative API for Staged
+Survey Weights}. \url{https://doi.org/10.32614/CRAN.package.weightflow}.
+
 \bibitem[\citeproctext]{ref-finch2019multilevel}
 Finch, W. Holmes, Jocelyn E. Bolin, y Ken Kelley. 2019. \emph{Multilevel
 Modeling Using {R}}. 2.ª ed. CRC Press.
@@ -12464,6 +12392,11 @@ Fuller, Wayne A. 1975. {«Regression analysis for sample survey»}.
 Fuller, Wayne A. 2002. {«Regression estimation for survey samples»}.
 \emph{Survey Methodology} 28 (1): 5-23.
 
+\bibitem[\citeproctext]{ref-Fuller2009}
+Fuller, Wayne A. 2009. \emph{Sampling Statistics}. Wiley Series en
+Survey Methodology. John Wiley \& Sons.
+\url{https://doi.org/10.1002/9780470523551}.
+
 \bibitem[\citeproctext]{ref-gambino2009sampling}
 Gambino, Jack G, y Pedro Luis do Nascimento Silva. 2009. {«Sampling and
 estimation in household surveys»}. En \emph{Handbook of Statistics},
@@ -12477,6 +12410,11 @@ Press.
 \bibitem[\citeproctext]{ref-goldstein2011multilevel}
 Goldstein, Harvey. 2011. \emph{Multilevel Statistical Models}. 4.ª ed.
 John Wiley \& Sons.
+
+\bibitem[\citeproctext]{ref-Groves2009}
+Groves, Robert M., Floyd J. Fowler, Mick P. Couper, James M. Lepkowski,
+Eleanor Singer, y Roger Tourangeau. 2009. \emph{Survey Methodology}. 2.ª
+ed. John Wiley \& Sons.
 
 \bibitem[\citeproctext]{ref-Gutierrez2016}
 Gutiérrez, Andrés. 2016. \emph{Estrategias de muestreo: diseño de
@@ -12619,11 +12557,21 @@ Molina, Elizabeth A., y Chris J. Skinner. 1992. {«Pseudo-likelihood and
 quasi-likelihood estimation for complex sampling schemes»}.
 \emph{Computational Statistics \& Data Analysis} 13: 395-405.
 
+\bibitem[\citeproctext]{ref-UnitedNations2005}
+Naciones Unidas. 2005. \emph{Designing Household Survey Samples:
+Practical Guidelines}. Studies en Methods, Series F, No. 98. United
+Nations.
+
 \bibitem[\citeproctext]{ref-ONUDeff}
 Naciones Unidas. 2009. \emph{Diseño de Muestras para Encuestas de
 Hogares: Directrices Prácticas.} Estudios de Métodos, Serie F 98.
 Naciones Unidas.
 \url{https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf}.
+
+\bibitem[\citeproctext]{ref-unitednations2021householdsurveys}
+Naciones Unidas. 2021. \emph{Report of the Intersecretariat Working
+Group on Household Surveys}. E/CN.3/2021/16. United Nations Statistical
+Commission.
 
 \bibitem[\citeproctext]{ref-UNhandbook}
 Naciones Unidas. 2026. \emph{Handbook of Surveys on Households and
@@ -12725,6 +12673,12 @@ Robinson, David, Alex Hayes, Simon Couch, y Emil Hvitfeldt. 2026.
 \emph{broom: Convert Statistical Objects into Tidy Tibbles}.
 \url{https://doi.org/10.32614/CRAN.package.broom}.
 
+\bibitem[\citeproctext]{ref-RustRao1996}
+Rust, Keith F., y J. N. K. Rao. 1996. {«Variance Estimation for Complex
+Surveys Using Replication Techniques»}. \emph{Statistical Methods in
+Medical Research} 5 (3): 283-310.
+\url{https://doi.org/10.1177/096228029600500305}.
+
 \bibitem[\citeproctext]{ref-sarndal2005nonresponse}
 Särndal, Carl-Erik, y Sixten Lundström. 2005. \emph{Estimation in
 surveys with nonresponse}. John Wiley \& Sons.
@@ -12779,6 +12733,16 @@ Tukey, John W. 1977. \emph{Exploratory Data Analysis}. Addison-Wesley.
 Valliant, Richard. 2024. \emph{svydiags: Regression Model Diagnostics
 for Survey Data}. \url{https://doi.org/10.32614/CRAN.package.svydiags}.
 
+\bibitem[\citeproctext]{ref-Valliant_Dever_2017}
+Valliant, Richard, y Jill A. Dever. 2017. \emph{Survey Weights: A
+Step-by-step Guide to Calculation}. 1 edition. Stata Press.
+
+\bibitem[\citeproctext]{ref-Valliant_Dever_Kreuter_2018}
+Valliant, Richard, Jill A. Dever, y Frauke Kreuter. 2018.
+\emph{Practical Tools for Designing and Weighting Survey Samples}.
+Statistics for Social y Behavioral Sciences. Springer International
+Publishing. \url{https://doi.org/10.1007/978-3-319-93632-1}.
+
 \bibitem[\citeproctext]{ref-gtools2025}
 Warnes, Gregory R., Ben Bolker, Thomas Lumley, et~al. 2023.
 \emph{gtools: Various R Programming Tools}.
@@ -12832,6 +12796,12 @@ Woodruff, Ralph S. 1952. {«Confidence Intervals for Medians and Other
 Position Measures»}. \emph{Journal of the American Statistical
 Association} 47 (260): 635-46.
 \url{https://doi.org/10.1080/01621459.1952.10483443}.
+
+\bibitem[\citeproctext]{ref-woodruff1971simple}
+Woodruff, Ralph S. 1971. {«A Simple Method for Approximating the
+Variance of a Complicated Estimate»}. \emph{Journal of the American
+Statistical Association} 66 (334): 411-14.
+\url{https://doi.org/10.1080/01621459.1971.10482279}.
 
 \end{CSLReferences}
 
