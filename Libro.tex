@@ -2775,9 +2775,7 @@ estudiar qué tan fuerte es la asociación entre el ingreso de los hogares
 y su nivel de gasto. Este tipo de análisis permite comprender mejor los
 patrones económicos y sociales en la población.
 
-\begin{description}
-\tightlist
-\item[Supóngase que se dispone de dos variables numéricas de interés,
+Supóngase que se dispone de dos variables numéricas de interés,
 denotadas por \(x\) y \(y\), observadas en la encuesta compleja. De
 acuerdo con Heeringa et~al.
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), la asociación lineal
@@ -2789,8 +2787,7 @@ unidades de medida y permite evaluar tanto la dirección como la
 intensidad de la relación lineal. Si \(\hat{\bar{x}}\) y
 \(\hat{\bar{y}}\) representan las estimaciones de las medias
 poblacionales de \(x\) y \(y\), respectivamente, el coeficiente de
-correlación ponderado se expresa como:]
-\end{description}
+correlación ponderado se expresa como:
 
 \[
 \hat{\rho}_{xy} = \frac{\displaystyle \sum_{h} \sum_{i} \sum_{k} w_{hik} (y_{hik} - \hat{\bar{y}})(x_{hik} - \hat{\bar{x}})} {\sqrt{\displaystyle \sum_{h} \sum_{i} \sum_{k} w_{hik} (y_{hik} - \hat{\bar{y}})^2} \sqrt{\displaystyle \sum_{h} \sum_{i} \sum_{k} w_{hik} (x_{hik} - \hat{\bar{x}})^2}}
@@ -2854,7 +2851,7 @@ por ejemplo obtener errores estándar o intervalos de confianza, pueden
 utilizarse métodos de replicación (bootstrap/jackknife) compatibles con
 el paquete \texttt{survey}. Otra opción es utilizar la función
 \texttt{svycor()} del paquete \texttt{jtools}
-(\citeproc{ref-Long2026Svycor}{Long 2026a}) para estimar directamente la
+(\citeproc{ref-jtools2026}{Long 2026}) para estimar directamente la
 correlación:
 
 \begin{Shaded}
@@ -8491,7 +8488,7 @@ efecto significativo una vez controladas las demás covariables incluidas
 en el modelo.
 
 De acuerdo con Henry et~al. (\citeproc{ref-ggstance2024}{2024}) y Long
-(\citeproc{ref-jtools2026}{2026b}), para visualizar la distribución de
+(\citeproc{ref-jtools2026}{2026}), para visualizar la distribución de
 los coeficientes se emplea \texttt{ggstance} para la geometría
 horizontal de los intervalos, junto con \texttt{plot\_summs()} del
 paquete \texttt{jtools}.
@@ -12534,13 +12531,8 @@ Li, Jianzhu, y Richard Valliant. 2015. {«Linear Regression Diagnostics
 in Cluster Samples»}. \emph{Journal of Official Statistics} 31 (1):
 61-75. \url{https://doi.org/10.1515/jos-2015-0003}.
 
-\bibitem[\citeproctext]{ref-Long2026Svycor}
-Long, Jacob A. 2026a. \emph{Calculate Correlations and Correlation
-Tables with Complex Survey Data}.
-\url{https://www.jtools.jacob-long.com/articles/svycor}.
-
 \bibitem[\citeproctext]{ref-jtools2026}
-Long, Jacob A. 2026b. \emph{jtools: Analysis and Presentation of Social
+Long, Jacob A. 2026. \emph{jtools: Analysis and Presentation of Social
 Scientific Data}. \url{https://doi.org/10.32614/CRAN.package.jtools}.
 
 \bibitem[\citeproctext]{ref-Lorenz1905}
