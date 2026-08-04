@@ -2316,13 +2316,12 @@ estándar}\label{estimacion-de-la-dispersion}
 
 En las encuestas de hogares, la estimación de medidas de dispersión es
 fundamental para evaluar el grado de heterogeneidad de la población
-respecto de las variables analizadas. SAS Institute Inc.
-(\citeproc{ref-SAS2012StdDev}{2012}) afimra que, ya sea que una encuesta
-mida el consumo de alcohol en la población adulta o el índice de masa
-corporal de los niños en edad escolar, una desviación estándar
-poblacional pequeña indica una mayor homogeneidad en la población,
-mientras que una desviación estándar grande indica una población más
-heterogénea.
+respecto de las variables analizadas. Ya sea que una encuesta mida el
+consumo de alcohol en la población adulta o el índice de masa corporal
+de los niños en edad escolar, una desviación estándar poblacional
+pequeña indica una mayor homogeneidad en la población, mientras que una
+desviación estándar grande indica una población más heterogénea
+(\citeproc{ref-SAS2012StdDev}{SAS Institute Inc. 2012}).
 
 En particular, estudiar la variabilidad de los ingresos permite
 identificar diferencias económicas entre los hogares y aporta
@@ -2848,11 +2847,10 @@ obtenerse la correlación aplicando las siguientes instrucciones:
 
 Si además se desea realizar inferencia estadística sobre la correlación,
 por ejemplo obtener errores estándar o intervalos de confianza, pueden
-utilizarse métodos de replicación (bootstrap/jackknife) compatibles con
-el paquete \texttt{survey}. Otra opción es utilizar la función
-\texttt{svycor()} del paquete \texttt{jtools}
-(\citeproc{ref-jtools2026}{Long 2026}) para estimar directamente la
-correlación:
+utilizarse métodos de replicación compatibles con el paquete
+\texttt{survey}. Otra opción es utilizar la función \texttt{svycor()}
+del paquete \texttt{jtools} (\citeproc{ref-jtools2026}{Long 2026}) para
+estimar directamente la correlación:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2879,33 +2877,29 @@ interpretarse como evidencia de una relación causal.
 \section{Pruebas de hipótesis}\label{pruebas-de-hipotesis}
 
 En el análisis de datos provenientes de encuestas de hogares no basta
-con estudiar cada variable de manera aislada, como estimar el ingreso
-medio de hombres y mujeres en un país. También es fundamental comparar
-grupos y evaluar si las diferencias observadas entre ellos reflejan
-desigualdades reales en la población o si podrían explicarse simplemente
-por el error de muestreo. Por ejemplo, una pregunta frecuente consiste
-en determinar si existen diferencias estadísticamente significativas en
-el ingreso medio entre hogares dirigidos por hombres y hogares dirigidos
-por mujeres. Este tipo de análisis permite identificar brechas sociales
-y económicas, además de generar evidencia útil para el diseño y
-evaluación de políticas públicas.
+con estudiar cada variable de manera aislada, sino que también es
+fundamental comparar grupos y evaluar si las diferencias observadas
+entre ellos reflejan desigualdades reales en la población o si podrían
+explicarse simplemente por el error de muestreo. Por ejemplo, una
+pregunta de interés consiste en determinar si existen diferencias
+estadísticamente significativas en el ingreso medio entre hogares
+dirigidos por hombres y hogares dirigidos por mujeres. Este tipo de
+análisis permite identificar brechas sociales y económicas, además de
+generar evidencia útil para el diseño y evaluación de políticas
+públicas.
 
-Según Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}),
-para responder este tipo de interrogantes se utilizan pruebas de
-hipótesis, es decir, procedimientos estadísticos que permiten contrastar
+Para responder este tipo de interrogantes se utilizan pruebas de
+hipótesis; es decir, procedimientos estadísticos que permiten contrastar
 afirmaciones sobre parámetros poblacionales utilizando la información
-observada en la muestra. En el contexto de encuestas de hogares, estas
-pruebas deben incorporar adecuadamente las características del diseño
-muestral con el fin de garantizar inferencias válidas y resultados
-confiables.
+observada en la muestra. En el contexto de las encuestas de hogares,
+estas pruebas deben incorporar adecuadamente las características del
+diseño muestral con el fin de garantizar inferencias válidas y
+resultados confiables.
 
-Las pruebas de hipótesis constituyen una herramienta fundamental para
-evaluar afirmaciones sobre parámetros poblacionales a partir de la
-información observada en una muestra. En términos generales, toda prueba
-de hipótesis se basa en el contraste entre dos proposiciones opuestas:
-la hipótesis nula, denotada por \(H_0\), y la hipótesis alternativa,
-denotada por \(H_1\). En el caso más común de una prueba bilateral,
-estas hipótesis se expresan como:
+En términos generales, toda prueba de hipótesis se basa en el contraste
+entre dos proposiciones opuestas: la hipótesis nula, denotada por
+\(H_0\), y la hipótesis alternativa, denotada por \(H_1\). En el caso
+más común de una prueba bilateral, estas hipótesis se expresan como:
 
 \[
 \begin{cases}
@@ -2918,16 +2912,15 @@ donde \(\theta\) representa el parámetro poblacional de interés y
 \(\theta_0\) un valor de referencia especificado bajo la hipótesis nula.
 Dependiendo del objetivo del análisis, la hipótesis alternativa también
 puede formularse de manera unilateral, por ejemplo, cuando se desea
-evaluar si \(\theta > \theta_0\) o si \(\theta < \theta_0\). El
-propósito de la prueba es determinar si la evidencia contenida en la
-muestra resulta suficientemente fuerte para rechazar la hipótesis nula
-en favor de la hipótesis alternativa.
+evaluar si \(\theta > \theta_0\) o si \(\theta < \theta_0\). En
+cualquier caso, el propósito de la prueba es determinar si la evidencia
+contenida en la muestra resulta suficientemente fuerte para rechazar la
+hipótesis nula en favor de la hipótesis alternativa.
 
-Supóngase que \(\bar{y}_1\) y \(\bar{y}_2\) representan las medias
-poblacionales de una variable \(y\) en dos dominios distintos, por
-ejemplo, el ingreso medio de hogares con jefatura masculina y el ingreso
-medio de hogares con jefatura femenina. Entonces, el parámetro de
-interés corresponde a la diferencia:
+Por ejemplo, supóngase que \(\bar{y}_1\) y \(\bar{y}_2\) representan las
+medias poblacionales de una variable \(y\) en dos dominios distintos,
+como los hogares con jefatura masculina y femenina. En este caso, el
+parámetro de interés corresponde a la diferencia entre ambas medias:
 
 \[
 \Delta = \bar{y}_1 - \bar{y}_2
@@ -2989,15 +2982,24 @@ observadas entre grupos.
 
 En \texttt{R}, estas pruebas pueden implementarse mediante la función
 \texttt{svyttest()} del paquete \texttt{survey}, la cual incorpora
-automáticamente los ajustes asociados al diseño muestral. A partir de
-los resultados presentados en la tabla~\ref{tbl-ttest-sexo} puede
-concluirse que, con un nivel de confianza del 95\%, no existe evidencia
-estadística suficiente para afirmar que los ingresos medios difieren
-según el sexo.
+automáticamente los ajustes asociados al diseño muestral. El siguiente
+código crea primero el objeto \texttt{survey\_design\_heads}, que
+conserva únicamente las observaciones correspondientes a las personas
+jefas de hogar, identificadas mediante \texttt{PersonID\ ==\ "idPer01"},
+sin perder las características del diseño muestral. Posteriormente, la
+función \texttt{svyttest()} compara el ingreso medio entre las
+categorías de la variable \texttt{Sex}. El argumento
+\texttt{level\ =\ 0.95} establece un nivel de confianza del 95 \% para
+los intervalos.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{ttest\_sex }\OtherTok{\textless{}{-}} \FunctionTok{svyttest}\NormalTok{(Income }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex, }\AttributeTok{design =}\NormalTok{ survey\_design, }\AttributeTok{level =} \FloatTok{0.95}\NormalTok{)}
+\NormalTok{survey\_design\_heads  }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(PersonID }\SpecialCharTok{==} \StringTok{"idPer01"}\NormalTok{)}
+
+\NormalTok{ttest\_sex }\OtherTok{\textless{}{-}} \FunctionTok{svyttest}\NormalTok{(Income }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex, }
+                      \AttributeTok{design =}\NormalTok{ survey\_design\_heads, }
+                      \AttributeTok{level =} \FloatTok{0.95}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3017,53 +3019,26 @@ estimated\_difference \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-1.36 & 0.176 & 118 & -12.8 & 69.4 & 28.3 \\
+2.76 & 0.007 & 118 & 34.7 & 210 & 122 \\
 
 \end{longtable}
 
 }
 
-Otra hipótesis de interés consiste en evaluar si los ingresos medios de
-los hogares difieren según el sexo de la jefatura dentro del área
-urbana, como se presenta en la tabla~\ref{tbl-ttest-sexo-urbano}. Los
-resultados indican que no se rechaza la hipótesis nula \(H_0\), por lo
-que no existe evidencia estadística suficiente para afirmar que los
-ingresos medios difieren por sexo en la zona urbana.
+A partir de los resultados presentados en la tabla~\ref{tbl-ttest-sexo},
+se estima que el ingreso medio de los hombres jefes de hogar es 122
+dólares mayor al de las muejeres jefes de hogar. Dado que el valor \(p\)
+obtenido es 0,007, inferior al nivel de significación establecido de
+\(\alpha = 0,05\), se rechaza la hipótesis nula de igualdad de medias y
+se concluye que la diferencia observada es estadísticamente
+significativa. Esta conclusión es consistente con el intervalo de
+confianza del 95 \%, que no incluye el valor cero. En conjunto, los
+resultados aportan evidencia de que, en la población representada por la
+encuesta, las mujeres jefas de hogar presentan un ingreso medio
+significativamente menor al de los hombres jefes de hogar.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{urban\_subset }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{filter}\NormalTok{(Zone }\SpecialCharTok{==} \StringTok{"Urban"}\NormalTok{)}
-
-\NormalTok{ttest\_urban }\OtherTok{\textless{}{-}} \FunctionTok{svyttest}\NormalTok{(Income }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex, }\AttributeTok{design =}\NormalTok{ urban\_subset, }\AttributeTok{level =} \FloatTok{0.95}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-{
-
-\begin{longtable}[]{@{}rrrrrr@{}}
-
-\caption{\label{tbl-ttest-sexo-urbano}Prueba de diferencia de ingresos
-medios por sexo en zona urbana}
-
-\tabularnewline
-
-\toprule\noalign{}
-statistic & p\_value & gl & ci\_lower & ci\_upper &
-estimated\_difference \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-1.57 & 0.122 & 63 & -12.3 & 102 & 44.7 \\
-
-\end{longtable}
-
-}
-
-Como plantea Gutiérrez (\citeproc{ref-Gutierrez2016}{2016}), el
-procedimiento descrito no se limita a las medias, sino que también puede
-aplicarse a proporciones, totales, razones o cualquier función
+El procedimiento descrito no se limita a las medias, sino que también
+puede aplicarse a proporciones, totales, razones o cualquier función
 diferenciable de totales. En todos los casos, el contraste se fundamenta
 en la estimación puntual, su varianza (incluyendo covarianzas cuando
 corresponde) y la comparación con la distribución \(t\) ajustada al
@@ -3072,7 +3047,7 @@ diseño muestral.
 \section{Estimación de contrastes}\label{estimacion-de-contrastes}
 
 En el análisis de encuestas de hogares es frecuente que el interés no se
-limite a comparar únicamente dos poblaciones, sino varias de manera
+limite a comparar únicamente dos subpoblaciones, sino varias de manera
 simultánea. Por ejemplo, puede ser necesario comparar los ingresos
 medios de los hogares entre distintas regiones, áreas geográficas o
 grupos poblacionales, con el propósito de identificar diferencias y
@@ -3099,17 +3074,13 @@ evaluar una amplia variedad de comparaciones entre grupos, incluyendo
 diferencias entre medias, comparaciones múltiples y combinaciones más
 complejas de parámetros.
 
-Los contrastes permiten comparar combinaciones lineales de parámetros
-estimados en diseños de muestreo complejos. En \texttt{R}, estos
-procedimientos se encuentran disponibles mediante la función
-\texttt{svycontrast()} del paquete \texttt{survey}. Por ejemplo, si se
-quiere comparar los ingresos medios de dos subpoblaciones particulares
-(las regiones Norte y Sur) se puede usar el contraste
-\(\bar{y}_{Norte} - \bar{y}_{Sur}\). Dado que la muestra cubre cinco
-regiones en total, el contraste debe construirse asignando coeficientes
-únicamente a las regiones involucradas en la comparación y dejando
-coeficientes iguales a cero para las demás regiones. De esta manera, el
-contraste se define como:
+Por ejemplo, si se quiere comparar los ingresos medios de dos
+subpoblaciones particulares (las regiones Norte y Sur) se puede usar el
+contraste \(\bar{y}_{Norte} - \bar{y}_{Sur}\). Dado que la muestra cubre
+cinco regiones en total, el contraste debe construirse asignando
+coeficientes únicamente a las regiones involucradas en la comparación y
+dejando coeficientes iguales a cero para las demás regiones. De esta
+manera, el contraste se define como:
 
 \[
 1\times\hat{\bar{y}}_{Norte}+\left(-1\right)\times\hat{\bar{y}}_{Sur}+0\times\hat{\bar{y}}_{Centro}+0\times\hat{\bar{y}}_{Occidente}+0\times\hat{\bar{y}}_{Oriente}.
@@ -3135,22 +3106,14 @@ contraste puede escribirse como:
 En consecuencia, el vector de contraste asociado a esta comparación es
 \(\left[1,\,-1,\,0,\,0,\,0\right]\), donde los coeficientes positivos y
 negativos indican las poblaciones que se desean comparar y los ceros
-representan las poblaciones excluidas del contraste. El primer paso
-consiste en calcular las medias estimadas para cada región mediante
-\texttt{group\_by()} y \texttt{survey\_mean()}, como se presenta en la
-tabla~\ref{tbl-prom-region}. El objeto visible de resultados se
-construye con \texttt{srvyr}; adicionalmente se crea un objeto auxiliar
-con matriz de covarianzas para los contrastes posteriores. Como
-resultado se obtienen las medias estimadas de los ingresos por región.
+representan las poblaciones excluidas del contraste. En \texttt{R},
+estos procedimientos se encuentran disponibles mediante la función
+\texttt{svycontrast()} del paquete \texttt{survey}. Para esto, es
+necesario crear un objeto con las medias de los ingresos desagregados
+por región, como se presenta en la tabla~\ref{tbl-prom-region}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{region\_mean }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{group\_by}\NormalTok{(Region) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{mean =} \FunctionTok{survey\_mean}\NormalTok{(Income,}
-                               \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
-                               \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
-
 \NormalTok{region\_mean\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}\AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Income,}
                               \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Region,}
                               \AttributeTok{design =}\NormalTok{ survey\_design,}
@@ -3163,33 +3126,47 @@ resultado se obtienen las medias estimadas de los ingresos por región.
 
 {
 
-\begin{longtable}[]{@{}lrrrr@{}}
+\begin{longtable}[]{@{}llrrrr@{}}
 
 \caption{\label{tbl-prom-region}Ingreso medio estimado por región}
 
 \tabularnewline
 
 \toprule\noalign{}
-Region & mean & mean\_se & mean\_low & mean\_upp \\
+& Region & Income & se & ci\_l & ci\_u \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Norte & 552 & 55.4 & 443 & 662 \\
-Sur & 626 & 62.4 & 502 & 749 \\
-Centro & 651 & 61.5 & 529 & 772 \\
-Occidente & 517 & 46.2 & 425 & 609 \\
-Oriente & 542 & 71.7 & 400 & 684 \\
+Norte & Norte & 552 & 55.4 & 444 & 661 \\
+Sur & Sur & 626 & 62.4 & 503 & 748 \\
+Centro & Centro & 651 & 61.5 & 530 & 771 \\
+Occidente & Occidente & 517 & 46.2 & 426 & 608 \\
+Oriente & Oriente & 542 & 71.7 & 401 & 682 \\
 
 \end{longtable}
 
 }
 
-La función \texttt{svycontrast()} devuelve el contraste estimado y su
-error estándar. Los argumentos de esta función son los promedios de los
-ingresos estimados (\texttt{stat}) y las constantes de contraste
-(\texttt{contrasts}), como se muestra en la
-tabla~\ref{tbl-contraste-ns}.
+La función \texttt{svyby()} estima el ingreso medio por región, de
+acuerdo con el diseño de muestreo \texttt{survey\_design}. El argumento
+\texttt{formula\ =\ \textasciitilde{}Income} especifica la variable
+numérica de interés, mientras que
+\texttt{by\ =\ \textasciitilde{}Region} define los dominios para los
+cuales se realizará la estimación. La opción \texttt{FUN\ =\ svymean}
+indica que debe calcularse la media del ingreso en cada región y
+\texttt{na.rm\ =\ TRUE} excluye las observaciones con valores faltantes.
+Por su parte, \texttt{vartype\ =\ c("se",\ "ci")} solicita el error
+estándar y el intervalo de confianza de cada media estimada. Finalmente,
+\texttt{covmat\ =\ TRUE} calcula la matriz de varianzas y covarianzas
+entre las estimaciones regionales, lo que permite realizar
+posteriormente contrastes o comparaciones entre ellas.
+
+Luego, la función \texttt{svycontrast()} devuelve el contraste estimado
+y su error estándar, como se muestra en la tabla~\ref{tbl-contraste-ns}.
+Los argumentos de esta función son los promedios de los ingresos
+estimados (\texttt{stat}) y las constantes de contraste
+(\texttt{contrasts}).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3221,10 +3198,16 @@ north\_south\_difference & -73.4 & 6959 & 83.4 \\
 
 }
 
-Nótese que estos mismos resultados podrían obtenerse realizando
-explícitamente el proceso de construcción del estimador del contraste y
-de su varianza estimada. Si se consideran únicamente los ingresos medios
-estimados de las regiones Norte y Sur, su diferencia es:
+La estimación de la diferencia de medias indica que el ingreso promedio
+en la región Norte es aproximadamente 73,4 dólares inferior al observado
+en la región Sur. Sin embargo, el error estándar de 83,4 es mayor que la
+diferencia estimada, lo que refleja una incertidumbre considerable. Por
+tanto, no hay evidencia suficiente para concluir que exista una
+diferencia estadísticamente significativa entre ambas regiones. Nótese
+que estos mismos resultados podrían obtenerse realizando explícitamente
+el proceso de construcción del estimador del contraste y de su varianza
+estimada. Si se consideran únicamente los ingresos medios estimados de
+las regiones Norte y Sur, su diferencia es:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3243,9 +3226,15 @@ Norte
 -73.4 
 \end{verbatim}
 
-El paso siguiente es calcular la matriz de varianzas y covarianzas y de
-allí extraer las varianzas y covarianzas de las regiones Norte y Sur,
-presentada en la tabla~\ref{tbl-vcov-region}:
+El paso siguiente consiste en calcular la matriz de varianzas y
+covarianzas y extraer de ella los elementos correspondientes a las
+regiones Norte y Sur, los cuales se presentan en la
+tabla~\ref{tbl-vcov-region}. Las covarianzas estimadas entre las
+regiones son todas nulas, lo que resulta coherente con el diseño
+muestral, dado que la estratificación se realizó por región y la
+selección de la muestra se efectuó de manera independiente en cada
+estrato. En consecuencia, los estimadores regionales no comparten
+unidades muestrales y su covarianza bajo el diseño es igual a cero.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3304,13 +3293,13 @@ realiza directamente a partir de la matriz estimada:
 \end{verbatim}
 
 Este resultado corresponde al mismo obtenido anteriormente con la
-función \texttt{svycontrast()}. Además de comparar únicamente dos
-poblaciones, los contrastes permiten evaluar simultáneamente varias
-comparaciones de interés entre diferentes grupos.
+función \texttt{svycontrast()}.
 
-Por otro lado, supóngase que se desea comparar los ingresos medios entre
-distintas regiones geográficas. En particular, podrían considerarse
-contrastes como \(\bar{y}_{Norte} - \bar{y}_{Centro}\),
+Además de comparar únicamente dos poblaciones, los contrastes permiten
+evaluar simultáneamente varias comparaciones de interés entre diferentes
+grupos. Por ejemplo, supóngase que se desea comparar los ingresos medios
+entre distintas regiones geográficas. En particular, podrían
+considerarse contrastes como \(\bar{y}_{Norte} - \bar{y}_{Centro}\),
 \(\bar{y}_{Sur} - \bar{y}_{Centro}\) y
 \(\bar{y}_{Occidente} - \bar{y}_{Oriente}\). Cada una de estas
 expresiones representa un contraste lineal específico entre medias
@@ -3331,11 +3320,7 @@ coeficientes positivos y negativos indican las medias que participan en
 cada comparación, mientras que los ceros representan las regiones que no
 intervienen en el contraste correspondiente. A continuación, se muestra
 la implementación de los contrastes en \texttt{R}, cuyos resultados se
-presentan en la tabla~\ref{tbl-contraste-regiones}. A partir de estos
-resultados, puede concluirse que las regiones Sur y Centro presentan los
-ingresos medios de los hogares más similares, dado que la diferencia
-estimada entre ambas regiones es la menor entre los contrastes
-evaluados.
+presentan en la tabla~\ref{tbl-contraste-regiones}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3375,22 +3360,17 @@ west\_east & -24.7 & 7272 & 85.3 \\
 
 También es posible construir contrastes entre variables asociadas a
 diferentes grupos poblacionales, como ocurre al comparar el ingreso
-medio según el sexo. Siguiendo el mismo procedimiento del ejemplo
-anterior, el primer paso consiste en estimar el ingreso medio para cada
-grupo, en este caso hombres y mujeres, como se presenta en la
-tabla~\ref{tbl-prom-sexo}.
+medio según el sexo del jefe de hogar. Siguiendo el mismo procedimiento
+del ejemplo anterior, y haciendo uso del objeto
+\texttt{survey\_design\_heads}, el primer paso consiste en estimar el
+ingreso medio para cada grupo, en este caso hombres y mujeres, como se
+presenta en la tabla~\ref{tbl-prom-sexo}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sex\_mean }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{group\_by}\NormalTok{(Sex) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{mean =} \FunctionTok{survey\_mean}\NormalTok{(Income,}
-                               \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
-                               \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
-
 \NormalTok{sex\_mean\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}\AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Income,}
                            \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Sex,}
-                           \AttributeTok{design =}\NormalTok{ survey\_design,}
+                           \AttributeTok{design =}\NormalTok{ survey\_design\_heads,}
                            \AttributeTok{FUN =}\NormalTok{ svymean,}
                            \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
                            \AttributeTok{covmat =} \ConstantTok{TRUE}\NormalTok{,}
@@ -3407,13 +3387,13 @@ tabla~\ref{tbl-prom-sexo}.
 \tabularnewline
 
 \toprule\noalign{}
-Sex & mean & mean\_se & mean\_low & mean\_upp \\
+Sex & Income & se & ci\_l & ci\_u \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Female & 558 & 25.8 & 506 & 609 \\
-Male & 586 & 34.6 & 517 & 654 \\
+Female & 442 & 23.5 & 396 & 488 \\
+Male & 564 & 34.0 & 498 & 631 \\
 
 \end{longtable}
 
@@ -3422,12 +3402,12 @@ Male & 586 & 34.6 & 517 & 654 \\
 En este caso, el contraste de interés está dado por
 \(\bar{y}_{F} - \bar{y}_{M}\), el cual permite cuantificar la diferencia
 entre el ingreso medio de las mujeres y el correspondiente a los
-hombres. A continuación, utilizando la función \texttt{svycontrast()}
-del paquete \texttt{survey}, se obtiene la estimación del contraste,
-cuyos resultados se presentan en la tabla~\ref{tbl-contraste-sexo}. A
-partir de estos resultados, se concluye que, en promedio, los hombres
-perciben 28.3 dólares más que las mujeres, con un error estándar
-estimado de 20.8 dólares.
+hombres. A continuación, utilizando la función \texttt{svycontrast()},
+se obtiene la estimación del contraste, cuyos resultados se presentan en
+la tabla~\ref{tbl-contraste-sexo}. A partir de estos resultados, se
+concluye que, en promedio, los hombres jefes de hogar perciben 122
+dólares más que las mujeres jefes de hogar, con un error estándar
+estimado de 44,3 dólares.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3453,7 +3433,7 @@ contrast & estimate & variance & standard\_error \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-sex\_difference & -28.3 & 431 & 20.8 \\
+sex\_difference & -122 & 1958 & 44.3 \\
 
 \end{longtable}
 
@@ -3461,26 +3441,19 @@ sex\_difference & -28.3 & 431 & 20.8 \\
 
 Dado que los contrastes corresponden a funciones lineales de parámetros,
 también es posible aplicarlos a estimadores de razón. Un ejemplo de ello
-consiste en comparar la relación entre ingresos y gastos según el sexo.
-En este caso, primero se estima la razón ingreso-gasto para cada grupo y
-posteriormente se construye el contraste entre dichas razones. A
-continuación, se presentan los códigos computacionales utilizados para
-realizar este análisis, cuyos resultados se muestran en la
-tabla~\ref{tbl-razon-ingreso-gasto-sexo}:
+consiste en comparar la relación entre ingresos y gastos según el sexo
+del jefe de hogar. En este caso, primero se estima la razón
+ingreso-gasto para cada grupo y posteriormente se construye el contraste
+entre dichas razones. A continuación, se presentan los códigos
+computacionales utilizados para realizar este análisis, cuyos resultados
+se muestran en la tabla~\ref{tbl-razon-ingreso-gasto-sexo}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sex\_ratio }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{group\_by}\NormalTok{(Sex) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{ratio =} \FunctionTok{survey\_ratio}\NormalTok{(Income,}
-\NormalTok{                                 Expenditure,}
-                                 \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
-                                 \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
-
 \NormalTok{sex\_ratio\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}\AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Income,}
                             \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Sex,}
                             \AttributeTok{denominator =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Expenditure,}
-                            \AttributeTok{design =}\NormalTok{ survey\_design,}
+                            \AttributeTok{design =}\NormalTok{ survey\_design\_heads,}
                             \AttributeTok{FUN =}\NormalTok{ svyratio,}
                             \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
                             \AttributeTok{covmat =} \ConstantTok{TRUE}\NormalTok{,}
@@ -3490,7 +3463,7 @@ tabla~\ref{tbl-razon-ingreso-gasto-sexo}:
 
 {
 
-\begin{longtable}[]{@{}lrrrr@{}}
+\begin{longtable}[]{@{}llrrrr@{}}
 
 \caption{\label{tbl-razon-ingreso-gasto-sexo}Razón ingreso/gasto
 desagregada por sexo}
@@ -3498,27 +3471,25 @@ desagregada por sexo}
 \tabularnewline
 
 \toprule\noalign{}
-Sex & ratio & ratio\_se & ratio\_low & ratio\_upp \\
+& Sex & Income/Expenditure & se.Income/Expenditure & ci\_l & ci\_u \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Female & 1.52 & 0.046 & 1.43 & 1.61 \\
-Male & 1.56 & 0.070 & 1.42 & 1.70 \\
+Female & Female & 1.42 & 0.051 & 1.31 & 1.52 \\
+Male & Male & 1.59 & 0.072 & 1.45 & 1.74 \\
 
 \end{longtable}
 
 }
 
-La función \texttt{svycontrast()} no se limita únicamente a la
-comparación de medias o totales, sino que también permite construir
-contrastes entre otros parámetros de interés, como razones y
-proporciones estimadas a partir de diseños de muestreo complejos. A
+La función \texttt{svycontrast()} permite construir el contraste entre
+estas razones estimadas a partir de diseños de muestreo complejos. A
 continuación, se presentan los códigos computacionales utilizados para
 realizar este análisis, cuyos resultados se muestran en la
 tabla~\ref{tbl-contraste-razon-sexo}. A partir de dichos resultados,
 puede concluirse que la diferencia entre las razones estimadas es de
-0.046 a favor de los hombres.
+0.178 a favor de los hombres.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3544,7 +3515,7 @@ contrast & estimate & standard\_error & variance \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-sex\_difference & -0.046 & 0.0416 & 0.00173 \\
+sex\_difference & -0.178 & 0.088 & 0.00774 \\
 
 \end{longtable}
 

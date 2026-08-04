@@ -1083,7 +1083,7 @@ Tabla&nbsp;3.11: Razón gasto/ingreso para las regiones
 <p>El análisis de encuestas de hogares no se limita a la estimación de medidas descriptivas, pues también resulta fundamental describir la dispersión, la posición relativa de las observaciones y el grado de desigualdad de la distribución de las variables. Debido a su naturaleza no lineal, la forma funcional de los estimadores y la cuantificación de su incertidumbre deben tratarse usando procedimientos de linealización de Taylor o los métodos de replicación.</p>
 <section id="estimacion-de-la-dispersion" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="estimacion-de-la-dispersion"><span class="header-section-number">3.2.1</span> Varianza y desviación estándar</h3>
-<p>En las encuestas de hogares, la estimación de medidas de dispersión es fundamental para evaluar el grado de heterogeneidad de la población respecto de las variables analizadas. <span class="citation" data-cites="SAS2012StdDev">SAS Institute Inc. (<a href="references.html#ref-SAS2012StdDev" role="doc-biblioref">2012</a>)</span> afimra que, ya sea que una encuesta mida el consumo de alcohol en la población adulta o el índice de masa corporal de los niños en edad escolar, una desviación estándar poblacional pequeña indica una mayor homogeneidad en la población, mientras que una desviación estándar grande indica una población más heterogénea.</p>
+<p>En las encuestas de hogares, la estimación de medidas de dispersión es fundamental para evaluar el grado de heterogeneidad de la población respecto de las variables analizadas. Ya sea que una encuesta mida el consumo de alcohol en la población adulta o el índice de masa corporal de los niños en edad escolar, una desviación estándar poblacional pequeña indica una mayor homogeneidad en la población, mientras que una desviación estándar grande indica una población más heterogénea <span class="citation" data-cites="SAS2012StdDev">(<a href="references.html#ref-SAS2012StdDev" role="doc-biblioref">SAS Institute Inc. 2012</a>)</span>.</p>
 <p>En particular, estudiar la variabilidad de los ingresos permite identificar diferencias económicas entre los hogares y aporta información relevante para el diagnóstico de la desigualdad y el diseño de políticas públicas. Una de las medidas de dispersión más utilizadas es la desviación estándar, que cuantifica cuánto se alejan, en promedio, los valores respecto de la media. Una desviación estándar pequeña indica que los ingresos se encuentran relativamente concentrados alrededor del promedio y, por tanto, que la población es más homogénea en términos económicos. Por el contrario, una desviación estándar elevada refleja una mayor dispersión y, en consecuencia, diferencias más marcadas entre los ingresos de los hogares.</p>
 <p>De acuerdo con <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, la desviación estándar poblacional se estima mediante una transformación no lineal del estimador de la varianza poblacional, <span class="math inline">\(\hat{S}_y^2\)</span>. Esta transformación incorpora, además, una corrección por grados de libertad basada en el número de observaciones válidas, denotado por <span class="math inline">\(n\)</span>. En consecuencia, el estimador de la desviación estándar poblacional se expresa como:</p>
 <p><span class="math display">\[
@@ -1414,7 +1414,7 @@ Tabla&nbsp;3.16: Matriz de varianzas y covarianzas ponderada entre ingreso y gas
 <pre><code>[1] 0.714</code></pre>
 </div>
 </div>
-<p>Si además se desea realizar inferencia estadística sobre la correlación, por ejemplo obtener errores estándar o intervalos de confianza, pueden utilizarse métodos de replicación (bootstrap/jackknife) compatibles con el paquete <code>survey</code>. Otra opción es utilizar la función <code>svycor()</code> del paquete <code>jtools</code> <span class="citation" data-cites="jtools2026">(<a href="references.html#ref-jtools2026" role="doc-biblioref">Long 2026</a>)</span> para estimar directamente la correlación:</p>
+<p>Si además se desea realizar inferencia estadística sobre la correlación, por ejemplo obtener errores estándar o intervalos de confianza, pueden utilizarse métodos de replicación compatibles con el paquete <code>survey</code>. Otra opción es utilizar la función <code>svycor()</code> del paquete <code>jtools</code> <span class="citation" data-cites="jtools2026">(<a href="references.html#ref-jtools2026" role="doc-biblioref">Long 2026</a>)</span> para estimar directamente la correlación:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jtools)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1430,17 +1430,17 @@ Expenditure   0.71        1.00</code></pre>
 </section>
 <section id="pruebas-de-hipotesis" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="pruebas-de-hipotesis"><span class="header-section-number">3.3</span> Pruebas de hipótesis</h2>
-<p>En el análisis de datos provenientes de encuestas de hogares no basta con estudiar cada variable de manera aislada, como estimar el ingreso medio de hombres y mujeres en un país. También es fundamental comparar grupos y evaluar si las diferencias observadas entre ellos reflejan desigualdades reales en la población o si podrían explicarse simplemente por el error de muestreo. Por ejemplo, una pregunta frecuente consiste en determinar si existen diferencias estadísticamente significativas en el ingreso medio entre hogares dirigidos por hombres y hogares dirigidos por mujeres. Este tipo de análisis permite identificar brechas sociales y económicas, además de generar evidencia útil para el diseño y evaluación de políticas públicas.</p>
-<p>Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, para responder este tipo de interrogantes se utilizan pruebas de hipótesis, es decir, procedimientos estadísticos que permiten contrastar afirmaciones sobre parámetros poblacionales utilizando la información observada en la muestra. En el contexto de encuestas de hogares, estas pruebas deben incorporar adecuadamente las características del diseño muestral con el fin de garantizar inferencias válidas y resultados confiables.</p>
-<p>Las pruebas de hipótesis constituyen una herramienta fundamental para evaluar afirmaciones sobre parámetros poblacionales a partir de la información observada en una muestra. En términos generales, toda prueba de hipótesis se basa en el contraste entre dos proposiciones opuestas: la hipótesis nula, denotada por <span class="math inline">\(H_0\)</span>, y la hipótesis alternativa, denotada por <span class="math inline">\(H_1\)</span>. En el caso más común de una prueba bilateral, estas hipótesis se expresan como:</p>
+<p>En el análisis de datos provenientes de encuestas de hogares no basta con estudiar cada variable de manera aislada, sino que también es fundamental comparar grupos y evaluar si las diferencias observadas entre ellos reflejan desigualdades reales en la población o si podrían explicarse simplemente por el error de muestreo. Por ejemplo, una pregunta de interés consiste en determinar si existen diferencias estadísticamente significativas en el ingreso medio entre hogares dirigidos por hombres y hogares dirigidos por mujeres. Este tipo de análisis permite identificar brechas sociales y económicas, además de generar evidencia útil para el diseño y evaluación de políticas públicas.</p>
+<p>Para responder este tipo de interrogantes se utilizan pruebas de hipótesis; es decir, procedimientos estadísticos que permiten contrastar afirmaciones sobre parámetros poblacionales utilizando la información observada en la muestra. En el contexto de las encuestas de hogares, estas pruebas deben incorporar adecuadamente las características del diseño muestral con el fin de garantizar inferencias válidas y resultados confiables.</p>
+<p>En términos generales, toda prueba de hipótesis se basa en el contraste entre dos proposiciones opuestas: la hipótesis nula, denotada por <span class="math inline">\(H_0\)</span>, y la hipótesis alternativa, denotada por <span class="math inline">\(H_1\)</span>. En el caso más común de una prueba bilateral, estas hipótesis se expresan como:</p>
 <p><span class="math display">\[
 \begin{cases}
 H_{0}: &amp; \theta = \theta_0 \\
 H_{1}: &amp; \theta \neq \theta_0
 \end{cases}
 \]</span></p>
-<p>donde <span class="math inline">\(\theta\)</span> representa el parámetro poblacional de interés y <span class="math inline">\(\theta_0\)</span> un valor de referencia especificado bajo la hipótesis nula. Dependiendo del objetivo del análisis, la hipótesis alternativa también puede formularse de manera unilateral, por ejemplo, cuando se desea evaluar si <span class="math inline">\(\theta &gt; \theta_0\)</span> o si <span class="math inline">\(\theta &lt; \theta_0\)</span>. El propósito de la prueba es determinar si la evidencia contenida en la muestra resulta suficientemente fuerte para rechazar la hipótesis nula en favor de la hipótesis alternativa.</p>
-<p>Supóngase que <span class="math inline">\(\bar{y}_1\)</span> y <span class="math inline">\(\bar{y}_2\)</span> representan las medias poblacionales de una variable <span class="math inline">\(y\)</span> en dos dominios distintos, por ejemplo, el ingreso medio de hogares con jefatura masculina y el ingreso medio de hogares con jefatura femenina. Entonces, el parámetro de interés corresponde a la diferencia:</p>
+<p>donde <span class="math inline">\(\theta\)</span> representa el parámetro poblacional de interés y <span class="math inline">\(\theta_0\)</span> un valor de referencia especificado bajo la hipótesis nula. Dependiendo del objetivo del análisis, la hipótesis alternativa también puede formularse de manera unilateral, por ejemplo, cuando se desea evaluar si <span class="math inline">\(\theta &gt; \theta_0\)</span> o si <span class="math inline">\(\theta &lt; \theta_0\)</span>. En cualquier caso, el propósito de la prueba es determinar si la evidencia contenida en la muestra resulta suficientemente fuerte para rechazar la hipótesis nula en favor de la hipótesis alternativa.</p>
+<p>Por ejemplo, supóngase que <span class="math inline">\(\bar{y}_1\)</span> y <span class="math inline">\(\bar{y}_2\)</span> representan las medias poblacionales de una variable <span class="math inline">\(y\)</span> en dos dominios distintos, como los hogares con jefatura masculina y femenina. En este caso, el parámetro de interés corresponde a la diferencia entre ambas medias:</p>
 <p><span class="math display">\[
 \Delta = \bar{y}_1 - \bar{y}_2
 \]</span></p>
@@ -1474,9 +1474,14 @@ t_{(1-\alpha/2,df)}
 \hat{se}(\hat{\Delta}).
 \]</span></p>
 <p>Este intervalo proporciona un rango de valores plausibles para la diferencia poblacional y constituye una herramienta útil para evaluar tanto la magnitud como la significación estadística de las diferencias observadas entre grupos.</p>
-<p>En <code>R</code>, estas pruebas pueden implementarse mediante la función <code>svyttest()</code> del paquete <code>survey</code>, la cual incorpora automáticamente los ajustes asociados al diseño muestral. A partir de los resultados presentados en la <a href="#tbl-ttest-sexo" class="quarto-xref">tabla&nbsp;<span>3.17</span></a> puede concluirse que, con un nivel de confianza del 95%, no existe evidencia estadística suficiente para afirmar que los ingresos medios difieren según el sexo.</p>
+<p>En <code>R</code>, estas pruebas pueden implementarse mediante la función <code>svyttest()</code> del paquete <code>survey</code>, la cual incorpora automáticamente los ajustes asociados al diseño muestral. El siguiente código crea primero el objeto <code>survey_design_heads</code>, que conserva únicamente las observaciones correspondientes a las personas jefas de hogar, identificadas mediante <code>PersonID == "idPer01"</code>, sin perder las características del diseño muestral. Posteriormente, la función <code>svyttest()</code> compara el ingreso medio entre las categorías de la variable <code>Sex</code>. El argumento <code>level = 0.95</code> establece un nivel de confianza del 95 % para los intervalos.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ttest_sex <span class="ot">&lt;-</span> <span class="fu">svyttest</span>(Income <span class="sc">~</span> Sex, <span class="at">design =</span> survey_design, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>survey_design_heads  <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(PersonID <span class="sc">==</span> <span class="st">"idPer01"</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>ttest_sex <span class="ot">&lt;-</span> <span class="fu">svyttest</span>(Income <span class="sc">~</span> Sex, </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">design =</span> survey_design_heads, </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">level =</span> <span class="fl">0.95</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-ttest-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -1499,12 +1504,12 @@ Tabla&nbsp;3.17: Prueba de diferencia de ingresos medios por sexo (población to
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">1.36</td>
-<td style="text-align: right;">0.176</td>
+<td style="text-align: right;">2.76</td>
+<td style="text-align: right;">0.007</td>
 <td style="text-align: right;">118</td>
-<td style="text-align: right;">-12.8</td>
-<td style="text-align: right;">69.4</td>
-<td style="text-align: right;">28.3</td>
+<td style="text-align: right;">34.7</td>
+<td style="text-align: right;">210</td>
+<td style="text-align: right;">122</td>
 </tr>
 </tbody>
 </table>
@@ -1513,53 +1518,12 @@ Tabla&nbsp;3.17: Prueba de diferencia de ingresos medios por sexo (población to
 </figure>
 </div>
 </div>
-<p>Otra hipótesis de interés consiste en evaluar si los ingresos medios de los hogares difieren según el sexo de la jefatura dentro del área urbana, como se presenta en la <a href="#tbl-ttest-sexo-urbano" class="quarto-xref">tabla&nbsp;<span>3.18</span></a>. Los resultados indican que no se rechaza la hipótesis nula <span class="math inline">\(H_0\)</span>, por lo que no existe evidencia estadística suficiente para afirmar que los ingresos medios difieren por sexo en la zona urbana.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>urban_subset <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Zone <span class="sc">==</span> <span class="st">"Urban"</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>ttest_urban <span class="ot">&lt;-</span> <span class="fu">svyttest</span>(Income <span class="sc">~</span> Sex, <span class="at">design =</span> urban_subset, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div id="tbl-ttest-sexo-urbano" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ttest-sexo-urbano-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3.18: Prueba de diferencia de ingresos medios por sexo en zona urbana
-</figcaption>
-<div aria-describedby="tbl-ttest-sexo-urbano-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">statistic</th>
-<th style="text-align: right;">p_value</th>
-<th style="text-align: right;">gl</th>
-<th style="text-align: right;">ci_lower</th>
-<th style="text-align: right;">ci_upper</th>
-<th style="text-align: right;">estimated_difference</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1.57</td>
-<td style="text-align: right;">0.122</td>
-<td style="text-align: right;">63</td>
-<td style="text-align: right;">-12.3</td>
-<td style="text-align: right;">102</td>
-<td style="text-align: right;">44.7</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<p>Como plantea <span class="citation" data-cites="Gutierrez2016">Gutiérrez (<a href="references.html#ref-Gutierrez2016" role="doc-biblioref">2016</a>)</span>, el procedimiento descrito no se limita a las medias, sino que también puede aplicarse a proporciones, totales, razones o cualquier función diferenciable de totales. En todos los casos, el contraste se fundamenta en la estimación puntual, su varianza (incluyendo covarianzas cuando corresponde) y la comparación con la distribución <span class="math inline">\(t\)</span> ajustada al diseño muestral.</p>
+<p>A partir de los resultados presentados en la <a href="#tbl-ttest-sexo" class="quarto-xref">tabla&nbsp;<span>3.17</span></a>, se estima que el ingreso medio de los hombres jefes de hogar es 122 dólares mayor al de las muejeres jefes de hogar. Dado que el valor <span class="math inline">\(p\)</span> obtenido es 0,007, inferior al nivel de significación establecido de <span class="math inline">\(\alpha = 0,05\)</span>, se rechaza la hipótesis nula de igualdad de medias y se concluye que la diferencia observada es estadísticamente significativa. Esta conclusión es consistente con el intervalo de confianza del 95 %, que no incluye el valor cero. En conjunto, los resultados aportan evidencia de que, en la población representada por la encuesta, las mujeres jefas de hogar presentan un ingreso medio significativamente menor al de los hombres jefes de hogar.</p>
+<p>El procedimiento descrito no se limita a las medias, sino que también puede aplicarse a proporciones, totales, razones o cualquier función diferenciable de totales. En todos los casos, el contraste se fundamenta en la estimación puntual, su varianza (incluyendo covarianzas cuando corresponde) y la comparación con la distribución <span class="math inline">\(t\)</span> ajustada al diseño muestral.</p>
 </section>
 <section id="estimacion-de-contrastes" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="estimacion-de-contrastes"><span class="header-section-number">3.4</span> Estimación de contrastes</h2>
-<p>En el análisis de encuestas de hogares es frecuente que el interés no se limite a comparar únicamente dos poblaciones, sino varias de manera simultánea. Por ejemplo, puede ser necesario comparar los ingresos medios de los hogares entre distintas regiones, áreas geográficas o grupos poblacionales, con el propósito de identificar diferencias y establecer patrones de desigualdad entre ellos. En este tipo de situaciones, las pruebas de diferencia de medias presentadas anteriormente resultan limitadas, ya que están diseñadas para comparar únicamente pares de poblaciones.</p>
+<p>En el análisis de encuestas de hogares es frecuente que el interés no se limite a comparar únicamente dos subpoblaciones, sino varias de manera simultánea. Por ejemplo, puede ser necesario comparar los ingresos medios de los hogares entre distintas regiones, áreas geográficas o grupos poblacionales, con el propósito de identificar diferencias y establecer patrones de desigualdad entre ellos. En este tipo de situaciones, las pruebas de diferencia de medias presentadas anteriormente resultan limitadas, ya que están diseñadas para comparar únicamente pares de poblaciones.</p>
 <p>Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, para abordar comparaciones más generales se utilizan los contrastes, que constituyen una herramienta flexible para evaluar combinaciones lineales de parámetros poblacionales. En términos generales, un contraste se define como:</p>
 <p><span class="math display">\[
 f\left(\theta_1,\theta_2,\ldots,\theta_J\right)
@@ -1567,7 +1531,7 @@ f\left(\theta_1,\theta_2,\ldots,\theta_J\right)
 \sum_{j=1}^{J} a_j \theta_j,
 \]</span></p>
 <p>donde los coeficientes <span class="math inline">\(a_j\)</span> son constantes conocidas y <span class="math inline">\(\theta_j\)</span> representan los parámetros de interés. Este enfoque permite formular y evaluar una amplia variedad de comparaciones entre grupos, incluyendo diferencias entre medias, comparaciones múltiples y combinaciones más complejas de parámetros.</p>
-<p>Los contrastes permiten comparar combinaciones lineales de parámetros estimados en diseños de muestreo complejos. En <code>R</code>, estos procedimientos se encuentran disponibles mediante la función <code>svycontrast()</code> del paquete <code>survey</code>. Por ejemplo, si se quiere comparar los ingresos medios de dos subpoblaciones particulares (las regiones Norte y Sur) se puede usar el contraste <span class="math inline">\(\bar{y}_{Norte} - \bar{y}_{Sur}\)</span>. Dado que la muestra cubre cinco regiones en total, el contraste debe construirse asignando coeficientes únicamente a las regiones involucradas en la comparación y dejando coeficientes iguales a cero para las demás regiones. De esta manera, el contraste se define como:</p>
+<p>Por ejemplo, si se quiere comparar los ingresos medios de dos subpoblaciones particulares (las regiones Norte y Sur) se puede usar el contraste <span class="math inline">\(\bar{y}_{Norte} - \bar{y}_{Sur}\)</span>. Dado que la muestra cubre cinco regiones en total, el contraste debe construirse asignando coeficientes únicamente a las regiones involucradas en la comparación y dejando coeficientes iguales a cero para las demás regiones. De esta manera, el contraste se define como:</p>
 <p><span class="math display">\[
 1\times\hat{\bar{y}}_{Norte}+\left(-1\right)\times\hat{\bar{y}}_{Sur}+0\times\hat{\bar{y}}_{Centro}+0\times\hat{\bar{y}}_{Occidente}+0\times\hat{\bar{y}}_{Oriente}.
 \]</span></p>
@@ -1583,75 +1547,75 @@ f\left(\theta_1,\theta_2,\ldots,\theta_J\right)
 \hat{\bar{y}}_{Oriente}
 \end{array}\right].
 \]</span></p>
-<p>En consecuencia, el vector de contraste asociado a esta comparación es <span class="math inline">\(\left[1,\,-1,\,0,\,0,\,0\right]\)</span>, donde los coeficientes positivos y negativos indican las poblaciones que se desean comparar y los ceros representan las poblaciones excluidas del contraste. El primer paso consiste en calcular las medias estimadas para cada región mediante <code>group_by()</code> y <code>survey_mean()</code>, como se presenta en la <a href="#tbl-prom-region" class="quarto-xref">tabla&nbsp;<span>3.19</span></a>. El objeto visible de resultados se construye con <code>srvyr</code>; adicionalmente se crea un objeto auxiliar con matriz de covarianzas para los contrastes posteriores. Como resultado se obtienen las medias estimadas de los ingresos por región.</p>
+<p>En consecuencia, el vector de contraste asociado a esta comparación es <span class="math inline">\(\left[1,\,-1,\,0,\,0,\,0\right]\)</span>, donde los coeficientes positivos y negativos indican las poblaciones que se desean comparar y los ceros representan las poblaciones excluidas del contraste. En <code>R</code>, estos procedimientos se encuentran disponibles mediante la función <code>svycontrast()</code> del paquete <code>survey</code>. Para esto, es necesario crear un objeto con las medias de los ingresos desagregados por región, como se presenta en la <a href="#tbl-prom-region" class="quarto-xref">tabla&nbsp;<span>3.18</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>region_mean <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">survey_mean</span>(Income,</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>region_mean_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(<span class="at">formula =</span> <span class="sc">~</span>Income,</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                              <span class="at">by =</span> <span class="sc">~</span>Region,</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>                              <span class="at">design =</span> survey_design,</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>                              <span class="at">FUN =</span> svymean,</span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>                              <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>                              <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>                              <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>region_mean_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(<span class="at">formula =</span> <span class="sc">~</span>Income,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">by =</span> <span class="sc">~</span>Region,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">design =</span> survey_design,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">FUN =</span> svymean,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                              <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                              <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                              <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-prom-region" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-prom-region-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3.19: Ingreso medio estimado por región
+Tabla&nbsp;3.18: Ingreso medio estimado por región
 </figcaption>
 <div aria-describedby="tbl-prom-region-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
+<th style="text-align: left;"></th>
 <th style="text-align: left;">Region</th>
-<th style="text-align: right;">mean</th>
-<th style="text-align: right;">mean_se</th>
-<th style="text-align: right;">mean_low</th>
-<th style="text-align: right;">mean_upp</th>
+<th style="text-align: right;">Income</th>
+<th style="text-align: right;">se</th>
+<th style="text-align: right;">ci_l</th>
+<th style="text-align: right;">ci_u</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Norte</td>
+<td style="text-align: left;">Norte</td>
 <td style="text-align: right;">552</td>
 <td style="text-align: right;">55.4</td>
-<td style="text-align: right;">443</td>
-<td style="text-align: right;">662</td>
+<td style="text-align: right;">444</td>
+<td style="text-align: right;">661</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Sur</td>
+<td style="text-align: left;">Sur</td>
 <td style="text-align: right;">626</td>
 <td style="text-align: right;">62.4</td>
-<td style="text-align: right;">502</td>
-<td style="text-align: right;">749</td>
+<td style="text-align: right;">503</td>
+<td style="text-align: right;">748</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Centro</td>
+<td style="text-align: left;">Centro</td>
 <td style="text-align: right;">651</td>
 <td style="text-align: right;">61.5</td>
-<td style="text-align: right;">529</td>
-<td style="text-align: right;">772</td>
+<td style="text-align: right;">530</td>
+<td style="text-align: right;">771</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Occidente</td>
+<td style="text-align: left;">Occidente</td>
 <td style="text-align: right;">517</td>
 <td style="text-align: right;">46.2</td>
-<td style="text-align: right;">425</td>
-<td style="text-align: right;">609</td>
+<td style="text-align: right;">426</td>
+<td style="text-align: right;">608</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Oriente</td>
+<td style="text-align: left;">Oriente</td>
 <td style="text-align: right;">542</td>
 <td style="text-align: right;">71.7</td>
-<td style="text-align: right;">400</td>
-<td style="text-align: right;">684</td>
+<td style="text-align: right;">401</td>
+<td style="text-align: right;">682</td>
 </tr>
 </tbody>
 </table>
@@ -1660,18 +1624,19 @@ Tabla&nbsp;3.19: Ingreso medio estimado por región
 </figure>
 </div>
 </div>
-<p>La función <code>svycontrast()</code> devuelve el contraste estimado y su error estándar. Los argumentos de esta función son los promedios de los ingresos estimados (<code>stat</code>) y las constantes de contraste (<code>contrasts</code>), como se muestra en la <a href="#tbl-contraste-ns" class="quarto-xref">tabla&nbsp;<span>3.20</span></a>.</p>
+<p>La función <code>svyby()</code> estima el ingreso medio por región, de acuerdo con el diseño de muestreo <code>survey_design</code>. El argumento <code>formula = ~Income</code> especifica la variable numérica de interés, mientras que <code>by = ~Region</code> define los dominios para los cuales se realizará la estimación. La opción <code>FUN = svymean</code> indica que debe calcularse la media del ingreso en cada región y <code>na.rm = TRUE</code> excluye las observaciones con valores faltantes. Por su parte, <code>vartype = c("se", "ci")</code> solicita el error estándar y el intervalo de confianza de cada media estimada. Finalmente, <code>covmat = TRUE</code> calcula la matriz de varianzas y covarianzas entre las estimaciones regionales, lo que permite realizar posteriormente contrastes o comparaciones entre ellas.</p>
+<p>Luego, la función <code>svycontrast()</code> devuelve el contraste estimado y su error estándar, como se muestra en la <a href="#tbl-contraste-ns" class="quarto-xref">tabla&nbsp;<span>3.19</span></a>. Los argumentos de esta función son los promedios de los ingresos estimados (<code>stat</code>) y las constantes de contraste (<code>contrasts</code>).</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>contrast_region_ns <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> region_mean_contrast,</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">north_south_difference =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>contrast_region_ns <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> region_mean_contrast,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">north_south_difference =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-contraste-ns" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-contraste-ns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3.20: Contraste de ingresos medios: región Norte menos región Sur
+Tabla&nbsp;3.19: Contraste de ingresos medios: región Norte menos región Sur
 </figcaption>
 <div aria-describedby="tbl-contraste-ns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1698,30 +1663,30 @@ Tabla&nbsp;3.20: Contraste de ingresos medios: región Norte menos región Sur
 </figure>
 </div>
 </div>
-<p>Nótese que estos mismos resultados podrían obtenerse realizando explícitamente el proceso de construcción del estimador del contraste y de su varianza estimada. Si se consideran únicamente los ingresos medios estimados de las regiones Norte y Sur, su diferencia es:</p>
+<p>La estimación de la diferencia de medias indica que el ingreso promedio en la región Norte es aproximadamente 73,4 dólares inferior al observado en la región Sur. Sin embargo, el error estándar de 83,4 es mayor que la diferencia estimada, lo que refleja una incertidumbre considerable. Por tanto, no hay evidencia suficiente para concluir que exista una diferencia estadísticamente significativa entre ambas regiones. Nótese que estos mismos resultados podrían obtenerse realizando explícitamente el proceso de construcción del estimador del contraste y de su varianza estimada. Si se consideran únicamente los ingresos medios estimados de las regiones Norte y Sur, su diferencia es:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 1: diferencia de las estimaciones (Norte - Sur)</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>region_income_mean <span class="ot">&lt;-</span> <span class="fu">setNames</span>(</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>(region_mean_contrast[[<span class="st">"Income"</span>]]),</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  region_mean_contrast[[<span class="st">"Region"</span>]]</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>region_income_mean[<span class="st">"Norte"</span>] <span class="sc">-</span> region_income_mean[<span class="st">"Sur"</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 1: diferencia de las estimaciones (Norte - Sur)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>region_income_mean <span class="ot">&lt;-</span> <span class="fu">setNames</span>(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>(region_mean_contrast[[<span class="st">"Income"</span>]]),</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  region_mean_contrast[[<span class="st">"Region"</span>]]</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>region_income_mean[<span class="st">"Norte"</span>] <span class="sc">-</span> region_income_mean[<span class="st">"Sur"</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Norte 
 -73.4 </code></pre>
 </div>
 </div>
-<p>El paso siguiente es calcular la matriz de varianzas y covarianzas y de allí extraer las varianzas y covarianzas de las regiones Norte y Sur, presentada en la <a href="#tbl-vcov-region" class="quarto-xref">tabla&nbsp;<span>3.21</span></a>:</p>
+<p>El paso siguiente consiste en calcular la matriz de varianzas y covarianzas y extraer de ella los elementos correspondientes a las regiones Norte y Sur, los cuales se presentan en la <a href="#tbl-vcov-region" class="quarto-xref">tabla&nbsp;<span>3.20</span></a>. Las covarianzas estimadas entre las regiones son todas nulas, lo que resulta coherente con el diseño muestral, dado que la estratificación se realizó por región y la selección de la muestra se efectuó de manera independiente en cada estrato. En consecuencia, los estimadores regionales no comparten unidades muestrales y su covarianza bajo el diseño es igual a cero.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 2: matriz de varianzas y covarianzas</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>region_vcov <span class="ot">&lt;-</span> <span class="fu">vcov</span>(region_mean_contrast)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 2: matriz de varianzas y covarianzas</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>region_vcov <span class="ot">&lt;-</span> <span class="fu">vcov</span>(region_mean_contrast)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-vcov-region" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-vcov-region-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3.21: Matriz de varianzas y covarianzas de los ingresos medios por región
+Tabla&nbsp;3.20: Matriz de varianzas y covarianzas de los ingresos medios por región
 </figcaption>
 <div aria-describedby="tbl-vcov-region-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1792,15 +1757,15 @@ Tabla&nbsp;3.21: Matriz de varianzas y covarianzas de los ingresos medios por re
 \]</span></p>
 <p>Para evitar inconsistencias con valores redondeados, el cálculo se realiza directamente a partir de la matriz estimada:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(region_vcov[<span class="st">"Norte"</span>, <span class="st">"Norte"</span>] <span class="sc">+</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>       region_vcov[<span class="st">"Sur"</span>, <span class="st">"Sur"</span>] <span class="sc">-</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>       <span class="dv">2</span> <span class="sc">*</span> region_vcov[<span class="st">"Norte"</span>, <span class="st">"Sur"</span>])</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(region_vcov[<span class="st">"Norte"</span>, <span class="st">"Norte"</span>] <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>       region_vcov[<span class="st">"Sur"</span>, <span class="st">"Sur"</span>] <span class="sc">-</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>       <span class="dv">2</span> <span class="sc">*</span> region_vcov[<span class="st">"Norte"</span>, <span class="st">"Sur"</span>])</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 83.4</code></pre>
 </div>
 </div>
-<p>Este resultado corresponde al mismo obtenido anteriormente con la función <code>svycontrast()</code>. Además de comparar únicamente dos poblaciones, los contrastes permiten evaluar simultáneamente varias comparaciones de interés entre diferentes grupos.</p>
-<p>Por otro lado, supóngase que se desea comparar los ingresos medios entre distintas regiones geográficas. En particular, podrían considerarse contrastes como <span class="math inline">\(\bar{y}_{Norte} - \bar{y}_{Centro}\)</span>, <span class="math inline">\(\bar{y}_{Sur} - \bar{y}_{Centro}\)</span> y <span class="math inline">\(\bar{y}_{Occidente} - \bar{y}_{Oriente}\)</span>. Cada una de estas expresiones representa un contraste lineal específico entre medias regionales. De manera conjunta, dichos contrastes pueden organizarse mediante la siguiente matriz de contrastes:</p>
+<p>Este resultado corresponde al mismo obtenido anteriormente con la función <code>svycontrast()</code>.</p>
+<p>Además de comparar únicamente dos poblaciones, los contrastes permiten evaluar simultáneamente varias comparaciones de interés entre diferentes grupos. Por ejemplo, supóngase que se desea comparar los ingresos medios entre distintas regiones geográficas. En particular, podrían considerarse contrastes como <span class="math inline">\(\bar{y}_{Norte} - \bar{y}_{Centro}\)</span>, <span class="math inline">\(\bar{y}_{Sur} - \bar{y}_{Centro}\)</span> y <span class="math inline">\(\bar{y}_{Occidente} - \bar{y}_{Oriente}\)</span>. Cada una de estas expresiones representa un contraste lineal específico entre medias regionales. De manera conjunta, dichos contrastes pueden organizarse mediante la siguiente matriz de contrastes:</p>
 <p><span class="math display">\[
 \left[\begin{array}{ccccc}
 1 &amp; 0 &amp; -1 &amp; 0 &amp; 0\\
@@ -1808,22 +1773,22 @@ Tabla&nbsp;3.21: Matriz de varianzas y covarianzas de los ingresos medios por re
 0 &amp; 0 &amp; 0 &amp; 1 &amp; -1
 \end{array}\right]
 \]</span></p>
-<p>En esta matriz, cada fila define un contraste distinto y cada columna corresponde a una de las regiones consideradas en el análisis. Los coeficientes positivos y negativos indican las medias que participan en cada comparación, mientras que los ceros representan las regiones que no intervienen en el contraste correspondiente. A continuación, se muestra la implementación de los contrastes en <code>R</code>, cuyos resultados se presentan en la <a href="#tbl-contraste-regiones" class="quarto-xref">tabla&nbsp;<span>3.22</span></a>. A partir de estos resultados, puede concluirse que las regiones Sur y Centro presentan los ingresos medios de los hogares más similares, dado que la diferencia estimada entre ambas regiones es la menor entre los contrastes evaluados.</p>
+<p>En esta matriz, cada fila define un contraste distinto y cada columna corresponde a una de las regiones consideradas en el análisis. Los coeficientes positivos y negativos indican las medias que participan en cada comparación, mientras que los ceros representan las regiones que no intervienen en el contraste correspondiente. A continuación, se muestra la implementación de los contrastes en <code>R</code>, cuyos resultados se presentan en la <a href="#tbl-contraste-regiones" class="quarto-xref">tabla&nbsp;<span>3.21</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>contrast_regions <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> region_mean_contrast,</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">north_south =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">south_center =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">west_east =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>contrast_regions <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> region_mean_contrast,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">north_south =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">south_center =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">west_east =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-contraste-regiones" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-contraste-regiones-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3.22: Contrastes de ingresos medios entre regiones
+Tabla&nbsp;3.21: Contrastes de ingresos medios entre regiones
 </figcaption>
 <div aria-describedby="tbl-contraste-regiones-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1862,27 +1827,21 @@ Tabla&nbsp;3.22: Contrastes de ingresos medios entre regiones
 </figure>
 </div>
 </div>
-<p>También es posible construir contrastes entre variables asociadas a diferentes grupos poblacionales, como ocurre al comparar el ingreso medio según el sexo. Siguiendo el mismo procedimiento del ejemplo anterior, el primer paso consiste en estimar el ingreso medio para cada grupo, en este caso hombres y mujeres, como se presenta en la <a href="#tbl-prom-sexo" class="quarto-xref">tabla&nbsp;<span>3.23</span></a>.</p>
+<p>También es posible construir contrastes entre variables asociadas a diferentes grupos poblacionales, como ocurre al comparar el ingreso medio según el sexo del jefe de hogar. Siguiendo el mismo procedimiento del ejemplo anterior, y haciendo uso del objeto <code>survey_design_heads</code>, el primer paso consiste en estimar el ingreso medio para cada grupo, en este caso hombres y mujeres, como se presenta en la <a href="#tbl-prom-sexo" class="quarto-xref">tabla&nbsp;<span>3.22</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>sex_mean <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex) <span class="sc">%&gt;%</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">survey_mean</span>(Income,</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>sex_mean_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(<span class="at">formula =</span> <span class="sc">~</span>Income,</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">by =</span> <span class="sc">~</span>Sex,</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">design =</span> survey_design,</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">FUN =</span> svymean,</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>                           <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>                           <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>                           <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>sex_mean_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(<span class="at">formula =</span> <span class="sc">~</span>Income,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">by =</span> <span class="sc">~</span>Sex,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">design =</span> survey_design_heads,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">FUN =</span> svymean,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-prom-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-prom-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3.23: Ingreso medio estimado por sexo
+Tabla&nbsp;3.22: Ingreso medio estimado por sexo
 </figcaption>
 <div aria-describedby="tbl-prom-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1890,26 +1849,26 @@ Tabla&nbsp;3.23: Ingreso medio estimado por sexo
 <thead>
 <tr class="header">
 <th style="text-align: left;">Sex</th>
-<th style="text-align: right;">mean</th>
-<th style="text-align: right;">mean_se</th>
-<th style="text-align: right;">mean_low</th>
-<th style="text-align: right;">mean_upp</th>
+<th style="text-align: right;">Income</th>
+<th style="text-align: right;">se</th>
+<th style="text-align: right;">ci_l</th>
+<th style="text-align: right;">ci_u</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Female</td>
-<td style="text-align: right;">558</td>
-<td style="text-align: right;">25.8</td>
-<td style="text-align: right;">506</td>
-<td style="text-align: right;">609</td>
+<td style="text-align: right;">442</td>
+<td style="text-align: right;">23.5</td>
+<td style="text-align: right;">396</td>
+<td style="text-align: right;">488</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Male</td>
-<td style="text-align: right;">586</td>
-<td style="text-align: right;">34.6</td>
-<td style="text-align: right;">517</td>
-<td style="text-align: right;">654</td>
+<td style="text-align: right;">564</td>
+<td style="text-align: right;">34.0</td>
+<td style="text-align: right;">498</td>
+<td style="text-align: right;">631</td>
 </tr>
 </tbody>
 </table>
@@ -1918,18 +1877,18 @@ Tabla&nbsp;3.23: Ingreso medio estimado por sexo
 </figure>
 </div>
 </div>
-<p>En este caso, el contraste de interés está dado por <span class="math inline">\(\bar{y}_{F} - \bar{y}_{M}\)</span>, el cual permite cuantificar la diferencia entre el ingreso medio de las mujeres y el correspondiente a los hombres. A continuación, utilizando la función <code>svycontrast()</code> del paquete <code>survey</code>, se obtiene la estimación del contraste, cuyos resultados se presentan en la <a href="#tbl-contraste-sexo" class="quarto-xref">tabla&nbsp;<span>3.24</span></a>. A partir de estos resultados, se concluye que, en promedio, los hombres perciben 28.3 dólares más que las mujeres, con un error estándar estimado de 20.8 dólares.</p>
+<p>En este caso, el contraste de interés está dado por <span class="math inline">\(\bar{y}_{F} - \bar{y}_{M}\)</span>, el cual permite cuantificar la diferencia entre el ingreso medio de las mujeres y el correspondiente a los hombres. A continuación, utilizando la función <code>svycontrast()</code>, se obtiene la estimación del contraste, cuyos resultados se presentan en la <a href="#tbl-contraste-sexo" class="quarto-xref">tabla&nbsp;<span>3.23</span></a>. A partir de estos resultados, se concluye que, en promedio, los hombres jefes de hogar perciben 122 dólares más que las mujeres jefes de hogar, con un error estándar estimado de 44,3 dólares.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>contrast_sex <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> sex_mean_contrast,</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">sex_difference =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>contrast_sex <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> sex_mean_contrast,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">sex_difference =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-contraste-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-contraste-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3.24: Contraste de ingresos medios entre mujeres y hombres
+Tabla&nbsp;3.23: Contraste de ingresos medios entre mujeres y hombres
 </figcaption>
 <div aria-describedby="tbl-contraste-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1945,9 +1904,9 @@ Tabla&nbsp;3.24: Contraste de ingresos medios entre mujeres y hombres
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">sex_difference</td>
-<td style="text-align: right;">-28.3</td>
-<td style="text-align: right;">431</td>
-<td style="text-align: right;">20.8</td>
+<td style="text-align: right;">-122</td>
+<td style="text-align: right;">1958</td>
+<td style="text-align: right;">44.3</td>
 </tr>
 </tbody>
 </table>
@@ -1956,56 +1915,52 @@ Tabla&nbsp;3.24: Contraste de ingresos medios entre mujeres y hombres
 </figure>
 </div>
 </div>
-<p>Dado que los contrastes corresponden a funciones lineales de parámetros, también es posible aplicarlos a estimadores de razón. Un ejemplo de ello consiste en comparar la relación entre ingresos y gastos según el sexo. En este caso, primero se estima la razón ingreso-gasto para cada grupo y posteriormente se construye el contraste entre dichas razones. A continuación, se presentan los códigos computacionales utilizados para realizar este análisis, cuyos resultados se muestran en la <a href="#tbl-razon-ingreso-gasto-sexo" class="quarto-xref">tabla&nbsp;<span>3.25</span></a>:</p>
+<p>Dado que los contrastes corresponden a funciones lineales de parámetros, también es posible aplicarlos a estimadores de razón. Un ejemplo de ello consiste en comparar la relación entre ingresos y gastos según el sexo del jefe de hogar. En este caso, primero se estima la razón ingreso-gasto para cada grupo y posteriormente se construye el contraste entre dichas razones. A continuación, se presentan los códigos computacionales utilizados para realizar este análisis, cuyos resultados se muestran en la <a href="#tbl-razon-ingreso-gasto-sexo" class="quarto-xref">tabla&nbsp;<span>3.24</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>sex_ratio <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex) <span class="sc">%&gt;%</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ratio =</span> <span class="fu">survey_ratio</span>(Income,</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                                 Expenditure,</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>sex_ratio_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(<span class="at">formula =</span> <span class="sc">~</span>Income,</span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">by =</span> <span class="sc">~</span>Sex,</span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">denominator =</span> <span class="sc">~</span>Expenditure,</span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">design =</span> survey_design,</span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>                            <span class="at">FUN =</span> svyratio,</span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>                            <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>                            <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>                            <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>sex_ratio_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(<span class="at">formula =</span> <span class="sc">~</span>Income,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">by =</span> <span class="sc">~</span>Sex,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">denominator =</span> <span class="sc">~</span>Expenditure,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">design =</span> survey_design_heads,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">FUN =</span> svyratio,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-razon-ingreso-gasto-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-razon-ingreso-gasto-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3.25: Razón ingreso/gasto desagregada por sexo
+Tabla&nbsp;3.24: Razón ingreso/gasto desagregada por sexo
 </figcaption>
 <div aria-describedby="tbl-razon-ingreso-gasto-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
+<th style="text-align: left;"></th>
 <th style="text-align: left;">Sex</th>
-<th style="text-align: right;">ratio</th>
-<th style="text-align: right;">ratio_se</th>
-<th style="text-align: right;">ratio_low</th>
-<th style="text-align: right;">ratio_upp</th>
+<th style="text-align: right;">Income/Expenditure</th>
+<th style="text-align: right;">se.Income/Expenditure</th>
+<th style="text-align: right;">ci_l</th>
+<th style="text-align: right;">ci_u</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Female</td>
+<td style="text-align: left;">Female</td>
+<td style="text-align: right;">1.42</td>
+<td style="text-align: right;">0.051</td>
+<td style="text-align: right;">1.31</td>
 <td style="text-align: right;">1.52</td>
-<td style="text-align: right;">0.046</td>
-<td style="text-align: right;">1.43</td>
-<td style="text-align: right;">1.61</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Male</td>
-<td style="text-align: right;">1.56</td>
-<td style="text-align: right;">0.070</td>
-<td style="text-align: right;">1.42</td>
-<td style="text-align: right;">1.70</td>
+<td style="text-align: left;">Male</td>
+<td style="text-align: right;">1.59</td>
+<td style="text-align: right;">0.072</td>
+<td style="text-align: right;">1.45</td>
+<td style="text-align: right;">1.74</td>
 </tr>
 </tbody>
 </table>
@@ -2014,18 +1969,18 @@ Tabla&nbsp;3.25: Razón ingreso/gasto desagregada por sexo
 </figure>
 </div>
 </div>
-<p>La función <code>svycontrast()</code> no se limita únicamente a la comparación de medias o totales, sino que también permite construir contrastes entre otros parámetros de interés, como razones y proporciones estimadas a partir de diseños de muestreo complejos. A continuación, se presentan los códigos computacionales utilizados para realizar este análisis, cuyos resultados se muestran en la <a href="#tbl-contraste-razon-sexo" class="quarto-xref">tabla&nbsp;<span>3.26</span></a>. A partir de dichos resultados, puede concluirse que la diferencia entre las razones estimadas es de 0.046 a favor de los hombres.</p>
+<p>La función <code>svycontrast()</code> permite construir el contraste entre estas razones estimadas a partir de diseños de muestreo complejos. A continuación, se presentan los códigos computacionales utilizados para realizar este análisis, cuyos resultados se muestran en la <a href="#tbl-contraste-razon-sexo" class="quarto-xref">tabla&nbsp;<span>3.25</span></a>. A partir de dichos resultados, puede concluirse que la diferencia entre las razones estimadas es de 0.178 a favor de los hombres.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>contrast_sex_ratio <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> sex_ratio_contrast,</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">sex_difference =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>contrast_sex_ratio <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> sex_ratio_contrast,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(<span class="at">sex_difference =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-contraste-razon-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-contraste-razon-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;3.26: Contraste de la razón ingreso/gasto entre sexos
+Tabla&nbsp;3.25: Contraste de la razón ingreso/gasto entre sexos
 </figcaption>
 <div aria-describedby="tbl-contraste-razon-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -2041,9 +1996,9 @@ Tabla&nbsp;3.26: Contraste de la razón ingreso/gasto entre sexos
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">sex_difference</td>
-<td style="text-align: right;">-0.046</td>
-<td style="text-align: right;">0.0416</td>
-<td style="text-align: right;">0.00173</td>
+<td style="text-align: right;">-0.178</td>
+<td style="text-align: right;">0.088</td>
+<td style="text-align: right;">0.00774</td>
 </tr>
 </tbody>
 </table>
@@ -2058,22 +2013,22 @@ Tabla&nbsp;3.26: Contraste de la razón ingreso/gasto entre sexos
 <p>Según <span class="citation" data-cites="wilkinson2005grammar">Wilkinson (<a href="references.html#ref-wilkinson2005grammar" role="doc-biblioref">2005</a>)</span>, la representación gráfica de variables continuas es un componente esencial en el análisis de encuestas de hogares. Los gráficos bien diseñados permiten identificar distribuciones, tendencias y relaciones entre variables, facilitando la interpretación de los hallazgos y su comunicación a distintos públicos. Un aspecto fundamental en este contexto es que los gráficos deben incorporar los pesos muestrales para reflejar la distribución de la población de interés.</p>
 <p>De acuerdo con <span class="citation" data-cites="patchwork">Pedersen (<a href="references.html#ref-patchwork" role="doc-biblioref">2025</a>)</span> y <span class="citation" data-cites="ggplot22026">Wickham et&nbsp;al. (<a href="references.html#ref-ggplot22026" role="doc-biblioref">2026</a>)</span>, en esta sección se utilizan los paquetes <code>patchwork</code> y <code>ggplot2</code> para la composición y construcción de gráficos. Estas herramientas se combinan con <code>survey</code> y <code>srvyr</code>, respectivamente.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(BigCity, <span class="at">package =</span> <span class="st">"TeachingSampling"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(BigCity, <span class="at">package =</span> <span class="st">"TeachingSampling"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="histogramas" class="level3" data-number="3.5.1">
 <h3 data-number="3.5.1" class="anchored" data-anchor-id="histogramas"><span class="header-section-number">3.5.1</span> Histogramas</h3>
 <p>Un histograma es una representación gráfica de la distribución de una variable numérica continua, construida a partir de rectángulos cuya altura es proporcional a la frecuencia de observaciones dentro de determinados intervalos de clase. En el contexto de encuestas de hogares, los histogramas ponderados permiten aproximar la distribución de la variable en la población, incorporando los factores de expansión asociados al diseño muestral.</p>
 <p>A continuación, se presenta el histograma ponderado de la variable <code>Income</code>, construido incorporando los pesos muestrales (<code>wk</code>) con el fin de representar la distribución estimada del ingreso en la población. Los resultados obtenidos se muestran en la <a href="#fig-hist-ingreso-ponde" class="quarto-xref">figura&nbsp;<span>3.2</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>weighted_income_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)) <span class="sc">+</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histograma ponderado"</span>)</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>weighted_income_hist</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>weighted_income_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)) <span class="sc">+</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histograma ponderado"</span>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>weighted_income_hist</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-hist-ingreso-ponde" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2090,17 +2045,17 @@ Figura&nbsp;3.2: Histograma ponderado del ingreso de los hogares
 <p>En este código, se inicia la construcción del gráfico utilizando la base de datos <code>survey_data</code>. Dentro de <code>aes()</code>, el argumento <code>x = Income</code> indica que la variable representada en el eje horizontal corresponde al ingreso, mientras que <code>weight = wk</code> incorpora los pesos muestrales para construir un histograma ponderado que refleje la distribución estimada en la población. La función <code>geom_histogram()</code> genera el histograma y, mediante <code>aes(y = ..density..)</code>, la altura de las barras se expresa en términos de densidad en lugar de frecuencias absolutas. Posteriormente, <code>ylab("")</code> elimina la etiqueta del eje vertical, y <code>ggtitle("Histograma ponderado")</code> agrega un título descriptivo al gráfico.</p>
 <p>Los histogramas también permiten comparar visualmente la distribución de una variable entre distintos subgrupos de la población mediante el argumento <code>fill</code>, el cual asigna un color diferente a cada categoría. Por ejemplo, es posible comparar la distribución del ingreso entre zonas urbanas y rurales, como se muestra en la <a href="#fig-hist-zona" class="quarto-xref">figura&nbsp;<span>3.3</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>zone_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Urban =</span> <span class="st">"#48C9B0"</span>, <span class="at">Rural =</span> <span class="st">"#117864"</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>weighted_zone_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(survey_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)) <span class="sc">+</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> ..density.., <span class="at">fill =</span> Zone),</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Weighted"</span>)</span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>weighted_zone_hist</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>zone_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Urban =</span> <span class="st">"#48C9B0"</span>, <span class="at">Rural =</span> <span class="st">"#117864"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>weighted_zone_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(survey_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)) <span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> ..density.., <span class="at">fill =</span> Zone),</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Weighted"</span>)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>weighted_zone_hist</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-hist-zona" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2117,9 +2072,9 @@ Figura&nbsp;3.3: Histograma ponderado del ingreso por zona geográfica
 <p>En este código, se construye un histograma ponderado utilizando la base de datos <code>survey_data</code>, donde <code>x = Income</code> define la variable representada en el eje horizontal y <code>weight = wk</code> incorpora los pesos muestrales para reflejar la distribución poblacional del ingreso. La función <code>geom_histogram()</code> genera el histograma y, mediante <code>aes(y = ..density.., fill = Zone)</code>, representa las barras en términos de densidad y asigna colores diferentes según la variable <code>Zone</code>, permitiendo comparar visualmente la distribución del ingreso entre zonas. El argumento <code>alpha = 0.5</code> agrega transparencia a las barras para facilitar la superposición de los histogramas, mientras que <code>position = "identity"</code> permite que las distribuciones se dibujen una encima de otra en lugar de apilarse. Posteriormente, <code>scale_fill_manual(values = zone_colors)</code> define manualmente los colores asociados a cada zona. Finalmente, <code>ylab("")</code> elimina la etiqueta del eje vertical, <code>ggtitle("Weighted")</code> agrega un título al gráfico.</p>
 <p>Adicionalmente, es posible superponer curvas de densidad suavizadas mediante la función <code>geom_density()</code>, lo que permite visualizar de manera continua la forma de la distribución de la variable analizada. Este tipo de representación facilita la identificación de patrones como asimetrías, concentración de observaciones o la presencia de múltiples modas. Un ejemplo de este tipo de gráfico se presenta en la <a href="#fig-densidades" class="quarto-xref">figura&nbsp;<span>3.4</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>weighted_income_hist <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">|</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  weighted_zone_hist <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Zone), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>weighted_income_hist <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">|</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  weighted_zone_hist <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Zone), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-densidades" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2139,21 +2094,21 @@ Figura&nbsp;3.4: Histogramas con curvas de densidad superpuestas para ingreso y 
 <p>Introducidos por <span class="citation" data-cites="Tukey1977EDA">Tukey (<a href="references.html#ref-Tukey1977EDA" role="doc-biblioref">1977</a>)</span>, los diagramas de caja (<em>boxplots</em>) permiten identificar valores atípicos y evaluar la dispersión de la distribución. Son una representación gráfica que resume una variable mediante estadísticas basadas en cuartiles, permitiendo identificar la mediana, la dispersión de los datos y la presencia de valores atípicos. En el contexto de encuestas de hogares, este tipo de gráfico resulta útil para comparar distribuciones entre distintos grupos poblacionales de manera compacta y visualmente intuitiva.</p>
 <p>Para construir <em>boxplots</em> ponderados en <code>ggplot2</code> se utiliza la función <code>geom_boxplot()</code>, como se muestra en la <a href="#fig-boxplot-zona-sexo" class="quarto-xref">figura&nbsp;<span>3.5</span></a>. En este caso, la función <code>ggplot()</code> inicia la construcción del gráfico utilizando la base de datos <code>survey_data</code>, donde <code>x = Income</code> define la variable numérica analizada y <code>weight = wk</code> incorpora los pesos muestrales para representar la distribución estimada en la población. Posteriormente, <code>geom_boxplot()</code> genera los diagramas de caja y, mediante <code>aes(fill = Zone)</code> o <code>aes(fill = Sex)</code>, asigna colores diferentes a cada categoría de las variables <code>Zone</code> y <code>Sex</code>, respectivamente, facilitando la comparación visual entre grupos. La función <code>coord_flip()</code> invierte los ejes para presentar los <em>boxplots</em> de forma horizontal, mejorando así su legibilidad. Por su parte, <code>scale_fill_manual()</code> permite definir manualmente los colores asociados a cada categoría mediante los vectores <code>zone_colors</code> y <code>sex_colors</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>weighted_zone_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(survey_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)) <span class="sc">+</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Zone)) <span class="sc">+</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Weighted"</span>) <span class="sc">+</span></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors)</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>sex_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Male =</span> <span class="st">"#5DADE2"</span>, <span class="at">Female =</span> <span class="st">"#2874A6"</span>)</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>weighted_sex_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(survey_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)) <span class="sc">+</span></span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Sex)) <span class="sc">+</span></span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Weighted"</span>) <span class="sc">+</span></span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> sex_colors)</span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>weighted_zone_boxplot <span class="sc">|</span> weighted_sex_boxplot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>weighted_zone_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(survey_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)) <span class="sc">+</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Zone)) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Weighted"</span>) <span class="sc">+</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors)</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>sex_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Male =</span> <span class="st">"#5DADE2"</span>, <span class="at">Female =</span> <span class="st">"#2874A6"</span>)</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>weighted_sex_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(survey_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)) <span class="sc">+</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Sex)) <span class="sc">+</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Weighted"</span>) <span class="sc">+</span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> sex_colors)</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>weighted_zone_boxplot <span class="sc">|</span> weighted_sex_boxplot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-boxplot-zona-sexo" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2169,17 +2124,17 @@ Figura&nbsp;3.5: Boxplots ponderados del ingreso por zona y sexo
 </div>
 <p>Además de las herramientas disponibles en <code>ggplot2</code>, las funciones especializadas <code>svyhist()</code> y <code>svyboxplot()</code> del paquete <code>survey</code> incorporan directamente las características del diseño muestral complejo en la construcción de los gráficos. Estas funciones permiten obtener representaciones gráficas coherentes con el diseño de la encuesta, facilitando el análisis exploratorio de las variables numéricas. Un ejemplo de su aplicación se presenta en la <a href="#fig-svyhist-svybox" class="quarto-xref">figura&nbsp;<span>3.6</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>old_par <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">svyhist</span>(<span class="sc">~</span>Income, survey_design,</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Household income"</span>,</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">col  =</span> <span class="st">"grey80"</span>, <span class="at">xlab =</span> <span class="st">"Income"</span>,</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">probability =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">svyboxplot</span>(Income <span class="sc">~</span> Zone, survey_design,</span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">col  =</span> <span class="st">"grey80"</span>,</span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Income"</span>, <span class="at">xlab =</span> <span class="st">"Zone"</span>)</span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(old_par)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>old_par <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">svyhist</span>(<span class="sc">~</span>Income, survey_design,</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Household income"</span>,</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">col  =</span> <span class="st">"grey80"</span>, <span class="at">xlab =</span> <span class="st">"Income"</span>,</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">probability =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="fu">svyboxplot</span>(Income <span class="sc">~</span> Zone, survey_design,</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">col  =</span> <span class="st">"grey80"</span>,</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Income"</span>, <span class="at">xlab =</span> <span class="st">"Zone"</span>)</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(old_par)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-svyhist-svybox" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2199,12 +2154,12 @@ Figura&nbsp;3.6: Histograma y boxplot del ingreso ajustados al diseño muestral 
 <p>Los diagramas de dispersión permiten explorar visualmente la relación entre dos variables continuas, facilitando la identificación de patrones de asociación, tendencias y posibles valores atípicos. En el contexto de encuestas con diseños muestrales complejos, resulta importante incorporar la información de los pesos de muestreo para que la representación gráfica refleje adecuadamente la contribución relativa de cada observación en la población.</p>
 <p>Cuando se trabaja con conjuntos de datos de gran tamaño, representar todos los puntos simultáneamente puede generar gráficos difíciles de interpretar debido a la sobreposición de observaciones. Sin embargo, en muestras de tamaño moderado, una estrategia sencilla y efectiva consiste en representar los pesos mediante el tamaño de los símbolos en el gráfico de dispersión. De esta manera, las observaciones con mayor peso poblacional aparecen resaltadas visualmente. Un ejemplo de este tipo de representación se presenta en la <a href="#fig-scatter-basico" class="quarto-xref">figura&nbsp;<span>3.7</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>weighted_basic_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> wk), <span class="at">alpha =</span> <span class="fl">0.3</span>)</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>weighted_basic_scatter</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>weighted_basic_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> wk), <span class="at">alpha =</span> <span class="fl">0.3</span>)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>weighted_basic_scatter</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-scatter-basico" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2221,14 +2176,14 @@ Figura&nbsp;3.7: Diagrama de dispersión entre ingreso y gasto de los hogares
 <p>En este código, se construye un diagrama de dispersión entre las variables <code>x = Expenditure</code> y <code>y = Income</code>. La función <code>geom_point()</code> agrega los puntos del gráfico y, mediante <code>aes(size = wk)</code>, utiliza los pesos muestrales (<code>wk</code>) para controlar el tamaño de cada punto, de modo que las observaciones con mayor representación poblacional aparezcan visualmente más destacadas. El argumento <code>alpha = 0.3</code> incorpora transparencia a los puntos, reduciendo el problema de sobreposición y facilitando la visualización de áreas con alta concentración de observaciones.</p>
 <p>Adicionalmente, es posible incorporar variables de agrupamiento en los diagramas de dispersión mediante los argumentos <code>shape</code> y <code>color</code>, los cuales permiten diferenciar visualmente las observaciones según categorías específicas de la población. Esto facilita la identificación de patrones diferenciados entre grupos y mejora la interpretación de la relación entre las variables analizadas. Un ejemplo de este tipo de representación se presenta en la <a href="#fig-scatter-zona" class="quarto-xref">figura&nbsp;<span>3.8</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>weighted_zone_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">shape =</span> Zone)) <span class="sc">+</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> wk, <span class="at">color =</span> Zone), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">size =</span> <span class="st">"Peso"</span>) <span class="sc">+</span></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> zone_colors)</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>weighted_zone_scatter</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>weighted_zone_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">shape =</span> Zone)) <span class="sc">+</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> wk, <span class="at">color =</span> Zone), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">size =</span> <span class="st">"Peso"</span>) <span class="sc">+</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> zone_colors)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>weighted_zone_scatter</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-scatter-zona" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
