@@ -17,25 +17,31 @@ source("../_tabla_helper.R")
 
 # Análisis de las variables continuas {#cap3}
 
-De acuerdo con @Lumley2010 y @HeeringaWestBerglund2017, el análisis estadístico de encuestas ha evolucionado de manera constante, impulsado por el desarrollo de nuevas metodologías y enfoques que buscan mejorar la precisión y la representatividad de los resultados. En general, estos avances surgen en el ámbito académico y, con el tiempo, son adoptados por instituciones públicas, empresas privadas y organismos estadísticos, que demandan su incorporación en los principales programas de análisis de datos.
+El análisis estadístico de encuestas ha evolucionado de manera constante, impulsado por el desarrollo de nuevas metodologías y enfoques que buscan mejorar la precisión y la representatividad de los resultados [@Lumley2010; @HeeringaWestBerglund2017]. En general, estos avances surgen en el ámbito académico y, con el tiempo, son adoptados por instituciones públicas, empresas privadas y organismos estadísticos, que demandan su incorporación en los principales programas de análisis de datos.
 
-Este capítulo presenta los principales procedimientos para el análisis estadístico de variables continuas utilizando `R`, incorporando adecuadamente las características del diseño muestral, tales como los pesos de expansión, la estratificación y la conglomeración. A lo largo del capítulo se ilustran métodos para estimar parámetros poblacionales, medir su precisión y realizar inferencias válidas a partir de datos provenientes de encuestas complejas. Asimismo, se introducen funciones y herramientas del paquete `survey`, uno de los recursos más utilizados en `R` para el análisis de encuestas.
+Este capítulo presenta los principales procedimientos para el análisis estadístico de variables continuas utilizando `R`, incorporando adecuadamente las características del diseño muestral, tales como los factores de expansión, así como la estratificación y la conglomeración. A lo largo de este capítulo se presentan métodos para estimar parámetros poblacionales, evaluar la precisión de las estimaciones y realizar inferencias válidas a partir de datos provenientes de encuestas complejas. Asimismo, tanto en este capítulo como en el resto del documento, se introducen de manera gradual las principales funciones y herramientas del paquete `survey`, una de las alternativas más completas y ampliamente utilizadas en `R` para el análisis adecuado de encuestas de hogares.
 
-De acuerdo con @RCoreSerialization2026, las bases de datos utilizadas en el análisis de encuestas pueden encontrarse en una amplia variedad de formatos (.xlsx,.dat,.csv,.parquet,.sas7bdat,.sav,.txt, entre otros). Sin embargo una buena práctica consiste en importar la información desde cualquiera de estos formatos y guardarla inmediatamente en un archivo con extensión `.rds`, que es un formato nativo de `R`.
+De acuerdo con @RCoreSerialization2026, las bases de datos utilizadas en el análisis de encuestas pueden encontrarse en una amplia variedad de formatos, como `xlsx`, `dat`, `csv`, `parquet`, `sas7bdat`, `sav` y `txt`, entre otros. Sin embargo, una buena práctica consiste en importar la información desde cualquiera de estos formatos y guardarla posteriormente en un archivo con extensión `.rds`, un formato nativo de `R` que permite almacenar distintos tipos de objetos, como bases de datos, vectores, matrices o listas. Otro formato nativo de `R` es `.RData`, que permite guardar varios objetos en un mismo archivo. En contraste, los archivos `.rds` almacenan un único objeto, lo que facilita un manejo más controlado, explícito y reproducible de la información. Por esta razón, se recomienda utilizar preferentemente el formato `.rds` al documentar proyectos y desarrollar análisis reproducibles.
 
-Los archivos `.rds` permiten almacenar cualquier objeto o información en `R`, como marcos de datos, vectores, matrices o listas. Otro formato propio de `R` es `.RData`, el cual permite guardar múltiples objetos en un solo archivo. En contraste, los archivos `.rds` almacenan únicamente un objeto, lo que hace su uso más controlado y reproducible. Por esta razón, se recomienda trabajar preferentemente con el formato `.rds` al documentar proyectos o reproducir análisis.
-
-Para ilustrar la sintaxis computacional que se utilizará a lo largo del capítulo, se empleará la misma base del capítulo anterior, que contiene una muestra de 2.605 registros que proviene de un muestreo complejo. A continuación, se muestra cómo cargar un archivo con extensión `.rds`:
+Para ilustrar la sintaxis computacional que se utilizará a lo largo del capítulo, se empleará una base de datos proveniente de una encuesta con un diseño de muestreo complejo. A continuación, se muestra cómo cargar el archivo, almacenado en formato `.rds`:
 
 ```{r cargar-datos-continuas, eval=TRUE}
-library(tidyverse)
-
 survey_data <- readRDS("../Data/encuesta.rds")
 ```
 
+El objeto `survey_data` carga la infomración desde el archivo `encuesta.rds`, el cual está organizado de manera que cada fila corresponde a una unidad observada, mientras que las columnas contienen tanto las variables de interés como la información necesaria para representar el diseño muestral. Para examinar rápidamente su estructura, puede utilizarse la función `glimpse()`, que presenta el número de observaciones y variables, sus nombres, sus tipos de datos y una muestra de los valores registrados.
+
+```{r describir-datos-continuas, eval=TRUE}
+library(tidyverse)
+
+dplyr::glimpse(survey_data)
+```
+
+La base contiene 2.605 registros individuales y 20 variables. Cada fila corresponde a una persona, identificada mediante `PersonID`, y se encuentra vinculada con su hogar a través de `HHID`. Además de variables sociodemográficas y económicas, como sexo, edad, estado civil, condición de empleo, ingreso, gasto y situación de pobreza, la base incluye información necesaria para representar el diseño de muestreo complejo, como el estrato (`Stratum`), la unidad primaria de muestreo (`PSU`) y los factores de expansión (`wk`). También incorpora variables de clasificación geográfica y demográfica, como zona, región y grupo de edad.
+
 Según @ONUDeff [sección 7.8], es fundamental que la estructura del diseño muestral sea tenida en cuenta en el proceso de inferencia al estimar estadísticas oficiales basadas en encuestas de hogares. Como se ha insistido en este documento, ignorar este aspecto puede generar estimaciones sesgadas y errores de muestreo subestimados. En este sentido los programas estadísticos incorporan funcionalidades específicas para manejar datos provenientes de encuestas con diseños complejos.
 
-Una vez cargada la muestra de hogares en `R`, el siguiente paso es definir el diseño muestral del cual proviene dicha muestra. Para ello se utilizará el paquete `srvyr`, que surge como un complemento del paquete `survey`. Estas librerías permiten definir objetos tipo `survey.design`, a los que se aplican las funciones de estimación y análisis de encuestas, y que pueden ser combinadas con la programación del paquete `tidyverse`. A continuación, se muestra un ejemplo en el que se define un objeto de tipo `survey_design` para la encuesta:
+Una vez cargada la encuesta de hogares en `R`, el siguiente paso es definir el diseño muestral del cual proviene dicha muestra. Para ello se utilizará el paquete `srvyr`, que surge como un complemento del paquete `survey`. Estas librerías permiten definir objetos tipo `survey.design`, a los que se aplican las funciones de estimación y análisis de encuestas, y que pueden ser combinadas con la programación del paquete `tidyverse`. A continuación, se muestra un ejemplo en el que se define un objeto de tipo `survey_design` para la encuesta:
 
 ```{r definir-diseno-continuas, message=FALSE, warning=FALSE}
 options(survey.lonely.psu = "adjust")
@@ -49,18 +55,30 @@ survey_design <- survey_data %>%
     ids = PSU,
     weights = wk,
     nest = TRUE
-)
+  )
 ```
 
-Como explica @Lumley2026, la opción `options(survey.lonely.psu = "adjust")` define cómo el paquete `survey` debe tratar los estratos que contienen una sola UPM en la muestra. En estos estratos no es posible calcular directamente la variabilidad entre UPM, porque no existe una segunda unidad con la cual realizar la comparación. Con el método `"adjust"`, la contribución de la UPM solitaria a la varianza se calcula centrando su estimación en la media general de las UPM de la muestra, en lugar de utilizar la media del propio estrato. Este ajuste evita que la contribución del estrato sea omitida o quede indefinida y suele producir una estimación conservadora de la varianza. La opción no modifica las estimaciones puntuales, sino únicamente sus varianzas, errores estándar e intervalos de confianza. Su aplicación debe distinguirse del caso de una UPM seleccionada con certeza, cuya contribución a la varianza debe especificarse mediante la información apropiada del diseño.
+Como explica @Lumley2026, la opción `options(survey.lonely.psu = "adjust")` define cómo el paquete `survey` debe tratar los estratos que contienen una sola UPM en la muestra. En estos estratos no es posible calcular directamente la variabilidad entre UPM, porque no existe una segunda unidad con la cual realizar la comparación. Con el método `"adjust"`, la contribución de la UPM solitaria a la varianza se calcula centrando su estimación en la media general de las UPM de la muestra, en lugar de utilizar la media del propio estrato. Este ajuste evita que la contribución del estrato sea omitida o quede indefinida y suele producir una estimación conservadora de la varianza. La opción no modifica las estimaciones puntuales, sino únicamente sus varianzas, errores estándar e intervalos de confianza. Su aplicación debe distinguirse del caso en el que una UPM sea seleccionada con probabilidad de inclusión uno. En cualquier caso, la contribución a la varianza debe especificarse mediante la información apropiada del diseño.
 
-En la implementación descrita por @FreedmanEllis2026, `survey_data` corresponde a la base de datos que contiene la muestra seleccionada. A partir de estos datos, la función `as_survey_design()` convierte la información en un objeto de clase `tbl_svy`, el cual almacena todos los elementos necesarios para describir el diseño muestral de la encuesta. Entre ellos se incluyen la variable de estratificación (`strata`), que identifica los estratos definidos en el diseño, y la variable especificada en `ids`, que representa las unidades primarias de muestreo (UPM) o conglomerados seleccionados en la primera etapa del muestreo. Asimismo, el argumento `weights` define la variable que contiene los factores de expansión asociados a cada observación. Finalmente, la opción `nest = TRUE` vuelve únicos dentro de cada estrato los identificadores de conglomerado que pudieran repetirse entre estratos.
+En la implementación descrita por @FreedmanEllis2026, `survey_data` corresponde a la base de datos que contiene la muestra seleccionada. A partir de estos datos, la función `as_survey_design()` convierte la información en un objeto de clase `tbl_svy`, el cual almacena todos los elementos necesarios para describir el diseño muestral de la encuesta. Entre ellos se incluyen la variable de estratificación (`strata`), que identifica los estratos definidos en el diseño, junto con la variable que representa las unidades primarias de muestreo (UPM) o conglomerados seleccionados en la primera etapa del muestreo (`ids`). Asimismo, el argumento `weights` define la variable que contiene los factores de expansión asociados a cada observación. Finalmente, la opción `nest = TRUE` vuelve únicos dentro de cada estrato los identificadores de conglomerado que pudieran repetirse entre estratos.
 
 ## Estimación de parámetros descriptivos {#estimacion-de-parametros-descriptivos}
 
-Según @sarndal2003model y @HeeringaWestBerglund2017, en las encuestas de hogares es común estimar parámetros descriptivos asociados a variables numéricas, tales como totales, medias, razones y desviaciones estándar. Estas medidas permiten caracterizar distintos fenómenos sociales y económicos de la población, por ejemplo el ingreso, el gasto, las horas trabajadas o el tamaño de los hogares. En esta sección se presentan la lógica detrás de la sintaxis utilizada para este tipo de estimación, junto con sus correspondientes medidas de precisión.
+En las encuestas de hogares es común estimar parámetros descriptivos asociados a variables numéricas, tales como totales, medias, razones y desviaciones estándar. Estas medidas permiten caracterizar distintos fenómenos sociales y económicos de la población. En esta sección se presenta la lógica detrás de la sintaxis utilizada para este tipo de estimación, junto con sus correspondientes medidas de precisión.
 
-### Estimación del total {#estimacion-del-total}
+### Totales {#estimacion-del-total}
+
+Como se ha señalado anteriormente, el total poblacional de una variable de interés puede estimarse de manera aproximadamente insesgada mediante el estimador de calibración [@DevilleSarndal1992], que pondera el valor observado en cada unidad por su correspondiente factor de expansión calibrado. En un diseño de muestreo con estratificación y selección en varias etapas, este estimador se expresa como:
+
+$$
+\hat{t}_y =
+\sum_{h}
+\sum_{i}
+\sum_{k}
+w_{hik}\,y_{hik},
+$$
+
+donde $h$ identifica el estrato, $i$ la unidad primaria de muestreo y $k$ la unidad final observada. El término $y_{hik}$ representa el valor de la variable de interés para la unidad $k$ perteneciente a la unidad primaria $i$ del estrato $h$, mientras que $w_{hik}$ corresponde a su factor de expansión. De este modo, cada unidad de la muestra representa a un determinado número de unidades de la población, y la suma ponderada permite reconstruir el total poblacional. 
 
 En `R`, la función `survey_total()` se utiliza para estimar totales a partir del objeto de diseño. Esta función incorpora automáticamente los factores de expansión y la estructura del diseño, garantizando que las estimaciones reflejen correctamente el modelo de inferencia.
 
@@ -83,35 +101,47 @@ El siguiente ejemplo presenta cómo estimar totales y sus intervalos de confianz
 
 ```{r cod-total-ingreso, eval=FALSE}
 survey_design %>%
-  summarise(total = survey_total(Income, vartype = c("se", "ci"), deff = TRUE))
+  summarise(
+    total = survey_total(Income, 
+                         vartype = c("se", "ci"), 
+                         deff = TRUE))
 ```
 ```{r}
 #| label: tbl-total-ingreso
 #| tbl-cap: "Estimación del total de ingresos de los hogares con intervalo de confianza al 95%"
 #| echo: false
 survey_design %>%
-  summarise(total = survey_total(Income, vartype = c("se", "ci"), deff = TRUE)) %>%
+  summarise(
+    total = survey_total(Income, 
+                         vartype = c("se", "ci"), 
+                         deff = TRUE)) %>%
   tabla_fmt()
 ```
 
-De la tabla, se obtiene que la estimación del total poblacional para el ingreso total es de 85.793.667. Este valor corresponde al estimador puntual obtenido a partir de la encuesta, incorporando los factores de expansión y las características del diseño muestral. El error estándar asociado a esta estimación es de 4.778.674, lo que refleja la variabilidad muestral del estimador. A partir de este valor se construye un intervalo de confianza del 95%, cuyos límites inferior y superior son 76.331.414 y 95.255.920, respectivamente. El efecto de diseño (`deff`), en el sentido desarrollado por @kish1965survey, es igual a 11, lo cual sugiere una pérdida importante de precisión asociada principalmente a las características del diseño complejo. En consecuencia, aunque el tamaño muestral nominal pueda ser grande, el tamaño muestral efectivo resultaría considerablemente menor debido al efecto combinado de la ponderación, la estratificación y la conglomeración; este valor no puede atribuirse exclusivamente a la correlación entre observaciones dentro de los conglomerados.
+De la tabla, se obtiene que la estimación del total poblacional para el ingreso total es de 85.793.667. Este valor corresponde al estimador puntual obtenido a partir de la encuesta, incorporando los factores de expansión y las características del diseño muestral. El error estándar asociado a esta estimación es de 4.778.674, lo que refleja la variabilidad muestral del estimador. A partir de este valor se construye un intervalo de confianza del 95%, cuyos límites inferior y superior son 76.331.414 y 95.255.920, respectivamente. El efecto de diseño (`deff`), en el sentido desarrollado por @kish1965survey, es igual a 11, lo cual sugiere una ligera pérdida de precisión asociada principalmente a las características del diseño complejo. En consecuencia, aunque el tamaño muestral nominal pueda ser grande, el tamaño muestral efectivo resultaría un poco menor debido al efecto combinado de la ponderación, la estratificación y la conglomeración.
 
-Para continuar ilustrando el uso de la función `survey_total()` dentro del enfoque de `srvyr`, estimemos el total de gastos de los hogares, pero ahora calculando el intervalo de confianza al 90%. El siguiente código realiza esta estimación, presentada en la @tbl-total-gasto:
+Para continuar ilustrando el uso de la función `survey_total()`, estimemos el total de gastos de los hogares, pero ahora calculando el intervalo de confianza al 90%. El siguiente código realiza esta estimación, presentada en la @tbl-total-gasto:
 
 ```{r cod-total-gasto, eval=FALSE}
 survey_design %>%
-  summarise(total = survey_total(Expenditure,
-                              vartype = "ci", level = 0.9,
-                              deff = TRUE))
+  summarise(total = survey_total(
+    Expenditure,
+    vartype = "ci",
+    level = 0.9,
+    deff = TRUE
+  ))
 ```
 ```{r}
 #| label: tbl-total-gasto
 #| tbl-cap: "Estimación del total de gastos de los hogares con intervalo de confianza al 90%"
 #| echo: false
 survey_design %>%
-  summarise(total = survey_total(Expenditure,
-                              vartype = "ci", level = 0.9,
-                              deff = TRUE)) %>%
+  summarise(total = survey_total(
+    Expenditure,
+    vartype = "ci",
+    level = 0.9,
+    deff = TRUE
+  )) %>%
   tabla_fmt()
 ```
 
@@ -121,10 +151,11 @@ Si el objetivo es estimar el total de ingresos de los hogares, pero desagregado 
 ```{r cod-total-ingreso-sexo, eval=FALSE}
 survey_design %>%
   group_by(Sex) %>%
-  cascade(total = survey_total(Income,
-                               vartype = c("se", "ci"),
-                               level = 0.95),
-          .fill = "Total income")
+  cascade(
+    total = survey_total(Income, 
+                         vartype = c("se", "ci"), 
+                         level = 0.95),
+    .fill = "Total income")
 ```
 ```{r}
 #| label: tbl-total-ingreso-sexo
@@ -132,16 +163,17 @@ survey_design %>%
 #| echo: false
 survey_design %>%
   group_by(Sex) %>%
-  cascade(total = survey_total(Income,
-                               vartype = c("se", "ci"),
-                               level = 0.95),
-          .fill = "Total income") %>%
+  cascade(
+    total = survey_total(Income, 
+                         vartype = c("se", "ci"), 
+                         level = 0.95),
+    .fill = "Total income") %>%
   tabla_fmt()
 ```
 
 Como se observa en los códigos anteriores, una forma práctica de obtener las estimaciones del total, su error estándar y su intervalo de confianza es mediante el argumento `vartype`, especificando las opciones `"se"` y `"ci"` respectivamente.
 
-### Estimación de la media {#estimacion-de-la-media}
+### Medias {#estimacion-de-la-media}
 
 Según @Gutierrez2016, la estimación de la media poblacional ocupa un lugar central en las encuestas de hogares, ya que muchos de los indicadores utilizados para el análisis socioeconómico corresponden a valores promedio, como el ingreso medio del hogar, el gasto per cápita o las horas promedio trabajadas. Este tipo de parámetros permite resumir el comportamiento general de las variables de interés y describir las tendencias centrales de la población objetivo. El estimador de la media poblacional puede expresarse como una razón no lineal entre dos totales poblacionales, los cuales se estiman de la siguiente manera:
 
@@ -160,127 +192,116 @@ Como se puede observar, el cálculo de la varianza de la media poblacional impli
 
 ```{r cod-media-ingreso, eval=FALSE}
 survey_design %>%
-  summarise(mean = survey_mean(Income,
-                                vartype = c("se", "ci"),
-                                level = 0.95,
-                                deff = TRUE))
+  summarise(mean = survey_mean(
+    Income,
+    vartype = c("se", "ci"),
+    level = 0.95,
+    deff = TRUE
+  ))
 ```
 ```{r}
 #| label: tbl-media-ingreso
 #| tbl-cap: "Estimación de la media de ingresos de los hogares"
 #| echo: false
 survey_design %>%
-  summarise(mean = survey_mean(Income,
-                                vartype = c("se", "ci"),
-                                level = 0.95,
-                                deff = TRUE)) %>%
+  summarise(mean = survey_mean(
+    Income,
+    vartype = c("se", "ci"),
+    level = 0.95,
+    deff = TRUE
+  )) %>%
   tabla_fmt()
 ```
 
-Como se aprecia, los argumentos utilizados en la función `survey_mean()` son similares a los de `survey_total()`. En este caso, `vartype` permite obtener el error estándar (`"se"`) y el intervalo de confianza (`"ci"`), mientras que el argumento `deff = TRUE` solicita el cálculo del efecto del diseño. De forma análoga, es posible estimar la media de los gastos de los hogares, empleando la misma estructura de código, presentada en la @tbl-media-gasto:
+Como se aprecia, los argumentos utilizados en la función `survey_mean()` son similares a los de `survey_total()`. En este caso, `vartype` permite obtener el error estándar (`"se"`) y el intervalo de confianza (`"ci"`), mientras que el argumento `deff = TRUE` solicita el cálculo del efecto del diseño. La estimación indica que el ingreso medio de los hogares en la población es de aproximadamente 571 dólares. El error estándar asociado es de 28,5, lo que refleja la incertidumbre muestral de la estimación. El intervalo de confianza, cuyos límites son 515 y 627, para un nivel de confianza del 95%. Además, el efecto de diseño estimado es de 8,82, lo que significa que la varianza de la media bajo el diseño muestral complejo es 8,82 veces mayor que la que se obtendría con un muestreo aleatorio simple de igual tamaño. Este valor evidencia una pérdida considerable de eficiencia, posiblemente asociada con la magnitud de la variabilidad del ingreso  entre las unidades primarias de muestreo.
+
+De forma análoga, es posible estimar la media de los gastos de los hogares, empleando la misma estructura de código, presentada en la @tbl-media-gasto:
 
 ```{r cod-media-gasto, eval=FALSE}
 survey_design %>%
-  summarise(mean = survey_mean(Expenditure,
-                                    vartype = c("se", "ci"),
-                                    level = 0.95,
-                                    deff = TRUE))
+  summarise(mean = survey_mean(
+    Expenditure,
+    vartype = c("se", "ci"),
+    level = 0.95,
+    deff = TRUE
+  ))
 ```
+
 ```{r}
 #| label: tbl-media-gasto
 #| tbl-cap: "Estimación de la media de gastos de los hogares"
 #| echo: false
 survey_design %>%
-  summarise(mean = survey_mean(Expenditure,
-                                    vartype = c("se", "ci"),
-                                    level = 0.95,
-                                    deff = TRUE)) %>%
+  summarise(mean = survey_mean(
+    Expenditure,
+    vartype = c("se", "ci"),
+    level = 0.95,
+    deff = TRUE
+  )) %>%
   tabla_fmt()
 ```
 
-También se pueden realizar estimaciones de la media por subgrupos siguiendo el mismo esquema mostrado previamente. Particularmente, los gastos de los hogares discriminados por sexo se presentan en la @tbl-media-gasto-sexo:
-
-
-```{r cod-media-gasto-sexo, eval=FALSE}
-survey_design %>%
-  group_by(Sex) %>%
-  cascade(mean = survey_mean(Expenditure,
-                              level = 0.95,
-                              vartype = c("se", "ci")),
-        .fill = "Mean expenditure") %>%
-  arrange(desc(Sex))
-```
-```{r}
-#| label: tbl-media-gasto-sexo
-#| tbl-cap: "Media de gastos de los hogares desagregada por sexo"
-#| echo: false
-survey_design %>%
-  group_by(Sex) %>%
-  cascade(mean = survey_mean(Expenditure,
-                              level = 0.95,
-                              vartype = c("se", "ci")),
-        .fill = "Mean expenditure") %>%
-  arrange(desc(Sex)) %>%
-  tabla_fmt()
-```
-
-De manera análoga, se pueden calcular las medias del gasto por zona, las cuales son presentadas en la @tbl-media-gasto-zona:
+La media estimada del gasto es de 371 dólares, con un error estándar de 13,3. El intervalo de confianza se extiende entre 344 y 397, mientras que el efecto de diseño de 6,02 indica una alta heterogeneidad entre las UPM de la muestra con respecto al gasto promedio. También se pueden realizar estimaciones de la media por subgrupos siguiendo el mismo esquema mostrado previamente. De manera análoga, se pueden calcular las medias del gasto por zona, las cuales son presentadas en la @tbl-media-gasto-zona:
 
 ```{r cod-media-gasto-zona, eval=FALSE}
 survey_design %>%
   group_by(Zone) %>%
-  cascade(mean = survey_mean(Expenditure,
-                              level = 0.95,
-                              vartype = c("se", "ci")),
-        .fill = "Mean expenditure") %>%
-  arrange(desc(Zone))
+  cascade(
+    mean = survey_mean(Expenditure,
+                       level = 0.95,
+                       vartype = c("se", "ci")),
+    .fill = "Mean expenditure")
 ```
+
 ```{r}
 #| label: tbl-media-gasto-zona
 #| tbl-cap: "Media de gastos de los hogares desagregada por zona"
 #| echo: false
 survey_design %>%
   group_by(Zone) %>%
-  cascade(mean = survey_mean(Expenditure,
-                              level = 0.95,
-                              vartype = c("se", "ci")),
-        .fill = "Mean expenditure") %>%
-  arrange(desc(Zone)) %>%
+  cascade(
+    mean = survey_mean(Expenditure, 
+                       level = 0.95,
+                       vartype = c("se", "ci")),
+    .fill = "Mean expenditure") %>%
   tabla_fmt()
 ```
 
-Asimismo, es posible realizar una estimación combinada por sexo y zona, presentada en la @tbl-media-gasto-zona-sexo:
+Al desagregar por zona, se observa que los hogares urbanos registran un gasto medio de 460, frente a 274 en los hogares rurales. Aunque los intervalos de confianza muestran mayor incertidumbre en la zona urbana, no se superponen, lo que sugiere una diferencia importante entre ambas zonas. Asimismo, es posible realizar una estimación combinada por zona y región, presentada en la @tbl-media-gasto-zona-reg:
 
 
 ```{r cod-media-gasto-zona-sexo, eval=FALSE}
 survey_design %>%
-  group_by(Zone, Sex) %>%
-  cascade(mean = survey_mean(Expenditure,
-                              level = 0.95,
-                              vartype = c("se", "ci")),
-        .fill = "Mean expenditure") %>%
-  arrange(desc(Zone), desc(Sex))
+  group_by(Zone, Region) %>%
+  cascade(
+    mean = survey_mean(Expenditure, 
+                       level = 0.95, 
+                       vartype = c("se", "ci")),
+    .fill = "Mean expenditure")
 ```
+
 ```{r}
-#| label: tbl-media-gasto-zona-sexo
-#| tbl-cap: "Media de gastos de los hogares desagregada por zona y sexo"
+#| label: tbl-media-gasto-zona-reg
+#| tbl-cap: "Media de gastos de los hogares desagregada por zona y región"
 #| echo: false
 survey_design %>%
-  group_by(Zone, Sex) %>%
-  cascade(mean = survey_mean(Expenditure,
-                              level = 0.95,
-                              vartype = c("se", "ci")),
-        .fill = "Mean expenditure") %>%
-  arrange(desc(Zone), desc(Sex)) %>%
+  group_by(Zone, Region) %>%
+  cascade(
+    mean = survey_mean(Expenditure, 
+                       level = 0.95, 
+                       vartype = c("se", "ci")),
+    .fill = "Mean expenditure") %>%
   tabla_fmt()
 ```
 
+El gasto medio varía de forma importante según la zona de residencia y la región. En el área rural, los mayores promedios se observan en las regiones Centro, Sur y Norte, mientras que Occidente y Oriente presentan los valores más bajos. En el área urbana, el gasto medio es superior en todas las regiones y alcanza sus niveles más altos en Centro, Sur y Oriente. No obstante, algunas estimaciones regionales, especialmente las de Centro rural y Sur urbano, presentan errores estándar relativamente elevados, por lo que deben interpretarse con mayor cautela.
 
-### Estimación de razones {#estimacion-de-razones}
 
-Según @sarndal2003model y @Gutierrez2016, un caso particular de funciones no lineales de totales es la razón poblacional, definida como el cociente entre dos totales poblacionales asociados a características de interés. Las razones permiten expresar la relación entre dos variables, lo cual resulta especialmente útil para construir indicadores comparativos y de seguimiento.
+### Razones {#estimacion-de-razones}
 
-De acuerdo con @FAO2026PoU, dado que la razón corresponde al cociente entre dos parámetros poblacionales desconocidos, tanto el numerador como el denominador deben ser estimados a partir de la muestra. Este tipo de parámetro es ampliamente utilizado en encuestas de hogares para construir indicadores relativos, por ejemplo, la cantidad de hombres por cada mujer, la proporción de personas ocupadas respecto a la población en edad de trabajar o la prevalencia de la subalimentación. Con la notación de @bautista1998, siendo $Y$ el total de la variable $y$ y $X$ el total de la variable $x$, la razón poblacional se define como $R = \frac{t_y}{t_x}$ y su estimador puntual en el marco de un muestreo complejo se expresa como:
+La razón poblacional es un parámetro no lineal definido como el cociente entre los totales de dos variables de interés. Permite cuantificar la relación entre ambas variables y resulta especialmente útil para construir indicadores relativos, comparar grupos y analizar su evolución a lo largo del tiempo. En las encuestas de hogares, este parámetro se utiliza ampliamente para calcular indicadores como el número de hombres por cada mujer, la proporción de personas ocupadas respecto de la población en edad de trabajar y la prevalencia de la subalimentación [@FAO2026PoU].
+
+Dado que la razón corresponde al cociente entre dos parámetros (totales) poblacionales desconocidos, tanto el numerador como el denominador deben ser estimados a partir de la muestra.  Siendo $t_y$ el total de la variable $y$ y $t_x$ el total de la variable $x$, la razón poblacional se define como $R = \frac{t_y}{t_x}$ y su estimador puntual se expresa como:
 
 $$
 \hat{R} = \frac{\hat{t}_y}{\hat{t}_x}
@@ -288,69 +309,49 @@ $$
        {\sum_{h}\sum_{i}\sum_{k} w_{hik} \ x_{hik}}
 $$
 
-Sin embargo, dado que $\hat{R}$ es un cociente entre dos estimadores, es decir, dos variables aleatorias, el cálculo de su varianza no es trivial. Para ello se emplea la linealización de Taylor o bien métodos de remuestreo. En particular, la función `survey_ratio()` implementa la estimación de razones y sus varianzas en el marco de encuestas complejas.
+Sin embargo, la estimación de la varianza de una razón requiere procedimientos específicos, entre los que destacan la linealización de Taylor y los métodos de remuestreo. En el contexto de encuestas complejas, la función `survey_ratio()` permite estimar razones poblacionales y obtener sus correspondientes medidas de precisión, incorporando adecuadamente las características del diseño muestral.
 
-Un ejemplo directo en encuestas de hogares es la razón entre el gasto y el ingreso, que ayuda a identificar patrones de consumo y niveles de sostenibilidad económica de los hogares. A continuación, se ilustra cómo estimar la razón entre el gasto y el ingreso de los hogares, presentada en la @tbl-razon-gasto-ingreso:
+Como primer ejemplo de aplicación, se estima la razón entre el número de mujeres y el número de hombres en la población representada por la base de datos. Este indicador permite examinar la composición de la población por sexo y detectar posibles diferencias en la presencia relativa de ambos grupos. Aunque está estrechamente relacionado con el índice de feminidad, en este caso se expresa directamente como una razón y, por tanto, no se multiplica por 100.
 
-
-```{r cod-razon-gasto-ingreso, eval=FALSE}
-survey_design %>%
-  summarise(ratio = survey_ratio(numerator = Expenditure,
-                                 denominator = Income,
-                                 level = 0.95,
-                                 vartype = c("se", "ci"))
-            )
-```
-```{r}
-#| label: tbl-razon-gasto-ingreso
-#| tbl-cap: "Razón gasto/ingreso de los hogares"
-#| echo: false
-survey_design %>%
-  summarise(ratio = survey_ratio(numerator = Expenditure,
-                                 denominator = Income,
-                                 level = 0.95,
-                                 vartype = c("se", "ci"))
-            ) %>%
-  tabla_fmt()
-```
-
-En este caso, se especificaron la variable de gasto como numerador (`numerator`), la variable de ingreso como denominador (`denominator`), el nivel de confianza (`level`) utilizado para la construcción de los intervalos de confianza y las medidas de precisión requeridas mediante el argumento (`vartype`). Como se puede observar, la razón entre el gasto y el ingreso es, aproximando, 0.65. Esto implica que, por cada 100 unidades monetarias que ingresan al hogar, se gastan aproximadamente 65; el intervalo de confianza al 95% va de 0.60 a 0.69.
-
-Si ahora el objetivo es estimar la razón entre mujeres y hombres en la base de ejemplo, se realiza de la siguiente manera, presentada en la @tbl-razon-sexo:
+Un valor igual a 1 indica que existe el mismo número de mujeres y hombres; un valor superior a 1 refleja una mayor cantidad de mujeres, mientras que un valor inferior a 1 señala una mayor cantidad de hombres. Por ejemplo, una razón de 1,05 indica que existen aproximadamente 1,05 mujeres por cada hombre, lo que equivale a una presencia ligeramente mayor de mujeres en la población. El procedimiento de estimación y los resultados obtenidos se presentan en la @tbl-razon-sexo:
 
 
 ```{r cod-razon-sexo, eval=FALSE}
 survey_design %>%
-  summarise(ratio = survey_ratio(numerator = (Sex == "Female"),
-                                 denominator = (Sex == "Male"),
-                                 level = 0.95,
-                                 vartype = c("se", "ci"))
-            )
+  summarise(ratio = survey_ratio(
+    numerator = (Sex == "Female"),
+    denominator = (Sex == "Male"),
+    level = 0.95,
+    vartype = c("se", "ci")
+  ))
 ```
 ```{r}
 #| label: tbl-razon-sexo
 #| tbl-cap: "Razón de mujeres por hombre en la población"
 #| echo: false
 survey_design %>%
-  summarise(ratio = survey_ratio(numerator = (Sex == "Female"),
-                                 denominator = (Sex == "Male"),
-                                 level = 0.95,
-                                 vartype = c("se", "ci"))
-            ) %>%
+  summarise(ratio = survey_ratio(
+    numerator = (Sex == "Female"),
+    denominator = (Sex == "Male"),
+    level = 0.95,
+    vartype = c("se", "ci")
+  )) %>%
   tabla_fmt()
 ```
 
-Dado que la variable sexo en la base de datos es categórica, fue necesario acudir a variables indicadoras para realizar el cálculo de la razón, utilizando `Sex == "Female"` para identificar a las mujeres y `Sex == "Male"` para los hombres. Los resultados muestran que en la población analizada hay una mayor cantidad de mujeres que de hombres, obteniéndose una razón estimada de 1.11. Esto indica que, por cada 100 hombres, existen aproximadamente 111 mujeres. Además, el intervalo de confianza al 95% sugiere que esta razón podría variar entre 1.04 y 1.18. Si se desea hacer la razón de mujeres y hombres pero en la zona rural, se haría de la siguiente manera, presentada en la @tbl-razon-sexo-rural:
+Dado que la variable sexo en la base de datos es categórica, fue necesario acudir a variables indicadoras para realizar el cálculo de la razón, utilizando `Sex == "Female"` para identificar a las mujeres y `Sex == "Male"` para los hombres. Los resultados muestran que en la población analizada hay una mayor cantidad de mujeres que de hombres, obteniéndose una razón estimada de 1.11. Esto indica que, por cada 100 hombres, existen aproximadamente 111 mujeres. Además, el intervalo de confianza al 95% sugiere que esta razón podría variar entre 1.04 y 1.18. La @tbl-razon-sexo-rural presenta la estimación de esta razón en la zona rural. Esta salida se obtuvo con la ejecución del siguiente código:
 
 ```{r cod-razon-sexo-rural, eval=FALSE}
 rural_subset <- survey_design %>%
   filter(Zone == "Rural")
+
 rural_subset %>%
-  summarise(ratio = survey_ratio(numerator = (Sex == "Female"),
-                                  denominator = (Sex == "Male"),
-                                  level = 0.95,
-                                  vartype = c("se", "ci"))
-            )
+  summarise(ratio = survey_ratio(
+    numerator = (Sex == "Female"),
+    denominator = (Sex == "Male"),
+    level = 0.95,
+    vartype = c("se", "ci")
+  ))
 ```
 ```{r}
 #| label: tbl-razon-sexo-rural
@@ -358,89 +359,99 @@ rural_subset %>%
 #| echo: false
 rural_subset <- survey_design %>%
   filter(Zone == "Rural")
+
 rural_subset %>%
-  summarise(ratio = survey_ratio(numerator = (Sex == "Female"),
-                                  denominator = (Sex == "Male"),
-                                  level = 0.95,
-                                  vartype = c("se", "ci"))
-            ) %>%
+  summarise(ratio = survey_ratio(
+    numerator = (Sex == "Female"),
+    denominator = (Sex == "Male"),
+    level = 0.95,
+    vartype = c("se", "ci")
+  )) %>%
   tabla_fmt()
 ```
 
-Ahora bien, otro análisis de interés es estimar la razón de gastos pero solo en la población femenina. A continuación, se presentan los códigos computacionales, como se muestra en la @tbl-razon-gasto-ingreso-mujer.
 
-```{r cod-razon-gasto-ingreso-mujer, eval=FALSE}
-female_subset <- survey_design %>%
-  filter(Sex == "Female")
+La razón estimada entre el número de mujeres y el número de hombres en la zona rural es de 1,07, lo que indica que el número de mujeres es cerca de un 7 % mayor que el de hombres. El intervalo de confianza se extiende de 0,997 a 1,14. Dado que el intervalo de confianza incluye el valor 1, no existe evidencia suficiente para concluir que la cantidad de mujeres difiere de la cantidad de hombres en la zona rural. 
 
-female_subset %>%
-  summarise(ratio = survey_ratio(numerator = Expenditure,
-                                 denominator = Income,
-                                 level = 0.95,
-                                 vartype = c("se", "ci"))
-            )
+Otro ejemplo frecuente de estimación de razones en las encuestas de hogares es la razón entre el gasto y el ingreso, la cual permite analizar patrones de consumo y aproximarse a la capacidad de los hogares para sostener sus niveles de gasto [@OECD2013ICW]. A continuación, se muestra cómo estimar este indicador, cuyos resultados se presentan en la @tbl-razon-gasto-ingreso:
+
+
+```{r cod-razon-gasto-ingreso, eval=FALSE}
+survey_design %>%
+  summarise(ratio = survey_ratio(
+    numerator = Expenditure,
+    denominator = Income,
+    level = 0.95,
+    vartype = c("se", "ci")
+  ))
+```
+```{r}
+#| label: tbl-razon-gasto-ingreso
+#| tbl-cap: "Razón gasto/ingreso de los hogares"
+#| echo: false
+survey_design %>%
+  summarise(ratio = survey_ratio(
+    numerator = Expenditure,
+    denominator = Income,
+    level = 0.95,
+    vartype = c("se", "ci")
+  )) %>%
+  tabla_fmt()
+```
+
+En este caso, se especificaron la variable de gasto como numerador (`numerator`), la variable de ingreso como denominador (`denominator`), el nivel de confianza (`level`) utilizado para la construcción de los intervalos de confianza y las medidas de precisión requeridas mediante el argumento (`vartype`). Como se puede observar, la razón entre el gasto y el ingreso es cercana a 0.65. Esto implica que, por cada 100 dólares que ingresan al hogar, se gastan aproximadamente 65; el intervalo de confianza al 95% va de 0.60 a 0.69.
+
+Ahora bien, otro análisis de interés es estimar la razón de gastos en cada una de las regiones. A continuación, se presentan los códigos computacionales, los cuales dan origen a las estimaciones presentadas en la @tbl-razon-gasto-ingreso-reg.
+
+```{r cod-razon-gasto-ingreso-reg, eval=FALSE}
+survey_design %>%
+  group_by(Region) %>%
+  summarise(ratio = survey_ratio(
+    numerator = Expenditure,
+    denominator = Income,
+    level = 0.95,
+    vartype = c("se", "ci")
+  ))
 ```
 
 ```{r}
-#| label: tbl-razon-gasto-ingreso-mujer
-#| tbl-cap: "Razón gasto/ingreso en hogares con jefatura femenina"
+#| label: tbl-razon-gasto-ingreso-reg
+#| tbl-cap: "Razón gasto/ingreso para las regiones"
 #| echo: false
-female_subset <- survey_design %>%
-  filter(Sex == "Female")
 
-female_subset %>%
-  summarise(ratio = survey_ratio(numerator = Expenditure,
-                                 denominator = Income,
-                                 level = 0.95,
-                                 vartype = c("se", "ci"))
-            ) %>%
+survey_design %>%
+  group_by(Region) %>%
+  summarise(ratio = survey_ratio(
+    numerator = Expenditure,
+    denominator = Income,
+    level = 0.95,
+    vartype = c("se", "ci")
+  )) %>%
   tabla_fmt()
 ```
 
-El resultado indica que, por cada 100 unidades monetarias que les ingresan a las mujeres, se gastan 66, con un intervalo de confianza entre 0.62 y 0.70. Por último, análogamente para los hombres, la razón de gastos resulta muy similar a la de las mujeres, como se muestra en la @tbl-razon-gasto-ingreso-hombre.
-
-```{r cod-razon-gasto-ingreso-hombre, eval=FALSE}
-male_subset <- survey_design %>%
-  filter(Sex == "Male")
-
-male_subset %>%
-  summarise(ratio = survey_ratio(numerator = Expenditure,
-                                 denominator = Income,
-                                 level = 0.95,
-                                 vartype = c("se", "ci"))
-            )
-```
-
-```{r}
-#| label: tbl-razon-gasto-ingreso-hombre
-#| tbl-cap: "Razón gasto/ingreso en hogares con jefatura masculina"
-#| echo: false
-male_subset <- survey_design %>%
-  filter(Sex == "Male")
-
-male_subset %>%
-  summarise(ratio = survey_ratio(numerator = Expenditure,
-                                 denominator = Income,
-                                 level = 0.95,
-                                 vartype = c("se", "ci"))
-            ) %>%
-  tabla_fmt()
-```
+La razón entre el gasto y el ingreso presenta diferencias entre las regiones. No obstante, los intervalos de confianza se superponen ampliamente, por lo que las diferencias observadas entre las regiones no necesariamente representan diferencias estadísticamente significativas. En conjunto, los resultados indican que los hogares destinan, en promedio, entre el 60 % y el 75 % de sus ingresos al gasto, con una mayor proporción en la región Centro.
 
 
 ## Estimación de parámetros de distribución y desigualdad {#estimacion-de-parametros-de-distribucion-y-desigualdad}
 
+El análisis de encuestas de hogares no se limita a la estimación de medidas descriptivas, pues también resulta fundamental describir la dispersión, la posición relativa de las observaciones y el grado de desigualdad de la distribución de las variables. Debido a su naturaleza no lineal, la forma funcional de los estimadores y la cuantificación de su incertidumbre deben tratarse usando procedimientos de linealización de Taylor o los métodos de replicación.
 
-### Estimación de la dispersión {#estimacion-de-la-dispersion}
 
-Según @Gutierrez2016 y @HeeringaWestBerglund2017, en las encuestas de hogares también es fundamental estimar medidas de dispersión de las variables estudiadas, ya que estas permiten evaluar el grado de heterogeneidad existente en la población. Por ejemplo, conocer qué tan dispersos son los ingresos de los hogares resulta clave para analizar desigualdades económicas y orientar el diseño de políticas públicas. Entre las medidas de dispersión más utilizadas se encuentra la desviación estándar, la cual cuantifica qué tan alejados se encuentran los valores observados respecto a su media. A continuación, se presenta el estimador de este parámetro:
+### Varianza y desviación estándar {#estimacion-de-la-dispersion}
+
+En las encuestas de hogares, la estimación de medidas de dispersión es fundamental para evaluar el grado de heterogeneidad de la población respecto de las variables analizadas. @SAS2012StdDev afimra que, ya sea que una encuesta mida el consumo de alcohol en la población adulta o el índice de masa corporal de los niños en edad escolar, una desviación estándar poblacional pequeña indica una mayor homogeneidad en la población, mientras que una desviación estándar grande indica una población más heterogénea.
+
+En particular, estudiar la variabilidad de los ingresos permite identificar diferencias económicas entre los hogares y aporta información relevante para el diagnóstico de la desigualdad y el diseño de políticas públicas. Una de las medidas de dispersión más utilizadas es la desviación estándar, que cuantifica cuánto se alejan, en promedio, los valores respecto de la media. Una desviación estándar pequeña indica que los ingresos se encuentran relativamente concentrados alrededor del promedio y, por tanto, que la población es más homogénea en términos económicos. Por el contrario, una desviación estándar elevada refleja una mayor dispersión y, en consecuencia, diferencias más marcadas entre los ingresos de los hogares. 
+
+De acuerdo con @HeeringaWestBerglund2017, la desviación estándar poblacional se estima mediante una transformación no lineal del estimador de la varianza poblacional, $\hat{S}_y^2$. Esta transformación incorpora, además, una corrección por grados de libertad basada en el número de observaciones válidas, denotado por $n$. En consecuencia, el estimador de la desviación estándar poblacional se expresa como:
 
 $$
-\hat s_y  =  \sqrt{\frac{n}{n-1}\frac{\sum_{h}\sum_{i}\sum_{k} w_{hik} \ \left(y_{hik}-\hat{\bar{y}}\right)^{2}}{\sum_{h}\sum_{i}\sum_{k} w_{hik}}}
+\hat s_y  =
+\sqrt{\frac{n}{n-1} \cdot \hat{S}^2_y} =  \sqrt{\frac{n}{n-1}\frac{\sum_{h}\sum_{i}\sum_{k} w_{hik} \ \left(y_{hik}-\hat{\bar{y}}\right)^{2}}{\sum_{h}\sum_{i}\sum_{k} w_{hik}}}
 $$
 
-Note que esta expresión contiene una corrección por grados de libertad que utiliza el número de observaciones válidas $n$. Para estimar la desviación estándar de variables numéricas en encuestas de hogares utilizando `R`, puede estimarse primero la varianza mediante `survey_var()` y luego obtener su raíz cuadrada. A continuación, se presenta un ejemplo de su uso aplicado a la estimación de la desviación estándar del ingreso, cuyos resultados se muestran en la @tbl-sd-ingreso-zona.
-
+El error estándar de este estimador puede aproximarse mediante linealización de Taylor o, equivalentemente, mediante el método delta [sarndal2003model]. Para estimar la desviación estándar de una variable numérica en encuestas de hogares mediante `R`, se estima primero la varianza poblacional con la función `survey_var()` y, posteriormente, se obtiene su raíz cuadrada. A continuación, se ilustra este procedimiento mediante la estimación de la desviación estándar del ingreso desagregada por zona.
 
 ```{r cod-sd-ingreso-zona, eval=FALSE}
 survey_design %>%
@@ -481,101 +492,37 @@ survey_design %>%
   tabla_fmt()
 ```
 
-Como se observó en el ejemplo anterior, se estimó la desviación estándar de los ingresos por zona, reportando además su correspondiente intervalo de confianza al 95%. Los argumentos de la función `survey_var()` son equivalentes a los utilizados previamente para la estimación de medias y totales. Si el interés es estimar la desviación estándar de los ingresos desagregando simultáneamente por sexo y zona, los códigos computacionales correspondientes se presentan en la @tbl-sd-ingreso-zona-sexo.
+Los argumentos de la función `survey_var()` son equivalentes a los utilizados previamente para la estimación de medias y totales. Los resultados de la @tbl-sd-ingreso-zona muestran que los ingresos presentan una dispersión considerablemente mayor en la zona urbana que en la rural. En la zona rural, la desviación estándar alcanza 310 dólares, mientras que en la zona rural se eleva a 582 dólares. Además, los intervalos de confianza de las desviaciones estándar no se superponen, lo que proporciona evidencia de que la variabilidad de los ingresos es efectivamente mayor en las áreas urbanas. 
 
+### Percentiles y medianas {#estimacion-de-percentiles}
 
-```{r cod-sd-ingreso-zona-sexo, eval=FALSE}
-survey_design %>%
-  group_by(Zone, Sex) %>%
-  summarise(
-    Var = survey_var(
-      Income,
-      level = 0.95,
-      vartype = c("se", "ci"),
-      na.rm = TRUE
-    )
-  ) %>%
-  mutate(
-    Sd     = sqrt(Var),
-    Sd_low = sqrt(Var_low),
-    Sd_upp = sqrt(Var_upp)
-  )
-```
-```{r}
-#| label: tbl-sd-ingreso-zona-sexo
-#| tbl-cap: "Desviación estándar de los ingresos desagregada por zona y sexo"
-#| echo: false
-survey_design %>%
-  group_by(Zone, Sex) %>%
-  summarise(
-    Var = survey_var(
-      Income,
-      level = 0.95,
-      vartype = c("se", "ci"),
-      na.rm = TRUE
-    )
-  ) %>%
-  mutate(
-    Sd     = sqrt(Var),
-    Sd_low = sqrt(Var_low),
-    Sd_upp = sqrt(Var_upp)
-  ) %>%
-  tabla_fmt()
-```
+Los percentiles permiten identificar puntos específicos de la distribución de una variable de interés y determinar los valores por debajo de los cuales se encuentra una proporción determinada de la población. En las encuestas de hogares, estas medidas resultan especialmente útiles para caracterizar la distribución de variables económicas y sociales, como el ingreso, el gasto o las horas trabajadas. Por ejemplo, los percentiles de ingreso pueden utilizarse para identificar a la población perteneciente al 10% superior de la distribución con fines tributarios [@UNECE2011Canberra], o para focalizar subsidios dirigidos a los hogares ubicados en los percentiles más bajos. La mediana, correspondinte al valor que divide a la población en dos partes iguales es poco sensible a valores extremos, razón por la cual suele considerarse una medida robusta de tendencia central.
 
-### Estimación de percentiles {#estimacion-de-percentiles}
-
-Según @SchulzeWaltrupKauermann2016 y @HeeringaWestBerglund2017, las medidas de posición no central, como los percentiles y la mediana, permiten identificar puntos específicos de la distribución de una variable de interés distintos de su valor promedio. En las encuestas de hogares, este tipo de medidas resulta especialmente útil para caracterizar la distribución de variables económicas y sociales, como el ingreso, el gasto o las horas trabajadas. La mediana, por ejemplo, corresponde al valor que divide a la población en dos partes iguales: el 50% de las observaciones se encuentra por debajo de dicho valor y el otro 50% por encima. A diferencia de la media, la mediana es poco sensible a valores extremos, razón por la cual suele considerarse una medida robusta de tendencia central.
-
-De manera similar, los percentiles permiten identificar segmentos específicos de la distribución poblacional. Por ejemplo, los percentiles de ingreso pueden utilizarse para identificar a la población perteneciente al 10% superior de la distribución con fines tributarios, o para focalizar subsidios dirigidos a los hogares ubicados en los percentiles más bajos. La estimación de cuantiles en encuestas complejas se basa en el uso de estimadores ponderados y en la estimación de la función de distribución acumulada (FDA) de la población. Para una población finita de tamaño $N$, un estimador de esta distribución está dado por:
+Los percentiles constituyen un caso particular de los cuantiles. En términos generales, el cuantil de orden $q$ (con $0 < q < 1$) es el valor que deja por debajo una proporción $q$ de la población. Cuando esta proporción se expresa en una escala de 0 a 100, el cuantil se denomina percentil. La estimación de cuantiles en encuestas complejas se basa en el uso de estimadores ponderados y en la estimación de la función de distribución acumulada (FDA) de la población [@SchulzeWaltrupKauermann2016]. Para una población finita de tamaño $N$, un estimador de esta distribución está dado por:
 
 $$
 \hat{F}\left(x\right) = \frac{\sum_{h} \sum_{i} \sum_{k} w_{hik} \ I\left(y_{k}\leq x\right)}{\sum_{h}\sum_{i}\sum_{k} w_{hik}}
 $$
 
-en donde la función $I\left(y_{k}\leq x\right)$ es una variable indicadora que toma el valor uno si $y_k \leq x$ y cero en otro caso.
-
-Una vez estimada la FDA utilizando los pesos del diseño muestral, el cuantil $q$-ésimo de una variable $y$ se define como el menor valor de $y$ para el cual la FDA es mayor o igual que $q$. En particular, la mediana corresponde al valor para el cual la FDA alcanza o supera 0.5; por tanto, la mediana estimada es el valor donde la FDA estimada es mayor o igual a 0.5. Para la estimación de cuantiles en encuestas complejas, se ordenan las observaciones en orden ascendente (estadísticas de orden) de forma que $y_{(1)} \leq y_{(2)} \leq \ldots \leq y_{(n)}$ y se identifica el valor de $j$ $(j=1,\ldots,n)$ tal que:
+en donde la función $I\left(y_{k}\leq x\right)$ es una variable indicadora que toma el valor uno si $y_k \leq x$ y cero en otro caso. Una vez estimada la FDA utilizando los pesos del diseño muestral, el cuantil $q$-ésimo de una variable $y$ se define como el menor valor de $y$ para el cual la FDA es mayor o igual que $q$. En particular, la mediana estimada es el valor donde la FDA estimada es mayor o igual a 0.5. Para la estimación de cuantiles en encuestas complejas, se ordenan las observaciones en orden ascendente (estadísticas de orden) de forma que $y_{(1)} \leq y_{(2)} \leq \ldots \leq y_{(n)}$ y se identifica el valor de $j$ $(j=1,\ldots,n)$ tal que:
 
 $$
 \hat{F}\left(y_{(j)}\right)\leq q\leq\hat{F}\left(y_{(j+1)}\right)
 $$
 
-Bajo esta condición, el estimador del cuantil $q$-ésimo se obtiene mediante interpolación lineal, la cual permite obtener estimaciones más estables y precisas de los cuantiles, especialmente cuando la FDA presenta saltos importantes asociados al uso de pesos muestrales. @Woodruff1952 fundamenta el método de inversión de la FDA como base para construir intervalos de confianza de cuantiles. En el caso de la varianza de percentiles y medianas, así como de la construcción de intervalos de confianza, @kovar1988 muestra que los métodos de replicación presentan buen desempeño para este tipo de parámetros no lineales en diseños complejos.
+Bajo esta condición, el estimador del cuantil $q$-ésimo se obtiene mediante interpolación lineal, la cual permite obtener estimaciones más estables y precisas de los cuantiles, especialmente cuando la FDA presenta saltos importantes asociados al uso de pesos muestrales.
 
-Tanto los estimadores de cuantiles como los métodos para estimar sus varianzas se encuentran implementados en `R`. En particular, la función `survey_median()` permite obtener la mediana junto con su error estándar e intervalo de confianza. A continuación, se presenta la sintaxis para estimar la mediana del gasto de los hogares utilizando la base de datos de ejemplo, cuyos resultados se muestran en la @tbl-mediana-gasto.
+@Woodruff1952 propone el método de inversión de la función de distribución acumulada como procedimiento para construir intervalos de confianza de cuantiles. Por su parte, @kovar1988 analiza la estimación de la varianza y la construcción de intervalos de confianza para percentiles y medianas, y muestra que los métodos de replicación presentan un desempeño satisfactorio para estos parámetros no lineales en encuestas con diseños muestrales complejos.
 
-```{r cod-mediana-gasto, eval=FALSE}
-survey_design %>%
-  summarise(median = survey_median(Expenditure,
-                                    level = 0.95,
-                                    vartype = c("se", "ci")
-                                    )
-            )
-```
-```{r}
-#| label: tbl-mediana-gasto
-#| tbl-cap: "Estimación de la mediana de los gastos de los hogares"
-#| echo: false
-survey_design %>%
-  summarise(median = survey_median(Expenditure,
-                                    level = 0.95,
-                                    vartype = c("se", "ci")
-                                    )
-            ) %>%
-  tabla_fmt()
-```
-
-Como puede observarse, los argumentos de la función `survey_median()` son equivalentes a los utilizados previamente para estimar totales y medias. Al igual que con otros parámetros poblacionales, la mediana también puede estimarse para distintos dominios de estudio, como zona geográfica, sexo o grupos de edad. La @tbl-mediana-gasto-zona muestra los resultados por zona geográfica.
+Tanto los estimadores de cuantiles como los métodos para estimar sus varianzas se encuentran implementados en `R`. En particular, la función `survey_median()` permite estimar la mediana y obtener, de manera conjunta, su error estándar y su intervalo de confianza. Al igual que otros parámetros poblacionales, la mediana puede estimarse para diferentes dominios de estudio, como la zona geográfica, el sexo o los grupos de edad. A continuación, se presenta la sintaxis empleada para estimar la mediana del gasto de los hogares por zona a partir de la base de datos de ejemplo.
 
 ```{r cod-mediana-gasto-zona, eval=FALSE}
 survey_design %>%
   group_by(Zone) %>%
-  summarise(median = survey_median(Expenditure,
-                                    level = 0.95,
-                                    vartype = c("se", "ci")
-                                    )
-            )
+  summarise(
+    median = survey_median(Expenditure, 
+                           level = 0.95, 
+                           vartype = c("se", "ci")))
 ```
 
 ```{r}
@@ -584,79 +531,58 @@ survey_design %>%
 #| echo: false
 survey_design %>%
   group_by(Zone) %>%
-  summarise(median = survey_median(Expenditure,
-                                    level = 0.95,
-                                    vartype = c("se", "ci")
-                                    )
-            ) %>%
+  summarise(
+    median = survey_median(Expenditure, 
+                           level = 0.95, 
+                           vartype = c("se", "ci"))) %>%
   tabla_fmt()
 ```
 
-Si el objetivo es estimar un percentil específico diferente de la mediana, por ejemplo el percentil 25 (primer cuartil), puede utilizarse la función `survey_quantile()` de la siguiente manera. Los resultados correspondientes se presentan en la @tbl-cuantil-gasto.
+A partir de la @tbl-mediana-gasto-zona se concluye que el ingreso mediano presenta una diferencia importante entre zonas. En el área rural, la mediana estimada es de 241 dólares, lo que indica que la mitad de la población rural tiene ingresos inferiores a este valor y la otra mitad registra ingresos superiores. En la zona urbana, la mediana asciende a 381 dólares, es decir, aproximadamente un 58 % más que en la zona rural. Los intervalos de confianza no se superponen, lo que sugiere una diferencia clara en los niveles centrales de ingreso entre ambas zonas. Aunque la estimación urbana presenta un error estándar mayor, los resultados muestran consistentemente que el ingreso mediano es más elevado en las áreas urbanas.
+
+Cuando el objetivo es estimar un percentil distinto de la mediana, puede utilizarse la función `survey_quantile()`. De acuerdo con @DorfmanValliant1993, algunos procedimientos para construir intervalos de confianza de cuantiles pueden presentar un desempeño menos satisfactorio que otras alternativas disponibles. En particular, el argumento `interval_type = "score"` emplea un método de inversión para determinar los límites del intervalo, en lugar de calcularlos directamente a partir de la función de influencia del percentil. 
+
+A modo de ejemplo, a continuación se presenta la sintaxis para estimar el percentil 25 del gasto. Los resultados obtenidos se muestran en la @tbl-cuantil-gasto.
 
 
 ```{r cod-cuantil-gasto, eval=FALSE}
 survey_design %>%
-  summarise(quantile = survey_quantile(Expenditure,
-                                quantiles = 0.25,
-                                level = 0.95,
-                                vartype = c("se", "ci"),
-                                interval_type = "score"
-                                )
-            )
+  summarise(
+    quantile = survey_quantile(
+      Expenditure,
+      quantiles = 0.25,
+      level = 0.95,
+      vartype = c("se", "ci"),
+      interval_type = "score"
+    )
+  )
 ```
 ```{r}
 #| label: tbl-cuantil-gasto
 #| tbl-cap: "Estimación del primer cuartil de los gastos de los hogares"
 #| echo: false
 survey_design %>%
-  summarise(quantile = survey_quantile(Expenditure,
-                                quantiles = 0.25,
-                                level = 0.95,
-                                vartype = c("se", "ci"),
-                                interval_type = "score"
-                                )
-            ) %>%
+  summarise(
+    quantile = survey_quantile(
+      Expenditure,
+      quantiles = 0.25,
+      level = 0.95,
+      vartype = c("se", "ci"),
+      interval_type = "score"
+    )
+  ) %>%
   tabla_fmt()
 ```
 
-En el marco metodológico de @DorfmanValliant1993 y en las implementaciones descritas por @FreedmanEllis2026 y @Lumley2026, el método basado en una prueba *score* puede producir resultados menos satisfactorios que otros procedimientos disponibles. El argumento `interval_type = "score"` no calcula el intervalo de confianza a partir de la función de influencia del percentil; en su lugar, obtiene los límites buscando los valores del parámetro que no serían rechazados por una prueba *score* robusta. Aquí se utiliza para mantener la coherencia con el código presentado. De manera análoga, la estimación del percentil 25 puede obtenerse para distintos subgrupos de la población, como sexo o zona geográfica, utilizando `group_by()`, tal como se muestra en la @tbl-cuantil-gasto-zona-sexo.
+De los resultados anteriores, el percentil 25 del gasto se estima en 200 dólares, lo que indica que aproximadamente una cuarta parte de la población presenta niveles de gasto iguales o inferiores a este valor, mientras que el 75 % restante registra gastos superiores. El error estándar de 13,8 dólares refleja la incertidumbre asociada a la estimación.
 
+### El coeficiente de Gini y la curva de Lorenz {#estimacion-del-coeficiente-de-gini}
 
-```{r cod-cuantil-gasto-zona-sexo, eval=FALSE}
-survey_design %>%
-  group_by(Zone, Sex) %>%
-  summarise(quantile = survey_quantile(Expenditure,
-                                quantiles = 0.25,
-                                level = 0.95,
-                                vartype = c("se", "ci"),
-                                interval_type = "score"
-                                )
-            )
-```
-```{r}
-#| label: tbl-cuantil-gasto-zona-sexo
-#| tbl-cap: "Primer cuartil de los gastos desagregado por zona y sexo"
-#| echo: false
-survey_design %>%
-  group_by(Zone, Sex) %>%
-  summarise(quantile = survey_quantile(Expenditure,
-                                quantiles = 0.25,
-                                level = 0.95,
-                                vartype = c("se", "ci"),
-                                interval_type = "score"
-                                )
-            ) %>%
-  tabla_fmt()
-```
+El tema sobre desigualdad económica trasciende el ámbito estrictamente estadístico y constituye uno de los temas centrales del análisis social contemporáneo. La desigualdad económica se relaciona con la persistencia de brechas en el acceso a oportunidades, la baja movilidad social y el debilitamiento de la cohesión social. En este contexto, su medición rigurosa resulta fundamental para producir diagnósticos sólidos y orientar el diseño, la implementación y la evaluación de políticas públicas integrales dirigidas a reducir las desigualdades y promover el desarrollo social inclusivo [@CEPAL2025PanoramaSocial, pp. 32-33].
 
-### Estimación del coeficiente de Gini {#estimacion-del-coeficiente-de-gini}
+Entre los indicadores más ampliamente utilizados para cuantificar la desigualdad económica se encuentra el coeficiente de Gini ($G$), el cual mide el grado de concentración del ingreso comparando la distribución observada con una situación hipotética de igualdad perfecta. Este coeficiente toma valores entre 0 y 1, donde $G = 0$ representa igualdad perfecta y $G = 1$ corresponde al máximo nivel de desigualdad posible. En consecuencia, cuanto más cercano a uno sea el coeficiente, mayor será la concentración del ingreso en una proporción reducida de la población.
 
-Como plantean @BinderKovacevic1995, el tema sobre desigualdad económica trasciende el ámbito estrictamente estadístico y constituye uno de los temas centrales del análisis social contemporáneo. Existe un amplio consenso respecto a la importancia de comprender cómo las desigualdades económicas condicionan las oportunidades, el bienestar y la calidad de vida de las personas. En este sentido, la medición rigurosa de la desigualdad representa un insumo fundamental para el diseño, seguimiento y evaluación de políticas públicas orientadas a la equidad social.
-
-Según @LangelTille2013, entre los indicadores más ampliamente utilizados para cuantificar la desigualdad económica se encuentra el coeficiente de Gini ($G$), el cual mide el grado de concentración del ingreso comparando la distribución observada con una situación hipotética de igualdad perfecta. Este coeficiente toma valores entre 0 y 1, donde $G = 0$ representa igualdad perfecta y $G = 1$ corresponde al máximo nivel de desigualdad posible. Valores más elevados indican una mayor concentración del ingreso en un grupo reducido de la población.
-
-En el contexto de las encuestas de hogares, la estimación del coeficiente de Gini debe incorporar adecuadamente las características del diseño muestral, incluyendo los factores de expansión, la estratificación y la conglomeración. En muchos casos, los pesos muestrales son previamente normalizados con el fin de simplificar los procedimientos de estimación y facilitar el procesamiento computacional. El estimador del coeficiente de Gini puede expresarse como:
+En el contexto de las encuestas de hogares, la estimación del coeficiente de Gini debe incorporar adecuadamente las características del diseño muestral, incluyendo los factores de expansión, la estratificación y la conglomeración. Siguiendo a @BinderKovacevic1995 y @LangelTille2013, el estimador ponderado del coeficiente de Gini puede expresarse en función de la posición acumulada de cada observación en la distribución del ingreso, así:
 
 $$
 \hat{G} = \frac{2\sum_{h}\sum_{i}\sum_{k}w_{hik}^{*}
@@ -665,17 +591,22 @@ $$
 
 donde $w_{hik}^{*}=\dfrac{w_{hik}}{\sum_{h}\sum_{i}\sum_{k}w_{hik}}$ corresponde al peso muestral normalizado, $\hat{F}_{hik}$ representa la función de distribución acumulada (FDA) estimada para la observación $k$ dentro del conglomerado $i$ del estrato $h$, y $\hat{\bar{y}}$ denota la media ponderada de la variable de ingreso en la población.
 
-De acuerdo con @osier2009variance y @convey2024, la literatura especializada profundiza en aspectos técnicos adicionales, especialmente en lo relacionado con la estimación de la varianza del coeficiente de Gini bajo diseños complejos. El paquete `convey` implementa procedimientos para calcular el coeficiente de Gini y su varianza en encuestas de hogares. Primero, se prepara el diseño muestral mediante `convey_prep()`. Luego, la función `svygini()` calcula el índice de Gini utilizando la variable de ingreso y el diseño de encuesta complejo especificado. A continuación se muestra la sintaxis para estimarlo en la base de datos de ejemplo, presentada en la @tbl-gini:
+Con respecto a la estimación de la varianza, @osier2009variance desarrolla un procedimiento de linealización que aproxima el estimador no lineal mediante una variable linealizada. A partir de este desarrollo, @convey2024 presenta su implementación en `R` mediante la función `svygini()`. Para ello, primero se prepara el diseño muestral mediante `convey_prep()`. Luego, la función `svygini()` calcula el índice de Gini utilizando la variable de ingreso y el diseño de encuesta complejo especificado. 
+
+A continuación, se presenta la sintaxis utilizada para estimar el coeficiente de Gini en la base de datos de ejemplo, cuyos resultados se muestran en la @tbl-gini.
+
 
 ```{r cod-gini, eval=FALSE}
 library(convey)
 gini_design <- convey_prep(survey_design)
-gini <- svygini(~Income, design = gini_design)
+gini <- svygini( ~ Income, design = gini_design)
 
-data.frame(Gini = coef(gini),
-           standard_error = SE(gini),
-           ci_lower = confint(gini)[1],
-           ci_upper = confint(gini)[2])
+data.frame(
+  Gini = coef(gini),
+  standard_error = SE(gini),
+  ci_lower = confint(gini)[1],
+  ci_upper = confint(gini)[2]
+)
 ```
 
 ```{r}
@@ -684,21 +615,24 @@ data.frame(Gini = coef(gini),
 #| echo: false
 library(convey)
 gini_design <- convey_prep(survey_design)
-gini <- svygini(~Income, design = gini_design)
+gini <- svygini( ~ Income, design = gini_design)
 
-data.frame(Gini = coef(gini),
-           standard_error = SE(gini),
-           ci_lower = confint(gini)[1],
-           ci_upper = confint(gini)[2]) %>%
+data.frame(
+  Gini = coef(gini),
+  standard_error = SE(gini),
+  ci_lower = confint(gini)[1],
+  ci_upper = confint(gini)[2]
+) %>%
   tabla_fmt()
 ```
 
+El coeficiente de Gini estimado indica un grado apreciable de desigualdad en la distribución del ingreso y evidencia una concentración relevante de los ingresos en una parte de la población. 
 
-Como explica @kovacevic1997, si el interés se centra en la estimación de la curva de Lorenz, es importante recordar que esta representa la relación entre el porcentaje acumulado de la población (ordenada desde los hogares con menores ingresos hasta aquellos con mayores ingresos) y la proporción acumulada del ingreso total que concentra dicha población. La línea diagonal de 45 grados corresponde a una situación hipotética de igualdad perfecta, en la cual todos los individuos participan proporcionalmente del ingreso total.
+Por su parte, la curva de Lorenz representa gráficamente la distribución del ingreso mediante la relación entre la proporción acumulada de la población, ordenada de menor a mayor ingreso, y la proporción acumulada del ingreso total que le corresponde [@Lorenz1905]. La diagonal de 45 grados representa una situación hipotética de igualdad perfecta, en la que cada proporción acumulada de la población concentra una proporción equivalente del ingreso total. 
 
-El área comprendida entre la curva de Lorenz y la diagonal de igualdad se conoce como el área de Lorenz, y el coeficiente de Gini puede interpretarse como el doble de esta área relativa. En consecuencia, cuanto más cercana se encuentre la curva de Lorenz a la diagonal, mayor será el nivel de equidad en la distribución del ingreso; por el contrario, curvas más alejadas reflejan mayores niveles de desigualdad económica.
+El coeficiente de Gini se obtiene como la razón entre el área comprendida entre la curva de Lorenz y la línea de igualdad y el área total situada bajo dicha línea [@Deaton1997]. Dado que esta última área es igual a un medio, el coeficiente también puede expresarse como el doble del área situada entre ambas curvas. En consecuencia, cuanto más próxima se encuentre la curva de Lorenz a la línea de igualdad, más equitativa será la distribución del ingreso; por el contrario, una mayor distancia entre ambas indica un grado más elevado de desigualdad.
 
-Para realizar la curva de Lorenz en `R` se utiliza la función `svylorenz()`, presentada en la @fig-lorenz:
+En encuestas con diseños muestrales complejos, la estimación de las ordenadas de la curva de Lorenz y de sus varianzas debe incorporar las ponderaciones y las demás características del diseño muestral [@KovacevicBinder1997]. Para realizar la curva de Lorenz en `R` se utiliza la función `svylorenz()`:
 
 ```{r fig-lorenz, fig.cap="Curva de Lorenz estimada para el ingreso de los hogares", fig.align="center", out.width="65%"}
 clorenz <- svylorenz(
@@ -712,13 +646,14 @@ clorenz <- svylorenz(
 
 El argumento `formula = ~Income` especifica la variable de ingreso sobre la cual se calculará la distribución acumulada. El argumento `design = gini_design` indica el objeto de diseño muestral previamente definido, el cual contiene la información relacionada con pesos, estratos y conglomerados de la encuesta. Por su parte, `quantiles = seq(0, 1, .05)` define los puntos de la distribución en los cuales se evaluará la curva de Lorenz, generando percentiles desde 0 hasta 1 en incrementos de 0.05. Finalmente, el argumento `alpha = .01` establece un nivel de significación del 1%, lo que equivale a construir intervalos de confianza del 99% para las estimaciones asociadas a la curva.
 
-### Estimación de la correlación {#estimacion-de-la-correlacion}
+A partir de la @fig-lorenz, se observa un grado considerable de desigualdad en la distribución del ingreso per cápita, dado que la curva de Lorenz se sitúa claramente por debajo de la línea de igualdad perfecta. Su marcada curvatura muestra que los grupos ubicados en la parte inferior de la distribución concentran una proporción reducida del ingreso total, mientras que una participación considerable se acumula entre las personas de mayores ingresos. La separación entre ambas líneas se amplía progresivamente hacia los tramos superiores, lo que refleja una mayor concentración del ingreso en estos grupos. Por su parte, la banda sombreada representa la incertidumbre asociada a la estimación de la curva.
 
-Según @HeeringaWestBerglund2017 y @Long2026Svycor, en el estudio de encuestas de hogares, además de describir variables de forma individual, resulta fundamental analizar cómo se relacionan entre sí. Una de las herramientas más utilizadas para este propósito es el coeficiente de correlación de Pearson, el cual mide la fuerza y la dirección de la relación lineal entre dos variables numéricas. Este coeficiente toma valores entre –1 y 1. Un valor positivo indica que ambas variables tienden a aumentar simultáneamente, mientras que un valor negativo señala que cuando una variable aumenta, la otra tiende a disminuir. Por su parte, valores cercanos a cero sugieren la ausencia de una relación lineal fuerte entre las variables analizadas.
+### Correlaciones {#estimacion-de-la-correlacion}
 
-Por ejemplo, en una encuesta de hogares puede ser de interés estudiar si existe una asociación entre el ingreso de los hogares y su nivel de gasto, así como evaluar la magnitud de dicha relación. Este tipo de análisis permite comprender mejor los patrones económicos y sociales observados en la población.
+En el estudio de encuestas de hogares, además de describir variables de forma individual, es importante analizar cómo se relacionan dos variables entre sí. Una de las herramientas más utilizadas para este propósito es el coeficiente de correlación de Pearson, el cual mide la fuerza y la dirección de la relación lineal entre dos variables numéricas. Este coeficiente toma valores entre –1 y 1. Un valor positivo indica que ambas variables tienden a aumentar simultáneamente, mientras que un valor negativo señala que cuando una variable aumenta, la otra tiende a disminuir. Por su parte, valores cercanos a cero sugieren la ausencia de una relación lineal fuerte entre las variables analizadas. Por ejemplo, en una encuesta de hogares puede ser de interés estudiar qué tan fuerte es la asociación entre el ingreso de los hogares y su nivel de gasto. Este tipo de análisis permite comprender mejor los patrones económicos y sociales en la población. 
 
-De acuerdo con @sarndal2003model, en encuestas complejas, es necesario incorporar los pesos muestrales para que la estimación sea representativa de la población, además de las variables de estratificación y conglomeración, que intervienen principalmente en la estimación de la incertidumbre de los estimadores. El cálculo ponderado implica evaluar la covarianza entre las dos variables y dividirla entre el producto de sus desviaciones estándar ponderadas, eliminando así la influencia de las unidades de medida. Asumiendo que $\hat{\bar{x}}$ es una estimación de la media poblacional de la variable $x$, entonces el coeficiente de correlación de Pearson ajustado por pesos se expresa como:
+Supóngase que se dispone de dos variables numéricas de interés, denotadas por $x$ y $y$, observadas en la encuesta compleja. De acuerdo con @HeeringaWestBerglund2017, la asociación lineal entre ambas variables puede estimarse mediante el coeficiente de correlación de Pearson ponderado, definido como la covarianza ponderada entre $x$ y $y$ dividida por el producto de sus desviaciones estándar ponderadas. Esta estandarización elimina la influencia de las unidades de medida y permite evaluar tanto la dirección como la intensidad de la relación lineal. Si $\hat{\bar{x}}$ y $\hat{\bar{y}}$ representan las estimaciones de las medias poblacionales de $x$ y $y$, respectivamente, el coeficiente de correlación ponderado se expresa como:
+:
 
 $$
 \hat{\rho}_{xy} = \frac{\displaystyle \sum_{h} \sum_{i} \sum_{k} w_{hik} (y_{hik} - \hat{\bar{y}})(x_{hik} - \hat{\bar{x}})} {\sqrt{\displaystyle \sum_{h} \sum_{i} \sum_{k} w_{hik} (y_{hik} - \hat{\bar{y}})^2} \sqrt{\displaystyle \sum_{h} \sum_{i} \sum_{k} w_{hik} (x_{hik} - \hat{\bar{x}})^2}}
@@ -755,13 +690,16 @@ sd_y <- sqrt(cov_matrix[2, 2])
 weighted_cor <- cov_xy / (sd_x * sd_y)
 weighted_cor
 ```
-Si además se desea realizar inferencia estadística sobre la correlación, por ejemplo obtener errores estándar o intervalos de confianza, pueden utilizarse métodos de replicación (bootstrap/jackknife) compatibles con el paquete `survey`. Otra opción es utilizar la función `svycor()` del paquete `jtools` para estimar directamente la correlación:
+Si además se desea realizar inferencia estadística sobre la correlación, por ejemplo obtener errores estándar o intervalos de confianza, pueden utilizarse métodos de replicación (bootstrap/jackknife) compatibles con el paquete `survey`. Otra opción es utilizar la función `svycor()` del paquete `jtools` [@Long2026Svycor] para estimar directamente la correlación:
 
 ```{r cod-correlacion-jtools}
 library(jtools)
 
 svycor(~Income + Expenditure, design = survey_design)
 ```
+
+La correlación entre el ingreso y el gasto es relativamente alta, con un coeficiente de Pearson estimado de 0,71. Esto indica que, en términos generales, los hogares con mayores ingresos tienden a registrar también niveles de gasto más elevados. Los valores iguales a 1 en la diagonal corresponden a la correlación de cada variable consigo misma. Finalmente, este resultado refleja una asociación lineal y no debe interpretarse como evidencia de una relación causal.
+
 
 ## Pruebas de hipótesis {#pruebas-de-hipotesis}
 
@@ -1088,7 +1026,7 @@ sex_mean %>%
   tabla_fmt()
 ```
 
-En este caso, el contraste de interés está dado por $\bar{y}_{F} - \bar{y}_{M}$, el cual permite cuantificar la diferencia entre el ingreso medio de las mujeres y el correspondiente a los hombres. A continuación, utilizando la función `svycontrast()` del paquete `survey`, se obtiene la estimación del contraste, cuyos resultados se presentan en la @tbl-contraste-sexo. A partir de estos resultados, se concluye que, en promedio, los hombres perciben 28.3 unidades monetarias más que las mujeres, con un error estándar estimado de 20.8 unidades monetarias.
+En este caso, el contraste de interés está dado por $\bar{y}_{F} - \bar{y}_{M}$, el cual permite cuantificar la diferencia entre el ingreso medio de las mujeres y el correspondiente a los hombres. A continuación, utilizando la función `svycontrast()` del paquete `survey`, se obtiene la estimación del contraste, cuyos resultados se presentan en la @tbl-contraste-sexo. A partir de estos resultados, se concluye que, en promedio, los hombres perciben 28.3 dólares más que las mujeres, con un error estándar estimado de 20.8 dólares.
 
 ```{r cod-contraste-sexo}
 contrast_sex <- svycontrast(
