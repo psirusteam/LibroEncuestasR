@@ -1303,7 +1303,7 @@ Tabla&nbsp;4.12: Proporción en condición de desempleo por región
 0 &amp; 0 &amp; 0 &amp; 1 &amp; -1
 \end{array}\right]
 \]</span></p>
-<p>Para calcular los errores estándar asociados a cada uno de los contrastes anteriores, es necesario considerar no solo las varianzas de las estimaciones regionales, sino también las covarianzas entre ellas. Esta información se resume en la matriz de varianzas y covarianzas de las proporciones estimadas de desempleo por región, presentada en la <a href="#tbl-vcov-desempleo-region" class="quarto-xref">tabla&nbsp;<span>4.13</span></a>:</p>
+<p>Para calcular los errores estándar asociados a cada uno de los contrastes anteriores, es necesario considerar no solo las varianzas de las estimaciones regionales, sino también las covarianzas entre ellas.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>region_unemployment_vcov <span class="ot">&lt;-</span> <span class="fu">vcov</span>(region_unemployment_contrast)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1374,7 +1374,7 @@ Tabla&nbsp;4.13: Matriz de varianzas y covarianzas de la proporción de desemple
 </figure>
 </div>
 </div>
-<p>Nótese que, en este caso, las covarianzas entre las estimaciones regionales son iguales a cero debido a que las muestras seleccionadas en cada región son independientes entre sí. Por tanto, el error estándar de cada contraste se obtiene aplicando la expresión de la varianza para la diferencia entre dos estimadores. Para verificar los resultados sin introducir errores de redondeo, los cálculos siguientes toman las varianzas y covarianzas directamente de la matriz presentada en la <a href="#tbl-vcov-desempleo-region" class="quarto-xref">tabla&nbsp;<span>4.13</span></a>:</p>
+<p>La matriz de varianzas y covarianzas presentada en la <a href="#tbl-vcov-desempleo-region" class="quarto-xref">tabla&nbsp;<span>4.13</span></a> muestra que las covarianzas entre las estimaciones regionales son iguales a cero, lo que refleja la independencia entre las muestras seleccionadas en cada región. A continuación se estiman los errores estándar asociados a acada contraste.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Norte - Centro</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(</span>
@@ -1424,16 +1424,15 @@ west_east      0.0105 0.0176</code></pre>
 </section>
 <section id="pruebas-de-hipotesis-sobre-proporciones" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="pruebas-de-hipotesis-sobre-proporciones"><span class="header-section-number">4.4</span> Pruebas de hipótesis sobre proporciones</h2>
-<p>Las pruebas de hipótesis también permiten evaluar si las diferencias observadas entre proporciones estimadas para distintos grupos reflejan diferencias en la población o si pueden atribuirse al error de muestreo <span class="citation" data-cites="korn1995analysis">(<a href="references.html#ref-korn1995analysis" role="doc-biblioref">Korn y Graubard 1995</a>)</span>. En encuestas de hogares, estos contrastes deben incorporar las características del diseño muestral para estimar correctamente la variabilidad de las proporciones y realizar inferencias válidas.</p>
-<p>Supóngase que <span class="math inline">\(p_H\)</span> representa la proporción de hombres desocupados y <span class="math inline">\(p_M\)</span> la proporción de mujeres desocupadas dentro de la población económicamente activa. El parámetro de interés corresponde a la diferencia entre ambas proporciones:</p>
+<p>Las pruebas de hipótesis también permiten evaluar si las diferencias observadas entre proporciones estimadas para distintos grupos reflejan diferencias en la población o si pueden atribuirse al error de muestreo <span class="citation" data-cites="korn1995analysis">(<a href="references.html#ref-korn1995analysis" role="doc-biblioref">Korn y Graubard 1995</a>)</span>. Supóngase que <span class="math inline">\(p_H\)</span> representa la proporción de hombres desocupados y <span class="math inline">\(p_M\)</span> la proporción de mujeres desocupadas dentro de la población económicamente activa. El parámetro de interés corresponde a la diferencia entre ambas proporciones:</p>
 <p><span class="math display">\[
 \Delta_p = p_H - p_M.
 \]</span></p>
 <p>Para evaluar si las proporciones de desocupación de hombres y mujeres son diferentes, se plantea el siguiente sistema de hipótesis bilateral:</p>
 <p><span class="math display">\[
 \begin{cases}
-H_{0}: &amp; \Delta_p = 0 \quad (p_H = p_M) \\
-H_{1}: &amp; \Delta_p \neq 0 \quad (p_H \neq p_M).
+H_{0}: &amp; \Delta_p = 0  \\
+H_{1}: &amp; \Delta_p \neq 0
 \end{cases}
 \]</span></p>
 <p>El estimador muestral de esta diferencia se define como <span class="math inline">\(\hat{\Delta}_p = \hat{p}_H - \hat{p}_M\)</span>. Su error estándar debe considerar tanto las varianzas de las proporciones estimadas como la covarianza entre ellas:</p>
@@ -1453,26 +1452,90 @@ t =
 \frac{\hat{\Delta}_p}
 {\widehat{se}(\hat{\Delta}_p)} \sim t_{df},
 \]</span></p>
-<p>el cual sigue aproximadamente una distribución <span class="math inline">\(t\)</span> de Student con los grados de libertad determinados por el diseño muestral. Bajo la hipótesis nula, valores absolutos elevados del estadístico <span class="math inline">\(t\)</span> proporcionan evidencia en contra de la igualdad de las proporciones.</p>
-<p>Para implementar esta prueba, la condición de desocupación se representa mediante una variable indicadora que toma el valor uno para las personas desocupadas y cero para las ocupadas. La media de esta variable dentro de cada grupo corresponde a la proporción de personas desocupadas. Además, el análisis debe restringirse a la población económicamente activa, por lo que se excluyen las personas inactivas y las observaciones con valores perdidos en <code>Employment</code>.</p>
-<p>En <code>R</code>, la función <code>svyttest()</code> del paquete <code>survey</code> permite contrastar la diferencia entre las medias de esta variable binaria y, por tanto, la diferencia entre las proporciones de desocupación de hombres y mujeres, incorporando los ajustes asociados al diseño muestral. El procedimiento y sus resultados se presentan en la Tabla @ref(tab:tab-ttest-desempleo-sexo).</p>
+<p>el cual sigue aproximadamente una distribución <span class="math inline">\(t\)</span> de Student con <span class="math inline">\(df\)</span> grados de libertad, determinados por el diseño de muestreo. Bajo la hipótesis nula, valores absolutos elevados del estadístico <span class="math inline">\(t\)</span> proporcionan evidencia en contra de la igualdad de las proporciones.</p>
+<p>Supóngase que el objetivo es evaluar, mediante una prueba de hipótesis, si la tasa de desempleo difiere significativamente entre hombres y mujeres. Para implementar esta prueba, se utiliza la variable indicadora <code>unemployed</code>, definida previamente, que toma el valor de uno para las personas desocupadas y de cero para el resto. Dado que la tasa de desempleo se calcula exclusivamente sobre la población económicamente activa, el análisis debe restringirse a las personas ocupadas y desocupadas, excluyendo tanto a la población inactiva como a las observaciones con valores perdidos en la variable <code>Employment</code>, que incluyen a los menores de edad. En consecuencia, la media de <code>unemployed</code> dentro de cada grupo de sexo corresponde a la proporción estimada de personas desocupadas, lo que permite contrastar formalmente ambas tasas.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pea_design <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>lf_design <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(Employment),</span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    Employment <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Employed"</span>, <span class="st">"Unemployed"</span>)</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  )  </span>
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>ttest_unemployment_sex <span class="ot">&lt;-</span> <span class="fu">svyttest</span>(</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  unemployed <span class="sc">~</span> Sex,</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> pea_design,</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">level =</span> <span class="fl">0.95</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>lf_design <span class="sc">%&gt;%</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex) <span class="sc">%&gt;%</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">proportion =</span> <span class="fu">survey_mean</span>(</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>      unemployed,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">proportion =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>),</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span>,</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
+<div id="tbl-prop-desempleo-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-prop-desempleo-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;4.14: Estimación de la tasa de desempleo por sexo
+</figcaption>
+<div aria-describedby="tbl-prop-desempleo-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<caption>Prueba de diferencia de proporciones de desocupación por sexo (población económicamente activa)</caption>
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Sex</th>
+<th style="text-align: right;">proportion</th>
+<th style="text-align: right;">proportion_se</th>
+<th style="text-align: right;">proportion_low</th>
+<th style="text-align: right;">proportion_upp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Female</td>
+<td style="text-align: right;">0.048</td>
+<td style="text-align: right;">0.012</td>
+<td style="text-align: right;">0.029</td>
+<td style="text-align: right;">0.078</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Male</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">0.015</td>
+<td style="text-align: right;">0.059</td>
+<td style="text-align: right;">0.118</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Las tasas de desempleo estimadas por sexo se presentan en la <a href="#tbl-prop-desempleo-sexo" class="quarto-xref">tabla&nbsp;<span>4.14</span></a>. En <code>R</code>, la función <code>svyttest()</code> del paquete <code>survey</code> permite contrastar la diferencia entre las medias de esta variable binaria y, por tanto, la diferencia entre las proporciones de desocupación de hombres y mujeres, incorporando los ajustes asociados al diseño muestral.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>lf_design <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(Employment),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    Employment <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Employed"</span>, <span class="st">"Unemployed"</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>ttest_unemployment_sex <span class="ot">&lt;-</span> <span class="fu">svyttest</span>(</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  unemployed <span class="sc">~</span> Sex,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> lf_design,</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">level =</span> <span class="fl">0.95</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-ttest-desempleo-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ttest-desempleo-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;4.15: Prueba de diferencia de proporciones de desocupación por sexo (población económicamente activa)
+</figcaption>
+<div aria-describedby="tbl-ttest-desempleo-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">statistic</th>
@@ -1496,7 +1559,10 @@ t =
 </table>
 </div>
 </div>
-<p>La diferencia estimada entre la proporción de hombres desocupados y la proporción de mujeres desocupadas es de 0.0359, es decir, la proporción correspondiente a los hombres es 3.59 puntos porcentuales mayor. El estadístico obtenido es <span class="math inline">\(t = 2.182\)</span>, con 118 grados de libertad y un valor-<em>p</em> de 0.031. Dado que el valor-<em>p</em> es inferior al nivel de significancia del 5%, se rechaza la hipótesis nula de igualdad de proporciones. Por tanto, existe evidencia estadística suficiente para afirmar que, dentro de la población económicamente activa, la proporción de desocupados es diferente entre hombres y mujeres.</p>
+</figure>
+</div>
+</div>
+<p>A partir de la <a href="#tbl-ttest-desempleo-sexo" class="quarto-xref">tabla&nbsp;<span>4.15</span></a>, se concluye que la diferencia estimada entre la proporción de hombres desocupados y la proporción de mujeres desocupadas es de 0.0359, es decir, la proporción correspondiente a los hombres es 3.59 puntos porcentuales mayor. El estadístico obtenido es <span class="math inline">\(t = 2.182\)</span>, con 118 grados de libertad y un valor-<em>p</em> de 0.031. Dado que el valor-<em>p</em> es inferior al nivel de significancia del 5%, se rechaza la hipótesis nula de igualdad de proporciones. Por tanto, existe evidencia estadística suficiente para afirmar que, dentro de la población económicamente activa, la proporción de desocupados es diferente entre hombres y mujeres.</p>
 </section>
 <section id="tablas-cruzadas" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="tablas-cruzadas"><span class="header-section-number">4.5</span> Tablas cruzadas</h2>
@@ -1506,11 +1572,11 @@ t =
 \hat{N}_{rc} = \sum_{h} \sum_{i} \sum_{k} w_{hik} \ I(x_{hik}=r,\ y_{hik}=c),
 \]</span></p>
 <p>donde <span class="math inline">\(w_{hik}\)</span> representa el factor de expansión asociado al elemento <span class="math inline">\(k\)</span> de la UPM <span class="math inline">\(i\)</span> perteneciente al estrato <span class="math inline">\(h\)</span>, mientras que <span class="math inline">\(I(x_{hik}=r,\ y_{hik}=c)\)</span> corresponde a una función indicadora que toma el valor de uno cuando la unidad observada pertenece simultáneamente a la categoría <span class="math inline">\(r\)</span> de la variable <span class="math inline">\(x\)</span> y a la categoría <span class="math inline">\(c\)</span> de la variable <span class="math inline">\(y\)</span>, y toma el valor de cero en cualquier otro caso.</p>
-<p>Además de las frecuencias conjuntas, también es posible estimar los tamaños marginales por filas y columnas, definidos respectivamente como <span class="math inline">\(\hat{N}_{r+} = \sum_{c=1}^{C} \hat{N}_{rc}\)</span> y <span class="math inline">\(\hat{N}_{+c} = \sum_{r=1}^{R} \hat{N}_{rc}\)</span>. Mientras que el total general se expresa como <span class="math inline">\(\hat{N}_{++} = \sum_{r=1}^{R}\sum_{c=1}^{C} \hat{N}_{rc}\)</span>. La estructura general de una tabla de contingencia con <span class="math inline">\(R\)</span> filas y <span class="math inline">\(C\)</span> columnas se presenta en la <a href="#tbl-estructura-contingencia" class="quarto-xref">tabla&nbsp;<span>4.14</span></a>:</p>
+<p>Además de las frecuencias conjuntas, también es posible estimar los tamaños marginales por filas y columnas, definidos respectivamente como <span class="math inline">\(\hat{N}_{r+} = \sum_{c=1}^{C} \hat{N}_{rc}\)</span> y <span class="math inline">\(\hat{N}_{+c} = \sum_{r=1}^{R} \hat{N}_{rc}\)</span>. Mientras que el total general se expresa como <span class="math inline">\(\hat{N}_{++} = \sum_{r=1}^{R}\sum_{c=1}^{C} \hat{N}_{rc}\)</span>. La estructura general de una tabla de contingencia con <span class="math inline">\(R\)</span> filas y <span class="math inline">\(C\)</span> columnas se presenta en la <a href="#tbl-estructura-contingencia" class="quarto-xref">tabla&nbsp;<span>4.16</span></a>:</p>
 <div id="tbl-estructura-contingencia" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-estructura-contingencia-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4.14: Estructura general de una tabla de contingencia con <span class="math inline">\(R\)</span> filas y <span class="math inline">\(C\)</span> columnas
+Tabla&nbsp;4.16: Estructura general de una tabla de contingencia con <span class="math inline">\(R\)</span> filas y <span class="math inline">\(C\)</span> columnas
 </figcaption>
 <div aria-describedby="tbl-estructura-contingencia-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -1590,25 +1656,25 @@ Tabla&nbsp;4.14: Estructura general de una tabla de contingencia con <span class
 <p><span class="math display">\[
 \hat{p}_{rc}=\frac{\hat{N}_{rc}}{\hat{N}_{++}}
 \]</span></p>
-<p>A continuación, y siguiendo con la base de datos de ejemplo, se estima la distribución porcentual de hombres y mujeres según su condición de pobreza, incorporando además sus respectivos errores estándar e intervalos de confianza. Los resultados se presentan en la <a href="#tbl-contingencia-pobreza-sexo" class="quarto-xref">tabla&nbsp;<span>4.15</span></a>. Este tipo de análisis permite describir la composición de la población pobre según sexo y evaluar la precisión de las estimaciones obtenidas a partir del diseño muestral.</p>
+<p>A continuación, y siguiendo con la base de datos de ejemplo, se estima la distribución porcentual de hombres y mujeres según su condición de pobreza, incorporando además sus respectivos errores estándar e intervalos de confianza. Los resultados se presentan en la <a href="#tbl-contingencia-pobreza-sexo" class="quarto-xref">tabla&nbsp;<span>4.17</span></a>. Este tipo de análisis permite describir la composición de la población pobre según sexo y evaluar la precisión de las estimaciones obtenidas a partir del diseño muestral.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>poverty_design <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">poor =</span> <span class="fu">factor</span>(</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    poor,</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>,</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Not poor"</span>, <span class="st">"Poor"</span>)</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>poverty_design <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">poor =</span> <span class="fu">factor</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    poor,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Not poor"</span>, <span class="st">"Poor"</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>poverty_design <span class="sc">%&gt;%</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(poor, Sex) <span class="sc">%&gt;%</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>poverty_design <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(poor, Sex) <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-contingencia-pobreza-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-contingencia-pobreza-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4.15: Proporción de hombres y mujeres en condición de pobreza y no pobreza
+Tabla&nbsp;4.17: Proporción de hombres y mujeres en condición de pobreza y no pobreza
 </figcaption>
 <div aria-describedby="tbl-contingencia-pobreza-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1672,17 +1738,17 @@ Tabla&nbsp;4.15: Proporción de hombres y mujeres en condición de pobreza y no 
 </div>
 </div>
 <p>Los resultados indican que el 52.3% de la población en condición de pobreza corresponde a mujeres, mientras que el 47.6% corresponde a hombres. Para las mujeres, el intervalo de confianza al 95% se encuentra entre 49.2% y 55.5%, mientras que para los hombres el intervalo correspondiente se ubica entre 44.5% y 50.7%. Estas estimaciones permiten observar la distribución relativa de la pobreza según sexo, considerando además la incertidumbre inherente al proceso de muestreo.</p>
-<p>Con el mismo enfoque de <code>srvyr</code> también puede estimarse la tabla de contingencia mediante <code>group_by()</code> y <code>summarise()</code>. En el siguiente ejemplo se estima la distribución de la condición de pobreza según sexo, obteniendo además medidas de precisión como errores estándar e intervalos de confianza. El código correspondiente y sus resultados se presentan en la <a href="#tbl-svyby-pobreza-sexo" class="quarto-xref">tabla&nbsp;<span>4.16</span></a>.</p>
+<p>Con el mismo enfoque de <code>srvyr</code> también puede estimarse la tabla de contingencia mediante <code>group_by()</code> y <code>summarise()</code>. En el siguiente ejemplo se estima la distribución de la condición de pobreza según sexo, obteniendo además medidas de precisión como errores estándar e intervalos de confianza. El código correspondiente y sus resultados se presentan en la <a href="#tbl-svyby-pobreza-sexo" class="quarto-xref">tabla&nbsp;<span>4.18</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sex_by_poverty_proportion <span class="ot">&lt;-</span> poverty_design <span class="sc">%&gt;%</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(poor, Sex) <span class="sc">%&gt;%</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>sex_by_poverty_proportion <span class="ot">&lt;-</span> poverty_design <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(poor, Sex) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-svyby-pobreza-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-svyby-pobreza-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4.16: Proporción de hombres y mujeres por condición de pobreza
+Tabla&nbsp;4.18: Proporción de hombres y mujeres por condición de pobreza
 </figcaption>
 <div aria-describedby="tbl-svyby-pobreza-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1745,16 +1811,16 @@ Tabla&nbsp;4.16: Proporción de hombres y mujeres por condición de pobreza
 </figure>
 </div>
 </div>
-<p>Los intervalos de confianza ya fueron calculados por <code>survey_prop(vartype = c("se", "ci"))</code>. El siguiente código no vuelve a estimarlos mediante <code>confint()</code>; utiliza <code>select()</code> para extraer las columnas que contienen sus límites inferior y superior. Los resultados se presentan en la <a href="#tbl-confint-sexo-pobreza" class="quarto-xref">tabla&nbsp;<span>4.17</span></a> y coinciden, por construcción, con los generados anteriormente.</p>
+<p>Los intervalos de confianza ya fueron calculados por <code>survey_prop(vartype = c("se", "ci"))</code>. El siguiente código no vuelve a estimarlos mediante <code>confint()</code>; utiliza <code>select()</code> para extraer las columnas que contienen sus límites inferior y superior. Los resultados se presentan en la <a href="#tbl-confint-sexo-pobreza" class="quarto-xref">tabla&nbsp;<span>4.19</span></a> y coinciden, por construcción, con los generados anteriormente.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>sex_by_poverty_proportion <span class="sc">%&gt;%</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(poor, Sex, proportion_low, proportion_upp)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>sex_by_poverty_proportion <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(poor, Sex, proportion_low, proportion_upp)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-confint-sexo-pobreza" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-confint-sexo-pobreza-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4.17: Intervalos de confianza para la proporción por sexo y pobreza
+Tabla&nbsp;4.19: Intervalos de confianza para la proporción por sexo y pobreza
 </figcaption>
 <div aria-describedby="tbl-confint-sexo-pobreza-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1799,18 +1865,18 @@ Tabla&nbsp;4.17: Intervalos de confianza para la proporción por sexo y pobreza
 </figure>
 </div>
 </div>
-<p>Otro análisis de interés relacionado con tablas de doble entrada en encuestas de hogares consiste en estimar el porcentaje de personas desempleadas según sexo. El procedimiento correspondiente y sus resultados se presentan en la <a href="#tbl-svyby-empleo-sexo" class="quarto-xref">tabla&nbsp;<span>4.18</span></a>.</p>
+<p>Otro análisis de interés relacionado con tablas de doble entrada en encuestas de hogares consiste en estimar el porcentaje de personas desempleadas según sexo. El procedimiento correspondiente y sus resultados se presentan en la <a href="#tbl-svyby-empleo-sexo" class="quarto-xref">tabla&nbsp;<span>4.20</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>sex_by_employment_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Employment)) <span class="sc">%&gt;%</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Employment, Sex) <span class="sc">%&gt;%</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>sex_by_employment_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Employment)) <span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Employment, Sex) <span class="sc">%&gt;%</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-svyby-empleo-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-svyby-empleo-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4.18: Proporción de hombres y mujeres por estado de ocupación
+Tabla&nbsp;4.20: Proporción de hombres y mujeres por estado de ocupación
 </figcaption>
 <div aria-describedby="tbl-svyby-empleo-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1889,16 +1955,16 @@ Tabla&nbsp;4.18: Proporción de hombres y mujeres por estado de ocupación
 </figure>
 </div>
 </div>
-<p>De la anterior salida se puede observar que el 27.2% de las personas desempleadas son mujeres y el 72.7% son hombres, con errores estándar de 5.3 puntos porcentuales para ambas estimaciones. Los intervalos de confianza correspondientes se presentan en la <a href="#tbl-confint-empleo-sexo" class="quarto-xref">tabla&nbsp;<span>4.19</span></a>:</p>
+<p>De la anterior salida se puede observar que el 27.2% de las personas desempleadas son mujeres y el 72.7% son hombres, con errores estándar de 5.3 puntos porcentuales para ambas estimaciones. Los intervalos de confianza correspondientes se presentan en la <a href="#tbl-confint-empleo-sexo" class="quarto-xref">tabla&nbsp;<span>4.21</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>sex_by_employment_proportion <span class="sc">%&gt;%</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Employment, Sex, proportion_low, proportion_upp)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>sex_by_employment_proportion <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Employment, Sex, proportion_low, proportion_upp)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-confint-empleo-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-confint-empleo-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4.19: Intervalos de confianza para la proporción por sexo y ocupación
+Tabla&nbsp;4.21: Intervalos de confianza para la proporción por sexo y ocupación
 </figcaption>
 <div aria-describedby="tbl-confint-empleo-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1955,17 +2021,17 @@ Tabla&nbsp;4.19: Intervalos de confianza para la proporción por sexo y ocupaci�
 </figure>
 </div>
 </div>
-<p>Si ahora el objetivo es estimar la pobreza por región, se utiliza la variable numérica <code>poor</code> dentro de un flujo <code>srvyr</code>, como se muestra en la <a href="#tbl-svyby-region-pobreza" class="quarto-xref">tabla&nbsp;<span>4.20</span></a>.</p>
+<p>Si ahora el objetivo es estimar la pobreza por región, se utiliza la variable numérica <code>poor</code> dentro de un flujo <code>srvyr</code>, como se muestra en la <a href="#tbl-svyby-region-pobreza" class="quarto-xref">tabla&nbsp;<span>4.22</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>region_poverty_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, poor) <span class="sc">%&gt;%</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>region_poverty_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, poor) <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-svyby-region-pobreza" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-svyby-region-pobreza-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4.20: Proporción en condición de pobreza por región
+Tabla&nbsp;4.22: Proporción en condición de pobreza por región
 </figcaption>
 <div aria-describedby="tbl-svyby-region-pobreza-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -2097,22 +2163,22 @@ P(\text{pobreza}=1 \mid \text{Sex}=\text{Male})
 \]</span></p>
 <p>La expresión del numerador representa, entre las mujeres, la ventaja relativa de encontrarse en condición de no pobreza respecto de encontrarse en pobreza. De manera análoga, el denominador representa esa misma ventaja entre los hombres. Por tanto, la razón de odds compara ambas ventajas relativas y permite cuantificar si la asociación entre sexo y pobreza favorece más a un grupo que a otro.</p>
 <p>Un valor igual a uno indicaría ausencia de asociación entre las variables, es decir, que la relación entre sexo y condición de pobreza es similar para hombres y mujeres. Valores superiores a uno indicarían una mayor ventaja relativa para las mujeres en comparación con los hombres, mientras que valores inferiores a uno sugerirían una mayor ventaja relativa para los hombres. En el contexto de encuestas de hogares, este tipo de medidas resulta especialmente útil para estudiar desigualdades sociodemográficas y brechas en condiciones de bienestar entre distintos grupos poblacionales.</p>
-<p>El procedimiento para realizarlo en <code>R</code> sería primero estimar las proporciones de la tabla cruzada entre las variables sexo y pobreza, presentada en la <a href="#tbl-interaccion-sexo-pobreza" class="quarto-xref">tabla&nbsp;<span>4.21</span></a>:</p>
+<p>El procedimiento para realizarlo en <code>R</code> sería primero estimar las proporciones de la tabla cruzada entre las variables sexo y pobreza, presentada en la <a href="#tbl-interaccion-sexo-pobreza" class="quarto-xref">tabla&nbsp;<span>4.23</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>sex_poverty_interaction_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex, poor) <span class="sc">%&gt;%</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>sex_poverty_odds_contrast <span class="ot">&lt;-</span> <span class="fu">svymean</span>(<span class="at">x =</span> <span class="sc">~</span><span class="fu">interaction</span>(Sex, poor),</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">design =</span> survey_design,</span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">ci =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">keep.vars =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>sex_poverty_interaction_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex, poor) <span class="sc">%&gt;%</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>sex_poverty_odds_contrast <span class="ot">&lt;-</span> <span class="fu">svymean</span>(<span class="at">x =</span> <span class="sc">~</span><span class="fu">interaction</span>(Sex, poor),</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">design =</span> survey_design,</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">ci =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">keep.vars =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-interaccion-sexo-pobreza" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-interaccion-sexo-pobreza-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4.21: Proporciones conjuntas de sexo y condición de pobreza
+Tabla&nbsp;4.23: Proporciones conjuntas de sexo y condición de pobreza
 </figcaption>
 <div aria-describedby="tbl-interaccion-sexo-pobreza-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -2177,17 +2243,17 @@ Tabla&nbsp;4.21: Proporciones conjuntas de sexo y condición de pobreza
 </div>
 <p>Luego, la función <code>svycontrast()</code> realiza el contraste dividiendo cada uno de los elementos de la expresión mostrada anteriormente:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>odds_ratio <span class="ot">&lt;-</span> <span class="fu">quote</span>(</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a> (<span class="st">`</span><span class="at">interaction(Sex, poor)Female.0</span><span class="st">`</span> <span class="sc">/</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">interaction(Sex, poor)Female.1</span><span class="st">`</span>) <span class="sc">/</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a> (<span class="st">`</span><span class="at">interaction(Sex, poor)Male.0</span><span class="st">`</span> <span class="sc">/</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">interaction(Sex, poor)Male.1</span><span class="st">`</span>)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="fu">svycontrast</span>(</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> sex_poverty_odds_contrast,</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> odds_ratio</span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>odds_ratio <span class="ot">&lt;-</span> <span class="fu">quote</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a> (<span class="st">`</span><span class="at">interaction(Sex, poor)Female.0</span><span class="st">`</span> <span class="sc">/</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">interaction(Sex, poor)Female.1</span><span class="st">`</span>) <span class="sc">/</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a> (<span class="st">`</span><span class="at">interaction(Sex, poor)Male.0</span><span class="st">`</span> <span class="sc">/</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">interaction(Sex, poor)Male.1</span><span class="st">`</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="fu">svycontrast</span>(</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> sex_poverty_odds_contrast,</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> odds_ratio</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         nlcon  SE
 contrast  1.02 0.1</code></pre>
@@ -2216,7 +2282,7 @@ H_0: p_{rc}^0 = p_{r+} \times p_{+c}, \quad \text{para todo } r = 1,\ldots,R \te
 <p>Bajo la hipótesis nula <span class="math inline">\(H_0\)</span>, el estadístico <span class="math inline">\(\chi_{RS}^2\)</span> sigue aproximadamente una distribución <span class="math inline">\(\chi^2\)</span> con <span class="math inline">\((R-1)(C-1)\)</span> grados de libertad, donde <span class="math inline">\(R\)</span> y <span class="math inline">\(C\)</span> corresponden al número de categorías de las filas y columnas, respectivamente. En situaciones de muestras pequeñas o con pocos grados de libertad, es frecuente utilizar ajustes basados en la distribución <span class="math inline">\(F\)</span>, los cuales mejoran la precisión de la inferencia estadística. Las pruebas de Rao-Scott constituyen el estándar para el análisis de asociación entre variables categóricas en encuestas complejas.</p>
 <p>El paquete <code>survey</code> en <code>R</code> implementa este tipo de pruebas mediante la función <code>svychisq()</code>, la cual incorpora automáticamente los ajustes de Rao-Scott para tener en cuenta las características del diseño muestral complejo. Esta función permite evaluar la existencia de asociación entre dos variables categóricas utilizando tablas de contingencia ponderadas y corrigiendo adecuadamente la variabilidad de los estimadores. A modo de ejemplo, para evaluar si la condición de pobreza es independiente del sexo, se ejecuta el siguiente código:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svychisq</span>(<span class="at">formula =</span> <span class="sc">~</span>Sex <span class="sc">+</span> poor, <span class="at">design =</span> survey_design, <span class="at">statistic =</span> <span class="st">"F"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svychisq</span>(<span class="at">formula =</span> <span class="sc">~</span>Sex <span class="sc">+</span> poor, <span class="at">design =</span> survey_design, <span class="at">statistic =</span> <span class="st">"F"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's X^2: Rao &amp; Scott adjustment
@@ -2227,7 +2293,7 @@ F = 0.06, ndf = 1, ddf = 119, p-value = 0.8</code></pre>
 </div>
 <p>En este caso, el argumento <code>formula</code> especifica las dos variables categóricas cuya independencia se desea evaluar; <code>design</code> corresponde al diseño muestral previamente definido; y <code>statistic = "F"</code> indica que la prueba se realizará utilizando la versión ajustada basada en la distribución <span class="math inline">\(F\)</span>. Si el valor-<em>p</em> es superior al 5%, no se rechaza la hipótesis nula <span class="math inline">\(H_0\)</span>, concluyendo que no existe evidencia estadística suficiente para afirmar que pobreza y sexo están asociadas. Por el contrario, si el valor-<em>p</em> es inferior al 5%, se rechaza <span class="math inline">\(H_0\)</span>, lo que sugiere la existencia de dependencia o asociación entre ambas variables categóricas. De manera similar, se pueden evaluar otras relaciones, como desempleo y sexo o pobreza y región.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svychisq</span>(<span class="at">formula =</span> <span class="sc">~</span>Sex <span class="sc">+</span> Employment, <span class="at">design =</span> survey_design, <span class="at">statistic =</span> <span class="st">"F"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svychisq</span>(<span class="at">formula =</span> <span class="sc">~</span>Sex <span class="sc">+</span> Employment, <span class="at">design =</span> survey_design, <span class="at">statistic =</span> <span class="st">"F"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's X^2: Rao &amp; Scott adjustment
@@ -2238,7 +2304,7 @@ F = 62, ndf = 2, ddf = 201, p-value &lt;0.0000000000000002</code></pre>
 </div>
 <p>En este primer caso, para el contraste de independencia entre las variables <code>Sex</code> y <code>Employment</code>, el estadístico obtenido fue <span class="math inline">\(F = 62.251\)</span>, con un valor-<span class="math inline">\(p\)</span> menor que <span class="math inline">\(2.2\times10^{-16}\)</span>, lo que proporciona evidencia estadísticamente significativa para rechazar la hipótesis nula de independencia entre ambas variables. En consecuencia, los resultados sugieren que existe una asociación significativa entre el sexo y la condición de empleo en la población de estudio.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svychisq</span>(<span class="at">formula =</span> <span class="sc">~</span>Region <span class="sc">+</span> poor, <span class="at">design =</span> survey_design, <span class="at">statistic =</span> <span class="st">"F"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svychisq</span>(<span class="at">formula =</span> <span class="sc">~</span>Region <span class="sc">+</span> poor, <span class="at">design =</span> survey_design, <span class="at">statistic =</span> <span class="st">"F"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's X^2: Rao &amp; Scott adjustment
@@ -2254,32 +2320,32 @@ F = 0.5, ndf = 3, ddf = 358, p-value = 0.7</code></pre>
 <p>De acuerdo con <span class="citation" data-cites="Wickham2016ggplot2">Wickham (<a href="references.html#ref-Wickham2016ggplot2" role="doc-biblioref">2016</a>)</span> y <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, la visualización de variables categóricas es fundamental en el análisis de encuestas de hogares, ya que permite comunicar de manera clara la distribución de grupos poblacionales y las comparaciones entre ellos. Al igual que en el análisis de variables continuas, los gráficos deben incorporar los pesos muestrales para que la representación visual corresponda a estimaciones válidas a nivel poblacional. Cuando la precisión estadística es relevante, es recomendable acompañar las barras con intervalos de confianza, que comunican tanto el valor central como la incertidumbre asociada al proceso de estimación.</p>
 <p>En esta sección se utiliza el paquete <code>ggplot2</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="graficos-de-barras" class="level3" data-number="4.8.1">
 <h3 data-number="4.8.1" class="anchored" data-anchor-id="graficos-de-barras"><span class="header-section-number">4.8.1</span> Gráficos de barras</h3>
 <p>La construcción de gráficos de barras en <code>R</code> requiere, como paso previo, obtener las estimaciones que se desean representar visualmente. En el contexto de encuestas complejas, estas estimaciones pueden calcularse mediante las funciones <code>survey_total()</code> o <code>survey_prop()</code> del paquete <code>srvyr</code>, dependiendo de si el interés se centra en totales poblacionales o proporciones.</p>
 <p>A continuación, se ilustra este procedimiento utilizando el tamaño poblacional estimado por zona de residencia. Los resultados gráficos correspondientes se presentan en la <a href="#fig-barras-zona" class="quarto-xref">figura&nbsp;<span>4.1</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>zone_size <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">survey_total</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>zone_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Urban =</span> <span class="st">"#48C9B0"</span>, <span class="at">Rural =</span> <span class="st">"#117864"</span>)</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> zone_size,</span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Zone, <span class="at">y =</span> size,</span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> size_upp, <span class="at">ymin =</span> size_low,</span>
-<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> Zone</span>
-<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
-<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>zone_size <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">survey_total</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>zone_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Urban =</span> <span class="st">"#48C9B0"</span>, <span class="at">Rural =</span> <span class="st">"#117864"</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> zone_size,</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Zone, <span class="at">y =</span> size,</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> size_upp, <span class="at">ymin =</span> size_low,</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> Zone</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-barras-zona" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2295,22 +2361,22 @@ Figura&nbsp;4.1: Gráfico de barras del tamaño poblacional por zona geográfica
 </div>
 <p>El procedimiento anterior también puede aplicarse a variables con más de dos categorías. En estos casos, el gráfico de barras permite comparar de manera sencilla las estimaciones asociadas a cada categoría de la variable de interés. Por ejemplo, a continuación se presenta la distribución estimada de la población según la condición de pobreza, cuyos resultados gráficos se muestran en la <a href="#fig-barras-pobreza" class="quarto-xref">figura&nbsp;<span>4.2</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>poverty_size <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Poverty) <span class="sc">%&gt;%</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">survey_total</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> poverty_size,</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty, <span class="at">y =</span> size,</span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> size_upp, <span class="at">ymin =</span> size_low,</span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> Poverty</span>
-<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>poverty_size <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Poverty) <span class="sc">%&gt;%</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">survey_total</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> poverty_size,</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty, <span class="at">y =</span> size,</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> size_upp, <span class="at">ymin =</span> size_low,</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> Poverty</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-barras-pobreza" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2326,30 +2392,30 @@ Figura&nbsp;4.2: Gráfico de barras del tamaño poblacional por condición de po
 </div>
 <p>Una de las ventajas de los gráficos de barras es que pueden extenderse fácilmente a comparaciones entre dos variables categóricas. Por ejemplo, se puede analizar el tamaño poblacional por nivel de pobreza cruzado con el estado de ocupación, presentada en la <a href="#fig-barras-empleo-pobreza" class="quarto-xref">figura&nbsp;<span>4.3</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>employment_poverty_size <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unemployed, Poverty) <span class="sc">%&gt;%</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">survey_total</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">unemployed =</span> <span class="fu">case_when</span>(</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>      unemployed <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Occupied"</span>,</span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>      unemployed <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Unemployed"</span>,</span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(unemployed) <span class="sc">~</span> <span class="st">"Not in the Labour Force"</span></span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> employment_poverty_size,</span>
-<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty, <span class="at">y =</span> size,</span>
-<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> size_upp, <span class="at">ymin =</span> size_low,</span>
-<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">as.factor</span>(unemployed)</span>
-<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb51-23"><a href="#cb51-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb51-24"><a href="#cb51-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>employment_poverty_size <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unemployed, Poverty) <span class="sc">%&gt;%</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">survey_total</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">unemployed =</span> <span class="fu">case_when</span>(</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>      unemployed <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Occupied"</span>,</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>      unemployed <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Unemployed"</span>,</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(unemployed) <span class="sc">~</span> <span class="st">"Not in the Labour Force"</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> employment_poverty_size,</span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty, <span class="at">y =</span> size,</span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> size_upp, <span class="at">ymin =</span> size_low,</span>
+<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">as.factor</span>(unemployed)</span>
+<span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb52-20"><a href="#cb52-20" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb52-21"><a href="#cb52-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb52-22"><a href="#cb52-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb52-23"><a href="#cb52-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb52-24"><a href="#cb52-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-barras-empleo-pobreza" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2365,23 +2431,23 @@ Figura&nbsp;4.3: Gráfico de barras del tamaño poblacional por estado de ocupac
 </div>
 <p>Este tipo de análisis gráfico resulta especialmente útil para identificar intersecciones de vulnerabilidad, al mostrar de manera simultánea dos o más características poblacionales. También es posible presentar proporciones en lugar de conteos. Por ejemplo, la proporción de hombres en condición de pobreza por zona, presentada en la <a href="#fig-barras-prop-zona-hombre" class="quarto-xref">figura&nbsp;<span>4.4</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>male_zone_poverty_proportion <span class="ot">&lt;-</span> male_subset <span class="sc">%&gt;%</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone, Poverty) <span class="sc">%&gt;%</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> male_zone_poverty_proportion,</span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty, <span class="at">y =</span> proportion,</span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> proportion_upp, <span class="at">ymin =</span> proportion_low,</span>
-<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> Zone</span>
-<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
-<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>male_zone_poverty_proportion <span class="ot">&lt;-</span> male_subset <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone, Poverty) <span class="sc">%&gt;%</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> male_zone_poverty_proportion,</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty, <span class="at">y =</span> proportion,</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> proportion_upp, <span class="at">ymin =</span> proportion_low,</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> Zone</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-barras-prop-zona-hombre" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2397,23 +2463,23 @@ Figura&nbsp;4.4: Proporción de hombres en condición de pobreza por zona geogr�
 </div>
 <p>De forma análoga, se puede graficar la proporción de hombres en condición de pobreza desagregada por región, presentada en la <a href="#fig-barras-prop-region-hombre" class="quarto-xref">figura&nbsp;<span>4.5</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>male_region_poverty_proportion <span class="ot">&lt;-</span> male_subset <span class="sc">%&gt;%</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, poor) <span class="sc">%&gt;%</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>()</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> male_region_poverty_proportion,</span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Region, <span class="at">y =</span> proportion,</span>
-<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> proportion_upp, <span class="at">ymin =</span> proportion_low,</span>
-<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">as.factor</span>(poor)</span>
-<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>male_region_poverty_proportion <span class="ot">&lt;-</span> male_subset <span class="sc">%&gt;%</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, poor) <span class="sc">%&gt;%</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>()</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> male_region_poverty_proportion,</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Region, <span class="at">y =</span> proportion,</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> proportion_upp, <span class="at">ymin =</span> proportion_low,</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">as.factor</span>(poor)</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-barras-prop-region-hombre" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2435,15 +2501,15 @@ Figura&nbsp;4.5: Proporción de hombres en condición de pobreza por región
 <p>De acuerdo con <span class="citation" data-cites="sf2026">Pebesma et&nbsp;al. (<a href="references.html#ref-sf2026" role="doc-biblioref">2026</a>)</span>, <span class="citation" data-cites="tmap2026">Tennekes (<a href="references.html#ref-tmap2026" role="doc-biblioref">2026</a>)</span> y <span class="citation" data-cites="Pebesma2018sf">Pebesma (<a href="references.html#ref-Pebesma2018sf" role="doc-biblioref">2018</a>)</span>, para construir este tipo de mapas en <code>R</code> se requiere información geoespacial en formato <em>shapefile</em>, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo <code>shapeBigCity/BigCity.shp</code>, cuyas regiones corresponden a las definidas en la base de datos <code>BigCity</code>. Los paquetes <code>sf</code> y <code>tmap</code> permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta.</p>
 <p>El siguiente código carga los paquetes necesarios para trabajar con información geoespacial y visualización cartográfica en <code>R</code>. La librería <code>sf</code> permite leer y manipular objetos espaciales modernos, mientras que <code>tmap</code> proporciona herramientas para elaborar mapas temáticos. La instrucción <code>tmap_mode("plot")</code> establece el modo de visualización estática de los mapas, apropiado para documentos y reportes. Finalmente, la función <code>read_sf()</code> importa el archivo geográfico <code>BigCity.shp</code>, almacenándolo en el objeto <code>bigcity_shape</code>, el cual contiene los polígonos correspondientes a las regiones de análisis.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>bigcity_shape <span class="ot">&lt;-</span> <span class="fu">read_sf</span>(<span class="st">"../Data/shapeBigCity/BigCity.shp"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>bigcity_shape <span class="ot">&lt;-</span> <span class="fu">read_sf</span>(<span class="st">"../Data/shapeBigCity/BigCity.shp"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Con el shapefile cargado, se puede generar un mapa de las regiones usando <code>tm_shape()</code> y <code>tm_polygons()</code>, como se muestra en la <a href="#fig-mapa-regiones" class="quarto-xref">figura&nbsp;<span>4.6</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(bigcity_shape) <span class="sc">+</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="st">"Region"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(bigcity_shape) <span class="sc">+</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="st">"Region"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-mapa-regiones" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2459,25 +2525,25 @@ Figura&nbsp;4.6: Mapa de regiones geográficas de BigCity
 </div>
 <p>Por ejemplo, si se desea representar geográficamente la proporción de hombres en condición de pobreza por región, estimada previamente en la <a href="#fig-barras-prop-region-hombre" class="quarto-xref">figura&nbsp;<span>4.5</span></a>, es necesario integrar las estimaciones obtenidas con la información espacial del shapefile. Para ello, el objeto <code>male_region_poverty_proportion</code>, que contiene las proporciones estimadas para cada región, se vincula con el archivo geográfico mediante la función <code>left_join()</code>. Posteriormente, se filtran únicamente las observaciones correspondientes a la categoría de pobreza (<code>poor == 1</code>), de manera que el mapa represente exclusivamente la distribución espacial de la población masculina en condición de pobreza.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>shape_region_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  bigcity_shape <span class="sc">%&gt;%</span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>      male_region_poverty_proportion <span class="sc">%&gt;%</span></span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(poor <span class="sc">==</span> <span class="dv">1</span>),</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">by =</span> <span class="st">"Region"</span></span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>shape_region_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  bigcity_shape <span class="sc">%&gt;%</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>      male_region_poverty_proportion <span class="sc">%&gt;%</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(poor <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">by =</span> <span class="st">"Region"</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Una vez construido el objeto espacial con las estimaciones de interés, el argumento <code>breaks</code> ayuda a definir los puntos de corte que determinarán los intervalos de la escala de color utilizada en el mapa. Posteriormente, se genera el mapa temático, permitiendo visualizar la distribución regional de la proporción de hombres en condición de pobreza, como se presenta en la <a href="#fig-mapa-pobreza-hombre" class="quarto-xref">figura&nbsp;<span>4.7</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>poverty_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="dv">1</span>)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>shape_region_map <span class="sc">+</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"proportion"</span>,</span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> poverty_breaks,</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Poverty proportion"</span>,</span>
-<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"YlOrRd"</span></span>
-<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>poverty_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="dv">1</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>shape_region_map <span class="sc">+</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"proportion"</span>,</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> poverty_breaks,</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Poverty proportion"</span>,</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"YlOrRd"</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-mapa-pobreza-hombre" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2494,26 +2560,26 @@ Figura&nbsp;4.7: Proporción de hombres en condición de pobreza por región
 <p>Otro uso de los mapas en encuestas, señalado por <span class="citation" data-cites="CEPAL2023Diseno">CEPAL (<a href="references.html#ref-CEPAL2023Diseno" role="doc-biblioref">2023</a>)</span>, es la visualización de la precisión de las estimaciones. Por ejemplo, usando el coeficiente de variación del ingreso medio por región es posible identificar las áreas donde las estimaciones son menos confiables, como se muestra en la <a href="#fig-mapa-cv-ingreso" class="quarto-xref">figura&nbsp;<span>4.8</span></a>.</p>
 <p>El siguiente código calcula y representa geográficamente el coeficiente de variación del ingreso medio por región. En primer lugar, se estima el ingreso promedio para cada región. El argumento <code>vartype = "cv"</code> solicita el cálculo del coeficiente de variación de cada estimación. Posteriormente, se definen los intervalos de clasificación de la escala de color mediante el objeto <code>cv_breaks</code>, y las estimaciones se integran con la información geográfica del shapefile usando <code>left_join()</code>. Finalmente, mediante las funciones <code>tm_shape()</code> y <code>tm_polygons()</code> del paquete <code>tmap</code>, se construye el mapa que representa espacialmente los coeficientes de variación utilizando una escala de colores en blanco y negro y ajustando la proporción del mapa con <code>tm_layout(asp = 0)</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>region_mean <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">survey_mean</span>(Income,</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"cv"</span>)))</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>cv_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="dv">1</span>)</span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>shape_cv_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(</span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>  bigcity_shape <span class="sc">%&gt;%</span></span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(region_mean, <span class="at">by =</span> <span class="st">"Region"</span>)</span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>shape_cv_map <span class="sc">+</span></span>
-<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mean_cv"</span>,</span>
-<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> cv_breaks,</span>
-<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mean income CV"</span>,</span>
-<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#FFFFFF"</span>, <span class="st">"#000000"</span>)</span>
-<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">asp =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>region_mean <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">survey_mean</span>(Income,</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"cv"</span>)))</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>cv_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="dv">1</span>)</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>shape_cv_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>  bigcity_shape <span class="sc">%&gt;%</span></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(region_mean, <span class="at">by =</span> <span class="st">"Region"</span>)</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>shape_cv_map <span class="sc">+</span></span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mean_cv"</span>,</span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> cv_breaks,</span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mean income CV"</span>,</span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#FFFFFF"</span>, <span class="st">"#000000"</span>)</span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">asp =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-mapa-cv-ingreso" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2530,51 +2596,51 @@ Figura&nbsp;4.8: Coeficiente de variación del ingreso medio por región
 <p>Los polígonos con tonos más oscuros corresponden a regiones donde la estimación del ingreso presenta mayor variabilidad relativa. Un coeficiente de variación elevado indica menor precisión relativa, pero no permite atribuirla únicamente a un tamaño muestral insuficiente, pues también puede reflejar la ponderación y otras características del diseño.</p>
 <p>De acuerdo con <span class="citation" data-cites="biscale2025">Prener et&nbsp;al. (<a href="references.html#ref-biscale2025" role="doc-biblioref">2025</a>)</span> y <span class="citation" data-cites="cowplot2025">Wilke (<a href="references.html#ref-cowplot2025" role="doc-biblioref">2025</a>)</span>, cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando <code>ggplot2</code> junto con los paquetes <code>biscale</code> y <code>cowplot</code>. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la <a href="#fig-mapa-bivariante" class="quarto-xref">figura&nbsp;<span>4.9</span></a>. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>region_sex_poverty_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, Zone, Sex, poor) <span class="sc">%&gt;%</span></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_mean</span>(<span class="at">vartype =</span> <span class="st">"cv"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(poor <span class="sc">==</span> <span class="dv">1</span>, Zone <span class="sc">==</span> <span class="st">"Rural"</span>, Sex <span class="sc">==</span> <span class="st">"Female"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>region_sex_poverty_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, Zone, Sex, poor) <span class="sc">%&gt;%</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_mean</span>(<span class="at">vartype =</span> <span class="st">"cv"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(poor <span class="sc">==</span> <span class="dv">1</span>, Zone <span class="sc">==</span> <span class="st">"Rural"</span>, Sex <span class="sc">==</span> <span class="st">"Female"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>El siguiente código construye un mapa bivariado que permite visualizar simultáneamente la proporción de pobreza femenina rural y el coeficiente de variación asociado a dicha estimación por región. En primer lugar, se integran las estimaciones contenidas en <code>region_sex_poverty_proportion</code> con la información geográfica del shapefile mediante <code>left_join()</code>. Posteriormente, la función <code>bi_class()</code> del paquete <code>biscale</code> clasifica conjuntamente las variables <code>proportion</code> y <code>proportion_cv</code> en una cuadrícula de (3 ) categorías (<code>dim = 3</code>), empleando el método de clasificación de Fisher (<code>style = "fisher"</code>). Luego, con <code>ggplot2</code> y <code>geom_sf()</code>, se genera el mapa temático utilizando colores bivariados definidos por <code>bi_scale_fill()</code>, mientras que <code>bi_theme()</code> aplica un estilo minimalista y se elimina la leyenda predeterminada.</p>
 <p>A continuación, la función <code>bi_legend()</code> crea una leyenda especializada que permite interpretar simultáneamente ambas dimensiones del mapa: el coeficiente de variación y la pobreza femenina rural. Finalmente, mediante las funciones <code>ggdraw()</code> y <code>draw_plot()</code> del paquete <code>cowplot</code>, se combinan el mapa y la leyenda en una única visualización.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biscale)</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>bivariate_shape <span class="ot">&lt;-</span> bigcity_shape <span class="sc">%&gt;%</span></span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(region_sex_poverty_proportion, <span class="at">by =</span> <span class="st">"Region"</span>)</span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>bivariate_data <span class="ot">&lt;-</span> <span class="fu">bi_class</span>(</span>
-<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>  bivariate_shape,</span>
-<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> proportion,</span>
-<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> proportion_cv,</span>
-<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> k,</span>
-<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">style =</span> <span class="st">"fisher"</span></span>
-<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-16"><a href="#cb60-16" aria-hidden="true" tabindex="-1"></a>bivariate_map <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb60-17"><a href="#cb60-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(</span>
-<span id="cb60-18"><a href="#cb60-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> bivariate_data,</span>
-<span id="cb60-19"><a href="#cb60-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">fill =</span> bi_class, <span class="at">geometry =</span> geometry),</span>
-<span id="cb60-20"><a href="#cb60-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"white"</span>,</span>
-<span id="cb60-21"><a href="#cb60-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.1</span></span>
-<span id="cb60-22"><a href="#cb60-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb60-23"><a href="#cb60-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bi_scale_fill</span>(<span class="at">pal =</span> <span class="st">"GrPink"</span>, <span class="at">dim =</span> k) <span class="sc">+</span></span>
-<span id="cb60-24"><a href="#cb60-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bi_theme</span>() <span class="sc">+</span></span>
-<span id="cb60-25"><a href="#cb60-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
-<span id="cb60-26"><a href="#cb60-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-27"><a href="#cb60-27" aria-hidden="true" tabindex="-1"></a>bivariate_legend <span class="ot">&lt;-</span> <span class="fu">bi_legend</span>(</span>
-<span id="cb60-28"><a href="#cb60-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">pal =</span> <span class="st">"GrPink"</span>,</span>
-<span id="cb60-29"><a href="#cb60-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> k,</span>
-<span id="cb60-30"><a href="#cb60-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Coefficient of variation"</span>,</span>
-<span id="cb60-31"><a href="#cb60-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Rural female poverty"</span>,</span>
-<span id="cb60-32"><a href="#cb60-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">8</span></span>
-<span id="cb60-33"><a href="#cb60-33" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb60-34"><a href="#cb60-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-35"><a href="#cb60-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>() <span class="sc">+</span></span>
-<span id="cb60-36"><a href="#cb60-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(bivariate_map, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="at">scale =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb60-37"><a href="#cb60-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(bivariate_legend, <span class="fl">0.75</span>, <span class="fl">0.4</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biscale)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>bivariate_shape <span class="ot">&lt;-</span> bigcity_shape <span class="sc">%&gt;%</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(region_sex_poverty_proportion, <span class="at">by =</span> <span class="st">"Region"</span>)</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>bivariate_data <span class="ot">&lt;-</span> <span class="fu">bi_class</span>(</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>  bivariate_shape,</span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> proportion,</span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> proportion_cv,</span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> k,</span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">style =</span> <span class="st">"fisher"</span></span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a>bivariate_map <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(</span>
+<span id="cb61-18"><a href="#cb61-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> bivariate_data,</span>
+<span id="cb61-19"><a href="#cb61-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">fill =</span> bi_class, <span class="at">geometry =</span> geometry),</span>
+<span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"white"</span>,</span>
+<span id="cb61-21"><a href="#cb61-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.1</span></span>
+<span id="cb61-22"><a href="#cb61-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb61-23"><a href="#cb61-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bi_scale_fill</span>(<span class="at">pal =</span> <span class="st">"GrPink"</span>, <span class="at">dim =</span> k) <span class="sc">+</span></span>
+<span id="cb61-24"><a href="#cb61-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bi_theme</span>() <span class="sc">+</span></span>
+<span id="cb61-25"><a href="#cb61-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb61-26"><a href="#cb61-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-27"><a href="#cb61-27" aria-hidden="true" tabindex="-1"></a>bivariate_legend <span class="ot">&lt;-</span> <span class="fu">bi_legend</span>(</span>
+<span id="cb61-28"><a href="#cb61-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">pal =</span> <span class="st">"GrPink"</span>,</span>
+<span id="cb61-29"><a href="#cb61-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> k,</span>
+<span id="cb61-30"><a href="#cb61-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Coefficient of variation"</span>,</span>
+<span id="cb61-31"><a href="#cb61-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Rural female poverty"</span>,</span>
+<span id="cb61-32"><a href="#cb61-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">8</span></span>
+<span id="cb61-33"><a href="#cb61-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb61-34"><a href="#cb61-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-35"><a href="#cb61-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>() <span class="sc">+</span></span>
+<span id="cb61-36"><a href="#cb61-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(bivariate_map, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="at">scale =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb61-37"><a href="#cb61-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(bivariate_legend, <span class="fl">0.75</span>, <span class="fl">0.4</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-mapa-bivariante" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">

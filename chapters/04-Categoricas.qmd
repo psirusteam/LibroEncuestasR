@@ -478,7 +478,7 @@ $$
 \end{array}\right]
 $$
 
-Para calcular los errores estándar asociados a cada uno de los contrastes anteriores, es necesario considerar no solo las varianzas de las estimaciones regionales, sino también las covarianzas entre ellas. Esta información se resume en la matriz de varianzas y covarianzas de las proporciones estimadas de desempleo por región, presentada en la @tbl-vcov-desempleo-region:
+Para calcular los errores estándar asociados a cada uno de los contrastes anteriores, es necesario considerar no solo las varianzas de las estimaciones regionales, sino también las covarianzas entre ellas. 
 
 ```{r cod-vcov-desempleo-region, echo=TRUE}
 region_unemployment_vcov <- vcov(region_unemployment_contrast)
@@ -493,7 +493,7 @@ region_unemployment_vcov %>%
   tabla_fmt(digits = 7)
 ```
 
-Nótese que, en este caso, las covarianzas entre las estimaciones regionales son iguales a cero debido a que las muestras seleccionadas en cada región son independientes entre sí. Por tanto, el error estándar de cada contraste se obtiene aplicando la expresión de la varianza para la diferencia entre dos estimadores. Para verificar los resultados sin introducir errores de redondeo, los cálculos siguientes toman las varianzas y covarianzas directamente de la matriz presentada en la @tbl-vcov-desempleo-region:
+La matriz de varianzas y covarianzas presentada en la @tbl-vcov-desempleo-region muestra que las covarianzas entre las estimaciones regionales son iguales a cero, lo que refleja la independencia entre las muestras seleccionadas en cada región. A continuación se estiman los errores estándar asociados a acada contraste.
 
 ```{r cod-se-contrastes-desempleo-region}
 # Norte - Centro
@@ -534,9 +534,7 @@ svycontrast(
 
 ## Pruebas de hipótesis sobre proporciones {#pruebas-de-hipotesis-sobre-proporciones}
 
-Las pruebas de hipótesis también permiten evaluar si las diferencias observadas entre proporciones estimadas para distintos grupos reflejan diferencias en la población o si pueden atribuirse al error de muestreo [@korn1995analysis]. En encuestas de hogares, estos contrastes deben incorporar las características del diseño muestral para estimar correctamente la variabilidad de las proporciones y realizar inferencias válidas.
-
-Supóngase que $p_H$ representa la proporción de hombres desocupados y $p_M$ la proporción de mujeres desocupadas dentro de la población económicamente activa. El parámetro de interés corresponde a la diferencia entre ambas proporciones:
+Las pruebas de hipótesis también permiten evaluar si las diferencias observadas entre proporciones estimadas para distintos grupos reflejan diferencias en la población o si pueden atribuirse al error de muestreo [@korn1995analysis]. Supóngase que $p_H$ representa la proporción de hombres desocupados y $p_M$ la proporción de mujeres desocupadas dentro de la población económicamente activa. El parámetro de interés corresponde a la diferencia entre ambas proporciones:
 
 $$
 \Delta_p = p_H - p_M.
@@ -546,8 +544,8 @@ Para evaluar si las proporciones de desocupación de hombres y mujeres son difer
 
 $$
 \begin{cases}
-H_{0}: & \Delta_p = 0 \quad (p_H = p_M) \\
-H_{1}: & \Delta_p \neq 0 \quad (p_H \neq p_M).
+H_{0}: & \Delta_p = 0  \\
+H_{1}: & \Delta_p \neq 0 
 \end{cases}
 $$
 
@@ -572,14 +570,60 @@ t =
 {\widehat{se}(\hat{\Delta}_p)} \sim t_{df},
 $$
 
-el cual sigue aproximadamente una distribución $t$ de Student con los grados de libertad determinados por el diseño muestral. Bajo la hipótesis nula, valores absolutos elevados del estadístico $t$ proporcionan evidencia en contra de la igualdad de las proporciones.
+el cual sigue aproximadamente una distribución $t$ de Student con $df$ grados de libertad, determinados por el diseño de muestreo. Bajo la hipótesis nula, valores absolutos elevados del estadístico $t$ proporcionan evidencia en contra de la igualdad de las proporciones.
 
-Para implementar esta prueba, la condición de desocupación se representa mediante una variable indicadora que toma el valor uno para las personas desocupadas y cero para las ocupadas. La media de esta variable dentro de cada grupo corresponde a la proporción de personas desocupadas. Además, el análisis debe restringirse a la población económicamente activa, por lo que se excluyen las personas inactivas y las observaciones con valores perdidos en `Employment`.
+Supóngase que el objetivo es evaluar, mediante una prueba de hipótesis, si la tasa de desempleo difiere significativamente entre hombres y mujeres. Para implementar esta prueba, se utiliza la variable indicadora `unemployed`, definida previamente, que toma el valor de uno para las personas desocupadas y de cero para el resto. Dado que la tasa de desempleo se calcula exclusivamente sobre la población económicamente activa, el análisis debe restringirse a las personas ocupadas y desocupadas, excluyendo tanto a la población inactiva como a las observaciones con valores perdidos en la variable `Employment`, que incluyen a los menores de edad. En consecuencia, la media de `unemployed` dentro de cada grupo de sexo corresponde a la proporción estimada de personas desocupadas, lo que permite contrastar formalmente ambas tasas.
 
-En `R`, la función `svyttest()` del paquete `survey` permite contrastar la diferencia entre las medias de esta variable binaria y, por tanto, la diferencia entre las proporciones de desocupación de hombres y mujeres, incorporando los ajustes asociados al diseño muestral. El procedimiento y sus resultados se presentan en la Tabla \@ref(tab:tab-ttest-desempleo-sexo).
+```{r cod-tab-desempleo-sexo}
+#| eval: true
+#| echo: true
+#| results: hide
+lf_design <- survey_design %>%
+  filter(
+    !is.na(Employment),
+    Employment %in% c("Employed", "Unemployed")
+  )  
 
-```{r cod-ttest-desempleo-sexo, eval=TRUE}
-pea_design <- survey_design %>%
+lf_design %>%
+  group_by(Sex) %>%
+  summarise(
+    proportion = survey_mean(
+      unemployed,
+      proportion = TRUE,
+      vartype = c("se", "ci"),
+      level = 0.95,
+      na.rm = TRUE
+    )
+  )
+```
+
+```{r}
+#| label: tbl-prop-desempleo-sexo
+#| tbl-cap: "Estimación de la tasa de desempleo por sexo"
+#| echo: false
+df_res <- lf_design %>%
+  group_by(Sex) %>%
+  summarise(
+    proportion = survey_mean(
+      unemployed,
+      proportion = TRUE,
+      vartype = c("se", "ci"),
+      level = 0.95,
+      na.rm = TRUE
+    )
+  )
+
+df_res %>%
+  tabla_fmt()
+```
+
+Las tasas de desempleo estimadas por sexo se presentan en la @tbl-prop-desempleo-sexo. En `R`, la función `svyttest()` del paquete `survey` permite contrastar la diferencia entre las medias de esta variable binaria y, por tanto, la diferencia entre las proporciones de desocupación de hombres y mujeres, incorporando los ajustes asociados al diseño muestral.
+
+```{r cod-ttest-desempleo-sexo}
+#| eval: true
+#| echo: true
+#| results: hide
+lf_design <- survey_design %>%
   filter(
     !is.na(Employment),
     Employment %in% c("Employed", "Unemployed")
@@ -587,12 +631,15 @@ pea_design <- survey_design %>%
 
 ttest_unemployment_sex <- svyttest(
   unemployed ~ Sex,
-  design = pea_design,
+  design = lf_design,
   level = 0.95
 )
 ```
 
-```{r tab-ttest-desempleo-sexo, echo=FALSE, tab.cap="Prueba de diferencia de proporciones de desocupación por sexo (población económicamente activa)"}
+```{r}
+#| label: tbl-ttest-desempleo-sexo
+#| tbl-cap: "Prueba de diferencia de proporciones de desocupación por sexo (población económicamente activa)"
+#| echo: false
 df_res <- tibble(
   statistic = ttest_unemployment_sex$statistic,
   p_value = ttest_unemployment_sex$p.value,
@@ -606,9 +653,7 @@ df_res %>%
   tabla_fmt()
 ```
 
-La diferencia estimada entre la proporción de hombres desocupados y la proporción de mujeres desocupadas es de 0.0359, es decir, la proporción correspondiente a los hombres es 3.59 puntos porcentuales mayor. El estadístico obtenido es $t = 2.182$, con 118 grados de libertad y un valor-*p* de 0.031. Dado que el valor-*p* es inferior al nivel de significancia del 5%, se rechaza la hipótesis nula de igualdad de proporciones. Por tanto, existe evidencia estadística suficiente para afirmar que, dentro de la población económicamente activa, la proporción de desocupados es diferente entre hombres y mujeres.
-
-
+A partir de la  @tbl-ttest-desempleo-sexo, se concluye que la diferencia estimada entre la proporción de hombres desocupados y la proporción de mujeres desocupadas es de 0.0359, es decir, la proporción correspondiente a los hombres es 3.59 puntos porcentuales mayor. El estadístico obtenido es $t = 2.182$, con 118 grados de libertad y un valor-*p* de 0.031. Dado que el valor-*p* es inferior al nivel de significancia del 5%, se rechaza la hipótesis nula de igualdad de proporciones. Por tanto, existe evidencia estadística suficiente para afirmar que, dentro de la población económicamente activa, la proporción de desocupados es diferente entre hombres y mujeres.
 
 ## Tablas cruzadas {#tablas-cruzadas}
 

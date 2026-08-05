@@ -260,7 +260,7 @@
 \subtitle{usando R}
 \author{Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa y Cristian
 Téllez}
-\date{4 de agosto de 2026}
+\date{5 de agosto de 2026}
 \begin{document}
 \frontmatter
 \maketitle
@@ -3913,41 +3913,36 @@ gasto por zona geográfica}
 
 \chapter{Análisis de variables categóricas}\label{cap4}
 
-De acuerdo con Heeringa et~al.
-(\citeproc{ref-HeeringaWestBerglund2017}{2017}) y CEPAL
-(\citeproc{ref-CEPAL2023Diseno}{2023}), en el análisis de encuestas de
-hogares, uno de los productos más habituales es la estimación de
-parámetros descriptivos asociados a variables categóricas, los cuales
-permiten sintetizar las principales características de la población.
-Estas medidas facilitan una representación clara y comprensible de
-fenómenos sociales a partir de información recolectada mediante muestras
-probabilísticas.
+En el análisis de encuestas de hogares, uno de los productos más
+habituales es la estimación de parámetros descriptivos asociados a
+variables categóricas, los cuales permiten sintetizar las principales
+características de la población. Estas medidas facilitan una
+representación clara y comprensible de fenómenos sociales a partir de
+información recolectada mediante muestras probabilísticas
+(\citeproc{ref-CEPAL2023Diseno}{CEPAL 2023}).
 
-Como explica Agresti (\citeproc{ref-Agresti2019Intro}{2019}), entre los
-indicadores descriptivos más utilizados para analizar variables
-categóricas se encuentran las frecuencias y las proporciones. Las
-frecuencias indican cuántas personas u hogares pertenecen a cada
-categoría, por ejemplo, el número de personas en condición de pobreza,
+Como explica Agresti (\citeproc{ref-Agresti2019Intro}{2019}), las
+frecuencias y las proporciones se encuentran entre los indicadores
+descriptivos más utilizados para analizar variables categóricas. Las
+frecuencias representan el número de personas u hogares que pertenecen a
+cada categoría, como la cantidad de personas en condición de pobreza,
 mientras que las proporciones expresan el peso relativo de cada
-categoría dentro del conjunto poblacional.
+categoría dentro de la población, como el porcentaje de hogares en
+situación de hacinamiento. Aunque el análisis descriptivo de este tipo
+de variables se apoya principalmente en estos parámetros, también puede
+complementarse con medidas derivadas de variables numéricas, como los
+cuantiles y los indicadores de desigualdad abordados en el capítulo
+anterior.
 
-Aunque el análisis descriptivo de variables categóricas suele apoyarse
-en estos parámetros básicos, también es posible combinarlas con medidas
-derivadas de variables numéricas, como cuantiles o indicadores de
-desigualdad, las cuales se abordaron en el capítulo anterior. No
-obstante, en este capítulo nos concentraremos exclusivamente en la
-descripción y estimación de parámetros asociados a variables
-categóricas, empleando diseños muestrales complejos.
-
-El análisis comienza con la definición del diseño de muestreo, siguiendo
-los lineamientos explicados en capítulos anteriores y utilizando la
-misma base de datos. Este paso es fundamental porque permite incorporar
-adecuadamente las características del diseño complejo de la encuesta,
-tales como los factores de expansión, las unidades primarias de muestreo
-y los estratos de selección. La correcta especificación de estos
-elementos garantiza que las estimaciones obtenidas sean representativas
-de la población objetivo y que las medidas de precisión reflejen
-apropiadamente la variabilidad introducida por el esquema de muestreo.
+Para estimar correctamente estas medidas a partir de una encuesta de
+hogares, es necesario comenzar por definir el diseño de muestreo. Este
+paso permite incorporar las características de la encuesta, incluidos
+los factores de expansión, las unidades primarias de muestreo y los
+estratos de selección. La adecuada especificación de estos elementos es
+fundamental para que las frecuencias, las proporciones y las demás
+estadísticas estimadas representen apropiadamente a la población
+objetivo y para que sus medidas de precisión reflejen la variabilidad
+introducida por el diseño muestral.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3968,13 +3963,17 @@ apropiadamente la variabilidad introducida por el esquema de muestreo.
 \end{Highlighting}
 \end{Shaded}
 
-Luego, se generan algunas variables categóricas derivadas de la
-información original de la encuesta, las cuales serán utilizadas en los
-ejercicios desarrollados a lo largo de este capítulo. Entre ellas, se
-construye una variable que identifica si la persona se encuentra o no en
-condición de pobreza. De manera complementaria, también se crean otras
-variables categóricas de interés analítico que permitirán realizar
-desagregaciones y comparaciones entre distintos grupos de la población:
+A partir de la información original de la encuesta, se construyen
+algunas variables categóricas que serán utilizadas en los ejercicios
+desarrollados a lo largo de este capítulo. En particular, se define una
+variable dicotómica que identifica si una persona se encuentra o no en
+condición de pobreza, considerando como pobres a quienes pertenecen a
+cualquiera de las categorías de pobreza registradas en la encuesta.
+Asimismo, se crea una variable que permite distinguir a las personas
+desempleadas del resto de la población y otra que clasifica a las
+personas en dos grupos de edad: menores de 18 años y personas de 18 años
+o más. Estas variables facilitarán la desagregación de los resultados y
+la comparación de indicadores entre distintos grupos de la población:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4006,9 +4005,12 @@ ejemplo, las personas menores de 18 años se clasifican en la categoría
 \texttt{"\textless{}\ 18\ years"}, mientras que el resto se agrupa en la
 categoría \texttt{"\textgreater{}=\ 18\ years"}.
 
-Además de lo anterior, se hace necesario generar subgrupos de la
-población para realizar estimaciones desagregadas. En este capítulo se
-emplean cuatro subpoblaciones de ejemplo:
+Además de las variables categóricas definidas previamente, es necesario
+establecer subpoblaciones que permitan obtener estimaciones desagregadas
+y comparar los indicadores entre distintos grupos. Para los ejemplos
+desarrollados en este capítulo, se consideran cuatro subpoblaciones
+definidas según la zona de residencia y el sexo: población urbana,
+población rural, mujeres y hombres.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4029,81 +4031,80 @@ emplean cuatro subpoblaciones de ejemplo:
 \section{Estimación del tamaño
 poblacional}\label{estimacion-del-tamano-poblacional}
 
-Según CEPAL (\citeproc{ref-CEPAL2023Diseno}{2023}), en el análisis de
-encuestas de hogares, es fundamental estimar el tamaño de las
-subpoblaciones, entendido como el número de personas u hogares que
-pertenecen a categorías específicas y la proporción que representan
-dentro de la población. Estas estimaciones, basadas en variables
-categóricas, permiten caracterizar el perfil demográfico y
-socioeconómico de la población, información clave para orientar la
-asignación de recursos, diseñar políticas públicas y formular programas
-sociales. Por ejemplo, estimar cuántas personas se encuentran por debajo
-de la línea de pobreza, cuántas están desempleadas o cuántas alcanzaron
-determinado nivel educativo es esencial para identificar brechas y
-evaluar condiciones de bienestar.
+En el análisis de encuestas de hogares, es fundamental estimar el tamaño
+de las distintas subpoblaciones y la proporción que cada una representa
+dentro de la población total (\citeproc{ref-CEPAL2023Diseno}{CEPAL
+2023}). Estas estimaciones permiten cuantificar grupos definidos por
+características demográficas o socioeconómicas y describir su
+importancia relativa. Por ejemplo, conocer el número y la proporción de
+personas que se encuentran por debajo de la línea de pobreza, están
+desempleadas o han alcanzado un determinado nivel educativo contribuye a
+identificar brechas entre grupos, evaluar sus condiciones de bienestar y
+generar información relevante para el diseño de políticas públicas.
 
-Como explica Gutiérrez (\citeproc{ref-Gutierrez2016}{2016}), la
-estimación del tamaño de una población o subpoblación se realiza a
-partir de variables categóricas, que segmentan a la población en grupos
-mutuamente excluyentes (particiones). El tamaño poblacional hace
-referencia al número total de individuos u hogares que, en la base de
-datos de la encuesta, pertenecen a una categoría determinada. Estas
-categorías pueden corresponder, por ejemplo, a estados de ocupación o
-niveles educativos alcanzados. Para obtener estas estimaciones, se
-combinan las respuestas de los encuestados con los pesos muestrales, que
-indican cuántas personas u hogares representa cada unidad de la muestra
-dentro de la población total.
-
-De acuerdo con Särndal et~al. (\citeproc{ref-sarndal2003model}{2003}),
-el estimador del tamaño de la población, se define como:
+Las subpoblaciones se definen mediante variables categóricas que
+clasifican a las unidades de la población finita en grupos mutuamente
+excluyentes, como las distintas condiciones de actividad económica o los
+niveles educativos alcanzados. El tamaño de una subpoblación corresponde
+al número total de personas u hogares de la población que pertenecen a
+una categoría determinada. Para estimarlo a partir de una encuesta, se
+suman los pesos muestrales de las unidades clasificadas en esa
+categoría, dado que cada peso indica cuántas personas u hogares de la
+población representa la unidad observada en la muestra. A partir de
+estas estimaciones también puede calcularse la proporción que cada
+subpoblación representa respecto del total poblacional. Por ende, el
+estimador del tamaño de la población
+(\citeproc{ref-sarndal2003model}{Särndal et~al. 2003}), se define como:
 
 \[
 \hat{N} = \sum_{h} \sum_{i} \sum_{k} w_{hik}
 \]
 
 En donde, \(w_{hik}\) es el peso o factor de expansión de la unidad
-\(k\) en la UPM \(i\) del estrato \(h\). Asimismo, la estimación del
-tamaño de una subpoblación sigue el mismo principio, pero se enmarca en
-un subconjunto definido por una característica específica. Para
-determinar cuántas personas pertenecen a una categoría particular, se
-identifica dicho grupo en la base de datos y se suman sus pesos
-muestrales. Esto permite cuantificar grupos de interés específicos y
-conocer su tamaño dentro de la población:
+\(k\) en la UPM \(i\) del estrato \(h\).
+
+Asimismo, la estimación del tamaño de una subpoblación sigue el mismo
+principio que la estimación del tamaño total, pero se restringe a las
+unidades que presentan una característica determinada. Para estimar
+cuántas personas u hogares pertenecen a una categoría específica \(d\),
+se identifica en la muestra a las unidades que cumplen dicha condición y
+se suman sus pesos muestrales. De esta manera, cada unidad contribuye a
+la estimación de acuerdo con el número de unidades de la población que
+representa:
 
 \[
-\hat{N}_d = \sum_{h} \sum_{i} \sum_{k} w_{hik} \ I(y_{hik}=d)
+\hat{N}_d
+=
+\sum_{h}
+\sum_{i}
+\sum_{k}
+w_{hik} \ 
+I(y_{hik}=d)
 \]
 
-Como señalan Deville y Särndal
-(\citeproc{ref-DevilleSarndal1992}{1992}), en donde \(I(y_{hik}=d)\) es
+donde \(\hat{N}_d\) representa el tamaño estimado de la subpoblación
+perteneciente a la categoría \(d\). Por su parte, \(I(y_{hik}=d)\) es
 una variable binaria que toma el valor de 1 si la unidad \(k\) de la UPM
 \(i\) en el estrato \(h\) pertenece a la categoría \(d\) de la variable
 de interés \(y\), y 0 en caso contrario. Nótese además que, si \(d\) fue
 utilizada en la calibración de los pesos, el valor de \(\hat{N}_d\)
-coincidirá con el control externo aplicado.
+coincidirá con el control externo aplicado y por ende su error estándar
+será nulo (\citeproc{ref-Gutierrez2016}{Gutiérrez 2016}).
 
-En \texttt{R}, y utilizando el diseño muestral definido previamente, es
+En \texttt{R}, utilizando el diseño muestral definido previamente, es
 posible, generar resúmenes de la información de la encuesta para cada
 categoría de la variable \texttt{Zone}. Para ello, los datos se agrupan
 según la zona geográfica, lo que permite obtener resultados
 independientes para cada uno de estos dominios de estudio. A partir de
 este procedimiento se producen dos tipos principales de resultados. En
 primer lugar, se calcula el número de observaciones efectivamente
-recolectadas en la muestra, sin considerar los factores de expansión, lo
-que corresponde al tamaño muestral disponible en cada zona. En segundo
-lugar, se estima el tamaño poblacional asociado a cada dominio
-incorporando la información del diseño de muestreo.
-
-Junto con las estimaciones poblacionales también se obtienen medidas de
-precisión, como el error estándar y el intervalo de confianza, las
-cuales permiten evaluar el nivel de incertidumbre asociado a los
-resultados producidos a partir de la muestra. Los resultados se
-presentan en la tabla~\ref{tbl-tamano-zona}. En dicha tabla, \texttt{n}
-representa el número de observaciones de la muestra en cada zona,
-mientras que \texttt{size} corresponde a la estimación del total
-poblacional de la subpoblación. Por su parte, la función
-\texttt{unweighted()} se utiliza para calcular resúmenes no ponderados
-directamente a partir de los datos observados en la muestra.
+recolectadas en la muestra, sin considerar los factores de expansión,
+usando la función \texttt{unweighted()}. En segundo lugar, se estima el
+tamaño poblacional asociado a cada dominio incorporando la información
+del diseño de muestreo. Junto con las estimaciones poblacionales también
+se obtienen medidas de precisión, como el error estándar y el intervalo
+de confianza. Los resultados se presentan en la
+tabla~\ref{tbl-tamano-zona}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4142,16 +4143,11 @@ En efecto, el tamaño de muestra fue de 1297 personas en la zona rural y
 de 1308 en la zona urbana. A partir de estas muestras se estimó una
 población de 72,102 personas para la zona rural, con un error estándar
 de 3,062, y de 78,164 personas para la zona urbana, con un error
-estándar de 2,847. Estos resultados reflejan no solo el tamaño estimado
-de la población en cada dominio, sino también el nivel de precisión
-asociado a las estimaciones obtenidas a partir del diseño muestral.
-
-Considerando un nivel de confianza del 95\%, los intervalos de confianza
-para las estimaciones poblacionales fueron de 66,038.5 a 78,165.4
-personas en la zona rural y de 72,526.2 a 83,801.7 personas en la zona
-urbana. De manera análoga, también es posible estimar el número de
-personas según los distintos niveles de pobreza, cuyos resultados se
-presentan en la tabla~\ref{tbl-tamano-pobreza}.
+estándar de 2,847. Considerando un nivel de confianza del 95\%, los
+intervalos de confianza para las estimaciones poblacionales fueron de
+66,038.5 a 78,165.4 personas en la zona rural y de 72,526.2 a 83,801.7
+personas en la zona urbana. De manera análoga, también es posible
+estimar el número de personas según los distintos niveles de pobreza.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4184,25 +4180,25 @@ Relative & 37349 & 3695 & 30032 & 44666 \\
 
 }
 
-Otra variable categórica relevante en las encuestas de hogares es el
-estado de ocupación. A continuación se presenta el código
-correspondiente, cuyos resultados se muestran en la
-tabla~\ref{tbl-tamano-empleo}. En este caso, la información se agrupa
-según las categorías de la variable \texttt{Employment}, lo que permite
-obtener estimaciones separadas para cada condición de actividad laboral
-de la población. Mediante el uso de la función \texttt{group\_by()} es
-posible desagregar las estimaciones en niveles más detallados,
-facilitando el análisis comparativo entre los distintos grupos
-ocupacionales.
+La tabla~\ref{tbl-tamano-pobreza} refelja una población en la que la
+mayoría de las personas no vive en pobreza, pero en la que esa aparente
+normalidad convive con una fractura difícil de considerar marginal:
+cerca de 58.868 personas se encuentran en pobreza relativa o extrema. De
+ellas, 21.519 padecen las privaciones más severas y 37.349 permanecen
+por debajo de los niveles de vida socialmente aceptables.
 
-Antes de realizar las estimaciones, se excluyen los registros con
-valores faltantes en la variable de empleo, garantizando que los
-resultados se calculen únicamente con información válida.
-Posteriormente, para cada categoría de ocupación se estima el tamaño
-poblacional utilizando el diseño muestral definido previamente. Además
-de la estimación puntual, también se calculan medidas de precisión,
-específicamente el error estándar y los intervalos de confianza, lo que
-permite evaluar el grado de incertidumbre asociado a cada estimación.
+Otra variable categórica relevante en las encuestas de hogares es el
+estado de ocupación. En este caso, la información se agrupa según las
+categorías de la variable \texttt{Employment}, lo que permite obtener
+estimaciones separadas para cada condición de actividad laboral de la
+población. Mediante el uso de la función \texttt{group\_by()} es posible
+desagregar las estimaciones en niveles más detallados, facilitando el
+análisis comparativo entre los distintos grupos ocupacionales. En primer
+lugar, se excluyen los registros con valores faltantes en la variable de
+empleo, garantizando que los resultados se calculen únicamente con
+personas activas en la fuerza de trabajo. Posteriormente, para cada
+categoría de ocupación se estima el tamaño poblacional, junto con el
+error estándar y los intervalos de confianza.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4236,24 +4232,28 @@ Employed & 61877 & 2540 & 56847 & 66907 \\
 
 }
 
-A partir de los resultados obtenidos se estima que 4,634.8 personas se
-encuentran desempleadas, con un intervalo de confianza del 95\% entre
-3,128.6 y 6,140.9 personas. Asimismo, se estima que 41,465.2 personas
-pertenecen a la población inactiva, con un intervalo de confianza entre
-37,182.6 y 45,747.8. Finalmente, la población ocupada se estimó en
-61,877.0 personas, con un intervalo de confianza de 56,847.0 a 66,907.0
-personas.
+A partir de los resultados presentados en la
+tabla~\ref{tbl-tamano-empleo}, se estima que la población ocupada
+asciende a 61.877 personas. Por su parte, la población inactiva se
+estima en 41.465 personas, mientras que cerca de 4.635 personas se
+encontrarían desempleadas. En conjunto, las estimaciones muestran que
+los desempleados representan el grupo de menor tamaño, aunque la
+amplitud relativa de su intervalo de confianza indica una mayor
+incertidumbre en comparación con las estimaciones de la población
+ocupada e inactiva.
 
 Finalmente, las estimaciones también pueden desagregarse simultáneamente
 por más de una variable categórica. Por ejemplo, es posible analizar el
 estado ocupacional según el nivel de pobreza, cuyos resultados se
 presentan en la tabla~\ref{tbl-tamano-empleo-pobreza}, de donde se puede
-concluir, entre otros aspectos, que aproximadamente 44,600.3 personas
-ocupadas no se encuentran en condición de pobreza, con un intervalo de
-confianza del 95\% entre 39,459.6 y 49,741.0 personas. Asimismo, se
-estima que 6,421.8 personas inactivas se encuentran en situación de
-pobreza extrema, con un intervalo de confianza al 95\% entre 3,806.6 y
-9,037.0 personas.
+concluir que el empleo constituye una protección importante frente a la
+pobreza. Entre las 61.877 personas ocupadas, 17.277 continúan en
+situación de pobreza, de las cuales 5.128 se encuentran en pobreza
+extrema y 12.149 en pobreza relativa. La vulnerabilidad es aún más
+visible entre las 41.465 personas inactivas, pues 17.119 viven en
+pobreza, mientras que entre las 4.635 personas desempleadas apenas 1.768
+son clasificadas como no pobres y 2.866 padecen pobreza extrema o
+relativa.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4302,17 +4302,15 @@ Total & Total & 107977 & 3466 & 101115 & 114839 \\
 
 \section{Estimación de proporciones}\label{estimacion-de-proporciones}
 
-De acuerdo con Korn y Graubard (\citeproc{ref-KornGraubard1999}{1999}) y
-Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}), las
-proporciones permiten expresar el peso relativo que tienen determinados
-grupos dentro de la población. Por ejemplo, conocer el porcentaje de
-hogares que se encuentran por debajo de la línea de pobreza es esencial
-para evaluar desigualdades y caracterizar condiciones de bienestar. Para
-obtener este tipo de indicadores, se calcula el promedio ponderado de la
-variable dicotómica, lo que asegura que la estimación represente
-adecuadamente la distribución poblacional. Al convertir las categorías
-originales en variables indicadoras, la proporción estimada se calcula
-como:
+Las proporciones permiten expresar el peso relativo que tienen
+determinados grupos dentro de la población. Por ejemplo, conocer el
+porcentaje de hogares que se encuentran por debajo de la línea de
+pobreza es esencial para evaluar desigualdades y caracterizar
+condiciones de bienestar. Para obtener este tipo de estimaciones, se
+calcula el promedio ponderado de la variable dicotómica, lo que asegura
+que la estimación represente adecuadamente la distribución poblacional.
+Al convertir las categorías originales en variables indicadoras, la
+proporción estimada se calcula como:
 
 \[
 \hat{p}_d = \frac{\hat{N}_d}{\hat{N}} = \frac{\displaystyle\sum_{h} \sum_{i} \sum_{k} w_{hik} \ I(y_{hik}=d)} {\displaystyle\sum_{h} \sum_{i} \sum_{k} w_{hik}}
@@ -4329,38 +4327,67 @@ estadísticos implementan automáticamente estos procedimientos y generan
 las estimaciones de proporciones junto con sus respectivos errores
 estándar e intervalos de confianza.
 
-Cuando las proporciones toman valores muy cercanos a 0 o a 1, la
-precisión de las estimaciones puede verse afectada, por lo que en muchos
-casos es necesario contar con tamaños muestrales mayores para obtener
-resultados estables y confiables. Esta situación es especialmente
-relevante en el análisis de fenómenos poco frecuentes o altamente
-concentrados, donde pequeñas variaciones en la muestra pueden producir
-cambios importantes en las estimaciones.
+Cuando las proporciones estimadas toman valores cercanos a 0 o a 1, su
+precisión puede disminuir y las aproximaciones estadísticas
+tradicionales pueden resultar poco adecuadas. En estos casos, suele ser
+necesario disponer de tamaños de muestra mayores para obtener
+estimaciones suficientemente estables. Este problema adquiere especial
+importancia al analizar fenómenos poco frecuentes o muy concentrados, ya
+que pequeñas variaciones en la composición de la muestra pueden
+ocasionar cambios sustanciales en las proporciones estimadas
+(\citeproc{ref-KornGraubard1999}{Korn y Graubard 1999}).
 
-Adicionalmente, como explica Agresti
-(\citeproc{ref-Agresti2019Intro}{2019}), los intervalos de confianza
-construidos mediante aproximaciones normales pueden presentar límites
-inferiores menores que 0 o superiores mayores que 1, lo que dificulta su
-interpretación al tratarse de proporciones. Para evitar este problema,
-una alternativa ampliamente utilizada consiste en aplicar la
-transformación logit antes de construir los intervalos de confianza.
-Este procedimiento garantiza que, al regresar a la escala original, los
-límites obtenidos permanezcan dentro del rango válido de las
-proporciones.
+Esta dificultad también afecta la construcción de los intervalos de
+confianza. Como señala Agresti (\citeproc{ref-Agresti2019Intro}{2019}),
+los intervalos basados directamente en la aproximación normal pueden
+producir límites inferiores menores que 0 o límites superiores mayores
+que 1, resultados incompatibles con el rango de una proporción. Una
+alternativa consiste en construir el intervalo en la escala logit y
+transformarlo posteriormente a la escala original. Para una proporción
+estimada \(\hat{p}_d\), el intervalo de confianza con nivel \(1-\alpha\)
+puede expresarse como
 
 \[
-CI(\hat{p}_d; 1-\alpha) = \frac{exp \left[ln\left(\frac{\hat{p}_d}{1-\hat{p}_d}\right) \pm \frac{\widehat{me}}{\hat{p}_d(1-\hat{p}_d)}\right]}{1 + exp \left[ln\left(\frac{\hat{p}_d}{1-\hat{p}_d}\right) \pm \frac{\widehat{me}}{\hat{p}_d(1-\hat{p}_d)}\right]}
+CI(\hat{p}_d;1-\alpha)
+=
+\left[
+\frac{\exp(L_d)}{1+\exp(L_d)},
+\frac{\exp(U_d)}{1+\exp(U_d)}
+\right],
 \]
 
-En donde \(\widehat{me}\) corresponde al margen de error estimado y se
-obtiene a partir del producto entre el valor crítico de la distribución
-\(t\) de Student y el error estándar estimado de la proporción
-\(\hat{p}_d\). El término \(t_{1-\alpha/2, df}\) representa el percentil
-asociado al nivel de confianza seleccionado, considerando \(df\) grados
-de libertad. En el contexto de encuestas complejas, estos grados de
-libertad suelen definirse como la diferencia entre el número de unidades
-primarias de muestreo (UPM) y el número de estratos presentes en el
-subgrupo o dominio de análisis.
+En donde
+
+\[
+L_d
+=
+\log\left(\frac{\hat{p}_d}{1-\hat{p}_d}\right)
+t_{1-\alpha/2, df}
+\frac{\widehat{SE}(\hat{p}_d)}
+{\hat{p}_d(1-\hat{p}_d)}
+\]
+
+y
+
+\[
+U_d
+=
+\log\left(\frac{\hat{p}_d}{1-\hat{p}_d}\right)
++
+t_{1-\alpha/2, df}
+\frac{\widehat{SE}(\hat{p}_d)}
+{\hat{p}_d(1-\hat{p}_d)}.
+\]
+
+Al aplicar la transformación inversa del logit a los límites \(L_d\) y
+\(U_d\), se garantiza que el intervalo resultante permanezca dentro del
+rango válido entre 0 y 1. Nótese que el término \(t_{1-\alpha/2, df}\)
+representa el percentil asociado al nivel de confianza seleccionado,
+considerando \(df\) grados de libertad. Como se advirtió anteriormente,
+en el contexto de encuestas complejas, estos grados de libertad suelen
+definirse como la diferencia entre el número de unidades primarias de
+muestreo (UPM) y el número de estratos presentes en el subgrupo o
+dominio de análisis.
 
 A diferencia de otros programas estadísticos que presentan los
 resultados en porcentaje, \texttt{R} reporta las proporciones en la
@@ -4369,7 +4396,7 @@ directamente las estimaciones, sus errores estándar e intervalos de
 confianza, lo que facilita el análisis de variables categóricas en
 encuestas de hogares. A continuación se ilustra cómo obtener la
 proporción de personas por zona usando el diseño muestral previamente
-definido, presentada en la tabla~\ref{tbl-prop-zona}:
+definido.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4405,65 +4432,28 @@ Urban & 0.52 & 0.014 & 0.492 & 0.548 \\
 
 }
 
-De acuerdo con Freedman Ellis y Schneider
-(\citeproc{ref-FreedmanEllis2026}{2026}), en este ejemplo, la función
-\texttt{survey\_mean()} se utiliza para calcular la estimación de
-proporciones poblacionales y, mediante el argumento
-\texttt{proportion\ =\ TRUE}, se especifica que el interés se centra en
-estimar la distribución relativa de la población entre las distintas
-categorías de la variable analizada. Los resultados indican que
-aproximadamente el 47.9\% de las personas reside en la zona rural, con
-un intervalo de confianza del 95\% entre 45.2\% y 50.7\%, mientras que
-el 52.0\% corresponde a población residente en la zona urbana, con un
-intervalo de confianza entre 49.2\% y 54.7\%.
+En este ejemplo, la función \texttt{survey\_mean()} se utiliza para
+calcular la estimación de proporciones poblacionales y, mediante el
+argumento \texttt{proportion\ =\ TRUE}, se especifica que el interés se
+centra en estimar la distribución relativa de la población entre las
+distintas categorías de la variable analizada. Los resultados
+presentados en la tabla~\ref{tbl-prop-zona} indican que aproximadamente
+el 48\% de las personas reside en la zona rural, con un intervalo de
+confianza del 95\% entre 45.2\% y 50.8\%, mientras que el 52\%
+corresponde a población residente en la zona urbana, con un intervalo de
+confianza entre 49.2\% y 54.8\%.
 
 La librería \texttt{srvyr} también dispone de la función
 \texttt{survey\_prop()}, diseñada específicamente para la estimación de
 proporciones en encuestas complejas. Esta función produce resultados
 equivalentes a los obtenidos con \texttt{survey\_mean()}, facilitando
 además una sintaxis más directa e intuitiva cuando el objetivo del
-análisis es exclusivamente el cálculo de proporciones. Los resultados
-obtenidos mediante esta alternativa se presentan en la
-tabla~\ref{tbl-prop-zona2}.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{survey\_design }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{group\_by}\NormalTok{(Zone) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{proportion =} \FunctionTok{survey\_prop}\NormalTok{(}\AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
-\end{Highlighting}
-\end{Shaded}
-
-{
-
-\begin{longtable}[]{@{}lrrrr@{}}
-
-\caption{\label{tbl-prop-zona2}Proporción de personas por zona
-geográfica (función survey\_prop)}
-
-\tabularnewline
-
-\toprule\noalign{}
-Zone & proportion & proportion\_se & proportion\_low &
-proportion\_upp \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-Rural & 0.48 & 0.014 & 0.452 & 0.508 \\
-Urban & 0.52 & 0.014 & 0.492 & 0.548 \\
-
-\end{longtable}
-
-}
-
-Si el interés se centra ahora en estimar proporciones para
-subpoblaciones específicas, por ejemplo, la proporción de hombres y
-mujeres que residen en la zona urbana, es necesario restringir el
-análisis a dicho dominio de estudio y posteriormente calcular las
-estimaciones correspondientes para cada categoría de sexo. El código
-computacional correspondiente se presenta en la
-tabla~\ref{tbl-prop-sexo-urbano}.
+análisis es exclusivamente el cálculo de proporciones. Además, si el
+interés se centra ahora en estimar proporciones para subpoblaciones
+específicas, por ejemplo, la proporción de hombres y mujeres que residen
+en la zona urbana, es necesario restringir el análisis a dicho dominio
+de estudio y posteriormente calcular las estimaciones correspondientes
+para cada categoría de sexo.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4495,80 +4485,16 @@ Male & 0.463 & 0.013 & 0.437 & 0.489 \\
 
 }
 
-A partir de estas estimaciones se observa que, en la zona urbana, el
-53.6\% de la población corresponde a mujeres, con un intervalo de
-confianza del 95\% entre 51.0\% y 56.2\%, mientras que el 46.4\%
-corresponde a hombres, con un intervalo de confianza entre 43.7\% y
-48.9\%. Estos resultados permiten apreciar no solo la distribución
-porcentual de la población según sexo, sino también el nivel de
-precisión asociado a las estimaciones.
-
-De manera análoga, es posible realizar el mismo ejercicio para la
-población residente en la zona rural, estimando la proporción de hombres
-y mujeres. Este tipo de desagregación permite comparar la composición
-poblacional según sexo entre las áreas urbana y rural, proporcionando
-una visión más detallada de las características demográficas de la
-población encuestada. Los resultados correspondientes se presentan en la
-tabla~\ref{tbl-prop-sexo-rural}.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{rural\_subset }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{group\_by}\NormalTok{(Sex) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{summarise}\NormalTok{(}
-    \AttributeTok{n =} \FunctionTok{unweighted}\NormalTok{(}\FunctionTok{n}\NormalTok{()),}
-    \AttributeTok{proportion =} \FunctionTok{survey\_prop}\NormalTok{(}\AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{))}
-\NormalTok{  )}
-\end{Highlighting}
-\end{Shaded}
-
-{
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1061}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0606}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1667}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2121}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2273}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2273}}@{}}
-
-\caption{\label{tbl-prop-sexo-rural}Proporción de hombres y mujeres en
-zona rural}
-
-\tabularnewline
-
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-Sex
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-n
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-proportion
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-proportion\_se
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-proportion\_low
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-proportion\_upp
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-Female & 679 & 0.516 & 0.008 & 0.500 & 0.533 \\
-Male & 618 & 0.484 & 0.008 & 0.467 & 0.500 \\
-
-\end{longtable}
-
-}
+La tabla~\ref{tbl-prop-sexo-urbano} muestra una leve mayoría femenina en
+la población urbana: las mujeres representan el 53,6\%, con un intervalo
+de confianza entre 51,0\% y 56,2\%, frente al 46,4\% de los hombres,
+cuyo intervalo se sitúa entre 43,7\% y 48,9\%.
 
 Ahora bien, si el análisis se restringe únicamente a la población
 masculina incluida en la base de datos y el interés consiste en estimar
 la distribución porcentual de los hombres según la zona de residencia,
 es posible calcular la proporción de hombres que viven en áreas urbanas
-y rurales utilizando el diseño muestral previamente definido. El código
-computacional correspondiente se presenta en la
-tabla~\ref{tbl-prop-zona-hombre}.
+y rurales utilizando el diseño muestral previamente definido.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4601,15 +4527,18 @@ Urban & 0.509 & 0.018 & 0.474 & 0.545 \\
 
 }
 
-Si se desea estimar resultados con varios niveles de desagregación, al
-igual que en los capítulos anteriores, el uso de la función
-\texttt{group\_by()} permite generar distintos niveles de agregación
-mediante la combinación de dos o más variables categóricas. Por ejemplo,
-es posible estimar la proporción de hombres según zona de residencia y
-condición de pobreza de manera simultánea. Este tipo de análisis permite
-caracterizar con mayor detalle las condiciones socioeconómicas de
-subpoblaciones específicas. El procedimiento correspondiente se presenta
-en la tabla~\ref{tbl-prop-zona-pobreza-hombre}.
+Los resultados de la tabla~\ref{tbl-prop-zona-hombre} revelan una
+población masculina repartida casi por igual entre lo urbano y lo rural:
+el 50,9\% reside en áreas urbanas, con un intervalo de confianza entre
+47,4\% y 54,5\%, mientras que el 49,1\% habita en zonas rurales, con un
+intervalo entre 45,5\% y 52,6\%.
+
+La función \texttt{group\_by()} permite generar distintos niveles de
+desagregación mediante la combinación de dos o más variables
+categóricas. Por ejemplo, es posible estimar la proporción de hombres
+según zona de residencia y condición de pobreza de manera simultánea.
+Este tipo de análisis permite caracterizar con mayor detalle las
+condiciones socioeconómicas de subpoblaciones específicas.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4663,29 +4592,22 @@ Urban & Relative & 0.227 & 0.026 & 0.180 & 0.283 \\
 
 }
 
-A partir de los resultados obtenidos se observa que, en la zona rural,
-el 19.7\% de los hombres se encuentra en situación de pobreza extrema,
-mientras que en la zona urbana esta proporción corresponde al 11.3\%.
-Aunque las estimaciones puntuales sugieren una mayor incidencia de
-pobreza extrema en la ruralidad, la superposición de los intervalos de
-confianza individuales no constituye por sí sola una prueba formal de
-igualdad; la significación de la diferencia debe evaluarse mediante un
-contraste que incorpore su error estándar.
+La tabla~\ref{tbl-prop-zona-pobreza-hombre} revela una geografía social
+particular. Mientras en las zonas urbanas el 66,0\% de los hombres se
+encuentra fuera de la pobreza, en las rurales esta proporción desciende
+al 54,9\%; mientras que la pobreza extrema aumenta del 11,3\% al 19,8\%
+al pasar de las zonas urbanas a las rurales. La pobreza relativa, en
+cambio, permanece más cercana entre ambos territorios.
 
-También es posible categorizar variables cuantitativas para facilitar su
-análisis conjunto con otras variables categóricas. Por ejemplo, la edad
-puede agruparse en rangos etarios específicos y posteriormente cruzarse
-con variables relacionadas con la situación en el empleo. Este tipo de
-procedimiento resulta útil para identificar diferencias en la
-participación laboral entre distintos grupos de edad.
-
-A continuación, la variable edad se clasifica en dos categorías para la
-población femenina: mujeres entre 18 y 35 años, y mujeres pertenecientes
-a otros rangos de edad. Posteriormente, estas categorías se analizan en
-conjunto con la variable de empleabilidad, permitiendo estimar la
-distribución de la condición laboral según grupo etario. Los resultados
-correspondientes se presentan en la
-tabla~\ref{tbl-prop-edad-rango-empleo-mujer}.
+Las variables cuantitativas también pueden agruparse en categorías para
+facilitar su análisis conjunto con variables cualitativas. Por ejemplo,
+la edad puede clasificarse en rangos etarios y cruzarse posteriormente
+con la condición de actividad, lo que permite examinar cómo varía la
+participación laboral entre distintos grupos de población. En este caso,
+la población femenina se divide en dos categorías: mujeres de 18 a 35
+años y mujeres pertenecientes a los demás grupos de edad. A partir de
+esta clasificación, se estima la distribución de la condición laboral en
+cada grupo etario.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4744,37 +4666,43 @@ Other & Employed & 0.413 & 0.029 & 0.356 & 0.472 \\
 
 }
 
+La tabla~\ref{tbl-prop-edad-rango-empleo-mujer} muestra que la
+inactividad constituye la condición predominante entre las mujeres de
+ambos grupos de edad: alcanza el 51,7\% entre aquellas de 18 a 35 años y
+el 57,1\% entre las demás. Las mujeres más jóvenes presentan una mayor
+proporción de ocupación: 45,5\%, frente a 41,3\%, pero también un
+desempleo algo más elevado, de 2,9\% frente a 1,6\%.
+
 \section{Contrastes y diferencias de
 proporciones}\label{contrastes-y-diferencias-de-proporciones}
 
-De acuerdo con Korn y Graubard (\citeproc{ref-KornGraubard1999}{1999}) y
-Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}), las
-proporciones obtenidas en las filas de una tabla de doble entrada pueden
-interpretarse como estimaciones para distintas subpoblaciones, definidas
-a partir de los niveles de una variable categórica. En este contexto, no
-solo resulta relevante estimar las proporciones asociadas a cada grupo,
-sino también evaluar las diferencias existentes entre ellas mediante
-contrastes lineales.
+Cuando se analizan conjuntamente dos variables categóricas, es posible
+examinar cómo se distribuye una de ellas dentro de los grupos definidos
+por la otra. Por ejemplo, puede estudiarse la proporción de personas en
+situación de pobreza por sexo, zona de residencia o condición de
+actividad. Cada una de estas categorías define una subpoblación
+específica, para la cual pueden estimarse proporciones y sus
+correspondientes medidas de precisión
+(\citeproc{ref-KornGraubard1999}{Korn y Graubard 1999};
+\citeproc{ref-HeeringaWestBerglund2017}{Heeringa et~al. 2017}).
 
-Por ejemplo, suponga que el interés está en comparar la proporción de
-mujeres en condición de pobreza con la proporción de hombres en esta
-misma situación. Formalmente, este contraste puede expresarse como
-\(\hat{p}_F - \hat{p}_M\), donde \(\hat{p}_F\) representa la proporción
-estimada de mujeres en pobreza y \(\hat{p}_M\) la proporción estimada de
-hombres en dicha condición. Para construir este contraste, primero se
-estiman las proporciones de hombres y mujeres en estado de pobreza
-utilizando el mismo procedimiento descrito en capítulos anteriores. Los
-resultados correspondientes se presentan en la
-tabla~\ref{tbl-svyby-pobreza-sexo2}:
+Sin embargo, la estimación separada de estas proporciones no siempre es
+suficiente. Con frecuencia, el interés principal consiste en determinar
+cuánto difieren dos grupos y si la brecha observada es suficientemente
+grande en relación con la incertidumbre asociada al muestreo. Para ello,
+pueden construirse contrastes lineales que expresen la diferencia entre
+dos proporciones estimadas y permitan obtener su error estándar,
+intervalo de confianza y, cuando corresponda, una prueba de
+significancia.
+
+Supóngase, por ejemplo, que se desea comparar la proporción de mujeres
+en situación de pobreza con la proporción correspondiente a los hombres.
+Este contraste puede expresarse como \(\hat{p}_F-\hat{p}_M\), donde
+\(\hat{p}_F\) representa la proporción estimada de mujeres en pobreza y
+\(\hat{p}_M\) la proporción estimada de hombres en la misma condición.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sex\_poverty\_proportion }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{group\_by}\NormalTok{(Sex) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{proportion =} \FunctionTok{survey\_mean}\NormalTok{(poor,}
-                                     \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
-                                     \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
-
 \NormalTok{sex\_poverty\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}
   \AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{poor,}
   \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Sex,}
@@ -4789,7 +4717,7 @@ tabla~\ref{tbl-svyby-pobreza-sexo2}:
 
 {
 
-\begin{longtable}[]{@{}lrrrr@{}}
+\begin{longtable}[]{@{}llrrrr@{}}
 
 \caption{\label{tbl-svyby-pobreza-sexo2}Proporción en condición de
 pobreza por sexo}
@@ -4797,23 +4725,24 @@ pobreza por sexo}
 \tabularnewline
 
 \toprule\noalign{}
-Sex & proportion & proportion\_se & proportion\_low & proportion\_upp \\
+& Sex & poor & se & ci\_l & ci\_u \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Female & 0.389 & 0.032 & 0.327 & 0.452 \\
-Male & 0.395 & 0.037 & 0.322 & 0.467 \\
+Female & Female & 0.389 & 0.032 & 0.327 & 0.451 \\
+Male & Male & 0.395 & 0.037 & 0.323 & 0.466 \\
 
 \end{longtable}
 
 }
 
-Una vez estimadas las proporciones de hombres y mujeres en condición de
-pobreza, es posible calcular la diferencia entre ambas proporciones
-junto con su correspondiente error estándar. En este caso, la diferencia
-estimada se obtiene restando la proporción de hombres en pobreza a la
-proporción de mujeres en esta misma condición:
+Con base en los resultados presentados en la
+tabla~\ref{tbl-svyby-pobreza-sexo2}, puede estimarse la diferencia entre
+las proporciones de mujeres y hombres en situación de pobreza, así como
+su correspondiente error estándar. Para ello, se resta la proporción
+estimada de hombres en pobreza de la proporción estimada de mujeres en
+la misma condición:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4831,28 +4760,41 @@ proporción de mujeres en esta misma condición:
 -0.00532 
 \end{verbatim}
 
-Para calcular correctamente la variabilidad asociada a esta diferencia,
-no basta con considerar únicamente las varianzas de cada estimación por
-separado. También es necesario incorporar la covarianza entre ambas
-proporciones, dado que las estimaciones provienen de una misma muestra
-y, por tanto, no son independientes. La matriz de varianzas y
-covarianzas puede obtenerse mediante la función \texttt{vcov}, cuyos
-resultados se presentan en la tabla~\ref{tbl-vcov-sex-pobreza}:
+Para estimar correctamente la variabilidad asociada a esta diferencia
+debe incorporarse la covarianza entre ambas estimaciones, ya que estas
+no provienen de dos muestras independientes. En efecto, hombres y
+mujeres pueden pertenecer a los mismos hogares y, además, los hogares de
+ambos grupos son seleccionados dentro de las mismas unidades primarias
+de muestreo (UPM). Por consiguiente, las dos proporciones comparten la
+estructura de dependencia inducida por el diseño de muestreo. Esto
+implica que las variaciones observadas en una estimación pueden estar
+relacionadas con las de la otra y, por tanto, que su covarianza no puede
+suponerse igual a cero. En este contexto, el error estándar de la
+diferencia (contraste) debe calcularse aplicando las propiedades de la
+varianza e incorporando explícitamente dicha covarianza, de la siguiente
+forma:
+
+\[
+\widehat{se}\left(\hat{p}_{F}-\hat{p}_{M}\right)
+=
+\sqrt{
+\widehat{Var}\left(\hat{p}_{F}\right)
++
+\widehat{Var}\left(\hat{p}_{M}\right)
+-
+2\,\widehat{Cov}\left(\hat{p}_{F},\hat{p}_{M}\right)
+}
+\]
+
+En \texttt{R}, la matriz de varianzas y covarianzas puede obtenerse
+mediante la función \texttt{vcov}, cuyos resultados se presentan en la
+tabla~\ref{tbl-vcov-sex-pobreza}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{sex\_poverty\_vcov }\OtherTok{\textless{}{-}} \FunctionTok{vcov}\NormalTok{(sex\_poverty\_contrast)}
-
-\NormalTok{sex\_poverty\_vcov }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{data.frame}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-         Female     Male
-Female 0.000998 0.000918
-Male   0.000918 0.001342
-\end{verbatim}
 
 {
 
@@ -4880,9 +4822,7 @@ A partir de esta matriz, el error estándar de la diferencia de
 proporciones se estima, utilizando la expresión general para la varianza
 de una diferencia entre estimadores, la cual corresponde a la suma de
 las varianzas de cada estimación menos dos veces la covarianza entre
-ellas. Para evitar inconsistencias derivadas del redondeo de los valores
-presentados en la tabla~\ref{tbl-vcov-sex-pobreza}, la verificación se
-realiza directamente con las entradas de la matriz estimada:
+ellas.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4922,9 +4862,8 @@ sex_difference -0.00532         0.0224
 De lo que se concluye que la diferencia estimada entre las proporciones
 de mujeres y hombres en estado de pobreza es -0.005 (-0.5\%), con un
 error estándar de 0.022. Dada la magnitud del error estándar respecto de
-la diferencia, la estimación es compatible con una diferencia nula y no
-debe interpretarse por sí sola como evidencia de una menor proporción de
-pobreza entre las mujeres.
+la diferencia, la estimación no debe interpretarse por sí sola como
+evidencia de una menor proporción de pobreza entre las mujeres.
 
 Otro ejercicio que puede desarrollarse a partir de una encuesta de
 hogares consiste en estimar la proporción de personas desempleadas según
@@ -4935,16 +4874,9 @@ tabla~\ref{tbl-svyby-desempleo-region}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{region\_unemployment\_proportion }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(unemployed)) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{group\_by}\NormalTok{(Region) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{proportion =} \FunctionTok{survey\_mean}\NormalTok{(unemployed,}
-                                     \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
-                                     \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
-
 \NormalTok{region\_unemployment\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}
-  \AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{unemployed,}
-  \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Region,}
+  \AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ unemployed,}
+  \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ Region,}
   \AttributeTok{design =}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
     \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(unemployed)),}
   \AttributeTok{FUN =}\NormalTok{ svymean,}
@@ -4957,7 +4889,7 @@ tabla~\ref{tbl-svyby-desempleo-region}:
 
 {
 
-\begin{longtable}[]{@{}lrrrr@{}}
+\begin{longtable}[]{@{}llrrrr@{}}
 
 \caption{\label{tbl-svyby-desempleo-region}Proporción en condición de
 desempleo por región}
@@ -4965,17 +4897,16 @@ desempleo por región}
 \tabularnewline
 
 \toprule\noalign{}
-Region & proportion & proportion\_se & proportion\_low &
-proportion\_upp \\
+& Region & unemployed & se & ci\_l & ci\_u \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Norte & 0.049 & 0.020 & 0.009 & 0.088 \\
-Sur & 0.066 & 0.024 & 0.019 & 0.113 \\
-Centro & 0.039 & 0.012 & 0.014 & 0.063 \\
-Occidente & 0.040 & 0.012 & 0.016 & 0.064 \\
-Oriente & 0.030 & 0.013 & 0.005 & 0.054 \\
+Norte & Norte & 0.049 & 0.020 & 0.010 & 0.088 \\
+Sur & Sur & 0.066 & 0.024 & 0.019 & 0.112 \\
+Centro & Centro & 0.039 & 0.012 & 0.014 & 0.063 \\
+Occidente & Occidente & 0.040 & 0.012 & 0.016 & 0.064 \\
+Oriente & Oriente & 0.030 & 0.013 & 0.005 & 0.054 \\
 
 \end{longtable}
 
@@ -5003,27 +4934,12 @@ matricial, estos contrastes entre regiones pueden escribirse así:
 Para calcular los errores estándar asociados a cada uno de los
 contrastes anteriores, es necesario considerar no solo las varianzas de
 las estimaciones regionales, sino también las covarianzas entre ellas.
-Esta información se resume en la matriz de varianzas y covarianzas de
-las proporciones estimadas de desempleo por región, presentada en la
-tabla~\ref{tbl-vcov-desempleo-region}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{region\_unemployment\_vcov }\OtherTok{\textless{}{-}} \FunctionTok{vcov}\NormalTok{(region\_unemployment\_contrast)}
-
-\NormalTok{region\_unemployment\_vcov }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{data.frame}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-             Norte      Sur   Centro Occidente  Oriente
-Norte     0.000401 0.000000 0.000000  0.000000 0.000000
-Sur       0.000000 0.000564 0.000000  0.000000 0.000000
-Centro    0.000000 0.000000 0.000154  0.000000 0.000000
-Occidente 0.000000 0.000000 0.000000  0.000151 0.000000
-Oriente   0.000000 0.000000 0.000000  0.000000 0.000158
-\end{verbatim}
 
 {
 
@@ -5050,14 +4966,12 @@ Oriente & 0.000000 & 0.000000 & 0.000000 & 0.000000 & 0.000158 \\
 
 }
 
-Nótese que las covarianzas entre las estimaciones regionales son iguales
-a cero debido a que las muestras seleccionadas en cada región son
-independientes entre sí. Por tanto, el error estándar de cada contraste
-se obtiene aplicando la expresión de la varianza para la diferencia
-entre dos estimadores. Para verificar los resultados sin introducir
-errores de redondeo, los cálculos siguientes toman las varianzas y
-covarianzas directamente de la matriz presentada en la
-tabla~\ref{tbl-vcov-desempleo-region}:
+La matriz de varianzas y covarianzas presentada en la
+tabla~\ref{tbl-vcov-desempleo-region} muestra que las covarianzas entre
+las estimaciones regionales son iguales a cero, lo que refleja la
+independencia entre las muestras seleccionadas en cada región. A
+continuación se estiman los errores estándar asociados a acada
+contraste.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5117,9 +5031,8 @@ contrastes definidos anteriormente se realiza de la siguiente manera:
   \AttributeTok{contrasts =} \FunctionTok{list}\NormalTok{(}
     \AttributeTok{north\_center =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{),}
     \AttributeTok{south\_center =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{),}
-    \AttributeTok{west\_east =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{)}
-\NormalTok{  )}
-\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \AttributeTok{west\_east    =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{)}
+\NormalTok{  )) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{data.frame}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
@@ -5130,6 +5043,175 @@ north_center   0.0100 0.0236
 south_center   0.0269 0.0268
 west_east      0.0105 0.0176
 \end{verbatim}
+
+\section{Pruebas de hipótesis sobre
+proporciones}\label{pruebas-de-hipotesis-sobre-proporciones}
+
+Las pruebas de hipótesis también permiten evaluar si las diferencias
+observadas entre proporciones estimadas para distintos grupos reflejan
+diferencias en la población o si pueden atribuirse al error de muestreo
+(\citeproc{ref-korn1995analysis}{Korn y Graubard 1995}). Supóngase que
+\(p_H\) representa la proporción de hombres desocupados y \(p_M\) la
+proporción de mujeres desocupadas dentro de la población económicamente
+activa. El parámetro de interés corresponde a la diferencia entre ambas
+proporciones:
+
+\[
+\Delta_p = p_H - p_M.
+\]
+
+Para evaluar si las proporciones de desocupación de hombres y mujeres
+son diferentes, se plantea el siguiente sistema de hipótesis bilateral:
+
+\[
+\begin{cases}
+H_{0}: & \Delta_p = 0  \\
+H_{1}: & \Delta_p \neq 0 
+\end{cases}
+\]
+
+El estimador muestral de esta diferencia se define como
+\(\hat{\Delta}_p = \hat{p}_H - \hat{p}_M\). Su error estándar debe
+considerar tanto las varianzas de las proporciones estimadas como la
+covarianza entre ellas:
+
+\[
+\widehat{se}(\hat{\Delta}_p) =
+\sqrt{
+\widehat{Var}(\hat{p}_H)
++
+\widehat{Var}(\hat{p}_M)
+-
+2\widehat{Cov}(\hat{p}_H,\hat{p}_M)
+}.
+\]
+
+A partir de estas cantidades, el estadístico de prueba se expresa como:
+
+\[
+t =
+\frac{\hat{\Delta}_p}
+{\widehat{se}(\hat{\Delta}_p)} \sim t_{df},
+\]
+
+el cual sigue aproximadamente una distribución \(t\) de Student con
+\(df\) grados de libertad, determinados por el diseño de muestreo. Bajo
+la hipótesis nula, valores absolutos elevados del estadístico \(t\)
+proporcionan evidencia en contra de la igualdad de las proporciones.
+
+Supóngase que el objetivo es evaluar, mediante una prueba de hipótesis,
+si la tasa de desempleo difiere significativamente entre hombres y
+mujeres. Para implementar esta prueba, se utiliza la variable indicadora
+\texttt{unemployed}, definida previamente, que toma el valor de uno para
+las personas desocupadas y de cero para el resto. Dado que la tasa de
+desempleo se calcula exclusivamente sobre la población económicamente
+activa, el análisis debe restringirse a las personas ocupadas y
+desocupadas, excluyendo tanto a la población inactiva como a las
+observaciones con valores perdidos en la variable \texttt{Employment},
+que incluyen a los menores de edad. En consecuencia, la media de
+\texttt{unemployed} dentro de cada grupo de sexo corresponde a la
+proporción estimada de personas desocupadas, lo que permite contrastar
+formalmente ambas tasas.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lf\_design }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(}
+    \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(Employment),}
+\NormalTok{    Employment }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{"Employed"}\NormalTok{, }\StringTok{"Unemployed"}\NormalTok{)}
+\NormalTok{  )  }
+
+\NormalTok{lf\_design }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Sex) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{proportion =} \FunctionTok{survey\_mean}\NormalTok{(}
+\NormalTok{      unemployed,}
+      \AttributeTok{proportion =} \ConstantTok{TRUE}\NormalTok{,}
+      \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{),}
+      \AttributeTok{level =} \FloatTok{0.95}\NormalTok{,}
+      \AttributeTok{na.rm =} \ConstantTok{TRUE}
+\NormalTok{    )}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+{
+
+\begin{longtable}[]{@{}lrrrr@{}}
+
+\caption{\label{tbl-prop-desempleo-sexo}Estimación de la tasa de
+desempleo por sexo}
+
+\tabularnewline
+
+\toprule\noalign{}
+Sex & proportion & proportion\_se & proportion\_low & proportion\_upp \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Female & 0.048 & 0.012 & 0.029 & 0.078 \\
+Male & 0.084 & 0.015 & 0.059 & 0.118 \\
+
+\end{longtable}
+
+}
+
+Las tasas de desempleo estimadas por sexo se presentan en la
+tabla~\ref{tbl-prop-desempleo-sexo}. En \texttt{R}, la función
+\texttt{svyttest()} del paquete \texttt{survey} permite contrastar la
+diferencia entre las medias de esta variable binaria y, por tanto, la
+diferencia entre las proporciones de desocupación de hombres y mujeres,
+incorporando los ajustes asociados al diseño muestral.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lf\_design }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(}
+    \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(Employment),}
+\NormalTok{    Employment }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{"Employed"}\NormalTok{, }\StringTok{"Unemployed"}\NormalTok{)}
+\NormalTok{  )}
+
+\NormalTok{ttest\_unemployment\_sex }\OtherTok{\textless{}{-}} \FunctionTok{svyttest}\NormalTok{(}
+\NormalTok{  unemployed }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex,}
+  \AttributeTok{design =}\NormalTok{ lf\_design,}
+  \AttributeTok{level =} \FloatTok{0.95}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+{
+
+\begin{longtable}[]{@{}rrrrrr@{}}
+
+\caption{\label{tbl-ttest-desempleo-sexo}Prueba de diferencia de
+proporciones de desocupación por sexo (población económicamente activa)}
+
+\tabularnewline
+
+\toprule\noalign{}
+statistic & p\_value & gl & ci\_lower & ci\_upper &
+estimated\_difference \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2.18 & 0.031 & 118 & 0.003 & 0.068 & 0.036 \\
+
+\end{longtable}
+
+}
+
+A partir de la tabla~\ref{tbl-ttest-desempleo-sexo}, se concluye que la
+diferencia estimada entre la proporción de hombres desocupados y la
+proporción de mujeres desocupadas es de 0.0359, es decir, la proporción
+correspondiente a los hombres es 3.59 puntos porcentuales mayor. El
+estadístico obtenido es \(t = 2.182\), con 118 grados de libertad y un
+valor-\emph{p} de 0.031. Dado que el valor-\emph{p} es inferior al nivel
+de significancia del 5\%, se rechaza la hipótesis nula de igualdad de
+proporciones. Por tanto, existe evidencia estadística suficiente para
+afirmar que, dentro de la población económicamente activa, la proporción
+de desocupados es diferente entre hombres y mujeres.
 
 \section{Tablas cruzadas}\label{tablas-cruzadas}
 
