@@ -17,17 +17,14 @@ source("../_tabla_helper.R")
 
 # Análisis de variables categóricas  {#cap4}
 
+En el análisis de encuestas de hogares, uno de los productos más habituales es la estimación de parámetros descriptivos asociados a variables categóricas, los cuales permiten sintetizar las principales características de la población. Estas medidas facilitan una representación clara y comprensible de fenómenos sociales a partir de información recolectada mediante muestras probabilísticas [@CEPAL2023Diseno].
 
-De acuerdo con @HeeringaWestBerglund2017 y @CEPAL2023Diseno, en el análisis de encuestas de hogares, uno de los productos más habituales es la estimación de parámetros descriptivos asociados a variables categóricas, los cuales permiten sintetizar las principales características de la población. Estas medidas facilitan una representación clara y comprensible de fenómenos sociales a partir de información recolectada mediante muestras probabilísticas.
+Como explica @Agresti2019Intro, las frecuencias y las proporciones se encuentran entre los indicadores descriptivos más utilizados para analizar variables categóricas. Las frecuencias representan el número de personas u hogares que pertenecen a cada categoría, como la cantidad de personas en condición de pobreza, mientras que las proporciones expresan el peso relativo de cada categoría dentro de la población, como el porcentaje de hogares en situación de hacinamiento. Aunque el análisis descriptivo de este tipo de variables se apoya principalmente en estos parámetros, también puede complementarse con medidas derivadas de variables numéricas, como los cuantiles y los indicadores de desigualdad abordados en el capítulo anterior.
 
-Como explica @Agresti2019Intro, entre los indicadores descriptivos más utilizados para analizar variables categóricas se encuentran las frecuencias y las proporciones. Las frecuencias indican cuántas personas u hogares pertenecen a cada categoría, por ejemplo, el número de personas en condición de pobreza, mientras que las proporciones expresan el peso relativo de cada categoría dentro del conjunto poblacional.
+Para estimar correctamente estas medidas a partir de una encuesta de hogares, es necesario comenzar por definir el diseño de muestreo. Este paso permite incorporar las características de la encuesta, incluidos los factores de expansión, las unidades primarias de muestreo y los estratos de selección. La adecuada especificación de estos elementos es fundamental para que las frecuencias, las proporciones y las demás estadísticas estimadas representen apropiadamente a la población objetivo y para que sus medidas de precisión reflejen la variabilidad introducida por el diseño muestral.
 
-Aunque el análisis descriptivo de variables categóricas suele apoyarse en estos parámetros básicos, también es posible combinarlas con medidas derivadas de variables numéricas, como cuantiles o indicadores de desigualdad, las cuales se abordaron en el capítulo anterior. No obstante, en este capítulo nos concentraremos exclusivamente en la descripción y estimación de parámetros asociados a variables categóricas, empleando diseños muestrales complejos.
-
-El análisis comienza con la definición del diseño de muestreo, siguiendo los lineamientos explicados en capítulos anteriores y utilizando la misma base de datos. Este paso es fundamental porque permite incorporar adecuadamente las características del diseño complejo de la encuesta, tales como los factores de expansión, las unidades primarias de muestreo y los estratos de selección. La correcta especificación de estos elementos garantiza que las estimaciones obtenidas sean representativas de la población objetivo y que las medidas de precisión reflejen apropiadamente la variabilidad introducida por el esquema de muestreo.
 
 ```{r cargar-datos-categoricas, eval=TRUE}
-
 library(tidyverse)
 library(survey)
 library(srvyr)
@@ -42,10 +39,9 @@ survey_design <- survey_data %>%
     weights = wk,
     nest = TRUE
   )
-
 ```
 
-Luego, se generan algunas variables categóricas derivadas de la información original de la encuesta, las cuales serán utilizadas en los ejercicios desarrollados a lo largo de este capítulo. Entre ellas, se construye una variable que identifica si la persona se encuentra o no en condición de pobreza. De manera complementaria, también se crean otras variables categóricas de interés analítico que permitirán realizar desagregaciones y comparaciones entre distintos grupos de la población:
+A partir de la información original de la encuesta, se construyen algunas variables categóricas que serán utilizadas en los ejercicios desarrollados a lo largo de este capítulo. En particular, se define una variable dicotómica que identifica si una persona se encuentra o no en condición de pobreza, considerando como pobres a quienes pertenecen a cualquiera de las categorías de pobreza registradas en la encuesta. Asimismo, se crea una variable que permite distinguir a las personas desempleadas del resto de la población y otra que clasifica a las personas en dos grupos de edad: menores de 18 años y personas de 18 años o más. Estas variables facilitarán la desagregación de los resultados y la comparación de indicadores entre distintos grupos de la población:
 
 ```{r crear-variables-categoricas, echo=TRUE, eval=TRUE}
 survey_design <- survey_design %>%
@@ -61,7 +57,7 @@ survey_design <- survey_design %>%
 
 En el código anterior se crean nuevas variables derivadas utilizando la función `mutate()` del paquete `dplyr`. Las variables `poor` y `unemployed` se construyen mediante la función `ifelse()`, que evalúa una condición lógica y asigna un valor dependiendo de si esta se cumple o no. En este caso, las variables toman el valor `1` cuando la persona se encuentra en condición de pobreza o desempleo, respectivamente, y `0` en caso contrario. Por su parte, la variable `age_18` se genera mediante la función `case_when()`, la cual permite definir categorías a partir de una o varias condiciones de forma más clara y flexible que `ifelse()`. Esta función resulta especialmente útil cuando se requiere construir variables categóricas con múltiples niveles. En el ejemplo, las personas menores de 18 años se clasifican en la categoría `"< 18 years"`, mientras que el resto se agrupa en la categoría `">= 18 years"`.
 
-Además de lo anterior, se hace necesario generar subgrupos de la población para realizar estimaciones desagregadas. En este capítulo se emplean cuatro subpoblaciones de ejemplo:
+Además de las variables categóricas definidas previamente, es necesario establecer subpoblaciones que permitan obtener estimaciones desagregadas y comparar los indicadores entre distintos grupos. Para los ejemplos desarrollados en este capítulo, se consideran cuatro subpoblaciones definidas según la zona de residencia y el sexo: población urbana, población rural, mujeres y hombres.
 
 ```{r crear-subpoblaciones-categoricas, eval=TRUE}
 urban_subset <- survey_design %>%
@@ -79,27 +75,31 @@ male_subset <- survey_design %>%
 
 ## Estimación del tamaño poblacional {#estimacion-del-tamano-poblacional}
 
-Según @CEPAL2023Diseno, en el análisis de encuestas de hogares, es fundamental estimar el tamaño de las subpoblaciones, entendido como el número de personas u hogares que pertenecen a categorías específicas y la proporción que representan dentro de la población. Estas estimaciones, basadas en variables categóricas, permiten caracterizar el perfil demográfico y socioeconómico de la población, información clave para orientar la asignación de recursos, diseñar políticas públicas y formular programas sociales. Por ejemplo, estimar cuántas personas se encuentran por debajo de la línea de pobreza, cuántas están desempleadas o cuántas alcanzaron determinado nivel educativo es esencial para identificar brechas y evaluar condiciones de bienestar.
+En el análisis de encuestas de hogares, es fundamental estimar el tamaño de las distintas subpoblaciones y la proporción que cada una representa dentro de la población total [@CEPAL2023Diseno]. Estas estimaciones permiten cuantificar grupos definidos por características demográficas o socioeconómicas y describir su importancia relativa. Por ejemplo, conocer el número y la proporción de personas que se encuentran por debajo de la línea de pobreza, están desempleadas o han alcanzado un determinado nivel educativo contribuye a identificar brechas entre grupos, evaluar sus condiciones de bienestar y generar información relevante para el diseño de políticas públicas.
 
-Como explica @Gutierrez2016, la estimación del tamaño de una población o subpoblación se realiza a partir de variables categóricas, que segmentan a la población en grupos mutuamente excluyentes (particiones). El tamaño poblacional hace referencia al número total de individuos u hogares que, en la base de datos de la encuesta, pertenecen a una categoría determinada. Estas categorías pueden corresponder, por ejemplo, a estados de ocupación o niveles educativos alcanzados. Para obtener estas estimaciones, se combinan las respuestas de los encuestados con los pesos muestrales, que indican cuántas personas u hogares representa cada unidad de la muestra dentro de la población total.
-
-De acuerdo con @sarndal2003model, el estimador del tamaño de la población, se define como:
+Las subpoblaciones se definen mediante variables categóricas que clasifican a las unidades de la población finita en grupos mutuamente excluyentes, como las distintas condiciones de actividad económica o los niveles educativos alcanzados. El tamaño de una subpoblación corresponde al número total de personas u hogares de la población que pertenecen a una categoría determinada. Para estimarlo a partir de una encuesta, se suman los pesos muestrales de las unidades clasificadas en esa categoría, dado que cada peso indica cuántas personas u hogares de la población representa la unidad observada en la muestra. A partir de estas estimaciones también puede calcularse la proporción que cada subpoblación representa respecto del total poblacional. Por ende, el estimador del tamaño de la población [@sarndal2003model], se define como:
 
 $$
 \hat{N} = \sum_{h} \sum_{i} \sum_{k} w_{hik}
 $$
 
-En donde, $w_{hik}$ es el peso o factor de expansión de la unidad $k$ en la UPM $i$ del estrato $h$. Asimismo, la estimación del tamaño de una subpoblación sigue el mismo principio, pero se enmarca en un subconjunto definido por una característica específica. Para determinar cuántas personas pertenecen a una categoría particular, se identifica dicho grupo en la base de datos y se suman sus pesos muestrales. Esto permite cuantificar grupos de interés específicos y conocer su tamaño dentro de la población:
+En donde, $w_{hik}$ es el peso o factor de expansión de la unidad $k$ en la UPM $i$ del estrato $h$. 
+
+Asimismo, la estimación del tamaño de una subpoblación sigue el mismo principio que la estimación del tamaño total, pero se restringe a las unidades que presentan una característica determinada. Para estimar cuántas personas u hogares pertenecen a una categoría específica $d$, se identifica en la muestra a las unidades que cumplen dicha condición y se suman sus pesos muestrales. De esta manera, cada unidad contribuye a la estimación de acuerdo con el número de unidades de la población que representa:
 
 $$
-\hat{N}_d = \sum_{h} \sum_{i} \sum_{k} w_{hik} \ I(y_{hik}=d)
+\hat{N}_d
+=
+\sum_{h}
+\sum_{i}
+\sum_{k}
+w_{hik} \ 
+I(y_{hik}=d)
 $$
 
-Como señalan @DevilleSarndal1992, en donde $I(y_{hik}=d)$ es una variable binaria que toma el valor de 1 si la unidad $k$ de la UPM $i$ en el estrato $h$ pertenece a la categoría $d$ de la variable de interés $y$, y 0 en caso contrario. Nótese además que, si $d$ fue utilizada en la calibración de los pesos, el valor de $\hat{N}_d$ coincidirá con el control externo aplicado.
+donde $\hat{N}_d$ representa el tamaño estimado de la subpoblación perteneciente a la categoría $d$. Por su parte, $I(y_{hik}=d)$ es una variable binaria que toma el valor de 1 si la unidad $k$ de la UPM $i$ en el estrato $h$ pertenece a la categoría $d$ de la variable de interés $y$, y 0 en caso contrario. Nótese además que, si $d$ fue utilizada en la calibración de los pesos, el valor de $\hat{N}_d$ coincidirá con el control externo aplicado y por ende su error estándar será nulo [@Gutierrez2016].
 
-En `R`, y utilizando el diseño muestral definido previamente, es posible, generar resúmenes de la información de la encuesta para cada categoría de la variable `Zone`. Para ello, los datos se agrupan según la zona geográfica, lo que permite obtener resultados independientes para cada uno de estos dominios de estudio. A partir de este procedimiento se producen dos tipos principales de resultados. En primer lugar, se calcula el número de observaciones efectivamente recolectadas en la muestra, sin considerar los factores de expansión, lo que corresponde al tamaño muestral disponible en cada zona. En segundo lugar, se estima el tamaño poblacional asociado a cada dominio incorporando la información del diseño de muestreo.
-
-Junto con las estimaciones poblacionales también se obtienen medidas de precisión, como el error estándar y el intervalo de confianza, las cuales permiten evaluar el nivel de incertidumbre asociado a los resultados producidos a partir de la muestra. Los resultados se presentan en la @tbl-tamano-zona. En dicha tabla, `n` representa el número de observaciones de la muestra en cada zona, mientras que `size` corresponde a la estimación del total poblacional de la subpoblación. Por su parte, la función `unweighted()` se utiliza para calcular resúmenes no ponderados directamente a partir de los datos observados en la muestra.
+En `R`, utilizando el diseño muestral definido previamente, es posible, generar resúmenes de la información de la encuesta para cada categoría de la variable `Zone`. Para ello, los datos se agrupan según la zona geográfica, lo que permite obtener resultados independientes para cada uno de estos dominios de estudio. A partir de este procedimiento se producen dos tipos principales de resultados. En primer lugar, se calcula el número de observaciones efectivamente recolectadas en la muestra, sin considerar los factores de expansión, usando la función `unweighted()`. En segundo lugar, se estima el tamaño poblacional asociado a cada dominio incorporando la información del diseño de muestreo. Junto con las estimaciones poblacionales también se obtienen medidas de precisión, como el error estándar y el intervalo de confianza. Los resultados se presentan en la @tbl-tamano-zona. 
 
 ```{r cod-tamano-zona, eval=FALSE}
 survey_design %>%
@@ -124,9 +124,7 @@ survey_design %>%
 ```
 
 
-En efecto, el tamaño de muestra fue de 1297 personas en la zona rural y de 1308 en la zona urbana. A partir de estas muestras se estimó una población de 72,102 personas para la zona rural, con un error estándar de 3,062, y de 78,164 personas para la zona urbana, con un error estándar de 2,847. Estos resultados reflejan no solo el tamaño estimado de la población en cada dominio, sino también el nivel de precisión asociado a las estimaciones obtenidas a partir del diseño muestral.
-
-Considerando un nivel de confianza del 95%, los intervalos de confianza para las estimaciones poblacionales fueron de 66,038.5 a 78,165.4 personas en la zona rural y de 72,526.2 a 83,801.7 personas en la zona urbana. De manera análoga, también es posible estimar el número de personas según los distintos niveles de pobreza, cuyos resultados se presentan en la @tbl-tamano-pobreza.
+En efecto, el tamaño de muestra fue de 1297 personas en la zona rural y de 1308 en la zona urbana. A partir de estas muestras se estimó una población de 72,102 personas para la zona rural, con un error estándar de 3,062, y de 78,164 personas para la zona urbana, con un error estándar de 2,847. Considerando un nivel de confianza del 95%, los intervalos de confianza para las estimaciones poblacionales fueron de 66,038.5 a 78,165.4 personas en la zona rural y de 72,526.2 a 83,801.7 personas en la zona urbana. De manera análoga, también es posible estimar el número de personas según los distintos niveles de pobreza.
 
 ```{r cod-tamano-pobreza, eval=FALSE}
 survey_design %>%
@@ -144,9 +142,9 @@ survey_design %>%
   tabla_fmt()
 ```
 
-Otra variable categórica relevante en las encuestas de hogares es el estado de ocupación. A continuación se presenta el código correspondiente, cuyos resultados se muestran en la @tbl-tamano-empleo. En este caso, la información se agrupa según las categorías de la variable `Employment`, lo que permite obtener estimaciones separadas para cada condición de actividad laboral de la población. Mediante el uso de la función `group_by()` es posible desagregar las estimaciones en niveles más detallados, facilitando el análisis comparativo entre los distintos grupos ocupacionales.
+La @tbl-tamano-pobreza refelja una población en la que la mayoría de las personas no vive en pobreza, pero en la que esa aparente normalidad convive con una fractura difícil de considerar marginal: cerca de 58.868 personas se encuentran en pobreza relativa o extrema. De ellas, 21.519 padecen las privaciones más severas y 37.349 permanecen por debajo de los niveles de vida socialmente aceptables.
 
-Antes de realizar las estimaciones, se excluyen los registros con valores faltantes en la variable de empleo, garantizando que los resultados se calculen únicamente con información válida. Posteriormente, para cada categoría de ocupación se estima el tamaño poblacional utilizando el diseño muestral definido previamente. Además de la estimación puntual, también se calculan medidas de precisión, específicamente el error estándar y los intervalos de confianza, lo que permite evaluar el grado de incertidumbre asociado a cada estimación.
+Otra variable categórica relevante en las encuestas de hogares es el estado de ocupación. En este caso, la información se agrupa según las categorías de la variable `Employment`, lo que permite obtener estimaciones separadas para cada condición de actividad laboral de la población. Mediante el uso de la función `group_by()` es posible desagregar las estimaciones en niveles más detallados, facilitando el análisis comparativo entre los distintos grupos ocupacionales. En primer lugar, se excluyen los registros con valores faltantes en la variable de empleo, garantizando que los resultados se calculen únicamente con personas activas en la fuerza de trabajo. Posteriormente, para cada categoría de ocupación se estima el tamaño poblacional, junto con el error estándar y los intervalos de confianza. 
 
 ```{r cod-tamano-empleo, eval=FALSE}
 survey_design %>%
@@ -165,9 +163,10 @@ survey_design %>%
   tabla_fmt()
 ```
 
-A partir de los resultados obtenidos se estima que 4,634.8 personas se encuentran desempleadas, con un intervalo de confianza del 95% entre 3,128.6 y 6,140.9 personas. Asimismo, se estima que 41,465.2 personas pertenecen a la población inactiva, con un intervalo de confianza entre 37,182.6 y 45,747.8. Finalmente, la población ocupada se estimó en 61,877.0 personas, con un intervalo de confianza de 56,847.0 a 66,907.0 personas.
+A partir de los resultados presentados en la @tbl-tamano-empleo, se estima que la población ocupada asciende a 61.877 personas. Por su parte, la población inactiva se estima en 41.465 personas, mientras que cerca de 4.635 personas se encontrarían desempleadas. En conjunto, las estimaciones muestran que los desempleados representan el grupo de menor tamaño, aunque la amplitud relativa de su intervalo de confianza indica una mayor incertidumbre en comparación con las estimaciones de la población ocupada e inactiva.
 
-Finalmente, las estimaciones también pueden desagregarse simultáneamente por más de una variable categórica. Por ejemplo, es posible analizar el estado ocupacional según el nivel de pobreza, cuyos resultados se presentan en la @tbl-tamano-empleo-pobreza, de donde se puede concluir, entre otros aspectos, que aproximadamente 44,600.3 personas ocupadas no se encuentran en condición de pobreza, con un intervalo de confianza del 95% entre 39,459.6 y 49,741.0 personas. Asimismo, se estima que 6,421.8 personas inactivas se encuentran en situación de pobreza extrema, con un intervalo de confianza al 95% entre 3,806.6 y 9,037.0 personas.
+Finalmente, las estimaciones también pueden desagregarse simultáneamente por más de una variable categórica. Por ejemplo, es posible analizar el estado ocupacional según el nivel de pobreza, cuyos resultados se presentan en la @tbl-tamano-empleo-pobreza, de donde se puede concluir que el empleo constituye una protección importante frente a la pobreza. Entre las 61.877 personas ocupadas, 17.277 continúan en situación de pobreza, de las cuales 5.128 se encuentran en pobreza extrema y 12.149 en pobreza relativa. La vulnerabilidad es aún más visible entre las 41.465 personas inactivas, pues 17.119 viven en pobreza, mientras que entre las 4.635 personas desempleadas apenas 1.768 son clasificadas como no pobres y 2.866 padecen pobreza extrema o relativa. 
+
 
 ```{r cod-tamano-empleo-pobreza, eval=FALSE}
 survey_design %>%
@@ -546,6 +545,84 @@ svycontrast(
 ) %>%
   data.frame()
 ```
+
+## Pruebas de hipótesis sobre proporciones {#pruebas-de-hipotesis-sobre-proporciones}
+
+Las pruebas de hipótesis también permiten evaluar si las diferencias observadas entre proporciones estimadas para distintos grupos reflejan diferencias en la población o si pueden atribuirse al error de muestreo. En encuestas de hogares, estos contrastes deben incorporar las características del diseño muestral para estimar correctamente la variabilidad de las proporciones y realizar inferencias válidas.
+
+Supóngase que $p_H$ representa la proporción de hombres desocupados y $p_M$ la proporción de mujeres desocupadas dentro de la población económicamente activa. El parámetro de interés corresponde a la diferencia entre ambas proporciones:
+
+$$
+\Delta_p = p_H - p_M.
+$$
+
+Para evaluar si las proporciones de desocupación de hombres y mujeres son diferentes, se plantea el siguiente sistema de hipótesis bilateral:
+
+$$
+\begin{cases}
+H_{0}: & \Delta_p = 0 \quad (p_H = p_M) \\
+H_{1}: & \Delta_p \neq 0 \quad (p_H \neq p_M).
+\end{cases}
+$$
+
+El estimador muestral de esta diferencia se define como $\hat{\Delta}_p = \hat{p}_H - \hat{p}_M$. Su error estándar debe considerar tanto las varianzas de las proporciones estimadas como la covarianza entre ellas:
+
+$$
+\widehat{se}(\hat{\Delta}_p) =
+\sqrt{
+\widehat{Var}(\hat{p}_H)
++
+\widehat{Var}(\hat{p}_M)
+-
+2\widehat{Cov}(\hat{p}_H,\hat{p}_M)
+}.
+$$
+
+A partir de estas cantidades, el estadístico de prueba se expresa como:
+
+$$
+t =
+\frac{\hat{\Delta}_p}
+{\widehat{se}(\hat{\Delta}_p)} \sim t_{df},
+$$
+
+el cual sigue aproximadamente una distribución $t$ de Student con los grados de libertad determinados por el diseño muestral. Bajo la hipótesis nula, valores absolutos elevados del estadístico $t$ proporcionan evidencia en contra de la igualdad de las proporciones.
+
+Para implementar esta prueba, la condición de desocupación se representa mediante una variable indicadora que toma el valor uno para las personas desocupadas y cero para las ocupadas. La media de esta variable dentro de cada grupo corresponde a la proporción de personas desocupadas. Además, el análisis debe restringirse a la población económicamente activa, por lo que se excluyen las personas inactivas y las observaciones con valores perdidos en `Employment`.
+
+En `R`, la función `svyttest()` del paquete `survey` permite contrastar la diferencia entre las medias de esta variable binaria y, por tanto, la diferencia entre las proporciones de desocupación de hombres y mujeres, incorporando los ajustes asociados al diseño muestral. El procedimiento y sus resultados se presentan en la Tabla \@ref(tab:tab-ttest-desempleo-sexo).
+
+```{r cod-ttest-desempleo-sexo, eval=TRUE}
+pea_design <- survey_design %>%
+  filter(
+    !is.na(Employment),
+    Employment %in% c("Employed", "Unemployed")
+  )
+
+ttest_unemployment_sex <- svyttest(
+  unemployed ~ Sex,
+  design = pea_design,
+  level = 0.95
+)
+```
+
+```{r tab-ttest-desempleo-sexo, echo=FALSE, tab.cap="Prueba de diferencia de proporciones de desocupación por sexo (población económicamente activa)"}
+df_res <- tibble(
+  statistic = ttest_unemployment_sex$statistic,
+  p_value = ttest_unemployment_sex$p.value,
+  gl = ttest_unemployment_sex$parameter,
+  ci_lower = ttest_unemployment_sex$conf.int[1],
+  ci_upper = ttest_unemployment_sex$conf.int[2],
+  estimated_difference = ttest_unemployment_sex$estimate
+)
+
+df_res %>%
+  tabla_fmt()
+```
+
+La diferencia estimada entre la proporción de hombres desocupados y la proporción de mujeres desocupadas es de 0.0359, es decir, la proporción correspondiente a los hombres es 3.59 puntos porcentuales mayor. El estadístico obtenido es $t = 2.182$, con 118 grados de libertad y un valor-*p* de 0.031. Dado que el valor-*p* es inferior al nivel de significancia del 5%, se rechaza la hipótesis nula de igualdad de proporciones. Por tanto, existe evidencia estadística suficiente para afirmar que, dentro de la población económicamente activa, la proporción de desocupados es diferente entre hombres y mujeres.
+
+
 
 ## Tablas cruzadas {#tablas-cruzadas}
 

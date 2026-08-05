@@ -766,7 +766,7 @@ Este intervalo proporciona un rango de valores plausibles para la diferencia pob
 En `R`, estas pruebas pueden implementarse mediante la función `svyttest()` del paquete `survey`, la cual incorpora automáticamente los ajustes asociados al diseño muestral. El siguiente código crea primero el objeto `survey_design_heads`, que conserva únicamente las observaciones correspondientes a las personas jefas de hogar, identificadas mediante `PersonID == "idPer01"`, sin perder las características del diseño muestral. Posteriormente, la función `svyttest()` compara el ingreso medio entre las categorías de la variable `Sex`. El argumento `level = 0.95` establece un nivel de confianza del 95 % para los intervalos.
 
 ```{r cod-ttest-sexo, eval=TRUE}
-survey_design_heads  <- survey_design %>% 
+survey_design_heads  <- survey_design %>%
   filter(PersonID == "idPer01")
 
 ttest_sex <- svyttest(Income ~ Sex, 
@@ -834,13 +834,15 @@ $$
 En consecuencia, el vector de contraste asociado a esta comparación es $\left[1,\,-1,\,0,\,0,\,0\right]$, donde los coeficientes positivos y negativos indican las poblaciones que se desean comparar y los ceros representan las poblaciones excluidas del contraste. En `R`, estos procedimientos se encuentran disponibles mediante la función `svycontrast()` del paquete `survey`. Para esto, es necesario crear un objeto con las medias de los ingresos desagregados por región, como se presenta en la @tbl-prom-region:
 
 ```{r cod-prom-region, eval=TRUE}
-region_mean_contrast <- svyby(formula = ~Income,
-                              by = ~Region,
-                              design = survey_design,
-                              FUN = svymean,
-                              na.rm = TRUE,
-                              covmat = TRUE,
-                              vartype = c("se", "ci"))
+region_mean_contrast <- svyby(
+  formula = ~ Income,
+  by = ~ Region,
+  design = survey_design,
+  FUN = svymean,
+  na.rm = TRUE,
+  covmat = TRUE,
+  vartype = c("se", "ci")
+)
 ```
 
 ```{r}
@@ -963,7 +965,9 @@ df_con <- tibble(
   contrast = names(contrast_regions),
   estimate = as.numeric(contrast_regions),
   variance = diag(attr(contrast_regions, "var")),
-  standard_error = sqrt(diag(attr(contrast_regions, "var")))
+  standard_error = sqrt(diag(attr(
+    contrast_regions, "var"
+  )))
 )
 
 df_con %>%
@@ -974,14 +978,15 @@ df_con %>%
 También es posible construir contrastes entre variables asociadas a diferentes grupos poblacionales, como ocurre al comparar el ingreso medio según el sexo del jefe de hogar. Siguiendo el mismo procedimiento del ejemplo anterior, y haciendo uso del objeto `survey_design_heads`,   el primer paso consiste en estimar el ingreso medio para cada grupo, en este caso hombres y mujeres, como se presenta en la @tbl-prom-sexo.
 
 ```{r cod-prom-sexo, eval=TRUE}
-sex_mean_contrast <- svyby(formula = ~Income,
-                           by = ~Sex,
-                           design = survey_design_heads,
-                           FUN = svymean,
-                           na.rm = TRUE,
-                           covmat = TRUE,
-                           vartype = c("se", "ci"))
-
+sex_mean_contrast <- svyby(
+  formula = ~ Income,
+  by = ~ Sex,
+  design = survey_design_heads,
+  FUN = svymean,
+  na.rm = TRUE,
+  covmat = TRUE,
+  vartype = c("se", "ci")
+)
 ```
 
 
@@ -1023,14 +1028,16 @@ df_con %>%
 Dado que los contrastes corresponden a funciones lineales de parámetros, también es posible aplicarlos a estimadores de razón. Un ejemplo de ello consiste en comparar la relación entre ingresos y gastos según el sexo del jefe de hogar. En este caso, primero se estima la razón ingreso-gasto para cada grupo y posteriormente se construye el contraste entre dichas razones. A continuación, se presentan los códigos computacionales utilizados para realizar este análisis, cuyos resultados se muestran en la @tbl-razon-ingreso-gasto-sexo:
 
 ```{r cod-razon-ingreso-gasto-sexo, echo=TRUE, eval=TRUE}
-sex_ratio_contrast <- svyby(formula = ~Income,
-                            by = ~Sex,
-                            denominator = ~Expenditure,
-                            design = survey_design_heads,
-                            FUN = svyratio,
-                            na.rm = TRUE,
-                            covmat = TRUE,
-                            vartype = c("se", "ci"))
+sex_ratio_contrast <- svyby(
+  formula = ~ Income,
+  by = ~ Sex,
+  denominator = ~ Expenditure,
+  design = survey_design_heads,
+  FUN = svyratio,
+  na.rm = TRUE,
+  covmat = TRUE,
+  vartype = c("se", "ci")
+)
 ```
 
 
@@ -1070,19 +1077,18 @@ df_res %>%
 
 ## Visualización de variables continuas {#viz-continuas}
 
-Según @wilkinson2005grammar, la representación gráfica de variables continuas es un componente esencial en el análisis de encuestas de hogares. Los gráficos bien diseñados permiten identificar distribuciones, tendencias y relaciones entre variables, facilitando la interpretación de los hallazgos y su comunicación a distintos públicos. Un aspecto fundamental en este contexto es que los gráficos deben incorporar los pesos muestrales para reflejar la distribución de la población de interés.
+La representación gráfica de variables continuas constituye un componente fundamental del análisis de encuestas de hogares. Los gráficos bien diseñados permiten examinar la forma de las distribuciones, identificar tendencias y explorar relaciones entre variables, lo que facilita tanto la interpretación de los resultados como su comunicación a distintos públicos. En este contexto, es importante que las representaciones gráficas incorporen, cuando corresponda, las características del diseño muestral [@Lumley2010]. En particular, el uso de los factores de expansión permite que la distribución representada refleje adecuadamente a la población de interés, en lugar de limitarse a describir únicamente las observaciones incluidas en la muestra.
 
-De acuerdo con @patchwork y @ggplot22026, en esta sección se utilizan los paquetes `patchwork` y `ggplot2` para la composición y construcción de gráficos. Estas herramientas se combinan con `survey` y `srvyr`, respectivamente.
+La construcción de los gráficos presentados en este docuemnto se basa en el enfoque conocido como la gramática de los gráficos, el cual concibe cada visualización como la combinación de distintos componentes que se agregan: los datos, las correspondencias entre variables y atributos visuales, los elementos geométricos, las escalas, las facetas y el sistema de coordenadas [@wilkinson2005grammar]. Este enfoque se implementa en `R` mediante el paquete `ggplot2`, que permite construir representaciones gráficas de manera sistemática y flexible [@ggplot22026]. Las estimaciones obtenidas con los paquetes `survey` y `srvyr`, incluidos los factores de expansión y las medidas de incertidumbre, se utilizan como insumos para elaborar los gráficos. Cuando es necesario presentar varias visualizaciones de manera conjunta, el paquete `patchwork` permite organizarlas y combinarlas en una composición gráfica coherente [@patchwork].
 
 ```{r setup-graficos-continuas, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(patchwork)
-data(BigCity, package = "TeachingSampling")
 ```
 
 ### Histogramas {#histogramas}
 
-Un histograma es una representación gráfica de la distribución de una variable numérica continua, construida a partir de rectángulos cuya altura es proporcional a la frecuencia de observaciones dentro de determinados intervalos de clase. En el contexto de encuestas de hogares, los histogramas ponderados permiten aproximar la distribución de la variable en la población, incorporando los factores de expansión asociados al diseño muestral.
+Un histograma es una representación gráfica de la distribución de una variable numérica continua, construida a partir de rectángulos cuya altura es proporcional a la frecuencia de observaciones dentro de determinados intervalos. En el contexto de las encuestas de hogares, los histogramas ponderados permiten aproximar la distribución de la variable de interés en la población, incorporando los factores de expansión asociados al diseño muestral.
 
 A continuación, se presenta el histograma ponderado de la variable `Income`, construido incorporando los pesos muestrales (`wk`) con el fin de representar la distribución estimada del ingreso en la población. Los resultados obtenidos se muestran en la @fig-hist-ingreso-ponde:
 
@@ -1093,6 +1099,7 @@ weighted_income_hist <- ggplot(
   geom_histogram(aes(y = ..density..)) +
   ylab("") +
   ggtitle("Histograma ponderado")
+
 weighted_income_hist
 ```
 
@@ -1116,11 +1123,13 @@ weighted_zone_hist
 
 En este código, se construye un histograma ponderado utilizando la base de datos `survey_data`, donde `x = Income` define la variable representada en el eje horizontal y `weight = wk` incorpora los pesos muestrales para reflejar la distribución poblacional del ingreso. La función `geom_histogram()` genera el histograma y, mediante `aes(y = ..density.., fill = Zone)`, representa las barras en términos de densidad y asigna colores diferentes según la variable `Zone`, permitiendo comparar visualmente la distribución del ingreso entre zonas. El argumento `alpha = 0.5` agrega transparencia a las barras para facilitar la superposición de los histogramas, mientras que `position = "identity"` permite que las distribuciones se dibujen una encima de otra en lugar de apilarse. Posteriormente, `scale_fill_manual(values = zone_colors)` define manualmente los colores asociados a cada zona. Finalmente, `ylab("")` elimina la etiqueta del eje vertical, `ggtitle("Weighted")` agrega un título al gráfico.
 
-Adicionalmente, es posible superponer curvas de densidad suavizadas mediante la función `geom_density()`, lo que permite visualizar de manera continua la forma de la distribución de la variable analizada. Este tipo de representación facilita la identificación de patrones como asimetrías, concentración de observaciones o la presencia de múltiples modas. Un ejemplo de este tipo de gráfico se presenta en la @fig-densidades:
+Además, es posible superponer curvas de densidad suavizadas mediante la función `geom_density()`, lo que permite representar de manera continua la forma de la distribución de la variable analizada. Este tipo de gráfico facilita la identificación de características como la asimetría, la concentración de los valores y la posible presencia de múltiples modas. En la @fig-densidades se presentan los histogramas del ingreso y el gasto junto con sus respectivas curvas de densidad estimadas. Para disponer ambos gráficos uno al lado del otro, se utiliza el operador `|` del paquete `patchwork`, que permite combinar distintas visualizaciones en una misma composición gráfica.
 
 ```{r fig-densidades, fig.cap="Histogramas con curvas de densidad superpuestas para ingreso y gasto", fig.align='center', out.width='90%'}
-weighted_income_hist + geom_density(fill = "blue", alpha = 0.3) |
-  weighted_zone_hist + geom_density(aes(fill = Zone), alpha = 0.3) +
+weighted_income_hist + 
+  geom_density(fill = "blue", alpha = 0.3) | 
+  weighted_zone_hist + 
+  geom_density(aes(fill = Zone), alpha = 0.3) +
   theme(legend.position = "top")
 ```
 
@@ -1131,7 +1140,8 @@ Introducidos por @Tukey1977EDA, los diagramas de caja (*boxplots*) permiten iden
 Para construir *boxplots* ponderados en `ggplot2` se utiliza la función `geom_boxplot()`, como se muestra en la @fig-boxplot-zona-sexo. En este caso, la función `ggplot()` inicia la construcción del gráfico utilizando la base de datos `survey_data`, donde `x = Income` define la variable numérica analizada y `weight = wk` incorpora los pesos muestrales para representar la distribución estimada en la población. Posteriormente, `geom_boxplot()` genera los diagramas de caja y, mediante `aes(fill = Zone)` o `aes(fill = Sex)`, asigna colores diferentes a cada categoría de las variables `Zone` y `Sex`, respectivamente, facilitando la comparación visual entre grupos. La función `coord_flip()` invierte los ejes para presentar los *boxplots* de forma horizontal, mejorando así su legibilidad. Por su parte, `scale_fill_manual()` permite definir manualmente los colores asociados a cada categoría mediante los vectores `zone_colors` y `sex_colors`.
 
 ```{r fig-boxplot-zona-sexo, fig.cap="Boxplots ponderados del ingreso por zona y sexo", fig.align='center', out.width='90%', echo=TRUE}
-weighted_zone_boxplot <- ggplot(survey_data, aes(x = Income, weight = wk)) +
+weighted_zone_boxplot <- 
+  ggplot(survey_data, aes(x = Income, weight = wk)) +
   geom_boxplot(aes(fill = Zone)) +
   ggtitle("Weighted") +
   coord_flip() +
@@ -1139,7 +1149,8 @@ weighted_zone_boxplot <- ggplot(survey_data, aes(x = Income, weight = wk)) +
 
 sex_colors <- c(Male = "#5DADE2", Female = "#2874A6")
 
-weighted_sex_boxplot <- ggplot(survey_data, aes(x = Income, weight = wk)) +
+weighted_sex_boxplot <- 
+  ggplot(survey_data, aes(x = Income, weight = wk)) +
   geom_boxplot(aes(fill = Sex)) +
   ggtitle("Weighted") +
   coord_flip() +
@@ -1153,14 +1164,22 @@ Además de las herramientas disponibles en `ggplot2`, las funciones especializad
 ```{r fig-svyhist-svybox, fig.cap="Histograma y boxplot del ingreso ajustados al diseño muestral complejo", fig.align='center', out.width='80%'}
 old_par <- par(no.readonly = TRUE)
 par(mfrow = c(1, 2))
-svyhist(~Income, survey_design,
+svyhist(
+  ~ Income,
+  survey_design,
   main = "Household income",
-  col  = "grey80", xlab = "Income",
-  probability = FALSE)
-
-svyboxplot(Income ~ Zone, survey_design,
   col  = "grey80",
-  ylab = "Income", xlab = "Zone")
+  xlab = "Income",
+  probability = FALSE
+)
+
+svyboxplot(
+  Income ~ Zone,
+  survey_design,
+  col  = "grey80",
+  ylab = "Income",
+  xlab = "Zone"
+)
 par(old_par)
 ```
 
@@ -1168,7 +1187,7 @@ par(old_par)
 
 Los diagramas de dispersión permiten explorar visualmente la relación entre dos variables continuas, facilitando la identificación de patrones de asociación, tendencias y posibles valores atípicos. En el contexto de encuestas con diseños muestrales complejos, resulta importante incorporar la información de los pesos de muestreo para que la representación gráfica refleje adecuadamente la contribución relativa de cada observación en la población.
 
-Cuando se trabaja con conjuntos de datos de gran tamaño, representar todos los puntos simultáneamente puede generar gráficos difíciles de interpretar debido a la sobreposición de observaciones. Sin embargo, en muestras de tamaño moderado, una estrategia sencilla y efectiva consiste en representar los pesos mediante el tamaño de los símbolos en el gráfico de dispersión. De esta manera, las observaciones con mayor peso poblacional aparecen resaltadas visualmente. Un ejemplo de este tipo de representación se presenta en la @fig-scatter-basico:
+Cuando se trabaja con conjuntos de datos de gran tamaño, representar todos los puntos simultáneamente puede generar gráficos difíciles de interpretar debido a la sobreposición de observaciones. Sin embargo, en muestras de tamaño moderado, una estrategia sencilla y efectiva consiste en representar los pesos mediante el tamaño de los símbolos en el gráfico de dispersión. De esta manera, las observaciones con mayor peso poblacional aparecerán resaltadas visualmente. Un ejemplo de este tipo de representación se presenta en la @fig-scatter-basico:
 
 ```{r fig-scatter-basico, fig.cap="Diagrama de dispersión entre ingreso y gasto de los hogares", fig.align='center', out.width='65%', echo=TRUE}
 weighted_basic_scatter <- ggplot(
@@ -1182,7 +1201,6 @@ weighted_basic_scatter
 En este código, se construye un diagrama de dispersión entre las variables `x = Expenditure` y `y = Income`. La función `geom_point()` agrega los puntos del gráfico y, mediante `aes(size = wk)`, utiliza los pesos muestrales (`wk`) para controlar el tamaño de cada punto, de modo que las observaciones con mayor representación poblacional aparezcan visualmente más destacadas. El argumento `alpha = 0.3` incorpora transparencia a los puntos, reduciendo el problema de sobreposición y facilitando la visualización de áreas con alta concentración de observaciones.
 
 Adicionalmente, es posible incorporar variables de agrupamiento en los diagramas de dispersión mediante los argumentos `shape` y `color`, los cuales permiten diferenciar visualmente las observaciones según categorías específicas de la población. Esto facilita la identificación de patrones diferenciados entre grupos y mejora la interpretación de la relación entre las variables analizadas. Un ejemplo de este tipo de representación se presenta en la @fig-scatter-zona.
-
 
 ```{r fig-scatter-zona, fig.cap="Diagrama de dispersión entre ingreso y gasto por zona geográfica", fig.align='center', out.width='65%', echo=TRUE}
 weighted_zone_scatter <- ggplot(

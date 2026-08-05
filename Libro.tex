@@ -2994,7 +2994,7 @@ los intervalos.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{survey\_design\_heads  }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{survey\_design\_heads  }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{filter}\NormalTok{(PersonID }\SpecialCharTok{==} \StringTok{"idPer01"}\NormalTok{)}
 
 \NormalTok{ttest\_sex }\OtherTok{\textless{}{-}} \FunctionTok{svyttest}\NormalTok{(Income }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex, }
@@ -3114,13 +3114,15 @@ por región, como se presenta en la tabla~\ref{tbl-prom-region}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{region\_mean\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}\AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Income,}
-                              \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Region,}
-                              \AttributeTok{design =}\NormalTok{ survey\_design,}
-                              \AttributeTok{FUN =}\NormalTok{ svymean,}
-                              \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
-                              \AttributeTok{covmat =} \ConstantTok{TRUE}\NormalTok{,}
-                              \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{))}
+\NormalTok{region\_mean\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}
+  \AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ Income,}
+  \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ Region,}
+  \AttributeTok{design =}\NormalTok{ survey\_design,}
+  \AttributeTok{FUN =}\NormalTok{ svymean,}
+  \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{covmat =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)}
+\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3368,13 +3370,15 @@ presenta en la tabla~\ref{tbl-prom-sexo}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sex\_mean\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}\AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Income,}
-                           \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Sex,}
-                           \AttributeTok{design =}\NormalTok{ survey\_design\_heads,}
-                           \AttributeTok{FUN =}\NormalTok{ svymean,}
-                           \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
-                           \AttributeTok{covmat =} \ConstantTok{TRUE}\NormalTok{,}
-                           \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{))}
+\NormalTok{sex\_mean\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}
+  \AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ Income,}
+  \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex,}
+  \AttributeTok{design =}\NormalTok{ survey\_design\_heads,}
+  \AttributeTok{FUN =}\NormalTok{ svymean,}
+  \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{covmat =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)}
+\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3450,14 +3454,16 @@ se muestran en la tabla~\ref{tbl-razon-ingreso-gasto-sexo}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sex\_ratio\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}\AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Income,}
-                            \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Sex,}
-                            \AttributeTok{denominator =} \SpecialCharTok{\textasciitilde{}}\NormalTok{Expenditure,}
-                            \AttributeTok{design =}\NormalTok{ survey\_design\_heads,}
-                            \AttributeTok{FUN =}\NormalTok{ svyratio,}
-                            \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
-                            \AttributeTok{covmat =} \ConstantTok{TRUE}\NormalTok{,}
-                            \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{))}
+\NormalTok{sex\_ratio\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}
+  \AttributeTok{formula =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ Income,}
+  \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex,}
+  \AttributeTok{denominator =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ Expenditure,}
+  \AttributeTok{design =}\NormalTok{ survey\_design\_heads,}
+  \AttributeTok{FUN =}\NormalTok{ svyratio,}
+  \AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{covmat =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)}
+\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3523,26 +3529,40 @@ sex\_difference & -0.178 & 0.088 & 0.00774 \\
 
 \section{Visualización de variables continuas}\label{viz-continuas}
 
-Según Wilkinson (\citeproc{ref-wilkinson2005grammar}{2005}), la
-representación gráfica de variables continuas es un componente esencial
-en el análisis de encuestas de hogares. Los gráficos bien diseñados
-permiten identificar distribuciones, tendencias y relaciones entre
-variables, facilitando la interpretación de los hallazgos y su
-comunicación a distintos públicos. Un aspecto fundamental en este
-contexto es que los gráficos deben incorporar los pesos muestrales para
-reflejar la distribución de la población de interés.
+La representación gráfica de variables continuas constituye un
+componente fundamental del análisis de encuestas de hogares. Los
+gráficos bien diseñados permiten examinar la forma de las
+distribuciones, identificar tendencias y explorar relaciones entre
+variables, lo que facilita tanto la interpretación de los resultados
+como su comunicación a distintos públicos. En este contexto, es
+importante que las representaciones gráficas incorporen, cuando
+corresponda, las características del diseño muestral
+(\citeproc{ref-Lumley2010}{Lumley 2010}). En particular, el uso de los
+factores de expansión permite que la distribución representada refleje
+adecuadamente a la población de interés, en lugar de limitarse a
+describir únicamente las observaciones incluidas en la muestra.
 
-De acuerdo con Pedersen (\citeproc{ref-patchwork}{2025}) y Wickham,
-Chang, et~al. (\citeproc{ref-ggplot22026}{2026}), en esta sección se
-utilizan los paquetes \texttt{patchwork} y \texttt{ggplot2} para la
-composición y construcción de gráficos. Estas herramientas se combinan
-con \texttt{survey} y \texttt{srvyr}, respectivamente.
+La construcción de los gráficos presentados en este docuemnto se basa en
+el enfoque conocido como la gramática de los gráficos, el cual concibe
+cada visualización como la combinación de distintos componentes que se
+agregan: los datos, las correspondencias entre variables y atributos
+visuales, los elementos geométricos, las escalas, las facetas y el
+sistema de coordenadas (\citeproc{ref-wilkinson2005grammar}{Wilkinson
+2005}). Este enfoque se implementa en \texttt{R} mediante el paquete
+\texttt{ggplot2}, que permite construir representaciones gráficas de
+manera sistemática y flexible (\citeproc{ref-ggplot22026}{Wickham,
+Chang, et~al. 2026}). Las estimaciones obtenidas con los paquetes
+\texttt{survey} y \texttt{srvyr}, incluidos los factores de expansión y
+las medidas de incertidumbre, se utilizan como insumos para elaborar los
+gráficos. Cuando es necesario presentar varias visualizaciones de manera
+conjunta, el paquete \texttt{patchwork} permite organizarlas y
+combinarlas en una composición gráfica coherente
+(\citeproc{ref-patchwork}{Pedersen 2025}).
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(ggplot2)}
 \FunctionTok{library}\NormalTok{(patchwork)}
-\FunctionTok{data}\NormalTok{(BigCity, }\AttributeTok{package =} \StringTok{"TeachingSampling"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3551,9 +3571,9 @@ con \texttt{survey} y \texttt{srvyr}, respectivamente.
 Un histograma es una representación gráfica de la distribución de una
 variable numérica continua, construida a partir de rectángulos cuya
 altura es proporcional a la frecuencia de observaciones dentro de
-determinados intervalos de clase. En el contexto de encuestas de
-hogares, los histogramas ponderados permiten aproximar la distribución
-de la variable en la población, incorporando los factores de expansión
+determinados intervalos. En el contexto de las encuestas de hogares, los
+histogramas ponderados permiten aproximar la distribución de la variable
+de interés en la población, incorporando los factores de expansión
 asociados al diseño muestral.
 
 A continuación, se presenta el histograma ponderado de la variable
@@ -3570,6 +3590,7 @@ figura~\ref{fig-hist-ingreso-ponde}:
   \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ ..density..)) }\SpecialCharTok{+}
   \FunctionTok{ylab}\NormalTok{(}\StringTok{""}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Histograma ponderado"}\NormalTok{)}
+
 \NormalTok{weighted\_income\_hist}
 \end{Highlighting}
 \end{Shaded}
@@ -3653,18 +3674,24 @@ define manualmente los colores asociados a cada zona. Finalmente,
 \texttt{ylab("")} elimina la etiqueta del eje vertical,
 \texttt{ggtitle("Weighted")} agrega un título al gráfico.
 
-Adicionalmente, es posible superponer curvas de densidad suavizadas
-mediante la función \texttt{geom\_density()}, lo que permite visualizar
-de manera continua la forma de la distribución de la variable analizada.
-Este tipo de representación facilita la identificación de patrones como
-asimetrías, concentración de observaciones o la presencia de múltiples
-modas. Un ejemplo de este tipo de gráfico se presenta en la
-figura~\ref{fig-densidades}:
+Además, es posible superponer curvas de densidad suavizadas mediante la
+función \texttt{geom\_density()}, lo que permite representar de manera
+continua la forma de la distribución de la variable analizada. Este tipo
+de gráfico facilita la identificación de características como la
+asimetría, la concentración de los valores y la posible presencia de
+múltiples modas. En la figura~\ref{fig-densidades} se presentan los
+histogramas del ingreso y el gasto junto con sus respectivas curvas de
+densidad estimadas. Para disponer ambos gráficos uno al lado del otro,
+se utiliza el operador \texttt{\textbar{}} del paquete
+\texttt{patchwork}, que permite combinar distintas visualizaciones en
+una misma composición gráfica.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{weighted\_income\_hist }\SpecialCharTok{+} \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{fill =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{|}
-\NormalTok{  weighted\_zone\_hist }\SpecialCharTok{+} \FunctionTok{geom\_density}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ Zone), }\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+\NormalTok{weighted\_income\_hist }\SpecialCharTok{+} 
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{fill =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{|} 
+\NormalTok{  weighted\_zone\_hist }\SpecialCharTok{+} 
+  \FunctionTok{geom\_density}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ Zone), }\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -3715,7 +3742,8 @@ asociados a cada categoría mediante los vectores \texttt{zone\_colors} y
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{weighted\_zone\_boxplot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(survey\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Income, }\AttributeTok{weight =}\NormalTok{ wk)) }\SpecialCharTok{+}
+\NormalTok{weighted\_zone\_boxplot }\OtherTok{\textless{}{-}} 
+  \FunctionTok{ggplot}\NormalTok{(survey\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Income, }\AttributeTok{weight =}\NormalTok{ wk)) }\SpecialCharTok{+}
   \FunctionTok{geom\_boxplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ Zone)) }\SpecialCharTok{+}
   \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Weighted"}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+}
@@ -3723,7 +3751,8 @@ asociados a cada categoría mediante los vectores \texttt{zone\_colors} y
 
 \NormalTok{sex\_colors }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{Male =} \StringTok{"\#5DADE2"}\NormalTok{, }\AttributeTok{Female =} \StringTok{"\#2874A6"}\NormalTok{)}
 
-\NormalTok{weighted\_sex\_boxplot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(survey\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Income, }\AttributeTok{weight =}\NormalTok{ wk)) }\SpecialCharTok{+}
+\NormalTok{weighted\_sex\_boxplot }\OtherTok{\textless{}{-}} 
+  \FunctionTok{ggplot}\NormalTok{(survey\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Income, }\AttributeTok{weight =}\NormalTok{ wk)) }\SpecialCharTok{+}
   \FunctionTok{geom\_boxplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ Sex)) }\SpecialCharTok{+}
   \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Weighted"}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+}
@@ -3759,14 +3788,22 @@ figura~\ref{fig-svyhist-svybox}.
 \begin{Highlighting}[]
 \NormalTok{old\_par }\OtherTok{\textless{}{-}} \FunctionTok{par}\NormalTok{(}\AttributeTok{no.readonly =} \ConstantTok{TRUE}\NormalTok{)}
 \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-\FunctionTok{svyhist}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Income, survey\_design,}
+\FunctionTok{svyhist}\NormalTok{(}
+  \SpecialCharTok{\textasciitilde{}}\NormalTok{ Income,}
+\NormalTok{  survey\_design,}
   \AttributeTok{main =} \StringTok{"Household income"}\NormalTok{,}
-  \AttributeTok{col  =} \StringTok{"grey80"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"Income"}\NormalTok{,}
-  \AttributeTok{probability =} \ConstantTok{FALSE}\NormalTok{)}
-
-\FunctionTok{svyboxplot}\NormalTok{(Income }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Zone, survey\_design,}
   \AttributeTok{col  =} \StringTok{"grey80"}\NormalTok{,}
-  \AttributeTok{ylab =} \StringTok{"Income"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"Zone"}\NormalTok{)}
+  \AttributeTok{xlab =} \StringTok{"Income"}\NormalTok{,}
+  \AttributeTok{probability =} \ConstantTok{FALSE}
+\NormalTok{)}
+
+\FunctionTok{svyboxplot}\NormalTok{(}
+\NormalTok{  Income }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Zone,}
+\NormalTok{  survey\_design,}
+  \AttributeTok{col  =} \StringTok{"grey80"}\NormalTok{,}
+  \AttributeTok{ylab =} \StringTok{"Income"}\NormalTok{,}
+  \AttributeTok{xlab =} \StringTok{"Zone"}
+\NormalTok{)}
 \FunctionTok{par}\NormalTok{(old\_par)}
 \end{Highlighting}
 \end{Shaded}
@@ -3800,8 +3837,8 @@ interpretar debido a la sobreposición de observaciones. Sin embargo, en
 muestras de tamaño moderado, una estrategia sencilla y efectiva consiste
 en representar los pesos mediante el tamaño de los símbolos en el
 gráfico de dispersión. De esta manera, las observaciones con mayor peso
-poblacional aparecen resaltadas visualmente. Un ejemplo de este tipo de
-representación se presenta en la figura~\ref{fig-scatter-basico}:
+poblacional aparecerán resaltadas visualmente. Un ejemplo de este tipo
+de representación se presenta en la figura~\ref{fig-scatter-basico}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
