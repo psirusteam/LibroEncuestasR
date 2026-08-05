@@ -194,7 +194,7 @@ survey_design %>%
 
 ## Estimación de proporciones {#estimacion-de-proporciones}
 
-De acuerdo con @KornGraubard1999 y @HeeringaWestBerglund2017, las proporciones permiten expresar el peso relativo que tienen determinados grupos dentro de la población. Por ejemplo, conocer el porcentaje de hogares que se encuentran por debajo de la línea de pobreza es esencial para evaluar desigualdades y caracterizar condiciones de bienestar. Para obtener este tipo de indicadores, se calcula el promedio ponderado de la variable dicotómica, lo que asegura que la estimación represente adecuadamente la distribución poblacional. Al convertir las categorías originales en variables indicadoras, la proporción estimada se calcula como:
+Las proporciones permiten expresar el peso relativo que tienen determinados grupos dentro de la población. Por ejemplo, conocer el porcentaje de hogares que se encuentran por debajo de la línea de pobreza es esencial para evaluar desigualdades y caracterizar condiciones de bienestar. Para obtener este tipo de estimaciones, se calcula el promedio ponderado de la variable dicotómica, lo que asegura que la estimación represente adecuadamente la distribución poblacional. Al convertir las categorías originales en variables indicadoras, la proporción estimada se calcula como:
 
 $$
 \hat{p}_d = \frac{\hat{N}_d}{\hat{N}} = \frac{\displaystyle\sum_{h} \sum_{i} \sum_{k} w_{hik} \ I(y_{hik}=d)} {\displaystyle\sum_{h} \sum_{i} \sum_{k} w_{hik}}
@@ -202,17 +202,45 @@ $$
 
 Como explica @Gutierrez2016, si bien este estimador es conceptualmente sencillo, corresponde a una función no lineal de los totales poblacionales. Por esta razón, para derivar sus propiedades estadísticas, particularmente su varianza y error estándar, es necesario recurrir a métodos de aproximación como la linealización de Taylor. En este contexto, se utiliza la función $z_{hik}=I(y_{hik}=d)-\hat{p}_d$. En la práctica, los programas estadísticos implementan automáticamente estos procedimientos y generan las estimaciones de proporciones junto con sus respectivos errores estándar e intervalos de confianza.
 
-Cuando las proporciones toman valores muy cercanos a 0 o a 1, la precisión de las estimaciones puede verse afectada, por lo que en muchos casos es necesario contar con tamaños muestrales mayores para obtener resultados estables y confiables. Esta situación es especialmente relevante en el análisis de fenómenos poco frecuentes o altamente concentrados, donde pequeñas variaciones en la muestra pueden producir cambios importantes en las estimaciones.
+Cuando las proporciones estimadas toman valores cercanos a 0 o a 1, su precisión puede disminuir y las aproximaciones estadísticas tradicionales pueden resultar poco adecuadas. En estos casos, suele ser necesario disponer de tamaños de muestra mayores para obtener estimaciones suficientemente estables. Este problema adquiere especial importancia al analizar fenómenos poco frecuentes o muy concentrados, ya que pequeñas variaciones en la composición de la muestra pueden ocasionar cambios sustanciales en las proporciones estimadas [@KornGraubard1999].
 
-Adicionalmente, como explica @Agresti2019Intro, los intervalos de confianza construidos mediante aproximaciones normales pueden presentar límites inferiores menores que 0 o superiores mayores que 1, lo que dificulta su interpretación al tratarse de proporciones. Para evitar este problema, una alternativa ampliamente utilizada consiste en aplicar la transformación logit antes de construir los intervalos de confianza. Este procedimiento garantiza que, al regresar a la escala original, los límites obtenidos permanezcan dentro del rango válido de las proporciones.
+Esta dificultad también afecta la construcción de los intervalos de confianza. Como señala @Agresti2019Intro, los intervalos basados directamente en la aproximación normal pueden producir límites inferiores menores que 0 o límites superiores mayores que 1, resultados incompatibles con el rango de una proporción. Una alternativa consiste en construir el intervalo en la escala logit y transformarlo posteriormente a la escala original. Para una proporción estimada $\hat{p}_d$, el intervalo de confianza con nivel $1-\alpha$ puede expresarse como
 
 $$
-CI(\hat{p}_d; 1-\alpha) = \frac{exp \left[ln\left(\frac{\hat{p}_d}{1-\hat{p}_d}\right) \pm \frac{\widehat{me}}{\hat{p}_d(1-\hat{p}_d)}\right]}{1 + exp \left[ln\left(\frac{\hat{p}_d}{1-\hat{p}_d}\right) \pm \frac{\widehat{me}}{\hat{p}_d(1-\hat{p}_d)}\right]}
+CI(\hat{p}_d;1-\alpha)
+=
+\left[
+\frac{\exp(L_d)}{1+\exp(L_d)},
+\frac{\exp(U_d)}{1+\exp(U_d)}
+\right],
 $$
 
-En donde $\widehat{me}$ corresponde al margen de error estimado y se obtiene a partir del producto entre el valor crítico de la distribución $t$ de Student y el error estándar estimado de la proporción $\hat{p}_d$. El término $t_{1-\alpha/2, df}$ representa el percentil asociado al nivel de confianza seleccionado, considerando $df$ grados de libertad. En el contexto de encuestas complejas, estos grados de libertad suelen definirse como la diferencia entre el número de unidades primarias de muestreo (UPM) y el número de estratos presentes en el subgrupo o dominio de análisis.
+En donde
 
-A diferencia de otros programas estadísticos que presentan los resultados en porcentaje, `R` reporta las proporciones en la escala [0,1]. Las funciones utilizadas permiten calcular directamente las estimaciones, sus errores estándar e intervalos de confianza, lo que facilita el análisis de variables categóricas en encuestas de hogares. A continuación se ilustra cómo obtener la proporción de personas por zona usando el diseño muestral previamente definido, presentada en la @tbl-prop-zona:
+$$
+L_d
+=
+\log\left(\frac{\hat{p}_d}{1-\hat{p}_d}\right)
+t_{1-\alpha/2, df}
+\frac{\widehat{SE}(\hat{p}_d)}
+{\hat{p}_d(1-\hat{p}_d)}
+$$
+
+y
+
+$$
+U_d
+=
+\log\left(\frac{\hat{p}_d}{1-\hat{p}_d}\right)
++
+t_{1-\alpha/2, df}
+\frac{\widehat{SE}(\hat{p}_d)}
+{\hat{p}_d(1-\hat{p}_d)}.
+$$
+
+Al aplicar la transformación inversa del logit a los límites $L_d$ y $U_d$, se garantiza que el intervalo resultante permanezca dentro del rango válido entre 0 y 1. Nótese que el término $t_{1-\alpha/2, df}$ representa el percentil asociado al nivel de confianza seleccionado, considerando $df$ grados de libertad. Como se advirtió anteriormente, en el contexto de encuestas complejas, estos grados de libertad suelen definirse como la diferencia entre el número de unidades primarias de muestreo (UPM) y el número de estratos presentes en el subgrupo o dominio de análisis.
+
+A diferencia de otros programas estadísticos que presentan los resultados en porcentaje, `R` reporta las proporciones en la escala [0,1]. Las funciones utilizadas permiten calcular directamente las estimaciones, sus errores estándar e intervalos de confianza, lo que facilita el análisis de variables categóricas en encuestas de hogares. A continuación se ilustra cómo obtener la proporción de personas por zona usando el diseño muestral previamente definido.
 
 ```{r cod-prop-zona-media, eval=FALSE}
 survey_design %>%
@@ -236,27 +264,9 @@ survey_design %>%
 ```
 
 
-De acuerdo con @FreedmanEllis2026, en este ejemplo, la función `survey_mean()` se utiliza para calcular la estimación de proporciones poblacionales y, mediante el argumento `proportion = TRUE`, se especifica que el interés se centra en estimar la distribución relativa de la población entre las distintas categorías de la variable analizada. Los resultados indican que aproximadamente el 47.9% de las personas reside en la zona rural, con un intervalo de confianza del 95% entre 45.2% y 50.7%, mientras que el 52.0% corresponde a población residente en la zona urbana, con un intervalo de confianza entre 49.2% y 54.7%.
+En este ejemplo, la función `survey_mean()` se utiliza para calcular la estimación de proporciones poblacionales y, mediante el argumento `proportion = TRUE`, se especifica que el interés se centra en estimar la distribución relativa de la población entre las distintas categorías de la variable analizada. Los resultados presentados en la @tbl-prop-zona indican que aproximadamente el 48% de las personas reside en la zona rural, con un intervalo de confianza del 95% entre 45.2% y 50.8%, mientras que el 52% corresponde a población residente en la zona urbana, con un intervalo de confianza entre 49.2% y 54.8%.
 
-La librería `srvyr` también dispone de la función `survey_prop()`, diseñada específicamente para la estimación de proporciones en encuestas complejas. Esta función produce resultados equivalentes a los obtenidos con `survey_mean()`, facilitando además una sintaxis más directa e intuitiva cuando el objetivo del análisis es exclusivamente el cálculo de proporciones. Los resultados obtenidos mediante esta alternativa se presentan en la @tbl-prop-zona2.
-
-```{r cod-prop-zona, eval=FALSE}
-survey_design %>%
-  group_by(Zone) %>%
-  summarise(proportion = survey_prop(vartype = c("se", "ci")))
-```
-```{r}
-#| label: tbl-prop-zona2
-#| tbl-cap: "Proporción de personas por zona geográfica (función survey_prop)"
-#| echo: false
-survey_design %>%
-  group_by(Zone) %>%
-  summarise(proportion = survey_prop(vartype = c("se", "ci"))) %>%
-  tabla_fmt()
-```
-
-
-Si el interés se centra ahora en estimar proporciones para subpoblaciones específicas, por ejemplo, la proporción de hombres y mujeres que residen en la zona urbana, es necesario restringir el análisis a dicho dominio de estudio y posteriormente calcular las estimaciones correspondientes para cada categoría de sexo. El código computacional correspondiente se presenta en la @tbl-prop-sexo-urbano.
+La librería `srvyr` también dispone de la función `survey_prop()`, diseñada específicamente para la estimación de proporciones en encuestas complejas. Esta función produce resultados equivalentes a los obtenidos con `survey_mean()`, facilitando además una sintaxis más directa e intuitiva cuando el objetivo del análisis es exclusivamente el cálculo de proporciones. Además, si el interés se centra ahora en estimar proporciones para subpoblaciones específicas, por ejemplo, la proporción de hombres y mujeres que residen en la zona urbana, es necesario restringir el análisis a dicho dominio de estudio y posteriormente calcular las estimaciones correspondientes para cada categoría de sexo. 
 
 ```{r cod-prop-sexo-urbano, eval=FALSE}
 urban_subset %>%
@@ -273,33 +283,9 @@ urban_subset %>%
   tabla_fmt()
 ```
 
-A partir de estas estimaciones se observa que, en la zona urbana, el 53.6% de la población corresponde a mujeres, con un intervalo de confianza del 95% entre 51.0% y 56.2%, mientras que el 46.4% corresponde a hombres, con un intervalo de confianza entre 43.7% y 48.9%. Estos resultados permiten apreciar no solo la distribución porcentual de la población según sexo, sino también el nivel de precisión asociado a las estimaciones.
+La @tbl-prop-sexo-urbano muestra una leve mayoría femenina en la población urbana: las mujeres representan el 53,6%, con un intervalo de confianza entre 51,0% y 56,2%, frente al 46,4% de los hombres, cuyo intervalo se sitúa entre 43,7% y 48,9%. 
 
-
-De manera análoga, es posible realizar el mismo ejercicio para la población residente en la zona rural, estimando la proporción de hombres y mujeres. Este tipo de desagregación permite comparar la composición poblacional según sexo entre las áreas urbana y rural, proporcionando una visión más detallada de las características demográficas de la población encuestada. Los resultados correspondientes se presentan en la @tbl-prop-sexo-rural.
-
-```{r cod-prop-sexo-rural, eval=FALSE}
-rural_subset %>%
-  group_by(Sex) %>%
-  summarise(
-    n = unweighted(n()),
-    proportion = survey_prop(vartype = c("se", "ci"))
-  )
-```
-```{r}
-#| label: tbl-prop-sexo-rural
-#| tbl-cap: "Proporción de hombres y mujeres en zona rural"
-#| echo: false
-rural_subset %>%
-  group_by(Sex) %>%
-  summarise(
-    n = unweighted(n()),
-    proportion = survey_prop(vartype = c("se", "ci"))
-  ) %>%
-  tabla_fmt()
-```
-
-Ahora bien, si el análisis se restringe únicamente a la población masculina incluida en la base de datos y el interés consiste en estimar la distribución porcentual de los hombres según la zona de residencia, es posible calcular la proporción de hombres que viven en áreas urbanas y rurales utilizando el diseño muestral previamente definido. El código computacional correspondiente se presenta en la @tbl-prop-zona-hombre.
+Ahora bien, si el análisis se restringe únicamente a la población masculina incluida en la base de datos y el interés consiste en estimar la distribución porcentual de los hombres según la zona de residencia, es posible calcular la proporción de hombres que viven en áreas urbanas y rurales utilizando el diseño muestral previamente definido. 
 
 
 ```{r cod-prop-zona-hombre, eval=FALSE}
@@ -317,8 +303,9 @@ male_subset %>%
   tabla_fmt()
 ```
 
+Los resultados de la @tbl-prop-zona-hombre revelan una población masculina repartida casi por igual entre lo urbano y lo rural: el 50,9% reside en áreas urbanas, con un intervalo de confianza entre 47,4% y 54,5%, mientras que el 49,1% habita en zonas rurales, con un intervalo entre 45,5% y 52,6%. 
 
-Si se desea estimar resultados con varios niveles de desagregación, al igual que en los capítulos anteriores, el uso de la función `group_by()` permite generar distintos niveles de agregación mediante la combinación de dos o más variables categóricas. Por ejemplo, es posible estimar la proporción de hombres según zona de residencia y condición de pobreza de manera simultánea. Este tipo de análisis permite caracterizar con mayor detalle las condiciones socioeconómicas de subpoblaciones específicas. El procedimiento correspondiente se presenta en la @tbl-prop-zona-pobreza-hombre.
+La función `group_by()` permite generar distintos niveles de desagregación mediante la combinación de dos o más variables categóricas. Por ejemplo, es posible estimar la proporción de hombres según zona de residencia y condición de pobreza de manera simultánea. Este tipo de análisis permite caracterizar con mayor detalle las condiciones socioeconómicas de subpoblaciones específicas. 
 
 ```{r cod-prop-zona-pobreza-hombre, eval=FALSE}
 male_subset %>%
@@ -335,11 +322,9 @@ male_subset %>%
   tabla_fmt()
 ```
 
-A partir de los resultados obtenidos se observa que, en la zona rural, el 19.7% de los hombres se encuentra en situación de pobreza extrema, mientras que en la zona urbana esta proporción corresponde al 11.3%. Aunque las estimaciones puntuales sugieren una mayor incidencia de pobreza extrema en la ruralidad, la superposición de los intervalos de confianza individuales no constituye por sí sola una prueba formal de igualdad; la significación de la diferencia debe evaluarse mediante un contraste que incorpore su error estándar.
+La @tbl-prop-zona-pobreza-hombre revela una geografía social particular. Mientras en las zonas urbanas el 66,0% de los hombres se encuentra fuera de la pobreza, en las rurales esta proporción desciende al 54,9%; mientras que la pobreza extrema aumenta del 11,3% al 19,8% al pasar de las zonas urbanas a las rurales. La pobreza relativa, en cambio, permanece más cercana entre ambos territorios. 
 
-También es posible categorizar variables cuantitativas para facilitar su análisis conjunto con otras variables categóricas. Por ejemplo, la edad puede agruparse en rangos etarios específicos y posteriormente cruzarse con variables relacionadas con la situación en el empleo. Este tipo de procedimiento resulta útil para identificar diferencias en la participación laboral entre distintos grupos de edad.
-
-A continuación, la variable edad se clasifica en dos categorías para la población femenina: mujeres entre 18 y 35 años, y mujeres pertenecientes a otros rangos de edad. Posteriormente, estas categorías se analizan en conjunto con la variable de empleabilidad, permitiendo estimar la distribución de la condición laboral según grupo etario. Los resultados correspondientes se presentan en la @tbl-prop-edad-rango-empleo-mujer.
+Las variables cuantitativas también pueden agruparse en categorías para facilitar su análisis conjunto con variables cualitativas. Por ejemplo, la edad puede clasificarse en rangos etarios y cruzarse posteriormente con la condición de actividad, lo que permite examinar cómo varía la participación laboral entre distintos grupos de población. En este caso, la población femenina se divide en dos categorías: mujeres de 18 a 35 años y mujeres pertenecientes a los demás grupos de edad. A partir de esta clasificación, se estima la distribución de la condición laboral en cada grupo etario. 
 
 ```{r cod-prop-edad-rango-empleo-mujer, eval=FALSE}
 female_subset %>%
@@ -366,19 +351,18 @@ female_subset %>%
   tabla_fmt()
 ```
 
+La @tbl-prop-edad-rango-empleo-mujer muestra que la inactividad constituye la condición predominante entre las mujeres de ambos grupos de edad: alcanza el 51,7% entre aquellas de 18 a 35 años y el 57,1% entre las demás. Las mujeres más jóvenes presentan una mayor proporción de ocupación: 45,5%, frente a 41,3%, pero también un desempleo algo más elevado, de 2,9% frente a 1,6%. 
+
 ## Contrastes y diferencias de proporciones {#contrastes-y-diferencias-de-proporciones}
 
-De acuerdo con @KornGraubard1999 y @HeeringaWestBerglund2017, las proporciones obtenidas en las filas de una tabla de doble entrada pueden interpretarse como estimaciones para distintas subpoblaciones, definidas a partir de los niveles de una variable categórica. En este contexto, no solo resulta relevante estimar las proporciones asociadas a cada grupo, sino también evaluar las diferencias existentes entre ellas mediante contrastes lineales.
+Cuando se analizan conjuntamente dos variables categóricas, es posible examinar cómo se distribuye una de ellas dentro de los grupos definidos por la otra. Por ejemplo, puede estudiarse la proporción de personas en situación de pobreza por sexo, zona de residencia o condición de actividad. Cada una de estas categorías define una subpoblación específica, para la cual pueden estimarse proporciones y sus correspondientes medidas de precisión [@KornGraubard1999; @HeeringaWestBerglund2017].
 
-Por ejemplo, suponga que el interés está en comparar la proporción de mujeres en condición de pobreza con la proporción de hombres en esta misma situación. Formalmente, este contraste puede expresarse como $\hat{p}_F - \hat{p}_M$, donde $\hat{p}_F$ representa la proporción estimada de mujeres en pobreza y $\hat{p}_M$ la proporción estimada de hombres en dicha condición. Para construir este contraste, primero se estiman las proporciones de hombres y mujeres en estado de pobreza utilizando el mismo procedimiento descrito en capítulos anteriores. Los resultados correspondientes se presentan en la @tbl-svyby-pobreza-sexo2:
+Sin embargo, la estimación separada de estas proporciones no siempre es suficiente. Con frecuencia, el interés principal consiste en determinar cuánto difieren dos grupos y si la brecha observada es suficientemente grande en relación con la incertidumbre asociada al muestreo. Para ello, pueden construirse contrastes lineales que expresen la diferencia entre dos proporciones estimadas y permitan obtener su error estándar, intervalo de confianza y, cuando corresponda, una prueba de significancia.
+
+Supóngase, por ejemplo, que se desea comparar la proporción de mujeres en situación de pobreza con la proporción correspondiente a los hombres. Este contraste puede expresarse como $\hat{p}_F-\hat{p}_M$, donde $\hat{p}_F$ representa la proporción estimada de mujeres en pobreza y $\hat{p}_M$ la proporción estimada de hombres en la misma condición. 
+
 
 ```{r cod-prop-pobreza-sexo}
-sex_poverty_proportion <- survey_design %>%
-  group_by(Sex) %>%
-  summarise(proportion = survey_mean(poor,
-                                     na.rm = TRUE,
-                                     vartype = c("se", "ci")))
-
 sex_poverty_contrast <- svyby(
   formula = ~poor,
   by = ~Sex,
@@ -394,11 +378,11 @@ sex_poverty_contrast <- svyby(
 #| label: tbl-svyby-pobreza-sexo2
 #| tbl-cap: "Proporción en condición de pobreza por sexo"
 #| echo: false
-sex_poverty_proportion %>%
+sex_poverty_contrast %>%
   tabla_fmt()
 ```
 
-Una vez estimadas las proporciones de hombres y mujeres en condición de pobreza, es posible calcular la diferencia entre ambas proporciones junto con su correspondiente error estándar. En este caso, la diferencia estimada se obtiene restando la proporción de hombres en pobreza a la proporción de mujeres en esta misma condición:
+Con base en los resultados presentados en la @tbl-svyby-pobreza-sexo2, puede estimarse la diferencia entre las proporciones de mujeres y hombres en situación de pobreza, así como su correspondiente error estándar. Para ello, se resta la proporción estimada de hombres en pobreza de la proporción estimada de mujeres en la misma condición:
 
 ```{r cod-diferencia-pobreza-sexo}
 sex_poverty_estimate <- setNames(
@@ -409,14 +393,27 @@ sex_poverty_estimate <- setNames(
 sex_poverty_estimate["Female"] - sex_poverty_estimate["Male"]
 ```
 
-Para calcular correctamente la variabilidad asociada a esta diferencia, no basta con considerar únicamente las varianzas de cada estimación por separado. También es necesario incorporar la covarianza entre ambas proporciones, dado que las estimaciones provienen de una misma muestra y, por tanto, no son independientes. La matriz de varianzas y covarianzas puede obtenerse mediante la función `vcov`, cuyos resultados se presentan en la @tbl-vcov-sex-pobreza:
+Para estimar correctamente la variabilidad asociada a esta diferencia debe incorporarse la covarianza entre ambas estimaciones, ya que estas no provienen de dos muestras independientes. En efecto, hombres y mujeres pueden pertenecer a los mismos hogares y, además, los hogares de ambos grupos son seleccionados dentro de las mismas unidades primarias de muestreo (UPM). Por consiguiente, las dos proporciones comparten la estructura de dependencia inducida por el diseño de muestreo. Esto implica que las variaciones observadas en una estimación pueden estar relacionadas con las de la otra y, por tanto, que su covarianza no puede suponerse igual a cero. En este contexto, el error estándar de la diferencia (contraste) debe calcularse aplicando las propiedades de la varianza e incorporando explícitamente dicha covarianza, de la siguiente forma:
+
+$$
+\widehat{se}\left(\hat{p}_{F}-\hat{p}_{M}\right)
+=
+\sqrt{
+\widehat{Var}\left(\hat{p}_{F}\right)
++
+\widehat{Var}\left(\hat{p}_{M}\right)
+-
+2\,\widehat{Cov}\left(\hat{p}_{F},\hat{p}_{M}\right)
+}
+$$
+
+
+En `R`, la matriz de varianzas y covarianzas puede obtenerse mediante la función `vcov`, cuyos resultados se presentan en la @tbl-vcov-sex-pobreza:
 
 ```{r cod-vcov-pobreza-sexo}
 sex_poverty_vcov <- vcov(sex_poverty_contrast)
-
-sex_poverty_vcov %>%
-  data.frame()
 ```
+
 ```{r}
 #| label: tbl-vcov-sex-pobreza
 #| tbl-cap: "Matriz de varianzas y covarianzas de la proporción de pobreza por sexo"
@@ -426,7 +423,7 @@ sex_poverty_vcov %>%
   tabla_fmt(digits = 10)
 ```
 
-A partir de esta matriz, el error estándar de la diferencia de proporciones se estima, utilizando la expresión general para la varianza de una diferencia entre estimadores, la cual corresponde a la suma de las varianzas de cada estimación menos dos veces la covarianza entre ellas. Para evitar inconsistencias derivadas del redondeo de los valores presentados en la @tbl-vcov-sex-pobreza, la verificación se realiza directamente con las entradas de la matriz estimada:
+A partir de esta matriz, el error estándar de la diferencia de proporciones se estima, utilizando la expresión general para la varianza de una diferencia entre estimadores, la cual corresponde a la suma de las varianzas de cada estimación menos dos veces la covarianza entre ellas.
 
 ```{r cod-se-diferencia-pobreza-sexo}
 sqrt(
@@ -446,21 +443,14 @@ svycontrast(
   data.frame()
 ```
 
-De lo que se concluye que la diferencia estimada entre las proporciones de mujeres y hombres en estado de pobreza es -0.005 (-0.5%), con un error estándar de 0.022. Dada la magnitud del error estándar respecto de la diferencia, la estimación es compatible con una diferencia nula y no debe interpretarse por sí sola como evidencia de una menor proporción de pobreza entre las mujeres.
+De lo que se concluye que la diferencia estimada entre las proporciones de mujeres y hombres en estado de pobreza es -0.005 (-0.5%), con un error estándar de 0.022. Dada la magnitud del error estándar respecto de la diferencia, la estimación no debe interpretarse por sí sola como evidencia de una menor proporción de pobreza entre las mujeres.
 
 Otro ejercicio que puede desarrollarse a partir de una encuesta de hogares consiste en estimar la proporción de personas desempleadas según la región de residencia. Para ello, se estiman las proporciones de desempleo para cada una de las regiones consideradas en el análisis. Los resultados obtenidos se presentan en la @tbl-svyby-desempleo-region:
 
 ```{r cod-prop-desempleo-region}
-region_unemployment_proportion <- survey_design %>%
-  filter(!is.na(unemployed)) %>%
-  group_by(Region) %>%
-  summarise(proportion = survey_mean(unemployed,
-                                     na.rm = TRUE,
-                                     vartype = c("se", "ci")))
-
 region_unemployment_contrast <- svyby(
-  formula = ~unemployed,
-  by = ~Region,
+  formula = ~ unemployed,
+  by = ~ Region,
   design = survey_design %>%
     filter(!is.na(unemployed)),
   FUN = svymean,
@@ -474,7 +464,7 @@ region_unemployment_contrast <- svyby(
 #| label: tbl-svyby-desempleo-region
 #| tbl-cap: "Proporción en condición de desempleo por región"
 #| echo: false
-region_unemployment_proportion %>%
+region_unemployment_contrast %>%
   tabla_fmt()
 ```
 
@@ -492,9 +482,6 @@ Para calcular los errores estándar asociados a cada uno de los contrastes anter
 
 ```{r cod-vcov-desempleo-region, echo=TRUE}
 region_unemployment_vcov <- vcov(region_unemployment_contrast)
-
-region_unemployment_vcov %>%
-  data.frame()
 ```
 
 ```{r}
@@ -506,7 +493,7 @@ region_unemployment_vcov %>%
   tabla_fmt(digits = 7)
 ```
 
-Nótese que las covarianzas entre las estimaciones regionales son iguales a cero debido a que las muestras seleccionadas en cada región son independientes entre sí. Por tanto, el error estándar de cada contraste se obtiene aplicando la expresión de la varianza para la diferencia entre dos estimadores. Para verificar los resultados sin introducir errores de redondeo, los cálculos siguientes toman las varianzas y covarianzas directamente de la matriz presentada en la @tbl-vcov-desempleo-region:
+Nótese que, en este caso, las covarianzas entre las estimaciones regionales son iguales a cero debido a que las muestras seleccionadas en cada región son independientes entre sí. Por tanto, el error estándar de cada contraste se obtiene aplicando la expresión de la varianza para la diferencia entre dos estimadores. Para verificar los resultados sin introducir errores de redondeo, los cálculos siguientes toman las varianzas y covarianzas directamente de la matriz presentada en la @tbl-vcov-desempleo-region:
 
 ```{r cod-se-contrastes-desempleo-region}
 # Norte - Centro
@@ -540,15 +527,14 @@ svycontrast(
   contrasts = list(
     north_center = c(1, 0, -1, 0, 0),
     south_center = c(0, 1, -1, 0, 0),
-    west_east = c(0, 0, 0, 1, -1)
-  )
-) %>%
+    west_east    = c(0, 0, 0, 1, -1)
+  )) %>%
   data.frame()
 ```
 
 ## Pruebas de hipótesis sobre proporciones {#pruebas-de-hipotesis-sobre-proporciones}
 
-Las pruebas de hipótesis también permiten evaluar si las diferencias observadas entre proporciones estimadas para distintos grupos reflejan diferencias en la población o si pueden atribuirse al error de muestreo. En encuestas de hogares, estos contrastes deben incorporar las características del diseño muestral para estimar correctamente la variabilidad de las proporciones y realizar inferencias válidas.
+Las pruebas de hipótesis también permiten evaluar si las diferencias observadas entre proporciones estimadas para distintos grupos reflejan diferencias en la población o si pueden atribuirse al error de muestreo [@korn1995analysis]. En encuestas de hogares, estos contrastes deben incorporar las características del diseño muestral para estimar correctamente la variabilidad de las proporciones y realizar inferencias válidas.
 
 Supóngase que $p_H$ representa la proporción de hombres desocupados y $p_M$ la proporción de mujeres desocupadas dentro de la población económicamente activa. El parámetro de interés corresponde a la diferencia entre ambas proporciones:
 
