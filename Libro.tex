@@ -110,7 +110,6 @@
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
 
 \usepackage{longtable,booktabs,array}
-\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -172,13 +171,13 @@
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \ifLuaTeX
-\usepackage[bidi=basic,shorthands=off]{babel}
+\usepackage[bidi=basic]{babel}
 \else
-\usepackage[bidi=default,shorthands=off]{babel}
+\usepackage[bidi=default]{babel}
 \fi
-\ifLuaTeX
-  \usepackage{selnolig} % disable illegal ligatures
-\fi
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
 
 
 \setlength{\emergencystretch}{3em} % prevent overfull lines
@@ -240,7 +239,7 @@
 \urlstyle{same}
 \hypersetup{
   pdftitle={Análisis de Encuestas de Hogares},
-  pdfauthor={Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa y Cristian Téllez},
+  pdfauthor={Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa, Cristian Téllez y Xavier Mancero},
   pdflang={es},
   colorlinks=true,
   linkcolor={Maroon},
@@ -258,15 +257,16 @@
 }
 \makeatother
 \subtitle{usando R}
-\author{Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa y Cristian
-Téllez}
-\date{5 de agosto de 2026}
+\author{Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa, Cristian
+Téllez y Xavier Mancero}
+\date{24 de agosto de 2026}
 \begin{document}
 \frontmatter
 \maketitle
 
 \renewcommand*\contentsname{Tabla de contenidos}
 {
+\hypersetup{linkcolor=}
 \setcounter{tocdepth}{2}
 \tableofcontents
 }
@@ -341,41 +341,41 @@ avanzadas y la correcta visualización de los datos.
 El análisis de encuestas con diseños complejos cuenta con una
 trayectoria consolidada en la literatura estadística, sustentada en el
 enfoque de inferencia basado en el diseño de muestreo. Como señalan
-Särndal et~al. (\citeproc{ref-sarndal2003model}{2003}) y Gutiérrez
-(\citeproc{ref-Gutierrez2016}{2016}), este enfoque reconoce a la
-distribución de probabilidad inducida por el proceso de selección de la
-muestra como el único mecanismo probabilístico que rige la inferencia.
-Bajo este paradigma, las propiedades estadísticas de los estimadores
-(como el insesgamiento, la precisión y la consistencia) se evalúan con
-respecto a la distribución de todas las posibles muestras que el diseño
-puede generar, sin imponer supuestos distribucionales sobre la variable
-de interés.
+Särndal, Swensson, y Wretman (\citeproc{ref-sarndal2003model}{2003}) y
+Gutiérrez (\citeproc{ref-Gutierrez2016}{2016}), este enfoque reconoce a
+la distribución de probabilidad inducida por el proceso de selección de
+la muestra como el único mecanismo probabilístico que rige la
+inferencia. Bajo este paradigma, las propiedades estadísticas de los
+estimadores (como el insesgamiento, la precisión y la consistencia) se
+evalúan con respecto a la distribución de todas las posibles muestras
+que el diseño puede generar, sin imponer supuestos distribucionales
+sobre la variable de interés.
 
 En este marco, la estimación de varianzas ha ocupado un lugar central y
 ha evolucionado en torno a tres grandes familias metodológicas
 complementarias. La primera, el método del último conglomerado
-(\citeproc{ref-hansen1953sample}{{Hansen et~al.} 1953}), simplifica la
+(\citeproc{ref-hansen1953sample}{Hansen et~al. 1953}), simplifica la
 estructura multietápica de los diseños de muestreo al concentrar la
 variabilidad del estimador en las unidades primarias de muestreo (UPM),
 tratando la selección como si se realizara con reemplazo. La segunda, la
 linealización de Taylor (\citeproc{ref-woodruff1971simple}{Woodruff
-1971}; \citeproc{ref-binder1983variances}{Binder 1983}), extiende este
-principio a parámetros no lineales (como medias, proporciones y razones)
-mediante una aproximación de primer orden que reduce el problema de
-estimación de la varianza al de un total. Finalmente, los métodos de
-replicación (\citeproc{ref-RustRao1996}{Rust y Rao 1996}) estiman la
-varianza a partir de la dispersión entre estimaciones obtenidas mediante
-réplicas sistemáticas de la muestra.
+1971}; \citeproc{ref-binder1983variances}{David A. Binder 1983}),
+extiende este principio a parámetros no lineales (como medias,
+proporciones y razones) mediante una aproximación de primer orden que
+reduce el problema de estimación de la varianza al de un total.
+Finalmente, los métodos de replicación (\citeproc{ref-RustRao1996}{Rust
+y Rao 1996}) estiman la varianza a partir de la dispersión entre
+estimaciones obtenidas mediante réplicas sistemáticas de la muestra.
 
 Paralelamente, en el ámbito de la modelización estadística,
 contribuciones fundamentales como las de Kish y Frankel
 (\citeproc{ref-kish1974inference}{1974}), Fuller
-(\citeproc{ref-fuller1975regression}{1975}) y Binder
+(\citeproc{ref-fuller1975regression}{1975}) y David A. Binder
 (\citeproc{ref-binder1983variances}{1983}) sentaron las bases de la
 regresión ponderada y de la estimación de varianzas de coeficientes de
 regresión en diseños estratificados y de múltiples etapas. Sobre este
 desarrollo, el método de máxima pseudo-verosimilitud (MPV)
-(\citeproc{ref-skinner1989analysis}{Skinner et~al. 1989};
+(\citeproc{ref-skinner1989analysis}{Skinner, Holt, y Smith 1989};
 \citeproc{ref-pfeffermann1993role}{Pfeffermann 1993}) incorporó los
 pesos muestrales en la función de log-verosimilitud para producir
 estimadores consistentes bajo el diseño de muestreo, extendiendo así los
@@ -395,8 +395,9 @@ la inferencia, y desarrolla métodos para estudiar, a partir de
 microdatos, el bienestar, la pobreza, la desigualdad, los patrones de
 consumo, la demanda de los hogares y las decisiones de ahorro.
 
-Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}) y
-Valliant et~al. (\citeproc{ref-Valliant_Dever_Kreuter_2018}{2018}) han
+Heeringa, West, y Berglund
+(\citeproc{ref-HeeringaWestBerglund2017}{2017}) y Valliant, Dever, y
+Kreuter (\citeproc{ref-Valliant_Dever_Kreuter_2018}{2018}) han
 sintetizado estas contribuciones en un marco analítico unificado que
 integra de manera coherente el diseño muestral, la ponderación y la
 modelización, constituyéndose en referencias estándar para la práctica
@@ -421,8 +422,8 @@ arte y la práctica cotidiana del análisis de encuestas en la región. Una
 de las principales manifestaciones de esta brecha se relaciona con el
 acceso y uso del software estadístico. Algunos textos de referencia
 ampliamente reconocidos en el análisis de encuestas, como Cochran
-(\citeproc{ref-cochran1977sampling}{1977}) y Särndal et~al.
-(\citeproc{ref-sarndal2003model}{2003}), constituyen fuentes
+(\citeproc{ref-cochran1977sampling}{1977}) y Särndal, Swensson, y
+Wretman (\citeproc{ref-sarndal2003model}{2003}), constituyen fuentes
 fundamentales desde el punto de vista teórico; sin embargo, no presentan
 ejemplos de aplicación real con software estadístico. Otros documentos
 están orientados principalmente hacia software con licencia, como
@@ -493,8 +494,9 @@ extiende estas capacidades al incorporar la sintaxis del ecosistema
 \texttt{tidyverse}, facilitando una transición fluida entre el análisis
 exploratorio y el inferencial. Paquetes complementarios como
 \texttt{TeachingSampling} (\citeproc{ref-GutierrezT2020}{Gutiérrez
-2020}) y \texttt{convey} (\citeproc{ref-convey2024}{Jacob et~al. 2024})
-consolidan un entorno analítico difícil de igualar en otros lenguajes.
+2020}) y \texttt{convey} (\citeproc{ref-convey2024}{Jacob, Pessoa, y
+Damico 2024}) consolidan un entorno analítico difícil de igualar en
+otros lenguajes.
 
 Finalmente, \texttt{R} ofrece una sólida integración con herramientas de
 reproducibilidad científica. En particular, su combinación con
@@ -773,15 +775,15 @@ consonancia con este enfoque, el paquete \texttt{weightflow} permite
 implementar estas etapas mediante un flujo de trabajo reproducible
 (\citeproc{ref-Ferreira2026weightflow}{Ferreira 2026}).
 
-Como muestran Korn y Graubard (\citeproc{ref-korn1995analysis}{1995}),
-las estimaciones ponderadas y no ponderadas pueden diferir
-sustancialmente, lo que evidencia la importancia de utilizar métodos de
-análisis coherentes con el diseño de la encuesta. Naciones Unidas
-(\citeproc{ref-UNhandbook}{2026, cap. 9}) presenta el siguiente ejemplo.
-Supóngase un país conformado por dos regiones: la Región A, con 100
-habitantes y un ingreso promedio de \$10.000, y la Región B, con 900
-habitantes y un ingreso promedio de \$2.000. El ingreso promedio
-verdadero de la población es:
+Como muestran Edward L. Korn y Graubard
+(\citeproc{ref-korn1995analysis}{1995}), las estimaciones ponderadas y
+no ponderadas pueden diferir sustancialmente, lo que evidencia la
+importancia de utilizar métodos de análisis coherentes con el diseño de
+la encuesta. Naciones Unidas (\citeproc{ref-UNhandbook}{2026, cap. 9})
+presenta el siguiente ejemplo. Supóngase un país conformado por dos
+regiones: la Región A, con 100 habitantes y un ingreso promedio de
+\$10.000, y la Región B, con 900 habitantes y un ingreso promedio de
+\$2.000. El ingreso promedio verdadero de la población es:
 
 \[\theta =
 \frac{(100 \times 10.000) + (900 \times 2.000)}
@@ -855,12 +857,12 @@ artificialmente estrechos y conclusiones potencialmente erróneas.
 La estratificación consiste en dividir previamente la población en
 grupos mutuamente excluyentes, denominados estratos, y seleccionar una
 muestra independiente dentro de cada uno de ellos
-(\citeproc{ref-sarndal2003model}{Särndal et~al. 2003}). Los estratos
-pueden definirse a partir de criterios geográficos, administrativos,
-demográficos o socioeconómicos. En las encuestas de hogares, es
-frecuente utilizar combinaciones de región, área urbana o rural y
-características socioeconómicas para formar los estratos del diseño
-(\citeproc{ref-CEPAL2023Diseno}{CEPAL 2023}).
+(\citeproc{ref-sarndal2003model}{Särndal, Swensson, y Wretman 2003}).
+Los estratos pueden definirse a partir de criterios geográficos,
+administrativos, demográficos o socioeconómicos. En las encuestas de
+hogares, es frecuente utilizar combinaciones de región, área urbana o
+rural y características socioeconómicas para formar los estratos del
+diseño (\citeproc{ref-CEPAL2023Diseno}{CEPAL 2023}).
 
 Este procedimiento permite garantizar la presencia en la muestra de
 grupos relevantes que podrían quedar insuficientemente representados
@@ -904,7 +906,7 @@ los datos recolectados en la encuesta. Cuando el diseño y la selección
 se implementan correctamente, los estimadores resultantes son insesgados
 respecto del diseño; es decir, su valor esperado, calculado sobre todas
 las muestras posibles, coincide exactamente con el parámetro poblacional
-(\citeproc{ref-sarndal2003model}{Särndal et~al. 2003}).
+(\citeproc{ref-sarndal2003model}{Särndal, Swensson, y Wretman 2003}).
 
 La estimación de totales constituye un paso central en el análisis
 estadístico aplicado a poblaciones finitas. Gran parte de los
@@ -928,7 +930,7 @@ estimador de Horvitz--Thompson
 (\citeproc{ref-HorvitzThompson1952}{Horvitz y Thompson 1952}) se expresa
 como
 
-\begin{equation}\protect\phantomsection\label{eq-HT}{
+\begin{equation}\phantomsection\label{eq-HT}{
 \hat{t}_{y} = \sum_{k \in s} d_k y_k
 }\end{equation}
 
@@ -955,7 +957,7 @@ información estadística. Por ejemplo, un estimador insesgado para la
 varianza del estimador de Horvitz--Thompson (ecuación~\ref{eq-HT}) puede
 expresarse como:
 
-\begin{equation}\protect\phantomsection\label{eq-varHT}{
+\begin{equation}\phantomsection\label{eq-varHT}{
 \widehat{Var}_p(\hat{t}_{y}) = \sum_{k \in s} \sum_{l \in s} \bigl( d_k d_l - d_{kl} \bigr) y_k y_l
 }\end{equation}
 
@@ -1074,7 +1076,7 @@ BADEHOG.
 
 \section{Inferencia en encuestas complejas}\label{inferencia-encuestas}
 
-Tal como destacan Heeringa et~al.
+Tal como destacan Heeringa, West, y Berglund
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), el cálculo de totales y
 medias poblacionales, junto con sus varianzas, ha sido esencial para el
 desarrollo de la teoría del muestreo probabilístico y la interpretación
@@ -1156,7 +1158,7 @@ obtención de resultados rigurosos y confiables.
 
 El método del último conglomerado es un enfoque ampliamente utilizado
 para estimar la varianza de totales en encuestas con diseños de muestreo
-estratificados y multietápicos. Desarrollado por {Hansen et~al.}
+estratificados y multietápicos. Desarrollado por Hansen et~al.
 (\citeproc{ref-hansen1953sample}{1953}), este método simplifica el
 tratamiento de las distintas etapas de selección al concentrar la
 estimación de la varianza en las unidades primarias de muestreo (UPM).
@@ -1189,7 +1191,7 @@ al siguiente expresión:
 
 \[\widehat{Var}(\hat{t}_y) = \sum_{h} \frac{n_h}{n_h-1} \sum_{i} (\hat{t}_{y_i} - \hat{\bar t}_{y_h})^2\]
 
-Para más detalles, véase {Hansen et~al.}
+Para más detalles, véase Hansen et~al.
 (\citeproc{ref-hansen1953sample}{1953, 258}) o Wolter
 (\citeproc{ref-Wolter2007Variance}{2007}). Aunque este método se propuso
 originalmente para calcular varianzas de estimadores de totales, el
@@ -1270,7 +1272,8 @@ muestral ponderada
 
 Bajo condiciones de regularidad, esta sustitución permite obtener
 estimadores consistentes de una amplia variedad de parámetros
-poblacionales (\citeproc{ref-binder1983variances}{Binder 1983}).
+poblacionales (\citeproc{ref-binder1983variances}{David A. Binder
+1983}).
 
 Asimismo, mediante la linealización de Taylor es posible aproximar un
 estimador no lineal por una expresión lineal cuya varianza puede
@@ -1285,7 +1288,7 @@ original se sustituya por una aproximación lineal. Para un parámetro
 definido como la solución de una ecuación de estimación muestral, un
 estimador consistente de su varianza puede expresarse como:
 
-\begin{equation}\protect\phantomsection\label{eq-EcuZ}{
+\begin{equation}\phantomsection\label{eq-EcuZ}{
 \widehat{Var}_p(\hat{\theta}) \approx [\hat{J}(\hat{\theta})]^{-1} \, \widehat{Var}_p \Bigg[\sum_{k\in s} w_k\, z_k(\hat{\theta})\Bigg] \, [\hat{J}(\hat{\theta})]^{-1}
 }\end{equation}
 
@@ -1353,7 +1356,7 @@ Por ejemplo, el Bootstrap es una herramienta de replicación robusta y
 versátil. Originalmente introducido por Efron
 (\citeproc{ref-efron1979bootstrap}{1979}) para datos que no provenían de
 encuestas, su adaptación más usada para encuestas de hogares es el
-Bootstrap de Reescalamiento propuesto por Rao et~al.
+Bootstrap de Reescalamiento propuesto por J. N. K. Rao, Wu, y Yue
 (\citeproc{ref-rao1992resampling}{1992}). Este método se ajusta de
 manera óptima a diseños de muestreo estratificados y multietápicos, y es
 ampliamente empleado para la estimación de varianzas en encuestas
@@ -1403,7 +1406,8 @@ no lineales. La simplicidad del método facilita su aplicación incluso
 sin software estadístico especializado. No obstante, su uso no es
 recomendable en encuestas repetidas con muestras superpuestas ni en
 situaciones con fracciones de muestreo grandes y tamaños de muestra
-pequeños (\citeproc{ref-bruch2011variance}{Bruch et~al. 2011}).
+pequeños (\citeproc{ref-bruch2011variance}{Bruch, Münnich, y Zins
+2011}).
 
 \subsection{Intervalos de confianza}\label{intervalos-de-confianza}
 
@@ -1449,11 +1453,11 @@ El análisis estadístico de encuestas ha evolucionado de manera
 constante, impulsado por el desarrollo de nuevas metodologías y enfoques
 que buscan mejorar la precisión y la representatividad de los resultados
 (\citeproc{ref-Lumley2010}{Lumley 2010};
-\citeproc{ref-HeeringaWestBerglund2017}{Heeringa et~al. 2017}). En
-general, estos avances surgen en el ámbito académico y, con el tiempo,
-son adoptados por instituciones públicas, empresas privadas y organismos
-estadísticos, que demandan su incorporación en los principales programas
-de análisis de datos.
+\citeproc{ref-HeeringaWestBerglund2017}{Heeringa, West, y Berglund
+2017}). En general, estos avances surgen en el ámbito académico y, con
+el tiempo, son adoptados por instituciones públicas, empresas privadas y
+organismos estadísticos, que demandan su incorporación en los
+principales programas de análisis de datos.
 
 Este capítulo presenta los principales procedimientos para el análisis
 estadístico de variables continuas utilizando \texttt{R}, incorporando
@@ -1710,8 +1714,6 @@ tabla~\ref{tbl-total-ingreso}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrrr@{}}
 
 \caption{\label{tbl-total-ingreso}Estimación del total de ingresos de
@@ -1728,8 +1730,6 @@ total & total\_se & total\_low & total\_upp & total\_deff \\
 85793667 & 4778674 & 76331414 & 95255920 & 11 \\
 
 \end{longtable}
-
-}
 
 De la tabla, se obtiene que la estimación del total poblacional para el
 ingreso total es de 85.793.667. Este valor corresponde al estimador
@@ -1764,8 +1764,6 @@ estimación, presentada en la tabla~\ref{tbl-total-gasto}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrr@{}}
 
 \caption{\label{tbl-total-gasto}Estimación del total de gastos de los
@@ -1782,8 +1780,6 @@ total & total\_low & total\_upp & total\_deff \\
 55677504 & 51360469 & 59994539 & 10.2 \\
 
 \end{longtable}
-
-}
 
 Si el objetivo es estimar el total de ingresos de los hogares, pero
 desagregado por sexo, se puede utilizar la función \texttt{group\_by()}
@@ -1806,8 +1802,6 @@ tabla~\ref{tbl-total-ingreso-sexo}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-total-ingreso-sexo}Total de ingresos de los hogares
@@ -1826,8 +1820,6 @@ Male & 41639847 & 2870194 & 35956576 & 47323118 \\
 Total income & 85793667 & 4778674 & 76331414 & 95255920 \\
 
 \end{longtable}
-
-}
 
 Como se observa en los códigos anteriores, una forma práctica de obtener
 las estimaciones del total, su error estándar y su intervalo de
@@ -1851,12 +1843,13 @@ cuales se estiman de la siguiente manera:
 \hat{\bar{y}}=  \frac{\hat{t}_y}{\hat{N}}  =  \frac{\sum_{h}\sum_{i}\sum_{k} w_{h i k} \ y_{hik}}{\sum_{h}\sum_{i}\sum_{k} w_{h i k}}
 \]
 
-De acuerdo con Särndal et~al. (\citeproc{ref-sarndal2003model}{2003}),
-dado que \(\hat{\bar{y}}\) no es una estadística lineal, su varianza
-suele estimarse mediante una aproximación. Por esta razón, es necesario
-recurrir a métodos de remuestreo o a la linealización de Taylor para
-aproximar su varianza. En este caso particular, utilizando series de
-Taylor, la varianza se define como:
+De acuerdo con Särndal, Swensson, y Wretman
+(\citeproc{ref-sarndal2003model}{2003}), dado que \(\hat{\bar{y}}\) no
+es una estadística lineal, su varianza suele estimarse mediante una
+aproximación. Por esta razón, es necesario recurrir a métodos de
+remuestreo o a la linealización de Taylor para aproximar su varianza. En
+este caso particular, utilizando series de Taylor, la varianza se define
+como:
 
 \[
 \widehat{Var}\left(\hat{\bar{y}}\right)  \approx  \frac{\widehat{Var}\left(\hat{t}_y\right)+\hat{\bar{y}}^{2}\ \widehat{Var}\left(\hat{N}\right)-2\ \hat{\bar{y}} \  \widehat{Cov}\left(\hat{t}_y,\hat{N}\right)}{\hat{N}^{2}}
@@ -1884,8 +1877,6 @@ cuyos resultados se presentan en la tabla~\ref{tbl-media-ingreso}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrrr@{}}
 
 \caption{\label{tbl-media-ingreso}Estimación de la media de ingresos de
@@ -1902,8 +1893,6 @@ mean & mean\_se & mean\_low & mean\_upp & mean\_deff \\
 571 & 28.5 & 515 & 627 & 8.82 \\
 
 \end{longtable}
-
-}
 
 Como se aprecia, los argumentos utilizados en la función
 \texttt{survey\_mean()} son similares a los de \texttt{survey\_total()}.
@@ -1938,8 +1927,6 @@ tabla~\ref{tbl-media-gasto}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrrr@{}}
 
 \caption{\label{tbl-media-gasto}Estimación de la media de gastos de los
@@ -1956,8 +1943,6 @@ mean & mean\_se & mean\_low & mean\_upp & mean\_deff \\
 371 & 13.3 & 344 & 397 & 6.02 \\
 
 \end{longtable}
-
-}
 
 La media estimada del gasto es de 371 dólares, con un error estándar de
 13,3. El intervalo de confianza se extiende entre 344 y 397, mientras
@@ -1980,8 +1965,6 @@ tabla~\ref{tbl-media-gasto-zona}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-media-gasto-zona}Media de gastos de los hogares
@@ -2001,8 +1984,6 @@ Urban & 460 & 22.2 & 416 & 504 \\
 
 \end{longtable}
 
-}
-
 Al desagregar por zona, se observa que los hogares urbanos registran un
 gasto medio de 460, frente a 274 en los hogares rurales. Aunque los
 intervalos de confianza muestran mayor incertidumbre en la zona urbana,
@@ -2021,8 +2002,6 @@ región, presentada en la tabla~\ref{tbl-media-gasto-zona-reg}:
     \AttributeTok{.fill =} \StringTok{"Mean expenditure"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
-{
 
 \begin{longtable}[]{@{}llrrrr@{}}
 
@@ -2052,8 +2031,6 @@ Urban & Oriente & 466 & 45.3 & 377 & 556 \\
 Urban & Mean expenditure & 460 & 22.2 & 416 & 504 \\
 
 \end{longtable}
-
-}
 
 El gasto medio varía de forma importante según la zona de residencia y
 la región. En el área rural, los mayores promedios se observan en las
@@ -2124,8 +2101,6 @@ resultados obtenidos se presentan en la tabla~\ref{tbl-razon-sexo}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrr@{}}
 
 \caption{\label{tbl-razon-sexo}Razón de mujeres por hombre en la
@@ -2142,8 +2117,6 @@ ratio & ratio\_se & ratio\_low & ratio\_upp \\
 1.11 & 0.035 & 1.04 & 1.18 \\
 
 \end{longtable}
-
-}
 
 Dado que la variable sexo en la base de datos es categórica, fue
 necesario acudir a variables indicadoras para realizar el cálculo de la
@@ -2172,8 +2145,6 @@ ejecución del siguiente código:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrr@{}}
 
 \caption{\label{tbl-razon-sexo-rural}Razón de mujeres por hombre en zona
@@ -2190,8 +2161,6 @@ ratio & ratio\_se & ratio\_low & ratio\_upp \\
 1.07 & 0.035 & 0.997 & 1.14 \\
 
 \end{longtable}
-
-}
 
 La razón estimada entre el número de mujeres y el número de hombres en
 la zona rural es de 1,07, lo que indica que el número de mujeres es
@@ -2219,8 +2188,6 @@ resultados se presentan en la tabla~\ref{tbl-razon-gasto-ingreso}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrr@{}}
 
 \caption{\label{tbl-razon-gasto-ingreso}Razón gasto/ingreso de los
@@ -2237,8 +2204,6 @@ ratio & ratio\_se & ratio\_low & ratio\_upp \\
 0.649 & 0.023 & 0.603 & 0.695 \\
 
 \end{longtable}
-
-}
 
 En este caso, se especificaron la variable de gasto como numerador
 (\texttt{numerator}), la variable de ingreso como denominador
@@ -2267,8 +2232,6 @@ la tabla~\ref{tbl-razon-gasto-ingreso-reg}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-razon-gasto-ingreso-reg}Razón gasto/ingreso para las
@@ -2289,8 +2252,6 @@ Occidente & 0.606 & 0.042 & 0.522 & 0.690 \\
 Oriente & 0.600 & 0.054 & 0.493 & 0.708 \\
 
 \end{longtable}
-
-}
 
 La razón entre el gasto y el ingreso presenta diferencias entre las
 regiones. No obstante, los intervalos de confianza se superponen
@@ -2335,7 +2296,7 @@ económicos. Por el contrario, una desviación estándar elevada refleja
 una mayor dispersión y, en consecuencia, diferencias más marcadas entre
 los ingresos de los hogares.
 
-De acuerdo con Heeringa et~al.
+De acuerdo con Heeringa, West, y Berglund
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), la desviación estándar
 poblacional se estima mediante una transformación no lineal del
 estimador de la varianza poblacional, \(\hat{S}_y^2\). Esta
@@ -2378,8 +2339,6 @@ ingreso desagregada por zona.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrrrrr@{}}
 
 \caption{\label{tbl-sd-ingreso-zona}Desviación estándar de los ingresos
@@ -2397,8 +2356,6 @@ Rural & 96274 & 13794 & 68960 & 123588 & 310 & 263 & 352 \\
 Urban & 338628 & 81241 & 177763 & 499494 & 582 & 422 & 707 \\
 
 \end{longtable}
-
-}
 
 Los argumentos de la función \texttt{survey\_var()} son equivalentes a
 los utilizados previamente para la estimación de medias y totales. Los
@@ -2464,12 +2421,12 @@ presenta saltos importantes asociados al uso de pesos muestrales.
 
 Woodruff (\citeproc{ref-Woodruff1952}{1952}) propone el método de
 inversión de la función de distribución acumulada como procedimiento
-para construir intervalos de confianza de cuantiles. Por su parte, Kovar
-et~al. (\citeproc{ref-kovar1988}{1988}) analiza la estimación de la
-varianza y la construcción de intervalos de confianza para percentiles y
-medianas, y muestra que los métodos de replicación presentan un
-desempeño satisfactorio para estos parámetros no lineales en encuestas
-con diseños muestrales complejos.
+para construir intervalos de confianza de cuantiles. Por su parte,
+Kovar, Rao, y Wu (\citeproc{ref-kovar1988}{1988}) analiza la estimación
+de la varianza y la construcción de intervalos de confianza para
+percentiles y medianas, y muestra que los métodos de replicación
+presentan un desempeño satisfactorio para estos parámetros no lineales
+en encuestas con diseños muestrales complejos.
 
 Tanto los estimadores de cuantiles como los métodos para estimar sus
 varianzas se encuentran implementados en \texttt{R}. En particular, la
@@ -2492,8 +2449,6 @@ base de datos de ejemplo.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-mediana-gasto-zona}Estimación de la mediana de los
@@ -2511,8 +2466,6 @@ Rural & 241 & 11.0 & 214 & 258 \\
 Urban & 381 & 19.8 & 337 & 416 \\
 
 \end{longtable}
-
-}
 
 A partir de la tabla~\ref{tbl-mediana-gasto-zona} se concluye que el
 ingreso mediano presenta una diferencia importante entre zonas. En el
@@ -2555,8 +2508,6 @@ tabla~\ref{tbl-cuantil-gasto}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrr@{}}
 
 \caption{\label{tbl-cuantil-gasto}Estimación del primer cuartil de los
@@ -2574,8 +2525,6 @@ quantile\_q25\_upp \\
 200 & 13.8 & 163 & 218 \\
 
 \end{longtable}
-
-}
 
 De los resultados anteriores, el percentil 25 del gasto se estima en 200
 dólares, lo que indica que aproximadamente una cuarta parte de la
@@ -2611,8 +2560,8 @@ reducida de la población.
 En el contexto de las encuestas de hogares, la estimación del
 coeficiente de Gini debe incorporar adecuadamente las características
 del diseño muestral, incluyendo los factores de expansión, la
-estratificación y la conglomeración. Siguiendo a Binder y Kovačević
-(\citeproc{ref-BinderKovacevic1995}{1995}) y Langel y Tillé
+estratificación y la conglomeración. Siguiendo a David A. Binder y
+Kovačević (\citeproc{ref-BinderKovacevic1995}{1995}) y Langel y Tillé
 (\citeproc{ref-LangelTille2013}{2013}), el estimador ponderado del
 coeficiente de Gini puede expresarse en función de la posición acumulada
 de cada observación en la distribución del ingreso, así:
@@ -2632,7 +2581,7 @@ la población.
 Con respecto a la estimación de la varianza, Osier
 (\citeproc{ref-osier2009variance}{2009}) desarrolla un procedimiento de
 linealización que aproxima el estimador no lineal mediante una variable
-linealizada. A partir de este desarrollo, Jacob et~al.
+linealizada. A partir de este desarrollo, Jacob, Pessoa, y Damico
 (\citeproc{ref-convey2024}{2024}) presenta su implementación en
 \texttt{R} mediante la función \texttt{svygini()}. Para ello, primero se
 prepara el diseño muestral mediante \texttt{convey\_prep()}. Luego, la
@@ -2658,8 +2607,6 @@ muestran en la tabla~\ref{tbl-gini}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-gini}Estimación del coeficiente de Gini para el
@@ -2676,8 +2623,6 @@ ingreso de los hogares}
 Income & 0.413 & 0.019 & 0.377 & 0.45 \\
 
 \end{longtable}
-
-}
 
 El coeficiente de Gini estimado indica un grado apreciable de
 desigualdad en la distribución del ingreso y evidencia una concentración
@@ -2776,7 +2721,7 @@ patrones económicos y sociales en la población.
 
 Supóngase que se dispone de dos variables numéricas de interés,
 denotadas por \(x\) y \(y\), observadas en la encuesta compleja. De
-acuerdo con Heeringa et~al.
+acuerdo con Heeringa, West, y Berglund
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), la asociación lineal
 entre ambas variables puede estimarse mediante el coeficiente de
 correlación de Pearson ponderado, definido como la covarianza ponderada
@@ -2804,8 +2749,6 @@ covarianzas entre el ingreso y el gasto de los hogares.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}llrr@{}}
 
 \caption{\label{tbl-covarianza}Matriz de varianzas y covarianzas
@@ -2823,8 +2766,6 @@ Income & Income & 243719 & 98337 \\
 Expenditure & Expenditure & 98337 & 77887 \\
 
 \end{longtable}
-
-}
 
 La función \texttt{svyvar} estima la matriz de varianzas y covarianzas
 considerando el diseño muestral. A partir de dicha matriz puede
@@ -3003,8 +2944,6 @@ los intervalos.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrrrr@{}}
 
 \caption{\label{tbl-ttest-sexo}Prueba de diferencia de ingresos medios
@@ -3022,8 +2961,6 @@ estimated\_difference \\
 2.76 & 0.007 & 118 & 34.7 & 210 & 122 \\
 
 \end{longtable}
-
-}
 
 A partir de los resultados presentados en la tabla~\ref{tbl-ttest-sexo},
 se estima que el ingreso medio de los hombres jefes de hogar es 122
@@ -3056,11 +2993,12 @@ situaciones, las pruebas de diferencia de medias presentadas
 anteriormente resultan limitadas, ya que están diseñadas para comparar
 únicamente pares de poblaciones.
 
-Según Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}),
-para abordar comparaciones más generales se utilizan los contrastes, que
-constituyen una herramienta flexible para evaluar combinaciones lineales
-de parámetros poblacionales. En términos generales, un contraste se
-define como:
+Según Heeringa, West, y Berglund
+(\citeproc{ref-HeeringaWestBerglund2017}{2017}), para abordar
+comparaciones más generales se utilizan los contrastes, que constituyen
+una herramienta flexible para evaluar combinaciones lineales de
+parámetros poblacionales. En términos generales, un contraste se define
+como:
 
 \[
 f\left(\theta_1,\theta_2,\ldots,\theta_J\right)
@@ -3126,8 +3064,6 @@ por región, como se presenta en la tabla~\ref{tbl-prom-region}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}llrrrr@{}}
 
 \caption{\label{tbl-prom-region}Ingreso medio estimado por región}
@@ -3147,8 +3083,6 @@ Occidente & Occidente & 517 & 46.2 & 426 & 608 \\
 Oriente & Oriente & 542 & 71.7 & 401 & 682 \\
 
 \end{longtable}
-
-}
 
 La función \texttt{svyby()} estima el ingreso medio por región, de
 acuerdo con el diseño de muestreo \texttt{survey\_design}. El argumento
@@ -3179,8 +3113,6 @@ estimados (\texttt{stat}) y las constantes de contraste
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrr@{}}
 
 \caption{\label{tbl-contraste-ns}Contraste de ingresos medios: región
@@ -3197,8 +3129,6 @@ contrast & estimate & variance & standard\_error \\
 north\_south\_difference & -73.4 & 6959 & 83.4 \\
 
 \end{longtable}
-
-}
 
 La estimación de la diferencia de medias indica que el ingreso promedio
 en la región Norte es aproximadamente 73,4 dólares inferior al observado
@@ -3245,8 +3175,6 @@ unidades muestrales y su covarianza bajo el diseño es igual a cero.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrrr@{}}
 
 \caption{\label{tbl-vcov-region}Matriz de varianzas y covarianzas de los
@@ -3267,8 +3195,6 @@ Occidente & 0 & 0 & 0 & 2136 & 0 \\
 Oriente & 0 & 0 & 0 & 0 & 5136 \\
 
 \end{longtable}
-
-}
 
 Para calcular el error estándar de la diferencia (contraste) se usarán
 las propiedades de la varianza, de la siguiente forma:
@@ -3337,8 +3263,6 @@ presentan en la tabla~\ref{tbl-contraste-regiones}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrr@{}}
 
 \caption{\label{tbl-contraste-regiones}Contrastes de ingresos medios
@@ -3357,8 +3281,6 @@ south\_center & -25.0 & 7673 & 87.6 \\
 west\_east & -24.7 & 7272 & 85.3 \\
 
 \end{longtable}
-
-}
 
 También es posible construir contrastes entre variables asociadas a
 diferentes grupos poblacionales, como ocurre al comparar el ingreso
@@ -3382,8 +3304,6 @@ presenta en la tabla~\ref{tbl-prom-sexo}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-prom-sexo}Ingreso medio estimado por sexo}
@@ -3400,8 +3320,6 @@ Female & 442 & 23.5 & 396 & 488 \\
 Male & 564 & 34.0 & 498 & 631 \\
 
 \end{longtable}
-
-}
 
 En este caso, el contraste de interés está dado por
 \(\bar{y}_{F} - \bar{y}_{M}\), el cual permite cuantificar la diferencia
@@ -3422,8 +3340,6 @@ estimado de 44,3 dólares.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrr@{}}
 
 \caption{\label{tbl-contraste-sexo}Contraste de ingresos medios entre
@@ -3440,8 +3356,6 @@ contrast & estimate & variance & standard\_error \\
 sex\_difference & -122 & 1958 & 44.3 \\
 
 \end{longtable}
-
-}
 
 Dado que los contrastes corresponden a funciones lineales de parámetros,
 también es posible aplicarlos a estimadores de razón. Un ejemplo de ello
@@ -3467,8 +3381,6 @@ se muestran en la tabla~\ref{tbl-razon-ingreso-gasto-sexo}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}llrrrr@{}}
 
 \caption{\label{tbl-razon-ingreso-gasto-sexo}Razón ingreso/gasto
@@ -3487,8 +3399,6 @@ Male & Male & 1.59 & 0.072 & 1.45 & 1.74 \\
 
 \end{longtable}
 
-}
-
 La función \texttt{svycontrast()} permite construir el contraste entre
 estas razones estimadas a partir de diseños de muestreo complejos. A
 continuación, se presentan los códigos computacionales utilizados para
@@ -3506,8 +3416,6 @@ puede concluirse que la diferencia entre las razones estimadas es de
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrr@{}}
 
 \caption{\label{tbl-contraste-razon-sexo}Contraste de la razón
@@ -3524,8 +3432,6 @@ contrast & estimate & standard\_error & variance \\
 sex\_difference & -0.178 & 0.088 & 0.00774 \\
 
 \end{longtable}
-
-}
 
 \section{Visualización de variables continuas}\label{viz-continuas}
 
@@ -4054,7 +3960,8 @@ población representa la unidad observada en la muestra. A partir de
 estas estimaciones también puede calcularse la proporción que cada
 subpoblación representa respecto del total poblacional. Por ende, el
 estimador del tamaño de la población
-(\citeproc{ref-sarndal2003model}{Särndal et~al. 2003}), se define como:
+(\citeproc{ref-sarndal2003model}{Särndal, Swensson, y Wretman 2003}), se
+define como:
 
 \[
 \hat{N} = \sum_{h} \sum_{i} \sum_{k} w_{hik}
@@ -4117,8 +4024,6 @@ tabla~\ref{tbl-tamano-zona}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrrr@{}}
 
 \caption{\label{tbl-tamano-zona}Tamaño poblacional estimado por zona
@@ -4136,8 +4041,6 @@ Rural & 1297 & 72102 & 3062 & 66039 & 78165 \\
 Urban & 1308 & 78164 & 2847 & 72526 & 83802 \\
 
 \end{longtable}
-
-}
 
 En efecto, el tamaño de muestra fue de 1297 personas en la zona rural y
 de 1308 en la zona urbana. A partir de estas muestras se estimó una
@@ -4157,8 +4060,6 @@ estimar el número de personas según los distintos niveles de pobreza.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-tamano-pobreza}Tamaño poblacional estimado por
@@ -4177,8 +4078,6 @@ Extreme & 21519 & 4949 & 11719 & 31319 \\
 Relative & 37349 & 3695 & 30032 & 44666 \\
 
 \end{longtable}
-
-}
 
 La tabla~\ref{tbl-tamano-pobreza} refelja una población en la que la
 mayoría de las personas no vive en pobreza, pero en la que esa aparente
@@ -4209,8 +4108,6 @@ error estándar y los intervalos de confianza.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-tamano-empleo}Tamaño poblacional estimado por estado
@@ -4229,8 +4126,6 @@ Inactive & 41465 & 2163 & 37183 & 45748 \\
 Employed & 61877 & 2540 & 56847 & 66907 \\
 
 \end{longtable}
-
-}
 
 A partir de los resultados presentados en la
 tabla~\ref{tbl-tamano-empleo}, se estima que la población ocupada
@@ -4267,8 +4162,6 @@ relativa.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}llrrrr@{}}
 
 \caption{\label{tbl-tamano-empleo-pobreza}Tamaño poblacional estimado
@@ -4297,8 +4190,6 @@ Employed & Total & 61877 & 2540 & 56847 & 66907 \\
 Total & Total & 107977 & 3466 & 101115 & 114839 \\
 
 \end{longtable}
-
-}
 
 \section{Estimación de proporciones}\label{estimacion-de-proporciones}
 
@@ -4335,7 +4226,7 @@ estimaciones suficientemente estables. Este problema adquiere especial
 importancia al analizar fenómenos poco frecuentes o muy concentrados, ya
 que pequeñas variaciones en la composición de la muestra pueden
 ocasionar cambios sustanciales en las proporciones estimadas
-(\citeproc{ref-KornGraubard1999}{Korn y Graubard 1999}).
+(\citeproc{ref-KornGraubard1999}{Edward L. Korn y Graubard 1999}).
 
 Esta dificultad también afecta la construcción de los intervalos de
 confianza. Como señala Agresti (\citeproc{ref-Agresti2019Intro}{2019}),
@@ -4409,8 +4300,6 @@ definido.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-prop-zona}Proporción de personas por zona
@@ -4429,8 +4318,6 @@ Rural & 0.48 & 0.014 & 0.452 & 0.508 \\
 Urban & 0.52 & 0.014 & 0.492 & 0.548 \\
 
 \end{longtable}
-
-}
 
 En este ejemplo, la función \texttt{survey\_mean()} se utiliza para
 calcular la estimación de proporciones poblacionales y, mediante el
@@ -4463,8 +4350,6 @@ para cada categoría de sexo.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-prop-sexo-urbano}Proporción de hombres y mujeres en
@@ -4482,8 +4367,6 @@ Female & 0.537 & 0.013 & 0.511 & 0.563 \\
 Male & 0.463 & 0.013 & 0.437 & 0.489 \\
 
 \end{longtable}
-
-}
 
 La tabla~\ref{tbl-prop-sexo-urbano} muestra una leve mayoría femenina en
 la población urbana: las mujeres representan el 53,6\%, con un intervalo
@@ -4504,8 +4387,6 @@ y rurales utilizando el diseño muestral previamente definido.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-prop-zona-hombre}Distribución por zona en la
@@ -4524,8 +4405,6 @@ Rural & 0.491 & 0.018 & 0.455 & 0.526 \\
 Urban & 0.509 & 0.018 & 0.474 & 0.545 \\
 
 \end{longtable}
-
-}
 
 Los resultados de la tabla~\ref{tbl-prop-zona-hombre} revelan una
 población masculina repartida casi por igual entre lo urbano y lo rural:
@@ -4547,8 +4426,6 @@ condiciones socioeconómicas de subpoblaciones específicas.
   \FunctionTok{summarise}\NormalTok{(}\AttributeTok{proportion =} \FunctionTok{survey\_prop}\NormalTok{(}\AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
-
-{
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0857}}
@@ -4590,8 +4467,6 @@ Urban & Relative & 0.227 & 0.026 & 0.180 & 0.283 \\
 
 \end{longtable}
 
-}
-
 La tabla~\ref{tbl-prop-zona-pobreza-hombre} revela una geografía social
 particular. Mientras en las zonas urbanas el 66,0\% de los hombres se
 encuentra fuera de la pobreza, en las rurales esta proporción desciende
@@ -4621,8 +4496,6 @@ cada grupo etario.
   \FunctionTok{summarise}\NormalTok{(}\AttributeTok{proportion =} \FunctionTok{survey\_prop}\NormalTok{(}\AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
-
-{
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1316}}
@@ -4664,8 +4537,6 @@ Other & Employed & 0.413 & 0.029 & 0.356 & 0.472 \\
 
 \end{longtable}
 
-}
-
 La tabla~\ref{tbl-prop-edad-rango-empleo-mujer} muestra que la
 inactividad constituye la condición predominante entre las mujeres de
 ambos grupos de edad: alcanza el 51,7\% entre aquellas de 18 a 35 años y
@@ -4683,8 +4554,9 @@ situación de pobreza por sexo, zona de residencia o condición de
 actividad. Cada una de estas categorías define una subpoblación
 específica, para la cual pueden estimarse proporciones y sus
 correspondientes medidas de precisión
-(\citeproc{ref-KornGraubard1999}{Korn y Graubard 1999};
-\citeproc{ref-HeeringaWestBerglund2017}{Heeringa et~al. 2017}).
+(\citeproc{ref-KornGraubard1999}{Edward L. Korn y Graubard 1999};
+\citeproc{ref-HeeringaWestBerglund2017}{Heeringa, West, y Berglund
+2017}).
 
 Sin embargo, la estimación separada de estas proporciones no siempre es
 suficiente. Con frecuencia, el interés principal consiste en determinar
@@ -4715,8 +4587,6 @@ Este contraste puede expresarse como \(\hat{p}_F-\hat{p}_M\), donde
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}llrrrr@{}}
 
 \caption{\label{tbl-svyby-pobreza-sexo2}Proporción en condición de
@@ -4734,8 +4604,6 @@ Female & Female & 0.389 & 0.032 & 0.327 & 0.451 \\
 Male & Male & 0.395 & 0.037 & 0.323 & 0.466 \\
 
 \end{longtable}
-
-}
 
 Con base en los resultados presentados en la
 tabla~\ref{tbl-svyby-pobreza-sexo2}, puede estimarse la diferencia entre
@@ -4796,8 +4664,6 @@ tabla~\ref{tbl-vcov-sex-pobreza}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrr@{}}
 
 \caption{\label{tbl-vcov-sex-pobreza}Matriz de varianzas y covarianzas
@@ -4815,8 +4681,6 @@ Female & 0.000998 & 0.000918 \\
 Male & 0.000918 & 0.001342 \\
 
 \end{longtable}
-
-}
 
 A partir de esta matriz, el error estándar de la diferencia de
 proporciones se estima, utilizando la expresión general para la varianza
@@ -4887,8 +4751,6 @@ tabla~\ref{tbl-svyby-desempleo-region}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}llrrrr@{}}
 
 \caption{\label{tbl-svyby-desempleo-region}Proporción en condición de
@@ -4909,8 +4771,6 @@ Occidente & Occidente & 0.040 & 0.012 & 0.016 & 0.064 \\
 Oriente & Oriente & 0.030 & 0.013 & 0.005 & 0.054 \\
 
 \end{longtable}
-
-}
 
 Una vez estimadas las proporciones de desempleo por región, el siguiente
 paso consiste en evaluar si existen diferencias estadísticamente
@@ -4941,8 +4801,6 @@ las estimaciones regionales, sino también las covarianzas entre ellas.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrrr@{}}
 
 \caption{\label{tbl-vcov-desempleo-region}Matriz de varianzas y
@@ -4963,8 +4821,6 @@ Occidente & 0.000000 & 0.000000 & 0.000000 & 0.000151 & 0.000000 \\
 Oriente & 0.000000 & 0.000000 & 0.000000 & 0.000000 & 0.000158 \\
 
 \end{longtable}
-
-}
 
 La matriz de varianzas y covarianzas presentada en la
 tabla~\ref{tbl-vcov-desempleo-region} muestra que las covarianzas entre
@@ -5050,11 +4906,11 @@ proporciones}\label{pruebas-de-hipotesis-sobre-proporciones}
 Las pruebas de hipótesis también permiten evaluar si las diferencias
 observadas entre proporciones estimadas para distintos grupos reflejan
 diferencias en la población o si pueden atribuirse al error de muestreo
-(\citeproc{ref-korn1995analysis}{Korn y Graubard 1995}). Supóngase que
-\(p_H\) representa la proporción de hombres desocupados y \(p_M\) la
-proporción de mujeres desocupadas dentro de la población económicamente
-activa. El parámetro de interés corresponde a la diferencia entre ambas
-proporciones:
+(\citeproc{ref-korn1995analysis}{Edward L. Korn y Graubard 1995}).
+Supóngase que \(p_H\) representa la proporción de hombres desocupados y
+\(p_M\) la proporción de mujeres desocupadas dentro de la población
+económicamente activa. El parámetro de interés corresponde a la
+diferencia entre ambas proporciones:
 
 \[
 \Delta_p = p_H - p_M.
@@ -5135,8 +4991,6 @@ formalmente ambas tasas.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-prop-desempleo-sexo}Estimación de la tasa de
@@ -5154,8 +5008,6 @@ Female & 0.048 & 0.012 & 0.029 & 0.078 \\
 Male & 0.084 & 0.015 & 0.059 & 0.118 \\
 
 \end{longtable}
-
-}
 
 Las tasas de desempleo estimadas por sexo se presentan en la
 tabla~\ref{tbl-prop-desempleo-sexo}. En \texttt{R}, la función
@@ -5180,8 +5032,6 @@ incorporando los ajustes asociados al diseño muestral.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrrrr@{}}
 
 \caption{\label{tbl-ttest-desempleo-sexo}Prueba de diferencia de
@@ -5200,8 +5050,6 @@ estimated\_difference \\
 
 \end{longtable}
 
-}
-
 A partir de la tabla~\ref{tbl-ttest-desempleo-sexo}, se concluye que la
 diferencia estimada entre la proporción de hombres desocupados y la
 proporción de mujeres desocupadas es de 0.0359, es decir, la proporción
@@ -5215,7 +5063,7 @@ de desocupados es diferente entre hombres y mujeres.
 
 \section{Tablas cruzadas}\label{tablas-cruzadas}
 
-De acuerdo con Heeringa et~al.
+De acuerdo con Heeringa, West, y Berglund
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}) y Agresti
 (\citeproc{ref-Agresti2019Intro}{2019}), además de analizar cada
 variable de manera individual, resulta especialmente relevante estudiar
@@ -5353,8 +5201,6 @@ precisión de las estimaciones obtenidas a partir del diseño muestral.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1268}}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0986}}
@@ -5393,8 +5239,6 @@ Poor & Male & 0.476 & 0.016 & 0.445 & 0.508 \\
 
 \end{longtable}
 
-}
-
 Los resultados indican que el 52.3\% de la población en condición de
 pobreza corresponde a mujeres, mientras que el 47.6\% corresponde a
 hombres. Para las mujeres, el intervalo de confianza al 95\% se
@@ -5418,8 +5262,6 @@ resultados se presentan en la tabla~\ref{tbl-svyby-pobreza-sexo}.
   \FunctionTok{summarise}\NormalTok{(}\AttributeTok{proportion =} \FunctionTok{survey\_prop}\NormalTok{(}\AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
-
-{
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1268}}
@@ -5459,8 +5301,6 @@ Poor & Male & 0.476 & 0.016 & 0.445 & 0.508 \\
 
 \end{longtable}
 
-}
-
 Los intervalos de confianza ya fueron calculados por
 \texttt{survey\_prop(vartype\ =\ c("se",\ "ci"))}. El siguiente código
 no vuelve a estimarlos mediante \texttt{confint()}; utiliza
@@ -5475,8 +5315,6 @@ los generados anteriormente.
 \NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(poor, Sex, proportion\_low, proportion\_upp)}
 \end{Highlighting}
 \end{Shaded}
-
-{
 
 \begin{longtable}[]{@{}llrr@{}}
 
@@ -5498,8 +5336,6 @@ Poor & Male & 0.445 & 0.508 \\
 
 \end{longtable}
 
-}
-
 Otro análisis de interés relacionado con tablas de doble entrada en
 encuestas de hogares consiste en estimar el porcentaje de personas
 desempleadas según sexo. El procedimiento correspondiente y sus
@@ -5513,8 +5349,6 @@ resultados se presentan en la tabla~\ref{tbl-svyby-empleo-sexo}.
   \FunctionTok{summarise}\NormalTok{(}\AttributeTok{proportion =} \FunctionTok{survey\_prop}\NormalTok{(}\AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
-
-{
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1507}}
@@ -5556,8 +5390,6 @@ Employed & Male & 0.595 & 0.019 & 0.558 & 0.631 \\
 
 \end{longtable}
 
-}
-
 De la anterior salida se puede observar que el 27.2\% de las personas
 desempleadas son mujeres y el 72.7\% son hombres, con errores estándar
 de 5.3 puntos porcentuales para ambas estimaciones. Los intervalos de
@@ -5570,8 +5402,6 @@ tabla~\ref{tbl-confint-empleo-sexo}:
 \NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Employment, Sex, proportion\_low, proportion\_upp)}
 \end{Highlighting}
 \end{Shaded}
-
-{
 
 \begin{longtable}[]{@{}llrr@{}}
 
@@ -5595,8 +5425,6 @@ Employed & Male & 0.558 & 0.631 \\
 
 \end{longtable}
 
-}
-
 Si ahora el objetivo es estimar la pobreza por región, se utiliza la
 variable numérica \texttt{poor} dentro de un flujo \texttt{srvyr}, como
 se muestra en la tabla~\ref{tbl-svyby-region-pobreza}.
@@ -5608,8 +5436,6 @@ se muestra en la tabla~\ref{tbl-svyby-region-pobreza}.
   \FunctionTok{summarise}\NormalTok{(}\AttributeTok{proportion =} \FunctionTok{survey\_prop}\NormalTok{(}\AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
-
-{
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1429}}
@@ -5655,8 +5481,6 @@ Oriente & 1 & 0.452 & 0.088 & 0.289 & 0.626 \\
 
 \end{longtable}
 
-}
-
 De lo anterior se puede concluir que, en la región Norte, el 35\% de las
 personas están en estado de pobreza, mientras que en el Sur la
 proporción es del 34\%. La proporción estimada más alta se observa en la
@@ -5666,7 +5490,7 @@ evaluar la precisión de estas estimaciones.
 \section{\texorpdfstring{La razón de
 \emph{odds}}{La razón de odds}}\label{la-razon-de-odds}
 
-De acuerdo con Díaz Monroy et~al.
+De acuerdo con Díaz Monroy, Morales Rivera, y León Dávila
 (\citeproc{ref-DiazMoralesLeon2018}{2018}) y Agresti
 (\citeproc{ref-Agresti2019Intro}{2019}), la razón de \emph{odds} es una
 medida ampliamente utilizada para estudiar la asociación entre dos
@@ -5676,7 +5500,7 @@ grupos poblacionales. Su interpretación se basa en comparar las ventajas
 relativas (\emph{odds}) de ocurrencia de un evento entre dos categorías
 de análisis.
 
-Como explican Heeringa et~al.
+Como explican Heeringa, West, y Berglund
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), en este sentido, este
 parámetro permite evaluar cómo cambia dicha ventaja entre diferentes
 grupos de interés y constituye una herramienta fundamental en estudios
@@ -5738,8 +5562,6 @@ presentada en la tabla~\ref{tbl-interaccion-sexo-pobreza}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1045}}
   >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0746}}
@@ -5777,8 +5599,6 @@ Male & 0 & 0.605 & 0.037 & 0.531 & 0.675 \\
 Male & 1 & 0.395 & 0.037 & 0.325 & 0.469 \\
 
 \end{longtable}
-
-}
 
 Luego, la función \texttt{svycontrast()} realiza el contraste dividiendo
 cada uno de los elementos de la expresión mostrada anteriormente:
@@ -5823,7 +5643,7 @@ población. En el contexto de tablas de contingencia, las pruebas de
 independencia permiten analizar si existe asociación entre dos variables
 categóricas.
 
-De acuerdo con Heeringa et~al.
+De acuerdo con Heeringa, West, y Berglund
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), en este caso, la
 hipótesis nula (\(H_{0}\)) establece que ambas variables son
 independientes; es decir, que la distribución de una variable no depende
@@ -5851,8 +5671,8 @@ consistente con el supuesto de independencia. Por el contrario,
 discrepancias suficientemente grandes sugieren la existencia de
 asociación entre las variables y conducen al rechazo de \(H_0\).
 
-Como explican Rao y Scott (\citeproc{ref-RaoScott1981}{1981}), en las
-encuestas de hogares, características propias del diseño muestral
+Como explican J. N. K. Rao y Scott (\citeproc{ref-RaoScott1981}{1981}),
+en las encuestas de hogares, características propias del diseño muestral
 complejo, como la estratificación, la selección por conglomerados y el
 uso de factores de expansión, afectan la variabilidad de los estimadores
 en comparación con la que se obtendría bajo un muestreo aleatorio
@@ -5866,7 +5686,7 @@ Con el propósito de corregir este problema, Fay
 (\citeproc{ref-fellegi1980approximate}{1980}) y Thomas y Rao
 (\citeproc{ref-thomas1987chisquare}{1987}) propusieron los primeros
 ajustes al estadístico chi-cuadrado de Pearson, basados en el efecto de
-diseño generalizado (\(GDEFF\)). Posteriormente, Rao y Scott
+diseño generalizado (\(GDEFF\)). Posteriormente, Jon N. K. Rao y Scott
 (\citeproc{ref-rao1984chisquare}{1984}) amplió y formalizó el marco
 teórico de estas correcciones, dando origen a lo que actualmente se
 conoce como la prueba de Rao-Scott, considerada el procedimiento de
@@ -6000,16 +5820,17 @@ la condición de pobreza.
 \section{Visualización de variables categóricas}\label{viz-categoricas}
 
 De acuerdo con Wickham (\citeproc{ref-Wickham2016ggplot2}{2016}) y
-Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}), la
-visualización de variables categóricas es fundamental en el análisis de
-encuestas de hogares, ya que permite comunicar de manera clara la
-distribución de grupos poblacionales y las comparaciones entre ellos. Al
-igual que en el análisis de variables continuas, los gráficos deben
-incorporar los pesos muestrales para que la representación visual
-corresponda a estimaciones válidas a nivel poblacional. Cuando la
-precisión estadística es relevante, es recomendable acompañar las barras
-con intervalos de confianza, que comunican tanto el valor central como
-la incertidumbre asociada al proceso de estimación.
+Heeringa, West, y Berglund
+(\citeproc{ref-HeeringaWestBerglund2017}{2017}), la visualización de
+variables categóricas es fundamental en el análisis de encuestas de
+hogares, ya que permite comunicar de manera clara la distribución de
+grupos poblacionales y las comparaciones entre ellos. Al igual que en el
+análisis de variables continuas, los gráficos deben incorporar los pesos
+muestrales para que la representación visual corresponda a estimaciones
+válidas a nivel poblacional. Cuando la precisión estadística es
+relevante, es recomendable acompañar las barras con intervalos de
+confianza, que comunican tanto el valor central como la incertidumbre
+asociada al proceso de estimación.
 
 En esta sección se utiliza el paquete \texttt{ggplot2}.
 
@@ -6438,7 +6259,8 @@ no permite atribuirla únicamente a un tamaño muestral insuficiente, pues
 también puede reflejar la ponderación y otras características del
 diseño.
 
-De acuerdo con Prener et~al. (\citeproc{ref-biscale2025}{2025}) y Wilke
+De acuerdo con Prener, Grossenbacher, y Zehr
+(\citeproc{ref-biscale2025}{2025}) y Wilke
 (\citeproc{ref-cowplot2025}{2025}), cuando se desea representar
 simultáneamente dos variables ---por ejemplo, la proporción de pobreza y
 su coeficiente de variación--- es posible construir un mapa bivariante
@@ -6550,13 +6372,13 @@ no determina automáticamente que deba ampliarse el tamaño muestral.
 
 \chapter{Modelos de regresión}\label{cap5}
 
-De acuerdo con Chambers y Skinner
-(\citeproc{ref-ChambersSkinner2003}{2003}) y Heeringa et~al.
-(\citeproc{ref-HeeringaWestBerglund2017}{2017}), los modelos de
-regresión constituyen una de las herramientas más utilizadas en el
-análisis de datos provenientes de encuestas, ya que permiten estudiar la
-relación entre una variable de interés y un conjunto de variables
-explicativas. A través de estos modelos, es posible evaluar cómo cambian
+Los modelos de regresión constituyen una de las herramientas más
+utilizadas en el análisis de datos provenientes de encuestas, ya que
+permiten estudiar la relación entre una variable de interés y un
+conjunto de variables explicativas
+(\citeproc{ref-ChambersSkinner2003}{Chambers y Skinner 2003};
+\citeproc{ref-HeeringaWestBerglund2017}{Heeringa, West, y Berglund
+2017}). A través de estos modelos, es posible evaluar cómo cambian
 determinadas características de la población según factores
 demográficos, sociales o económicos observados en la muestra. No
 obstante, la validez de los resultados obtenidos depende de una adecuada
@@ -6574,12 +6396,13 @@ características del diseño muestral de la encuesta.
 
 Por ejemplo, es posible analizar el comportamiento del ingreso de los
 hogares como variable de respuesta, en función de características como
-el nivel educativo alcanzado y la situación laboral de sus integrantes,
-consideradas variables explicativas. Utilizando información proveniente
-de encuestas de hogares, este tipo de modelos permite identificar
-patrones de asociación, cuantificar el efecto de distintos factores
-socioeconómicos sobre el ingreso y generar evidencia empírica útil para
-el diseño, seguimiento y evaluación de políticas públicas.
+la edad del jefe de hogar, el nivel educativo alcanzado y la situación
+laboral de sus integrantes, consideradas variables explicativas.
+Utilizando información proveniente de encuestas de hogares, este tipo de
+modelos permite identificar patrones de asociación, cuantificar el
+efecto de distintos factores socioeconómicos sobre el ingreso y generar
+evidencia empírica útil para el diseño, seguimiento y evaluación de
+políticas públicas.
 
 Como explica Pfeffermann
 (\citeproc{ref-pfeffermann2011modelling}{2011}), dado que las encuestas
@@ -6609,15 +6432,16 @@ desarrolló estimadores de varianza apoyados en técnicas de linealización
 para modelos de regresión lineal múltiple con ponderación desigual y
 métodos específicos para diseños estratificados y de dos etapas.
 
-Más adelante, Shah et~al. (\citeproc{ref-shah1977inference}{1977}) y
-Binder (\citeproc{ref-binder1983variances}{1983}) abordaron el problema
-de las violaciones a los supuestos clásicos al trabajar con datos de
-encuestas mediante alternativas de inferencia robusta para los
-parámetros. En paralelo, las distribuciones muestrales de los
-estimadores de regresión en poblaciones finitas se incorporaron a
-procedimientos para estimar varianzas bajo esquemas complejos.
+Más adelante, Shah, Holt, y Folsom
+(\citeproc{ref-shah1977inference}{1977}) y David A. Binder
+(\citeproc{ref-binder1983variances}{1983}) abordaron el problema de las
+violaciones a los supuestos clásicos al trabajar con datos de encuestas
+mediante alternativas de inferencia robusta para los parámetros. En
+paralelo, las distribuciones muestrales de los estimadores de regresión
+en poblaciones finitas se incorporaron a procedimientos para estimar
+varianzas bajo esquemas complejos.
 
-En los años siguientes, Skinner et~al.
+En los años siguientes, Skinner, Holt, y Smith
 (\citeproc{ref-skinner1989analysis}{1989}) y Fuller
 (\citeproc{ref-fuller2002regression}{2002}) ampliaron estos aportes
 mediante estimadores de varianza para los coeficientes de regresión que
@@ -6629,7 +6453,7 @@ ponderación \emph{q-weighted} y evidencia empírica sobre su utilidad.
 \section{Formulación del modelo}\label{formulacion-del-modelo}
 
 De acuerdo con Chambers y Skinner
-(\citeproc{ref-ChambersSkinner2003}{2003}) y Heeringa et~al.
+(\citeproc{ref-ChambersSkinner2003}{2003}) y Heeringa, West, y Berglund
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), los modelos de
 regresión bajo diseños de muestreo complejos permiten trascender las
 estadísticas descriptivas y estudiar asociaciones o realizar
@@ -6742,14 +6566,15 @@ principales para abordar este problema. El primero corresponde al
 enfoque basado en el diseño muestral, cuyo objetivo es obtener
 inferencias válidas para la población objetivo respetando las
 características del proceso de selección de la muestra. De acuerdo con
-Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}), desde
-esta perspectiva, los pesos muestrales son esenciales para corregir las
-probabilidades desiguales de inclusión y producir estimaciones
-insesgadas de los coeficientes de regresión. Sin embargo, este enfoque
-no protege frente a posibles errores de especificación del modelo; es
-decir, aun cuando las estimaciones sean válidas desde el punto de vista
-del diseño, el modelo puede no representar adecuadamente las relaciones
-existentes en la población.
+Heeringa, West, y Berglund
+(\citeproc{ref-HeeringaWestBerglund2017}{2017}), desde esta perspectiva,
+los pesos muestrales son esenciales para corregir las probabilidades
+desiguales de inclusión y producir estimaciones insesgadas de los
+coeficientes de regresión. Sin embargo, este enfoque no protege frente a
+posibles errores de especificación del modelo; es decir, aun cuando las
+estimaciones sean válidas desde el punto de vista del diseño, el modelo
+puede no representar adecuadamente las relaciones existentes en la
+población.
 
 El segundo corresponde al enfoque orientado al modelo, según el cual los
 pesos no son necesariamente requeridos siempre que el modelo esté
@@ -6761,21 +6586,21 @@ de los parámetros. Desde esta perspectiva, incorporar ponderaciones
 podría incluso resultar contraproducente, al aumentar innecesariamente
 la varianza de los estimadores y, en consecuencia, los errores estándar.
 
-Según Skinner et~al. (\citeproc{ref-skinner1989analysis}{1989}) y
-Naciones Unidas (\citeproc{ref-UNhandbook}{2026}), la discusión sobre la
-conveniencia de utilizar ponderaciones en modelos de regresión ha sido
-ampliamente desarrollada en la literatura especializada. En la práctica,
-una recomendación metodológica frecuente consiste en estimar los modelos
-tanto con ponderaciones como sin ellas y comparar posteriormente los
-resultados obtenidos. Si la inclusión de los pesos produce cambios
-importantes en los coeficientes estimados o modifica las conclusiones
-sustantivas del análisis, ello sugiere que el diseño de muestreo es
-informativo o que el modelo presenta problemas de especificación, por lo
-que el uso de ponderaciones resulta aconsejable. Por el contrario, si
-los coeficientes permanecen relativamente estables y las ponderaciones
-únicamente incrementan los errores estándar, puede considerarse que el
-modelo captura adecuadamente la estructura de los datos y que el uso de
-pesos no es estrictamente necesario.
+Según Skinner, Holt, y Smith (\citeproc{ref-skinner1989analysis}{1989})
+y Naciones Unidas (\citeproc{ref-UNhandbook}{2026}), la discusión sobre
+la conveniencia de utilizar ponderaciones en modelos de regresión ha
+sido ampliamente desarrollada en la literatura especializada. En la
+práctica, una recomendación metodológica frecuente consiste en estimar
+los modelos tanto con ponderaciones como sin ellas y comparar
+posteriormente los resultados obtenidos. Si la inclusión de los pesos
+produce cambios importantes en los coeficientes estimados o modifica las
+conclusiones sustantivas del análisis, ello sugiere que el diseño de
+muestreo es informativo o que el modelo presenta problemas de
+especificación, por lo que el uso de ponderaciones resulta aconsejable.
+Por el contrario, si los coeficientes permanecen relativamente estables
+y las ponderaciones únicamente incrementan los errores estándar, puede
+considerarse que el modelo captura adecuadamente la estructura de los
+datos y que el uso de pesos no es estrictamente necesario.
 
 En términos aplicados, esta decisión suele depender del propósito
 analítico del estudio. Cuando el objetivo es realizar inferencia
@@ -6848,9 +6673,9 @@ representatividad como las propiedades inferenciales del modelo.
 modelo}\label{estimacion-de-los-parametros-del-modelo}
 
 De acuerdo con Molina y Skinner (\citeproc{ref-molina1992pseudo}{1992})
-y Binder (\citeproc{ref-binder2011estimating}{2011}), en términos del
-ajuste de modelos de regresión con encuestas de hogares, se han
-desarrollado metodologías inferenciales avanzadas que integran las
+y David A. Binder (\citeproc{ref-binder2011estimating}{2011}), en
+términos del ajuste de modelos de regresión con encuestas de hogares, se
+han desarrollado metodologías inferenciales avanzadas que integran las
 fuentes de incertidumbre en un mismo marco analítico, buscando reflejar
 tanto la estructura del diseño como los supuestos y limitaciones del
 modelo. Entre las aproximaciones más relevantes se encuentran la
@@ -7163,11 +6988,11 @@ de error, como \(R^{2} = 1 - \frac{SSE}{SST}\); en donde \(SST\)
 representa la suma de cuadrados totales y \(SSE\) la suma de cuadrados
 del error.
 
-Según Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}),
-en encuestas con diseños de muestreo complejos, esta medida debe
-ajustarse para incorporar la estructura del diseño y los pesos
-muestrales. El estimador ponderado del coeficiente de determinación se
-define como:
+Según Heeringa, West, y Berglund
+(\citeproc{ref-HeeringaWestBerglund2017}{2017}), en encuestas con
+diseños de muestreo complejos, esta medida debe ajustarse para
+incorporar la estructura del diseño y los pesos muestrales. El estimador
+ponderado del coeficiente de determinación se define como:
 
 \[
 \hat{R}^2 = 1 - \frac{\widehat{SSE}}{\widehat{SST}}
@@ -7259,11 +7084,12 @@ posibles desviaciones en la especificación, lo que ayuda a determinar si
 el ajuste es adecuado o si, por el contrario, es necesario reconsiderar
 la forma funcional del modelo o el método de estimación utilizado.
 
-Según Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}),
-en encuestas con diseños de muestreo complejos, los residuales de
-Pearson constituyen una herramienta habitual para evaluar las
-discrepancias entre los valores observados y los valores esperados bajo
-el modelo ajustado. Estos se definen como:
+Según Heeringa, West, y Berglund
+(\citeproc{ref-HeeringaWestBerglund2017}{2017}), en encuestas con
+diseños de muestreo complejos, los residuales de Pearson constituyen una
+herramienta habitual para evaluar las discrepancias entre los valores
+observados y los valores esperados bajo el modelo ajustado. Estos se
+definen como:
 
 \[
 r_{k} = \frac{y_k - \mu_k}{\sqrt{\widehat{Var}(\mu_k)/w_k}},
@@ -7445,11 +7271,12 @@ los datos sin afectar sustancialmente el ajuste, una observación
 influyente puede alterar de manera significativa las estimaciones de los
 parámetros, incluso si no luce inusual.
 
-Según Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017,
-213}), la distancia de Cook mide el impacto que tendría la eliminación
-de la observación \(k\) sobre el ajuste global del modelo, al combinar
-simultáneamente la magnitud del residuo, la varianza estimada del modelo
-y su apalancamiento (\emph{leverage}). En el contexto de encuestas con
+Según Heeringa, West, y Berglund
+(\citeproc{ref-HeeringaWestBerglund2017}{2017, 213}), la distancia de
+Cook mide el impacto que tendría la eliminación de la observación \(k\)
+sobre el ajuste global del modelo, al combinar simultáneamente la
+magnitud del residuo, la varianza estimada del modelo y su
+apalancamiento (\emph{leverage}). En el contexto de encuestas con
 diseños muestrales complejos, la distancia de Cook suele denotarse como
 \(c_k\) y su expresión incorpora explícitamente los pesos muestrales.
 Para evaluar la magnitud de este estadístico, se utiliza una
@@ -7543,8 +7370,6 @@ tabla~\ref{tbl-dfbetas-primeros}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrrr@{}}
 
 \caption{\label{tbl-dfbetas-primeros}Valores DfBetas para las primeras
@@ -7570,8 +7395,6 @@ Beta\_1 & Beta\_2 & Beta\_3 & Beta\_4 \\
 -0.0007 & 0.0004 & 0.0007 & -0.0029 \\
 
 \end{longtable}
-
-}
 
 Una vez obtenidos los valores de la medida DFBETA para cada observación
 y coeficiente del modelo, se calcula el correspondiente umbral de
@@ -7617,8 +7440,6 @@ tabla~\ref{tbl-dfbetas-influyentes}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rlrl@{}}
 
 \caption{\label{tbl-dfbetas-influyentes}Las diez observaciones más
@@ -7644,8 +7465,6 @@ id & variable & value & criterion \\
 891 & Beta\_3 & 0.1558 & Yes \\
 
 \end{longtable}
-
-}
 
 Los resultados muestran que varias observaciones superan el umbral
 establecido por el criterio \(D_f\text{Beta}_{(k)j}\), lo que indica que
@@ -7759,7 +7578,7 @@ covariables incluidas en el modelo aportan información relevante para
 explicar la variabilidad de la variable respuesta.
 
 De acuerdo con Chambers y Skinner
-(\citeproc{ref-ChambersSkinner2003}{2003}) y Heeringa et~al.
+(\citeproc{ref-ChambersSkinner2003}{2003}) y Heeringa, West, y Berglund
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), en modelos ajustados
 con datos provenientes de encuestas complejas, las pruebas de hipótesis
 sobre los coeficientes de regresión se construyen utilizando estimadores
@@ -7843,8 +7662,6 @@ como los intervalos de confianza anunciados.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1579}}
   >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1184}}
@@ -7886,8 +7703,6 @@ SexMale & 20.644 & 15.6115 & 1.322 & 0.1886 & -10.2762 & 51.565 \\
 
 \end{longtable}
 
-}
-
 Los resultados del modelo indican que la variable \texttt{Expenditure}
 presenta una asociación estadísticamente significativa con la variable
 de interés (\texttt{Income}). Este efecto resulta altamente
@@ -7900,11 +7715,12 @@ concluyente al nivel convencional del 5\%.
 
 \section{Estimación y predicción}\label{estimacion-y-prediccion}
 
-Según Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}),
-los modelos de regresión cumplen dos objetivos fundamentales. El primero
-consiste en explicar la variabilidad de la variable respuesta a partir
-de las covariables disponibles, propósito que ha sido desarrollado a lo
-largo de este capítulo. El segundo corresponde a la predicción del valor
+Según Heeringa, West, y Berglund
+(\citeproc{ref-HeeringaWestBerglund2017}{2017}), los modelos de
+regresión cumplen dos objetivos fundamentales. El primero consiste en
+explicar la variabilidad de la variable respuesta a partir de las
+covariables disponibles, propósito que ha sido desarrollado a lo largo
+de este capítulo. El segundo corresponde a la predicción del valor
 esperado de la variable de interés para nuevas observaciones, tanto
 dentro como fuera del dominio muestral. La siguiente expresión
 representa el valor esperado de la variable respuesta \(y_k\)
@@ -7956,8 +7772,6 @@ estándar y pruebas en una estructura rectangular.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-coeficientes-modelo}Coeficientes estimados del
@@ -7977,8 +7791,6 @@ ZoneUrban & 66.652 & 39.6655 & 1.680 & 0.0956 \\
 SexMale & 20.644 & 15.6115 & 1.322 & 0.1886 \\
 
 \end{longtable}
-
-}
 
 A partir de los coeficientes estimados del modelo, la estimación del
 valor esperado de la variable respuesta para la unidad \(k\) puede
@@ -8046,8 +7858,6 @@ varianzas y covarianzas se presenta en la tabla~\ref{tbl-vcov-modelo}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-vcov-modelo}Matriz de varianzas y covarianzas de los
@@ -8067,8 +7877,6 @@ ZoneUrban & 123.69 & -3.2949 & 1573.353 & -121.4459 \\
 SexMale & 326.13 & -0.5704 & -121.446 & 243.7178 \\
 
 \end{longtable}
-
-}
 
 En términos computacionales, esto implica combinar el vector de
 covariables de cada observación con la matriz
@@ -8374,9 +8182,9 @@ característica de interés es
 parametrización, cada coeficiente de \(\boldsymbol{\beta}\) representa
 el efecto de una covariable sobre el logaritmo de la razón de
 probabilidades de que ocurra el evento de interés, manteniendo
-constantes las demás variables del modelo. Según Heeringa et~al.
-(\citeproc{ref-HeeringaWestBerglund2017}{2017}), la estimación de los
-parámetros puede realizarse mediante el enfoque de pseudo-máxima
+constantes las demás variables del modelo. Según Heeringa, West, y
+Berglund (\citeproc{ref-HeeringaWestBerglund2017}{2017}), la estimación
+de los parámetros puede realizarse mediante el enfoque de pseudo-máxima
 verosimilitud. Este método incorpora los factores de expansión en la
 función de verosimilitud convencional con el fin de obtener estimadores
 consistentes respecto de la población objetivo. La función de
@@ -8436,11 +8244,11 @@ condiciones de regularidad, estos estimadores son consistentes y
 asintóticamente normales, constituyendo la base de procedimientos de
 inferencia para el análisis de datos de encuestas complejas.
 
-Como explica Binder (\citeproc{ref-binder1983variances}{1983}), una vez
-obtenidos los estimadores de pseudo-máxima verosimilitud, sus varianzas
-se estiman, mediante técnicas de linealización de Taylor, las cuales
-incorporan explícitamente las características del diseño complejo de
-muestreo. La matriz de varianzas y covarianzas de los parámetros
+Como explica David A. Binder (\citeproc{ref-binder1983variances}{1983}),
+una vez obtenidos los estimadores de pseudo-máxima verosimilitud, sus
+varianzas se estiman, mediante técnicas de linealización de Taylor, las
+cuales incorporan explícitamente las características del diseño complejo
+de muestreo. La matriz de varianzas y covarianzas de los parámetros
 estimados, denotada por
 \(\text{Var}(\hat{\boldsymbol{\beta}})=\boldsymbol{\Sigma}\), se obtiene
 a partir de una aproximación lineal de las ecuaciones de estimación
@@ -8515,8 +8323,6 @@ controlado el efecto de las demás covariables incluidas en el modelo.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1176}}
   >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.2235}}
@@ -8565,8 +8371,6 @@ conf.high
 
 \end{longtable}
 
-}
-
 La figura~\ref{fig-logistica-base} presenta la distribución de los
 estimadores de los coeficientes de regresión. Se observa que, para todas
 las covariables excepto el sexo, los intervalos de confianza no incluyen
@@ -8577,7 +8381,8 @@ encuentra evidencia suficiente para concluir que esta variable tenga un
 efecto significativo una vez controladas las demás covariables incluidas
 en el modelo.
 
-De acuerdo con Henry et~al. (\citeproc{ref-ggstance2024}{2024}) y Long
+De acuerdo con Henry, Wickham, y Chang
+(\citeproc{ref-ggstance2024}{2024}) y Long
 (\citeproc{ref-jtools2026}{2026}), para visualizar la distribución de
 los coeficientes se emplea \texttt{ggstance} para la geometría
 horizontal de los intervalos, junto con \texttt{plot\_summs()} del
@@ -8636,8 +8441,6 @@ ajustado se presentan en la tabla~\ref{tbl-logistica-interaccion}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.3253}}
   >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1084}}
@@ -8685,8 +8488,6 @@ EmploymentEmployed:SexMale & -0.4812 & 0.7604 & -0.6328 & 0.5281 &
 -1.9878 & 1.0254 \\
 
 \end{longtable}
-
-}
 
 Al incorporar la interacción entre sexo y situación laboral, el gasto
 continúa mostrando una asociación negativa y estadísticamente
@@ -8787,10 +8588,11 @@ sobre el logaritmo de las razones de probabilidades (\emph{log-odds}) de
 pertenecer a una determinada categoría en comparación con la categoría
 de referencia.
 
-Según Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}),
-la estimación de los parámetros del modelo se realiza mediante el
-enfoque de pseudo-máxima verosimilitud. La función de
-pseudo-verosimilitud multinomial se define como
+Según Heeringa, West, y Berglund
+(\citeproc{ref-HeeringaWestBerglund2017}{2017}), la estimación de los
+parámetros del modelo se realiza mediante el enfoque de pseudo-máxima
+verosimilitud. La función de pseudo-verosimilitud multinomial se define
+como
 
 \[
 PL(\boldsymbol{\beta} \mid \mathbf{X}) =
@@ -8820,13 +8622,13 @@ y_{k(j)}
 \]
 
 De acuerdo con Molina y Skinner (\citeproc{ref-molina1992pseudo}{1992})
-y Binder (\citeproc{ref-binder1983variances}{1983}), la inferencia
-estadística para los parámetros de interés se basa en estimaciones de
-varianza obtenidas mediante técnicas de linealización de Taylor que
-incorporan explícitamente las características del diseño muestral
-complejo, permitiendo calcular errores estándar, intervalos de confianza
-y pruebas de hipótesis apropiados para datos de encuestas. Bajo
-condiciones regulares, los estimadores obtenidos mediante este
+y David A. Binder (\citeproc{ref-binder1983variances}{1983}), la
+inferencia estadística para los parámetros de interés se basa en
+estimaciones de varianza obtenidas mediante técnicas de linealización de
+Taylor que incorporan explícitamente las características del diseño
+muestral complejo, permitiendo calcular errores estándar, intervalos de
+confianza y pruebas de hipótesis apropiados para datos de encuestas.
+Bajo condiciones regulares, los estimadores obtenidos mediante este
 procedimiento son consistentes y asintóticamente normales.
 
 Para el ajuste del modelo usando \texttt{R}, como referencia inicial, se
@@ -8850,8 +8652,6 @@ tabla~\ref{tbl-prop-empleo-15}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-prop-empleo-15}Proporción estimada de personas por
@@ -8871,8 +8671,6 @@ Inactive & 0.3840 & 0.0152 & 0.3539 & 0.4142 \\
 Employed & 0.5731 & 0.0140 & 0.5453 & 0.6008 \\
 
 \end{longtable}
-
-}
 
 De acuerdo con Lumley (\citeproc{ref-svyVGAM2026}{2026}), para modelar
 una variable de respuesta multinomial se emplea la función
@@ -8963,8 +8761,6 @@ estadísticamente significativos al nivel convencional del 5\%.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}llrrrr@{}}
 
 \caption{\label{tbl-multinomial-coef}Coeficientes estimados del modelo
@@ -8988,8 +8784,6 @@ y.level & term & estimate & std.error & statistic & p.value \\
 2 & ZoneUrban & 0.0392 & 0.3605 & 0.1087 & 0.9135 \\
 
 \end{longtable}
-
-}
 
 De acuerdo con Warnes et~al. (\citeproc{ref-gtools2025}{2023}) y Solt y
 Hu (\citeproc{ref-dotwhisker2025}{2025}), la
@@ -9156,8 +8950,6 @@ presentan en la tabla~\ref{tbl-gamma-coeficientes}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-gamma-coeficientes}Coeficientes del modelo Gamma
@@ -9178,8 +8970,6 @@ SexMale & 0.0484 & 0.0384 & 1.260 & 0.2104 \\
 ZoneUrban & 0.1514 & 0.0890 & 1.701 & 0.0916 \\
 
 \end{longtable}
-
-}
 
 Dado que el modelo utiliza un enlace logarítmico, los coeficientes
 pueden interpretarse como efectos multiplicativos sobre el ingreso
@@ -9350,17 +9140,18 @@ para el ingreso en función del gasto (sin considerar estratos)}
 
 \end{figure}%
 
-Como explica Finch et~al. (\citeproc{ref-finch2019multilevel}{2019}), si
-bien este modelo resulta útil como referencia inicial, sus supuestos
-suelen ser poco realistas en el contexto de encuestas de hogares. En
-particular, la independencia entre observaciones puede verse
-comprometida cuando los hogares pertenecen a estratos que comparten
-características socioeconómicas, demográficas o geográficas similares.
-Asimismo, es posible que los niveles promedio de ingreso difieran
-sistemáticamente entre estratos, aun cuando la relación entre ingreso y
-gasto sea semejante. Ignorar esta estructura jerárquica puede conducir a
-estimaciones incorrectas de los errores estándar y, en consecuencia, a
-inferencias estadísticas poco confiables.
+Como explica Finch, Bolin, y Kelley
+(\citeproc{ref-finch2019multilevel}{2019}), si bien este modelo resulta
+útil como referencia inicial, sus supuestos suelen ser poco realistas en
+el contexto de encuestas de hogares. En particular, la independencia
+entre observaciones puede verse comprometida cuando los hogares
+pertenecen a estratos que comparten características socioeconómicas,
+demográficas o geográficas similares. Asimismo, es posible que los
+niveles promedio de ingreso difieran sistemáticamente entre estratos,
+aun cuando la relación entre ingreso y gasto sea semejante. Ignorar esta
+estructura jerárquica puede conducir a estimaciones incorrectas de los
+errores estándar y, en consecuencia, a inferencias estadísticas poco
+confiables.
 
 Con fines exclusivamente ilustrativos, se incorpora gradualmente la
 estructura jerárquica de los datos al proceso de modelación. Para ello,
@@ -9816,8 +9607,6 @@ datos.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lr@{}}
 
 \caption{\label{tbl-interceptos-nulos}Interceptos estimados por estrato
@@ -9846,8 +9635,6 @@ idStrt012 & 362 \\
 
 \end{longtable}
 
-}
-
 De acuerdo con Lüdecke et~al. (\citeproc{ref-performance2026}{2026}), a
 partir de los componentes de varianza estimados en el modelo nulo, la
 correlación intraclase se calcula mediante la función \texttt{icc()} del
@@ -9872,8 +9659,6 @@ obtenidos se presentan en la tabla~\ref{tbl-icc-nulo}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}rrl@{}}
 
 \caption{\label{tbl-icc-nulo}Correlación intraclase del modelo nulo
@@ -9890,8 +9675,6 @@ ICC\_adjusted & ICC\_unadjusted & optional \\
 0.329 & 0.329 & FALSE \\
 
 \end{longtable}
-
-}
 
 La correlación intraclase estimada de 32\% indica que aproximadamente un
 tercio de la variabilidad total observada en el ingreso se debe a
@@ -9991,8 +9774,6 @@ tabla~\ref{tbl-coef-intercepto-aleatorio}:
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrr@{}}
 
 \caption{\label{tbl-coef-intercepto-aleatorio}Coeficientes del modelo
@@ -10016,8 +9797,6 @@ idStrt007 & 12.5 & 1.19 \\
 idStrt008 & 107.1 & 1.19 \\
 
 \end{longtable}
-
-}
 
 Con el fin de facilitar la visualización de los resultados del modelo,
 se utiliza la submuestra reducida presentada anteriormente, la cual
@@ -10195,8 +9974,6 @@ estos componentes.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrr@{}}
 
 \caption{\label{tbl-coef-pendiente-aleatoria}Coeficientes del modelo con
@@ -10218,12 +9995,10 @@ idStrt005 & -89.7 & 1.286 \\
 idStrt006 & 28.6 & 1.217 \\
 idStrt007 & 41.0 & 1.079 \\
 idStrt008 & 163.8 & 0.928 \\
-idStrt009 & 16.5 & 0.838 \\
+idStrt009 & 16.6 & 0.838 \\
 idStrt010 & 89.9 & 1.830 \\
 
 \end{longtable}
-
-}
 
 Una vez más, con el propósito de facilitar la visualización de los
 resultados, se utiliza la submuestra reducida definida previamente, la
@@ -10475,8 +10250,6 @@ mucho mayores.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lr@{}}
 
 \caption{\label{tbl-coef-logit-nulo}Interceptos estimados por estrato en
@@ -10504,8 +10277,6 @@ idStrt011 & -1.275 \\
 idStrt012 & 0.203 \\
 
 \end{longtable}
-
-}
 
 La correlación intraclase asciende a 0.315. Dado que el modelo no
 incluye covariables, estas diferencias reflejan exclusivamente la
@@ -10608,8 +10379,6 @@ diferencias entre estratos continúan siendo relevantes.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrr@{}}
 
 \caption{\label{tbl-coef-logit-int-aleatorio}Coeficientes del modelo
@@ -10635,8 +10404,6 @@ idStrt009 & 3.721 & -0.007 \\
 idStrt010 & 1.175 & -0.007 \\
 
 \end{longtable}
-
-}
 
 La figura~\ref{fig-logit-int-aleatorio} presenta las curvas de
 probabilidad predichas mediante un modelo logístico con intercepto
@@ -10767,8 +10534,6 @@ tabla~\ref{tbl-coef-logit-pendiente}.
 \end{Highlighting}
 \end{Shaded}
 
-{
-
 \begin{longtable}[]{@{}lrr@{}}
 
 \caption{\label{tbl-coef-logit-pendiente}Coeficientes del modelo
@@ -10783,20 +10548,18 @@ estratos)}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-idStrt001 & 4.864 & -0.025 \\
-idStrt002 & 9.860 & -0.035 \\
+idStrt001 & 4.865 & -0.025 \\
+idStrt002 & 9.862 & -0.035 \\
 idStrt003 & -1.133 & -0.007 \\
-idStrt004 & 1.897 & -0.015 \\
-idStrt005 & 8.029 & -0.026 \\
+idStrt004 & 1.899 & -0.015 \\
+idStrt005 & 8.030 & -0.026 \\
 idStrt006 & -1.153 & 0.009 \\
-idStrt007 & 0.973 & -0.012 \\
+idStrt007 & 0.974 & -0.012 \\
 idStrt008 & 1.488 & -0.006 \\
 idStrt009 & 3.660 & -0.005 \\
-idStrt010 & 4.132 & -0.020 \\
+idStrt010 & 4.133 & -0.020 \\
 
 \end{longtable}
-
-}
 
 Los coeficientes por estrato evidencian que la relación entre gasto y
 pobreza no sólo cambia en el nivel base, sino también en la intensidad y
@@ -10960,17 +10723,18 @@ procesamientos en componentes lógicos.
 \section{Carga e inspección inicial de la
 base}\label{carga-e-inspeccion-inicial-de-la-base}
 
-De acuerdo con Wickham et~al. (\citeproc{ref-WickhamEtAl2023}{2023}), es
-muy usual que al trabajar proyectos en \texttt{R} sea necesario importar
-bases de datos con información relevante para un estudio en particular.
-Los formatos que pueden importarse mediante \texttt{R} y sus paquetes
-son diversos; entre ellos se encuentran \texttt{.xlsx}, \texttt{.csv},
-\texttt{.txt} y \texttt{.dta}, que es el formato utilizado por
-\texttt{Stata}. Una vez leída la base de datos en el formato pertinente
-es recomendable transformarla al formato nativo de \texttt{R}, es decir
-\texttt{.RDS}. Este es un formato más eficiente y propio de \texttt{R},
-y su uso facilita la importación, la transformación y el almacenamiento
-dentro de un flujo reproducible de análisis.
+De acuerdo con Wickham, Çetinkaya-Rundel, y Grolemund
+(\citeproc{ref-WickhamEtAl2023}{2023}), es muy usual que al trabajar
+proyectos en \texttt{R} sea necesario importar bases de datos con
+información relevante para un estudio en particular. Los formatos que
+pueden importarse mediante \texttt{R} y sus paquetes son diversos; entre
+ellos se encuentran \texttt{.xlsx}, \texttt{.csv}, \texttt{.txt} y
+\texttt{.dta}, que es el formato utilizado por \texttt{Stata}. Una vez
+leída la base de datos en el formato pertinente es recomendable
+transformarla al formato nativo de \texttt{R}, es decir \texttt{.RDS}.
+Este es un formato más eficiente y propio de \texttt{R}, y su uso
+facilita la importación, la transformación y el almacenamiento dentro de
+un flujo reproducible de análisis.
 
 Una vez se carga la base de datos se procede a utilizar las funciones en
 \texttt{R} para poder obtener resultados de los procesamientos agregados
@@ -11486,7 +11250,7 @@ tramos de edad.
 \subsection{\texorpdfstring{\texttt{summarise}: resúmenes
 descriptivos}{summarise: resúmenes descriptivos}}\label{summarise-resumenes-descriptivos}
 
-De acuerdo con Heeringa et~al.
+De acuerdo con Heeringa, West, y Berglund
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), la función
 \texttt{summarise()} permite construir una tabla resumen a partir de una
 o varias variables de la base de datos. En el siguiente ejemplo se
@@ -11750,10 +11514,11 @@ ingresos para cada categoría de ocupación.
 
 \chapter{Inferencia en poblaciones finitas}\label{ap2}
 
-De acuerdo con Skinner et~al. (\citeproc{ref-skinner1989analysis}{1989})
-y Kish (\citeproc{ref-kish1987statistical}{1987}), una cuestión
-fundamental en el análisis de encuestas es identificar cuál es la medida
-de probabilidad que rige la inferencia. En la inferencia estadística
+De acuerdo con Skinner, Holt, y Smith
+(\citeproc{ref-skinner1989analysis}{1989}) y Kish
+(\citeproc{ref-kish1987statistical}{1987}), una cuestión fundamental en
+el análisis de encuestas es identificar cuál es la medida de
+probabilidad que rige la inferencia. En la inferencia estadística
 clásica se suele asumir que las observaciones disponibles son variables
 aleatorias independientes e idénticamente distribuidas (IID). Bajo ese
 enfoque, la aleatoriedad proviene del modelo que genera los datos. Sin
@@ -11764,16 +11529,17 @@ y probabilidades de inclusión desiguales.
 
 \section{Dos posibles inferencias}\label{dos-posibles-inferencias}
 
-Según Särndal et~al. (\citeproc{ref-sarndal2003model}{2003}), en
-encuestas de hogares conviene distinguir tres objetos. Primero, la
-población finita, denotada como \(U = \{1,2,\ldots,N\}\), la cual
-contiene todas las unidades de interés. Segundo, la variable de estudio
-\(y_k\), observada o definida para cada unidad \(k \in U\). Tercero, el
-diseño muestral \(p(s)\), que asigna probabilidades a las posibles
-muestras \(s \subset U\). En la notación utilizada a lo largo de este
-documento, una unidad puede identificarse como \(k\) dentro del
-conglomerado o UPM \(i\), perteneciente al estrato \(h\), de modo que
-los estimadores ponderados suelen escribirse como sumas de la forma
+Según Särndal, Swensson, y Wretman
+(\citeproc{ref-sarndal2003model}{2003}), en encuestas de hogares
+conviene distinguir tres objetos. Primero, la población finita, denotada
+como \(U = \{1,2,\ldots,N\}\), la cual contiene todas las unidades de
+interés. Segundo, la variable de estudio \(y_k\), observada o definida
+para cada unidad \(k \in U\). Tercero, el diseño muestral \(p(s)\), que
+asigna probabilidades a las posibles muestras \(s \subset U\). En la
+notación utilizada a lo largo de este documento, una unidad puede
+identificarse como \(k\) dentro del conglomerado o UPM \(i\),
+perteneciente al estrato \(h\), de modo que los estimadores ponderados
+suelen escribirse como sumas de la forma
 
 \[
 \hat{t}_y = \sum_h \sum_i \sum_k w_{hik} \ y_{hik}
@@ -11819,18 +11585,19 @@ cada estimador y diseño. En particular, el total de Horvitz--Thompson
 satisface \(E_{p}(\hat{t}_y) = t_y\) bajo probabilidades de inclusión
 positivas.
 
-De acuerdo con Binder (\citeproc{ref-binder2011estimating}{2011}), esta
-distinción permite entender por qué, aun cuando exista un modelo
-razonable para la variable de interés, el diseño muestral debe
-incorporarse explícitamente si se desea obtener inferencias válidas para
-la población objetivo. Para comprender la distinción entre inferencia
-basada en el modelo e inferencia basada en el diseño, partimos de un
-ejemplo sencillo. Supóngase que se generan \(N=100\) realizaciones
-independientes de una variable Bernoulli con parámetro \(\theta=0.3\),
-donde \(\theta\) representa la proporción esperada de personas
-desempleadas en una población generada por un modelo. Si
-\(Y_k \sim Bernoulli(\theta)\), entonces la esperanza bajo el modelo es
-\(E_{\xi}(Y_k) = \theta\), mientras que la varianza bajo el modelo es
+De acuerdo con David A. Binder
+(\citeproc{ref-binder2011estimating}{2011}), esta distinción permite
+entender por qué, aun cuando exista un modelo razonable para la variable
+de interés, el diseño muestral debe incorporarse explícitamente si se
+desea obtener inferencias válidas para la población objetivo. Para
+comprender la distinción entre inferencia basada en el modelo e
+inferencia basada en el diseño, partimos de un ejemplo sencillo.
+Supóngase que se generan \(N=100\) realizaciones independientes de una
+variable Bernoulli con parámetro \(\theta=0.3\), donde \(\theta\)
+representa la proporción esperada de personas desempleadas en una
+población generada por un modelo. Si \(Y_k \sim Bernoulli(\theta)\),
+entonces la esperanza bajo el modelo es \(E_{\xi}(Y_k) = \theta\),
+mientras que la varianza bajo el modelo es
 \(Var_{\xi}(Y_k) = \theta(1-\theta)\).
 
 En la literatura especializada, el modelo \(\xi\) recibe el nombre de
@@ -12031,7 +11798,7 @@ presentan como enfoques excluyentes, sino como componentes
 complementarios de un mismo problema. En particular, puede considerarse
 que la muestra ha sido obtenida mediante un diseño probabilístico
 complejo y que, al mismo tiempo, los valores de la variable de interés
-responden a un modelo de superpoblación. Binder
+responden a un modelo de superpoblación. David A. Binder
 (\citeproc{ref-binder2011estimating}{2011}) plantea esta formulación
 como un esquema de inferencia doble, en el cual la incertidumbre no
 proviene de una única fuente, sino de la combinación entre el mecanismo
@@ -12056,7 +11823,7 @@ condicionado a la población finita generada, y luego se promedia sobre
 el modelo de superpoblación. En este contexto, la verosimilitud conjunta
 completa puede resultar intratable, especialmente cuando las
 probabilidades de inclusión dependen de variables relacionadas con la
-respuesta. Las ecuaciones de estimación ponderadas de Binder
+respuesta. Las ecuaciones de estimación ponderadas de David A. Binder
 (\citeproc{ref-binder1983variances}{1983}) fundamentan la máxima
 pseudo-verosimilitud (MPV), que pondera las contribuciones de cada
 unidad por el inverso de su probabilidad de inclusión; Pfeffermann
@@ -12158,8 +11925,8 @@ usar directamente la log-verosimilitud ordinaria puede producir
 estimaciones que describen la muestra, pero no la población objetivo.
 
 La máxima pseudo-verosimilitud, desarrollada a partir de los resultados
-de Binder (\citeproc{ref-binder1983variances}{1983}), incorpora los
-pesos de muestreo en la log-verosimilitud. Para unidades observadas
+de David A. Binder (\citeproc{ref-binder1983variances}{1983}), incorpora
+los pesos de muestreo en la log-verosimilitud. Para unidades observadas
 \(k \in s\), se define
 
 \[
@@ -12250,7 +12017,7 @@ La solución es el estimador de mínimos cuadrados ponderados:
 = (\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'\mathbf{W}\mathbf{y}
 \]
 
-De acuerdo con Heeringa et~al.
+De acuerdo con Heeringa, West, y Berglund
 (\citeproc{ref-HeeringaWestBerglund2017}{2017}), este resultado extiende
 de manera natural el estimador ordinario al contexto de encuestas
 complejas: cada observación contribuye al ajuste del modelo en
@@ -12350,11 +12117,11 @@ encuesta busca representar.
 
 \markboth{Referencias}{Referencias}
 
-\protect\phantomsection\label{refs}
-\begin{CSLReferences}{1}{1}
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
 \bibitem[\citeproctext]{ref-Agresti2019Intro}
 Agresti, Alan. 2019. \emph{An Introduction to Categorical Data
-Analysis}. 3.ª ed. John Wiley \& Sons.
+Analysis}. 3.ª ed. Hoboken, NJ: John Wiley \& Sons.
 \url{https://doi.org/10.1002/9781119405283}.
 
 \bibitem[\citeproctext]{ref-asparouhov2006general}
@@ -12411,23 +12178,24 @@ Methodology} 9: 49. \url{https://doi.org/10.1186/1471-2288-9-49}.
 
 \bibitem[\citeproctext]{ref-CasellaBerger2002}
 Casella, George, y Roger L. Berger. 2002. \emph{Statistical Inference}.
-2.ª ed. Duxbury.
+2.ª ed. Pacific Grove, CA: Duxbury.
 
 \bibitem[\citeproctext]{ref-CEPAL2023Diseno}
 CEPAL. 2023. \emph{Diseño y análisis estadístico de las encuestas de
-hogares de América Latina}. Metodologías de la CEPAL 5. Naciones Unidas.
+hogares de América Latina}. Metodologías de la CEPAL 5. Santiago:
+Naciones Unidas.
 \url{https://repositorio.cepal.org/server/api/core/bitstreams/14d443ec-8f1e-44a7-b22b-9f124f205abe/content}.
 
 \bibitem[\citeproctext]{ref-CEPAL2025PanoramaSocial}
 CEPAL. 2025. \emph{Panorama Social de América Latina y el Caribe, 2025:
 cómo salir de la trampa de alta desigualdad, baja movilidad social y
-débil cohesión social}. {Comisión Económica para América Latina y el
-Caribe}.
+débil cohesión social}. LC/PUB.2025/23-P/-*. Santiago: {Comisión
+Económica para América Latina y el Caribe}.
 \url{https://repositorio.cepal.org/server/api/core/bitstreams/61e9dfa1-de2a-4af6-b670-0e2ed9b00cfe/content}.
 
 \bibitem[\citeproctext]{ref-ChambersSkinner2003}
 Chambers, Raymond L., y Chris J. Skinner, eds. 2003. \emph{Analysis of
-Survey Data}. John Wiley \& Sons.
+Survey Data}. Chichester: John Wiley \& Sons.
 \url{https://doi.org/10.1002/0470867205}.
 
 \bibitem[\citeproctext]{ref-cochran1977sampling}
@@ -12436,8 +12204,8 @@ Cochran, William Gemmell. 1977. \emph{Sampling techniques}. John Wiley
 
 \bibitem[\citeproctext]{ref-Deaton1997}
 Deaton, Angus. 1997. \emph{The Analysis of Household Surveys: A
-Microeconometric Approach to Development Policy}. World Bank; The Johns
-Hopkins University Press.
+Microeconometric Approach to Development Policy}. Baltimore, MD: World
+Bank; The Johns Hopkins University Press.
 
 \bibitem[\citeproctext]{ref-DevilleSarndal1992}
 Deville, Jean-Claude, y Carl-Erik Särndal. 1992. {«Calibration
@@ -12448,13 +12216,13 @@ Statistical Association} 87 (418): 376-82.
 \bibitem[\citeproctext]{ref-DiazMoralesLeon2018}
 Díaz Monroy, Luis Guillermo, Mario Alfonso Morales Rivera, y Leidy Rocío
 León Dávila. 2018. \emph{Análisis estadístico de datos categóricos}. 1.ª
-ed. Editorial Universidad Nacional de Colombia.
+ed. Bogotá: Editorial Universidad Nacional de Colombia.
 \url{https://portaldelibros.unal.edu.co/gpd-anyalisis-estadyustico-de-datos-categy-ricos-9789587834376-667e35367b60f.html}.
 
 \bibitem[\citeproctext]{ref-DorfmanValliant1993}
 Dorfman, Alan H., y Richard Valliant. 1993. {«Quantile Variance
-Estimators in Complex Surveys»}. \emph{Proceedings of the Survey
-Research Methods Section}, 866-71.
+Estimators in Complex Surveys»}. En \emph{Proceedings of the Survey
+Research Methods Section}, 866-71. American Statistical Association.
 
 \bibitem[\citeproctext]{ref-efron1979bootstrap}
 Efron, Bradley. 1979. {«Bootstrap methods: Another look at the
@@ -12462,7 +12230,7 @@ jackknife»}. \emph{The Annals of Statistics} 7 (1): 1-26.
 \url{https://doi.org/10.1214/aos/1176344552}.
 
 \bibitem[\citeproctext]{ref-FAO2026PoU}
-FAO. 2026. \emph{Indicador 2.1.1: Prevalencia de la subalimentación}.
+FAO. 2026. {«Indicador 2.1.1: Prevalencia de la subalimentación»}.
 \url{https://www.fao.org/sustainable-development-goals-data-portal/data/indicators/2.1.1-prevalence-of-undernourishment/es}.
 
 \bibitem[\citeproctext]{ref-fay1979contingency}
@@ -12482,11 +12250,11 @@ Survey Weights}. \url{https://doi.org/10.32614/CRAN.package.weightflow}.
 
 \bibitem[\citeproctext]{ref-finch2019multilevel}
 Finch, W. Holmes, Jocelyn E. Bolin, y Ken Kelley. 2019. \emph{Multilevel
-Modeling Using {R}}. 2.ª ed. CRC Press.
+Modeling Using {R}}. 2.ª ed. Boca Raton, FL: CRC Press.
 
 \bibitem[\citeproctext]{ref-FoxWeisberg2019}
 Fox, John, y Sanford Weisberg. 2019. \emph{An R Companion to Applied
-Regression}. 3.ª ed. SAGE Publications.
+Regression}. 3.ª ed. Thousand Oaks, CA: SAGE Publications.
 
 \bibitem[\citeproctext]{ref-FreedmanEllis2026}
 Freedman Ellis, Greg, y Ben Schneider. 2026. \emph{srvyr: 'dplyr'-Like
@@ -12498,32 +12266,32 @@ Fuller, Wayne A. 1975. {«Regression analysis for sample survey»}.
 \emph{Sankhya, Series C} 37: 117-32.
 
 \bibitem[\citeproctext]{ref-fuller2002regression}
-Fuller, Wayne A. 2002. {«Regression estimation for survey samples»}.
+---------. 2002. {«Regression estimation for survey samples»}.
 \emph{Survey Methodology} 28 (1): 5-23.
 
 \bibitem[\citeproctext]{ref-Fuller2009}
-Fuller, Wayne A. 2009. \emph{Sampling Statistics}. Wiley Series en
-Survey Methodology. John Wiley \& Sons.
+---------. 2009. \emph{Sampling Statistics}. Wiley Series en Survey
+Methodology. Hoboken, New Jersey: John Wiley \& Sons.
 \url{https://doi.org/10.1002/9780470523551}.
 
 \bibitem[\citeproctext]{ref-gambino2009sampling}
 Gambino, Jack G, y Pedro Luis do Nascimento Silva. 2009. {«Sampling and
 estimation in household surveys»}. En \emph{Handbook of Statistics},
-vol. 29. Elsevier.
+29:407-39. Elsevier.
 
 \bibitem[\citeproctext]{ref-gelman2006data}
 Gelman, Andrew, y Jennifer Hill. 2006. \emph{Data Analysis Using
-Regression and Multilevel/Hierarchical Models}. Cambridge University
-Press.
+Regression and Multilevel/Hierarchical Models}. New York: Cambridge
+University Press.
 
 \bibitem[\citeproctext]{ref-goldstein2011multilevel}
 Goldstein, Harvey. 2011. \emph{Multilevel Statistical Models}. 4.ª ed.
-John Wiley \& Sons.
+Chichester: John Wiley \& Sons.
 
 \bibitem[\citeproctext]{ref-Groves2009}
 Groves, Robert M., Floyd J. Fowler, Mick P. Couper, James M. Lepkowski,
 Eleanor Singer, y Roger Tourangeau. 2009. \emph{Survey Methodology}. 2.ª
-ed. John Wiley \& Sons.
+ed. Hoboken, NJ: John Wiley \& Sons.
 
 \bibitem[\citeproctext]{ref-Gutierrez2016}
 Gutiérrez, Andrés. 2016. \emph{Estrategias de muestreo: diseño de
@@ -12531,26 +12299,26 @@ encuestas y estimación de parámetros}. Segunda edición. Ediciones de la
 U.
 
 \bibitem[\citeproctext]{ref-GutierrezT2020}
-Gutiérrez, Andrés. 2020. \emph{TeachingSampling: Selection of Samples
-and Parameter Estimation in Finite Population}.
+---------. 2020. \emph{TeachingSampling: Selection of Samples and
+Parameter Estimation in Finite Population}.
 \url{https://doi.org/10.32614/CRAN.package.TeachingSampling}.
 
 \bibitem[\citeproctext]{ref-GutierrezBabativa2023}
-Gutiérrez, Andrés, y Giovany Babativa-Márquez. 2023. \emph{Efectos de
-diseño para indicadores sociales en Am{é}rica Latina: función
-generalizada de varianza para estimadores directos provenientes de
-encuestas de hogares}. LC/TS.2023/95 No. 106. CEPAL - Serie Estudios
-Estadísticos. CEPAL.
+Gutiérrez, Andrés, y Giovany Babativa-Márquez. 2023. {«Efectos de diseño
+para indicadores sociales en Am{é}rica Latina: función generalizada de
+varianza para estimadores directos provenientes de encuestas de
+hogares»}. LC/TS.2023/95 106. CEPAL - Serie Estudios Estadísticos.
+Santiago: CEPAL.
 \url{https://repositorio.cepal.org/server/api/core/bitstreams/feb8c8be-6434-41f2-8fd9-f12f71a0739a/content}.
 
 \bibitem[\citeproctext]{ref-hansen1953sample}
-{Hansen, Morris H, William N Hurwitz, William G Madow, et~al.} 1953.
-\emph{Sample survey methods and theory}.
+Hansen, Morris H, William N Hurwitz, William G Madow, et~al. 1953.
+{«Sample survey methods and theory»}.
 
 \bibitem[\citeproctext]{ref-HeeringaWestBerglund2017}
 Heeringa, Steven G., Brady T. West, y Patricia A. Berglund. 2017.
-\emph{Applied Survey Data Analysis}. 2.ª ed. Chapman \& Hall/CRC.
-\url{https://doi.org/10.1201/9781315153278}.
+\emph{Applied Survey Data Analysis}. 2.ª ed. Boca Raton: Chapman \&
+Hall/CRC. \url{https://doi.org/10.1201/9781315153278}.
 
 \bibitem[\citeproctext]{ref-ggstance2024}
 Henry, Lionel, Hadley Wickham, y Winston Chang. 2024. \emph{ggstance:
@@ -12573,11 +12341,11 @@ Kalton, Graham, y Ismael Flores-Cervantes. 2003. {«Weighting methods»}.
 \emph{Journal of official statistics} 19 (2): 81.
 
 \bibitem[\citeproctext]{ref-kish1965survey}
-Kish, Leslie. 1965. \emph{Survey sampling.}
+Kish, Leslie. 1965. {«Survey sampling.»}
 
 \bibitem[\citeproctext]{ref-kish1987statistical}
-Kish, Leslie. 1987. \emph{Statistical Design for Research}. John Wiley
-\& Sons.
+---------. 1987. \emph{Statistical Design for Research}. New York: John
+Wiley \& Sons.
 
 \bibitem[\citeproctext]{ref-kish1974inference}
 Kish, Leslie, y Martin R. Frankel. 1974. {«Inference from complex
@@ -12586,7 +12354,7 @@ samples»}. \emph{Journal of the Royal Statistical Society, Series B} 36:
 
 \bibitem[\citeproctext]{ref-KornGraubard1999}
 Korn, Edward L., y Barry I. Graubard. 1999. \emph{Analysis of Health
-Surveys}. John Wiley \& Sons.
+Surveys}. New York: John Wiley \& Sons.
 \url{https://doi.org/10.1002/9781118032619}.
 
 \bibitem[\citeproctext]{ref-korn1995analysis}
@@ -12608,7 +12376,7 @@ Statistics} 16 (S1): 25-45.
 
 \bibitem[\citeproctext]{ref-kreft1998introducing}
 Kreft, Ita G. G., y Jan De Leeuw. 1998. \emph{Introducing Multilevel
-Modeling}. Sage Publications.
+Modeling}. London: Sage Publications.
 
 \bibitem[\citeproctext]{ref-LangelTille2013}
 Langel, Matti, y Yves Tillé. 2013. {«Variance Estimation of the Gini
@@ -12641,7 +12409,7 @@ Lumley, Thomas. 2010. \emph{Complex Surveys: A Guide to Analysis Using
 R: A Guide to Analysis Using R}. John Wiley \& Sons.
 
 \bibitem[\citeproctext]{ref-svyVGAM2026}
-Lumley, Thomas. 2026. \emph{svyVGAM: Design-Based Inference in Vector
+---------. 2026. \emph{svyVGAM: Design-Based Inference in Vector
 Generalised Linear Models}.
 \url{https://doi.org/10.32614/CRAN.package.svyVGAM}.
 
@@ -12652,11 +12420,12 @@ Lumley, Thomas, Peter Gao, Ben Schneider, y Stas Kolenikov. 2026.
 
 \bibitem[\citeproctext]{ref-McCullaghNelder1989}
 McCullagh, Peter, y John A. Nelder. 1989. \emph{Generalized Linear
-Models}. 2.ª ed. Chapman \& Hall.
+Models}. 2.ª ed. London: Chapman \& Hall.
 \url{https://doi.org/10.1007/978-1-4899-3242-6}.
 
 \bibitem[\citeproctext]{ref-merlo2006brief}
-Merlo, Juan, Basile Chaix, Henrik Ohlsson, et~al. 2006. {«A Brief
+Merlo, Juan, Basile Chaix, Henrik Ohlsson, Anders Beckman, Kristina
+Johnell, Per Hjerpe, Lennart Råstam, y Klaus Larsen. 2006. {«A Brief
 Conceptual Tutorial of Multilevel Analysis in Social Epidemiology: Using
 Measures of Clustering in Multilevel Logistic Regression to Investigate
 Contextual Phenomena»}. \emph{Journal of Epidemiology \& Community
@@ -12669,23 +12438,23 @@ quasi-likelihood estimation for complex sampling schemes»}.
 
 \bibitem[\citeproctext]{ref-UnitedNations2005}
 Naciones Unidas. 2005. \emph{Designing Household Survey Samples:
-Practical Guidelines}. Studies en Methods, Series F, No. 98. United
-Nations.
+Practical Guidelines}. Studies en Methods, Series F, No. 98. New York:
+United Nations.
 
 \bibitem[\citeproctext]{ref-ONUDeff}
-Naciones Unidas. 2009. \emph{Diseño de Muestras para Encuestas de
-Hogares: Directrices Prácticas.} Estudios de Métodos, Serie F 98.
+---------. 2009. \emph{Diseño de Muestras para Encuestas de Hogares:
+Directrices Prácticas.} Estudios de Métodos, Serie F 98. Nueva York:
 Naciones Unidas.
 \url{https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf}.
 
 \bibitem[\citeproctext]{ref-unitednations2021householdsurveys}
-Naciones Unidas. 2021. \emph{Report of the Intersecretariat Working
-Group on Household Surveys}. E/CN.3/2021/16. United Nations Statistical
+---------. 2021. {«Report of the Intersecretariat Working Group on
+Household Surveys»}. E/CN.3/2021/16. United Nations Statistical
 Commission.
 
 \bibitem[\citeproctext]{ref-UNhandbook}
-Naciones Unidas. 2026. \emph{Handbook of Surveys on Households and
-Individuals Foundations and Emerging Approaches}. Naciones Unidas.
+---------. 2026. \emph{Handbook of Surveys on Households and Individuals
+Foundations and Emerging Approaches}. Naciones Unidas.
 
 \bibitem[\citeproctext]{ref-nelder1972generalized}
 Nelder, John A., y Robert W. M. Wedderburn. 1972. {«Generalized Linear
@@ -12694,17 +12463,17 @@ Models»}. \emph{Journal of the Royal Statistical Society: Series A
 
 \bibitem[\citeproctext]{ref-OECD2013ICW}
 OECD. 2013. \emph{OECD Framework for Statistics on the Distribution of
-Household Income, Consumption and Wealth}. OECD Publishing.
+Household Income, Consumption and Wealth}. Paris: OECD Publishing.
 \url{https://doi.org/10.1787/9789264194830-en}.
 
 \bibitem[\citeproctext]{ref-osier2009variance}
 Osier, Guillaume. 2009. {«Variance estimation for complex indicators of
-poverty and inequality using linearization techniques»}. \emph{Survey
-research methods} 3: 167-95.
+poverty and inequality using linearization techniques»}. En \emph{Survey
+research methods}, 3:167-95. 3.
 
 \bibitem[\citeproctext]{ref-Park2003Design}
 Park, Inho, Marianne Winglee, Jay Clark, Keith Rust, Andrea Sedlak, y
-David Morganstein. 2003. {«Design Effects and Survey Planning»}.
+David Morganstein. 2003. {«Design Effects and Survey Planning»}. En
 \emph{Proceedings of the Section on Survey Research Methods}, 3179-86.
 \url{https://www.asasrms.org/Proceedings/y2003/Files/JSM2003-000156.pdf}.
 
@@ -12714,8 +12483,10 @@ Spatial Vector Data»}. \emph{The R Journal} 10 (1): 439-46.
 \url{https://doi.org/10.32614/RJ-2018-009}.
 
 \bibitem[\citeproctext]{ref-sf2026}
-Pebesma, Edzer, Roger Bivand, Etienne Racine, et~al. 2026. \emph{sf:
-Simple Features for R}. \url{https://doi.org/10.32614/CRAN.package.sf}.
+Pebesma, Edzer, Roger Bivand, Etienne Racine, Michael Sumner, Ian Cook,
+Tim Keitt, Robin Lovelace, Hadley Wickham, Jeroen Ooms, y Kirill Müller.
+2026. \emph{sf: Simple Features for R}.
+\url{https://doi.org/10.32614/CRAN.package.sf}.
 
 \bibitem[\citeproctext]{ref-patchwork}
 Pedersen, Thomas Lin. 2025. \emph{patchwork: The composer of plots}.
@@ -12727,9 +12498,9 @@ Survey Data»}. \emph{International Statistical Review} 61 (2): 317-37.
 \url{https://doi.org/10.2307/1403631}.
 
 \bibitem[\citeproctext]{ref-pfeffermann2011modelling}
-Pfeffermann, Danny. 2011. {«Modelling of complex survey data: {W}hy
-model? {W}hy is it a problem? {H}ow can we approach it?»} \emph{Survey
-Methodology} 37 (2): 115-36.
+---------. 2011. {«Modelling of complex survey data: {W}hy model? {W}hy
+is it a problem? {H}ow can we approach it?»} \emph{Survey Methodology}
+37 (2): 115-36.
 
 \bibitem[\citeproctext]{ref-pfeffermann1998weighting}
 Pfeffermann, Danny, Chris J. Skinner, David J. Holmes, Harvey Goldstein,
@@ -12748,12 +12519,12 @@ Prener, Christopher, Timo Grossenbacher, y Angelo Zehr. 2025.
 
 \bibitem[\citeproctext]{ref-RCoreTeam2026}
 R Core Team. 2026a. \emph{R: A Language and Environment for Statistical
-Computing}. R Foundation for Statistical Computing.
+Computing}. Vienna, Austria: R Foundation for Statistical Computing.
 \url{https://www.R-project.org/}.
 
 \bibitem[\citeproctext]{ref-RCoreSerialization2026}
-R Core Team. 2026b. \emph{Serialization Interface for Single Objects}. R
-Foundation for Statistical Computing.
+---------. 2026b. \emph{Serialization Interface for Single Objects}.
+Vienna: R Foundation for Statistical Computing.
 \url{https://stat.ethz.ch/R-manual/R-devel/library/base/html/readRDS.html}.
 
 \bibitem[\citeproctext]{ref-rabehesketh2006multilevel}
@@ -12763,8 +12534,8 @@ Series A} 169 (4): 805-27.
 \url{https://doi.org/10.1111/j.1467-985X.2006.00426.x}.
 
 \bibitem[\citeproctext]{ref-rabehesketh2012multilevel}
-Rabe-Hesketh, Sophia, y Anders Skrondal. 2012. \emph{Multilevel and
-Longitudinal Modeling Using Stata}. 3.ª ed. Stata Press.
+---------. 2012. \emph{Multilevel and Longitudinal Modeling Using
+Stata}. 3.ª ed. College Station, TX: Stata Press.
 
 \bibitem[\citeproctext]{ref-RaoScott1981}
 Rao, J. N. K., y Alastair J. Scott. 1981. {«The Analysis of Categorical
@@ -12803,8 +12574,8 @@ Särndal, Carl-Erik, Bengt Swensson, y Jan Wretman. 2003. \emph{Model
 assisted survey sampling}. Springer Science \& Business Media.
 
 \bibitem[\citeproctext]{ref-SAS2012StdDev}
-SAS Institute Inc. 2012. \emph{Estimating the Standard Deviation of a
-Variable in a Finite Population}. SAS Support, Sample 45701.
+SAS Institute Inc. 2012. {«Estimating the Standard Deviation of a
+Variable in a Finite Population»}. SAS Support, Sample 45701.
 \url{https://support.sas.com/kb/45/701.html}.
 
 \bibitem[\citeproctext]{ref-SchulzeWaltrupKauermann2016}
@@ -12820,11 +12591,11 @@ International Statistical Institute} 41 (3): 43-57.
 
 \bibitem[\citeproctext]{ref-skinner1989analysis}
 Skinner, Chris J., David Holt, y Tom M. F. Smith, eds. 1989.
-\emph{Analysis of complex surveys}. John Wiley \& Sons.
+\emph{Analysis of complex surveys}. New York: John Wiley \& Sons.
 
 \bibitem[\citeproctext]{ref-snijders2011}
-Snijders, Tom AB, y Roel Bosker. 2011. \emph{Multilevel analysis: An
-introduction to basic and advanced multilevel modeling}.
+Snijders, Tom AB, y Roel Bosker. 2011. {«Multilevel analysis: An
+introduction to basic and advanced multilevel modeling»}.
 
 \bibitem[\citeproctext]{ref-dotwhisker2025}
 Solt, Frederick, y Yue Hu. 2025. \emph{dotwhisker: Dot-and-Whisker Plots
@@ -12837,7 +12608,7 @@ Statistical Software} 84 (6): 1-39.
 \url{https://doi.org/10.18637/jss.v084.i06}.
 
 \bibitem[\citeproctext]{ref-tmap2026}
-Tennekes, Martijn. 2026. \emph{tmap: Thematic Maps}.
+---------. 2026. \emph{tmap: Thematic Maps}.
 \url{https://doi.org/10.32614/CRAN.package.tmap}.
 
 \bibitem[\citeproctext]{ref-thomas1987chisquare}
@@ -12847,11 +12618,13 @@ sampling»}. \emph{Journal of the American Statistical Association} 82
 (398): 630-36.
 
 \bibitem[\citeproctext]{ref-Tukey1977EDA}
-Tukey, John W. 1977. \emph{Exploratory Data Analysis}. Addison-Wesley.
+Tukey, John W. 1977. \emph{Exploratory Data Analysis}. Reading, MA:
+Addison-Wesley.
 
 \bibitem[\citeproctext]{ref-UNECE2011Canberra}
 UNECE. 2011. \emph{Canberra Group Handbook on Household Income
-Statistics}. 2.ª ed. {United Nations Economic Commission for Europe}.
+Statistics}. 2.ª ed. Geneva: {United Nations Economic Commission for
+Europe}.
 
 \bibitem[\citeproctext]{ref-Valliant2024}
 Valliant, Richard. 2024. \emph{svydiags: Regression Model Diagnostics
@@ -12864,37 +12637,41 @@ Step-by-step Guide to Calculation}. 1 edition. Stata Press.
 \bibitem[\citeproctext]{ref-Valliant_Dever_Kreuter_2018}
 Valliant, Richard, Jill A. Dever, y Frauke Kreuter. 2018.
 \emph{Practical Tools for Designing and Weighting Survey Samples}.
-Statistics for Social y Behavioral Sciences. Springer International
-Publishing. \url{https://doi.org/10.1007/978-3-319-93632-1}.
+Statistics for Social y Behavioral Sciences. Cham: Springer
+International Publishing.
+\url{https://doi.org/10.1007/978-3-319-93632-1}.
 
 \bibitem[\citeproctext]{ref-gtools2025}
-Warnes, Gregory R., Ben Bolker, Thomas Lumley, et~al. 2023.
-\emph{gtools: Various R Programming Tools}.
-\url{https://doi.org/10.32614/CRAN.package.gtools}.
+Warnes, Gregory R., Ben Bolker, Thomas Lumley, Arni Magnusson, Bill
+Venables, Genei Ryodan, y Steffen Moeller. 2023. \emph{gtools: Various R
+Programming Tools}. \url{https://doi.org/10.32614/CRAN.package.gtools}.
 
 \bibitem[\citeproctext]{ref-Wickham2014}
 Wickham, Hadley. 2014. {«Tidy Data»}. \emph{Journal of Statistical
 Software} 59 (10): 1-23. \url{https://doi.org/10.18637/jss.v059.i10}.
 
 \bibitem[\citeproctext]{ref-Wickham2016ggplot2}
-Wickham, Hadley. 2016. \emph{ggplot2: Elegant Graphics for Data
-Analysis}. 2.ª ed. Springer.
-\url{https://doi.org/10.1007/978-3-319-24277-4}.
+---------. 2016. \emph{ggplot2: Elegant Graphics for Data Analysis}. 2.ª
+ed. Cham: Springer. \url{https://doi.org/10.1007/978-3-319-24277-4}.
 
 \bibitem[\citeproctext]{ref-tidyverse2026}
-Wickham, Hadley, Mara Averick, Jennifer Bryan, et~al. 2026.
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy
+D'Agostino McGowan, Romain François, Garrett Grolemund, et~al. 2026.
 \emph{tidyverse: Easily Install and Load the Tidyverse}.
 \url{https://doi.org/10.32614/CRAN.package.tidyverse}.
 
 \bibitem[\citeproctext]{ref-WickhamEtAl2023}
 Wickham, Hadley, Mine Çetinkaya-Rundel, y Garrett Grolemund. 2023.
 \emph{R for Data Science: Import, Tidy, Transform, Visualize, and Model
-Data}. 2.ª ed. O'Reilly Media. \url{https://r4ds.hadley.nz/}.
+Data}. 2.ª ed. Sebastopol, CA: O'Reilly Media.
+\url{https://r4ds.hadley.nz/}.
 
 \bibitem[\citeproctext]{ref-ggplot22026}
-Wickham, Hadley, Winston Chang, Lionel Henry, et~al. 2026.
-\emph{ggplot2: Create Elegant Data Visualisations Using the Grammar of
-Graphics}. \url{https://doi.org/10.32614/CRAN.package.ggplot2}.
+Wickham, Hadley, Winston Chang, Lionel Henry, Thomas Lin Pedersen,
+Kohske Takahashi, Claus Wilke, Kara Woo, Hiroaki Yutani, Dewey
+Dunnington, y Teun van den Brand. 2026. \emph{ggplot2: Create Elegant
+Data Visualisations Using the Grammar of Graphics}.
+\url{https://doi.org/10.32614/CRAN.package.ggplot2}.
 
 \bibitem[\citeproctext]{ref-dplyr2026}
 Wickham, Hadley, Romain François, Lionel Henry, Kirill Müller, y Davis
@@ -12907,12 +12684,12 @@ Annotations for 'ggplot2'}.
 \url{https://doi.org/10.32614/CRAN.package.cowplot}.
 
 \bibitem[\citeproctext]{ref-wilkinson2005grammar}
-Wilkinson, Leland. 2005. \emph{The grammar of graphics}. 2.ª ed.
-Springer.
+Wilkinson, Leland. 2005. \emph{The grammar of graphics}. 2.ª ed. New
+York: Springer.
 
 \bibitem[\citeproctext]{ref-Wolter2007Variance}
 Wolter, Kirk M. 2007. \emph{Introduction to Variance Estimation}. 2.ª
-ed. Springer Series en Statistics. Springer.
+ed. Springer Series en Statistics. New York, NY: Springer.
 \url{https://doi.org/10.1007/978-0-387-35099-8}.
 
 \bibitem[\citeproctext]{ref-Woodruff1952}
@@ -12922,9 +12699,9 @@ Association} 47 (260): 635-46.
 \url{https://doi.org/10.1080/01621459.1952.10483443}.
 
 \bibitem[\citeproctext]{ref-woodruff1971simple}
-Woodruff, Ralph S. 1971. {«A Simple Method for Approximating the
-Variance of a Complicated Estimate»}. \emph{Journal of the American
-Statistical Association} 66 (334): 411-14.
+---------. 1971. {«A Simple Method for Approximating the Variance of a
+Complicated Estimate»}. \emph{Journal of the American Statistical
+Association} 66 (334): 411-14.
 \url{https://doi.org/10.1080/01621459.1971.10482279}.
 
 \end{CSLReferences}

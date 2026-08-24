@@ -1,6 +1,26 @@
 {
     "sources": [
         {
+            "author": [
+                {
+                    "literal": "Naciones Unidas"
+                }
+            ],
+            "id": "unitednations2021householdsurveys",
+            "issued": {
+                "date-parts": [
+                    [
+                        2021
+                    ]
+                ]
+            },
+            "note": "Fifty-second session",
+            "number": "E/CN.3/2021/16",
+            "publisher": "United Nations Statistical Commission",
+            "title": "Report of the intersecretariat working group on household surveys",
+            "type": "report"
+        },
+        {
             "URL": "https://unstats.un.org/unsd/publication/seriesf/seriesf_96e.pdf",
             "author": [
                 {
@@ -111,6 +131,35 @@
             "type": "book"
         },
         {
+            "URL": "https://support.sas.com/kb/45/701.html",
+            "accessed": {
+                "date-parts": [
+                    [
+                        2026,
+                        8,
+                        3
+                    ]
+                ]
+            },
+            "author": [
+                {
+                    "literal": "SAS Institute Inc."
+                }
+            ],
+            "id": "SAS2012StdDev",
+            "issued": {
+                "date-parts": [
+                    [
+                        2012
+                    ]
+                ]
+            },
+            "note": "Date modified: February 16, 2012",
+            "publisher": "SAS Support, Sample 45701",
+            "title": "Estimating the standard deviation of a variable in a finite population",
+            "type": ""
+        },
+        {
             "DOI": "10.1093/jssam/smac040",
             "author": [
                 {
@@ -172,7 +221,8 @@
             "ISBN": "978-958-762-586-8",
             "author": [
                 {
-                    "literal": "Andrés Gutiérrez"
+                    "family": "Gutiérrez",
+                    "given": "Andrés"
                 }
             ],
             "edition": "Segunda edición",
@@ -241,12 +291,16 @@
             "type": "article-journal"
         },
         {
+            "DOI": "10.1007/978-0-387-35099-8",
+            "ISBN": "978-0-387-32917-8",
             "author": [
                 {
                     "family": "Wolter",
                     "given": "Kirk M."
                 }
             ],
+            "collection-title": "Springer series in statistics",
+            "edition": "2",
             "id": "Wolter2007Variance",
             "issued": {
                 "date-parts": [
@@ -256,6 +310,7 @@
                 ]
             },
             "publisher": "Springer",
+            "publisher-place": "New York, NY",
             "title": "Introduction to variance estimation",
             "type": "book"
         },
@@ -285,6 +340,29 @@
             "title": "Generalized linear models",
             "type": "article-journal",
             "volume": "135"
+        },
+        {
+            "DOI": "10.1002/9780470523551",
+            "ISBN": "978-0-470-45460-2",
+            "author": [
+                {
+                    "family": "Fuller",
+                    "given": "Wayne A."
+                }
+            ],
+            "collection-title": "Wiley series in survey methodology",
+            "id": "Fuller2009",
+            "issued": {
+                "date-parts": [
+                    [
+                        2009
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "publisher-place": "Hoboken, New Jersey",
+            "title": "Sampling statistics",
+            "type": "book"
         },
         {
             "author": [
@@ -333,37 +411,6 @@
         {
             "author": [
                 {
-                    "family": "Heeringa",
-                    "given": "Steven G"
-                },
-                {
-                    "family": "West",
-                    "given": "Brady T"
-                },
-                {
-                    "family": "Heeringa",
-                    "given": "Steve G"
-                },
-                {
-                    "family": "Berglund",
-                    "given": "Patricia A"
-                }
-            ],
-            "id": "heeringa2017applied",
-            "issued": {
-                "date-parts": [
-                    [
-                        2017
-                    ]
-                ]
-            },
-            "publisher": "chapman; hall/CRC",
-            "title": "Applied survey data analysis",
-            "type": "book"
-        },
-        {
-            "author": [
-                {
                     "family": "Cochran",
                     "given": "William Gemmell"
                 }
@@ -395,7 +442,7 @@
                     ]
                 ]
             },
-            "publisher": "John Wiley; Sons",
+            "publisher": "John Wiley & Sons",
             "title": "Complex surveys: A guide to analysis using r: A guide to analysis using r",
             "title-short": "Complex surveys",
             "type": "book"
@@ -416,7 +463,7 @@
                     ]
                 ]
             },
-            "publisher": "Chapman; Hall/CRC",
+            "publisher": "Chapman & Hall/CRC",
             "publisher-place": "Boca Raton",
             "title": "Bookdown: Authoring books and technical documents with r markdown",
             "title-short": "Bookdown",
@@ -446,7 +493,7 @@
                     ]
                 ]
             },
-            "publisher": "Chapman; Hall/CRC",
+            "publisher": "Chapman & Hall/CRC",
             "publisher-place": "Boca Raton",
             "title": "R markdown: The definitive guide",
             "title-short": "R markdown",
@@ -734,6 +781,26 @@
             "type": "book"
         },
         {
+            "author": [
+                {
+                    "family": "UNECE"
+                }
+            ],
+            "edition": "2",
+            "id": "UNECE2011Canberra",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "publisher": "United Nations Economic Commission for Europe",
+            "publisher-place": "Geneva",
+            "title": "Canberra group handbook on household income statistics",
+            "type": "book"
+        },
+        {
             "DOI": "10.1080/01621459.1952.10483446",
             "author": [
                 {
@@ -837,6 +904,26 @@
             "title": "Sampling and estimation in household surveys",
             "type": "chapter",
             "volume": "29"
+        },
+        {
+            "DOI": "10.1787/9789264194830-en",
+            "author": [
+                {
+                    "literal": "OECD"
+                }
+            ],
+            "id": "OECD2013ICW",
+            "issued": {
+                "date-parts": [
+                    [
+                        2013
+                    ]
+                ]
+            },
+            "publisher": "OECD Publishing",
+            "publisher-place": "Paris",
+            "title": "OECD framework for statistics on the distribution of household income, consumption and wealth",
+            "type": "book"
         },
         {
             "author": [
@@ -1035,7 +1122,8 @@
             "URL": "https://repositorio.cepal.org/server/api/core/bitstreams/feb8c8be-6434-41f2-8fd9-f12f71a0739a/content",
             "author": [
                 {
-                    "literal": "Andrés Gutiérrez"
+                    "family": "Gutiérrez",
+                    "given": "Andrés"
                 },
                 {
                     "family": "Babativa-Márquez",
@@ -1058,30 +1146,6 @@
             "title": "Efectos de diseño para indicadores sociales en américa latina: Función generalizada de varianza para estimadores directos provenientes de encuestas de hogares",
             "title-short": "Efectos de diseño para indicadores sociales en américa latina",
             "type": "report"
-        },
-        {
-            "author": [
-                {
-                    "family": "Wolter",
-                    "given": "Kirk M"
-                },
-                {
-                    "family": "Wolter",
-                    "given": "Kirk M"
-                }
-            ],
-            "id": "wolter2007",
-            "issued": {
-                "date-parts": [
-                    [
-                        2007
-                    ]
-                ]
-            },
-            "publisher": "Springer",
-            "title": "Introduction to variance estimation",
-            "type": "book",
-            "volume": "53"
         },
         {
             "DOI": "10.1080/01621459.1988.10478591",
@@ -1244,7 +1308,7 @@
                     ]
                 ]
             },
-            "publisher": "Chapman; Hall/CRC",
+            "publisher": "Chapman & Hall/CRC",
             "publisher-place": "Boca Raton",
             "title": "Applied survey data analysis",
             "type": "book"
@@ -1359,6 +1423,29 @@
             "volume": "47"
         },
         {
+            "DOI": "10.1080/01621459.1971.10482279",
+            "author": [
+                {
+                    "family": "Woodruff",
+                    "given": "Ralph S."
+                }
+            ],
+            "container-title": "Journal of the American Statistical Association",
+            "id": "woodruff1971simple",
+            "issue": "334",
+            "issued": {
+                "date-parts": [
+                    [
+                        1971
+                    ]
+                ]
+            },
+            "page": "411-414",
+            "title": "A simple method for approximating the variance of a complicated estimate",
+            "type": "article-journal",
+            "volume": "66"
+        },
+        {
             "author": [
                 {
                     "family": "Kovar",
@@ -1388,6 +1475,173 @@
             "title": "Bootstrap and other methods to measure errors in survey estimates",
             "type": "article-journal",
             "volume": "16"
+        },
+        {
+            "author": [
+                {
+                    "literal": "Naciones Unidas"
+                }
+            ],
+            "collection-number": "Series F, No. 98",
+            "collection-title": "Studies in methods",
+            "id": "UnitedNations2005",
+            "issued": {
+                "date-parts": [
+                    [
+                        2005
+                    ]
+                ]
+            },
+            "publisher": "United Nations",
+            "publisher-place": "New York",
+            "title": "Designing household survey samples: Practical guidelines",
+            "title-short": "Designing household survey samples",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1007/978-3-319-93632-1",
+            "ISBN": "978-3-319-93631-4",
+            "author": [
+                {
+                    "family": "Valliant",
+                    "given": "Richard"
+                },
+                {
+                    "family": "Dever",
+                    "given": "Jill A."
+                },
+                {
+                    "family": "Kreuter",
+                    "given": "Frauke"
+                }
+            ],
+            "collection-title": "Statistics for social and behavioral sciences",
+            "id": "Valliant_Dever_Kreuter_2018",
+            "issued": {
+                "date-parts": [
+                    [
+                        2018
+                    ]
+                ]
+            },
+            "publisher": "Springer International Publishing",
+            "publisher-place": "Cham",
+            "title": "Practical tools for designing and weighting survey samples",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Valliant",
+                    "given": "Richard"
+                },
+                {
+                    "family": "Dever",
+                    "given": "Jill A."
+                }
+            ],
+            "edition": "1 edition",
+            "id": "Valliant_Dever_2017",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "publisher": "Stata Press",
+            "title": "Survey weights: A step-by-step guide to calculation",
+            "title-short": "Survey weights",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.weightflow",
+            "URL": "https://CRAN.R-project.org/package=weightflow",
+            "author": [
+                {
+                    "family": "Ferreira",
+                    "given": "Juan Pablo"
+                }
+            ],
+            "id": "Ferreira2026weightflow",
+            "issued": {
+                "date-parts": [
+                    [
+                        2026
+                    ]
+                ]
+            },
+            "note": "R package version 0.2.0",
+            "title": "Weightflow: Declarative API for staged survey weights",
+            "title-short": "Weightflow",
+            "type": "book"
+        },
+        {
+            "DOI": "10.2307/2276207",
+            "author": [
+                {
+                    "family": "Lorenz",
+                    "given": "Max O."
+                }
+            ],
+            "container-title": "Publications of the American Statistical Association",
+            "id": "Lorenz1905",
+            "issue": "70",
+            "issued": {
+                "date-parts": [
+                    [
+                        1905
+                    ]
+                ]
+            },
+            "page": "209-219",
+            "title": "Methods of measuring the concentration of wealth",
+            "type": "article-journal",
+            "volume": "9"
+        },
+        {
+            "author": [
+                {
+                    "family": "Deaton",
+                    "given": "Angus"
+                }
+            ],
+            "id": "Deaton1997",
+            "issued": {
+                "date-parts": [
+                    [
+                        1997
+                    ]
+                ]
+            },
+            "publisher": "World Bank; The Johns Hopkins University Press",
+            "publisher-place": "Baltimore, MD",
+            "title": "The analysis of household surveys: A microeconometric approach to development policy",
+            "title-short": "The analysis of household surveys",
+            "type": "book"
+        },
+        {
+            "ISBN": "978-92-1-157692-4",
+            "URL": "https://repositorio.cepal.org/server/api/core/bitstreams/61e9dfa1-de2a-4af6-b670-0e2ed9b00cfe/content",
+            "author": [
+                {
+                    "family": "CEPAL"
+                }
+            ],
+            "collection-number": "LC/PUB.2025/23-P/-*",
+            "id": "CEPAL2025PanoramaSocial",
+            "issued": {
+                "date-parts": [
+                    [
+                        2025
+                    ]
+                ]
+            },
+            "publisher": "Comisión Económica para América Latina y el Caribe",
+            "publisher-place": "Santiago",
+            "title": "Panorama social de américa latina y el caribe, 2025: Cómo salir de la trampa de alta desigualdad, baja movilidad social y débil cohesión social",
+            "title-short": "Panorama social de américa latina y el caribe, 2025",
+            "type": "book"
         },
         {
             "author": [
@@ -1441,6 +1695,33 @@
             "title-short": "Estimating some measures of income inequality from survey data",
             "type": "article-journal",
             "volume": "21"
+        },
+        {
+            "author": [
+                {
+                    "family": "Kovačević",
+                    "given": "Milorad S."
+                },
+                {
+                    "family": "Binder",
+                    "given": "David A."
+                }
+            ],
+            "container-title": "Journal of Official Statistics",
+            "id": "KovacevicBinder1997",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        1997
+                    ]
+                ]
+            },
+            "page": "41-58",
+            "title": "Variance estimation for measures of income inequality and polarization: The estimating equations approach",
+            "title-short": "Variance estimation for measures of income inequality and polarization",
+            "type": "article-journal",
+            "volume": "13"
         },
         {
             "DOI": "10.1111/j.1467-985X.2012.01048.x",
@@ -1548,26 +1829,6 @@
             "title": "Variance estimation for measures of income inequality and polarization-the estimating equations approach",
             "type": "article-journal",
             "volume": "13"
-        },
-        {
-            "URL": "https://www.jtools.jacob-long.com/articles/svycor",
-            "author": [
-                {
-                    "family": "Long",
-                    "given": "Jacob A."
-                }
-            ],
-            "id": "Long2026Svycor",
-            "issued": {
-                "date-parts": [
-                    [
-                        2026
-                    ]
-                ]
-            },
-            "note": "Documentación del paquete jtools",
-            "title": "Calculate correlations and correlation tables with complex survey data",
-            "type": ""
         },
         {
             "author": [
@@ -2380,7 +2641,7 @@
                     ]
                 ]
             },
-            "publisher": "Chapman; Hall",
+            "publisher": "Chapman & Hall",
             "publisher-place": "London",
             "title": "Generalized linear models",
             "type": "book"
@@ -2940,8 +3201,8 @@
                     "given": "Winston"
                 },
                 {
-                    "family": "McGowan",
-                    "given": "Lucy D’Agostino"
+                    "family": "D’Agostino McGowan",
+                    "given": "Lucy"
                 },
                 {
                     "family": "François",
@@ -3076,7 +3337,8 @@
             "URL": "https://CRAN.R-project.org/package=TeachingSampling",
             "author": [
                 {
-                    "literal": "Andrés Gutiérrez"
+                    "family": "Gutiérrez",
+                    "given": "Andrés"
                 }
             ],
             "id": "GutierrezT2020",
@@ -3211,6 +3473,47 @@
             "publisher": "Duxbury",
             "publisher-place": "Pacific Grove, CA",
             "title": "Statistical inference",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Groves",
+                    "given": "Robert M."
+                },
+                {
+                    "family": "Fowler",
+                    "given": "Floyd J."
+                },
+                {
+                    "family": "Couper",
+                    "given": "Mick P."
+                },
+                {
+                    "family": "Lepkowski",
+                    "given": "James M."
+                },
+                {
+                    "family": "Singer",
+                    "given": "Eleanor"
+                },
+                {
+                    "family": "Tourangeau",
+                    "given": "Roger"
+                }
+            ],
+            "edition": "2",
+            "id": "Groves2009",
+            "issued": {
+                "date-parts": [
+                    [
+                        2009
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "publisher-place": "Hoboken, NJ",
+            "title": "Survey methodology",
             "type": "book"
         }
     ],
