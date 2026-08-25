@@ -1,5 +1,5 @@
 
-```{r setup-categoricas, include=FALSE}
+```{r setup-cap4a, include=FALSE}
 knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
@@ -8,14 +8,14 @@ knitr::opts_chunk$set(
   fig.width = 6,
   fig.height = 4,
   out.width = "70%",
-  fig.path = "../figures/"
+  fig.path = "../figures/cap4a/"
 )
 
 options(scipen = 999, digits = 3)
 source("../_tabla_helper.R")
 ```
 
-# Análisis de variables categóricas  {#cap4}
+# Análisis de variables categóricas (versión alternativa) {#cap4a}
 
 En el análisis de encuestas de hogares, uno de los productos más habituales es la estimación de parámetros descriptivos asociados a variables categóricas, los cuales permiten sintetizar las principales características de la población. Estas medidas facilitan una representación clara y comprensible de fenómenos sociales a partir de información recolectada mediante muestras probabilísticas [@CEPAL2023Diseno].
 
@@ -76,9 +76,7 @@ male_subset <- survey_design %>%
 
 ## Estimación de parámetros descriptivos {#estimacion-parametros-descriptivos-categoricas}
 
-Esta sección presenta los principales parámetros descriptivos utilizados para analizar variables categóricas en encuestas de hogares. En particular, se aborda la estimación de tamaños poblacionales, proporciones y distribuciones por dominios o subpoblaciones, incorporando los factores de expansión y la estructura del diseño muestral. Estos indicadores permiten describir la composición de la población y cuantificar la presencia relativa de distintos grupos de interés.
-
-### Tamaños poblacionales {#estimacion-del-tamano-poblacional}
+### Tamaños poblacionales {#estimacion-del-tamano-poblacional-cap4a}
 
 En el análisis de encuestas de hogares, es fundamental estimar el tamaño de las distintas subpoblaciones y la proporción que cada una representa dentro de la población total [@CEPAL2023Diseno]. Estas estimaciones permiten cuantificar grupos definidos por características demográficas o socioeconómicas y describir su importancia relativa. Por ejemplo, conocer el número y la proporción de personas que se encuentran por debajo de la línea de pobreza, están desempleadas o han alcanzado un determinado nivel educativo contribuye a identificar brechas entre grupos, evaluar sus condiciones de bienestar y generar información relevante para el diseño de políticas públicas.
 
@@ -198,7 +196,7 @@ survey_design %>%
 
 
 
-### Proporciones {#estimacion-de-proporciones}
+### Proporciones {#estimacion-de-proporciones-cap4a}
 Las proporciones permiten expresar el peso relativo que tienen determinados grupos dentro de la población. Por ejemplo, conocer el porcentaje de hogares que se encuentran por debajo de la línea de pobreza es esencial para evaluar desigualdades y caracterizar condiciones de bienestar. Para obtener este tipo de estimaciones, se calcula el promedio ponderado de la variable dicotómica, lo que asegura que la estimación represente adecuadamente la distribución poblacional. Al convertir las categorías originales en variables indicadoras, la proporción estimada se calcula como:
 
 $$
@@ -361,9 +359,7 @@ La @tbl-prop-edad-rango-empleo-mujer muestra que la inactividad constituye la co
 
 ## Estimación de parámetros de asociación {#estimacion-parametros-asociacion-categoricas}
 
-Esta sección introduce herramientas para estudiar la relación entre dos o más variables categóricas en el contexto de encuestas complejas. A partir de tablas cruzadas y medidas como la razón de *odds*, se busca describir cómo se distribuyen ciertos grupos o condiciones de interés de manera conjunta, incorporando los pesos muestrales y la variabilidad inducida por el diseño.
-
-### Tablas cruzadas {#tablas-cruzadas}
+### Tablas cruzadas {#tablas-cruzadas-cap4a}
 De acuerdo con @HeeringaWestBerglund2017 y @Agresti2019Intro, además de analizar cada variable de manera individual, resulta especialmente relevante estudiar si existe asociación entre dos variables categóricas. Este tipo de análisis permite identificar patrones y relaciones que aportan información valiosa para la toma de decisiones y la comprensión de fenómenos sociales. Por ejemplo, en el ámbito de las políticas públicas es posible relacionar educación y empleo para diseñar estrategias orientadas al mercado laboral; en la evaluación de programas sociales, analizar diferencias en el acceso a servicios de salud según el nivel de ingresos; y en investigación social, estudiar cómo variables demográficas y condiciones de vida se relacionan entre sí para comprender dinámicas y tendencias de la población.
 
 Formalmente, sean $x$ y $y$ dos variables categóricas con $R$ categorías para las filas y $C$ categorías para las columnas, respectivamente. En el contexto de encuestas por muestreo, el interés suele centrarse en estimar la distribución conjunta de ambas variables, es decir, la proporción de unidades poblacionales que pertenecen simultáneamente a cada combinación posible de categorías. Para ello, las entradas de una tabla cruzada, también conocida como tabla de contingencia, se estiman mediante frecuencias ponderadas obtenidas a partir de los factores de expansión y del diseño muestral. La estimación del total poblacional asociado a cada celda $(r,c)$ se define como:
@@ -458,7 +454,7 @@ region_poverty_proportion %>%
 
 Los resultados muestran diferencias regionales relevantes en la incidencia de la pobreza. La mayor proporción estimada se observa en Oriente, donde el 45.2% de la población se encuentra en condición de pobreza, seguida de Occidente con 40.1%; en contraste, Sur presenta la menor proporción, con 34.4%, mientras que Norte y Centro registran valores de 35.9% y 36.5%, respectivamente. Sin embargo, estas diferencias deben interpretarse con cautela, ya que la precisión de las estimaciones varía considerablemente entre regiones: Oriente y Centro presentan los errores estándar más altos y, en consecuencia, intervalos de confianza más amplios. De hecho, el notable solapamiento de los intervalos de confianza sugiere que las diferencias observadas entre regiones no necesariamente reflejan diferencias estadísticamente significativas. 
 
-### Razón de odds {#la-razon-de-odds}
+### Razón de odds {#la-razon-de-odds-cap4a}
 De acuerdo con @Agresti2019Intro, la razón de *odds* es una medida ampliamente utilizada para estudiar la asociación entre dos variables categóricas, especialmente cuando el interés se centra en comparar la probabilidad de ocurrencia de un evento entre distintos grupos poblacionales. Su interpretación se basa en comparar las ventajas relativas (*odds*) de ocurrencia de un evento entre dos categorías de análisis [@DiazMoralesLeon2018].
 
 En este sentido, este parámetro permite evaluar cómo cambia dicha ventaja entre diferentes grupos de interés y constituye una herramienta fundamental en estudios sociales, económicos y de salud; además, esta medida también puede utilizarse para cuantificar la relación entre los niveles de una variable y un factor categórico, comparando las ventajas relativas de ocurrencia del evento en cada grupo.
@@ -519,9 +515,7 @@ svycontrast(
 ```
 
 
-## Pruebas de hipótesis {#pruebas-de-hipotesis-sobre-proporciones}
-
-Esta sección presenta procedimientos para evaluar hipótesis sobre variables categóricas considerando el diseño muestral de la encuesta. En particular, se abordan pruebas sobre diferencias de proporciones y pruebas de independencia para tablas de contingencia, con el propósito de determinar si las diferencias o asociaciones observadas en la muestra cuentan con respaldo estadístico en la población.
+## Pruebas de hipótesis {#pruebas-de-hipotesis-categoricas}
 
 ### Pruebas sobre diferencias de proporciones {#pruebas-diferencias-proporciones}
 Las pruebas de hipótesis también permiten evaluar si las diferencias observadas entre proporciones estimadas para distintos grupos reflejan diferencias en la población o si pueden atribuirse al error de muestreo [@korn1995analysis]. Supóngase que $p_H$ representa la proporción de hombres desocupados y $p_M$ la proporción de mujeres desocupadas dentro de la población económicamente activa. El parámetro de interés corresponde a la diferencia entre ambas proporciones:
@@ -645,7 +639,7 @@ df_res %>%
 
 A partir de la  @tbl-ttest-desempleo-sexo, se concluye que la diferencia estimada entre la proporción de hombres desocupados y la proporción de mujeres desocupadas es de 0.0359, es decir, la proporción correspondiente a los hombres es 3.59 puntos porcentuales mayor. El estadístico obtenido es $t = 2.182$, con 118 grados de libertad y un valor-*p* de 0.031. Dado que el valor-*p* es inferior al nivel de significancia del 5%, se rechaza la hipótesis nula de igualdad de proporciones. Por tanto, existe evidencia estadística suficiente para afirmar que, dentro de la población económicamente activa, la proporción de desocupados es diferente entre hombres y mujeres.
 
-### Prueba de independencia de Rao-Scott {#prueba-de-independencia-chi}
+### Prueba de independencia de Rao-Scott {#prueba-independencia-rao-scott}
 Como se introdujo en los capítulos anteriores, una prueba de hipótesis es un procedimiento estadístico utilizado para evaluar si la evidencia observada en una muestra es compatible con una afirmación acerca de la población. En el contexto de tablas de contingencia, las pruebas de independencia permiten analizar si existe asociación entre dos variables categóricas [@Agresti2019Intro].
 
 En este caso, la hipótesis nula ($H_{0}$) establece que ambas variables son independientes; es decir, que la distribución de una variable no depende de las categorías de la otra. Bajo este supuesto, las diferencias observadas en la muestra se atribuyen únicamente a la variabilidad muestral y no a una relación real entre las variables en la población. Matemáticamente, esta hipótesis puede expresarse como:
@@ -698,8 +692,9 @@ svychisq(formula = ~Region + poor, design = survey_design, statistic = "F")
 
 Por otro lado, esta prueba de independencia entre las variables `Region` y `poor`, da como resultado $F = 0.48794$, con un valor-$p = 0.6914$. Dado que este valor-$p$ es considerablemente mayor que niveles de significancia convencionales, no existe evidencia suficiente para rechazar la hipótesis nula de independencia. Por tanto, los resultados sugieren que, bajo el diseño muestral considerado, no se observa una asociación estadísticamente significativa entre la región y la condición de pobreza.
 
-## Estimación de contrastes {#contrastes-y-diferencias-de-proporciones}
+## Estimación de contrastes {#estimacion-de-contrastes-categoricas}
 
+### Diferencias de proporciones {#diferencias-de-proporciones-cap4a}
 Cuando se analizan conjuntamente dos variables categóricas, es posible examinar cómo se distribuye una de ellas dentro de los grupos definidos por la otra. Por ejemplo, puede estudiarse la proporción de personas en situación de pobreza por sexo, zona de residencia o condición de actividad. Cada una de estas categorías define una subpoblación específica, para la cual pueden estimarse proporciones y sus correspondientes medidas de precisión [@KornGraubard1999; @HeeringaWestBerglund2017].
 
 Sin embargo, la estimación separada de estas proporciones no siempre es suficiente. Con frecuencia, el interés principal consiste en determinar cuánto difieren dos grupos y si la brecha observada es suficientemente grande en relación con la incertidumbre asociada al muestreo. Para ello, pueden construirse contrastes lineales que expresen la diferencia entre dos proporciones estimadas y permitan obtener su error estándar, intervalo de confianza y, cuando corresponda, una prueba de significancia.
@@ -790,6 +785,7 @@ svycontrast(
 
 De lo que se concluye que la diferencia estimada entre las proporciones de mujeres y hombres en estado de pobreza es -0.005 (-0.5%), con un error estándar de 0.022. Dada la magnitud del error estándar respecto de la diferencia, la estimación no debe interpretarse por sí sola como evidencia de una menor proporción de pobreza entre las mujeres.
 
+### Contrastes múltiples entre grupos {#contrastes-multiples-proporciones}
 Otro ejercicio que puede desarrollarse a partir de una encuesta de hogares consiste en estimar la proporción de personas desempleadas según la región de residencia. Para ello, se estiman las proporciones de desempleo para cada una de las regiones consideradas en el análisis. Los resultados obtenidos se presentan en la @tbl-svyby-desempleo-region:
 
 ```{r cod-prop-desempleo-region}
@@ -877,11 +873,11 @@ svycontrast(
   data.frame()
 ```
 
-## Visualización de variables categóricas {#viz-categoricas}
+## Visualización de variables categóricas {#viz-categoricas-cap4a}
 
 La visualización de variables categóricas es fundamental en el análisis de encuestas de hogares, ya que permite comunicar de manera clara la distribución de grupos poblacionales y las comparaciones entre ellos. Al igual que en el análisis de variables continuas, los gráficos deben permitir que la representación visual corresponda a estimaciones válidas a nivel poblacional. 
 
-### Gráficos de barras {#graficos-de-barras}
+### Gráficos de barras {#graficos-de-barras-cap4a}
 La construcción de gráficos de barras en `R` requiere, como paso previo, obtener las estimaciones que se desean representar visualmente. En el contexto de encuestas complejas, estas estimaciones pueden calcularse mediante las funciones `survey_total()` o `survey_prop()` del paquete `srvyr`, dependiendo de si el interés se centra en totales poblacionales o proporciones. En esta sección se utiliza el paquete `ggplot2` para construir los gráficos.
 
 ```{r setup-graficos-categoricas, message=FALSE, warning=FALSE}
@@ -1020,7 +1016,7 @@ ggplot(
   theme(legend.position = "top")
 ```
 
-### Mapas temáticos {#viz-mapas}
+### Mapas temáticos {#mapas-tematicos}
 Como explica @Tennekes2018tmap, los mapas temáticos constituyen una herramienta de visualización especialmente útil en el análisis de encuestas de hogares, ya que permiten representar la distribución territorial de indicadores sociales y demográficos. En este contexto, las estimaciones calculadas en secciones anteriores pueden proyectarse directamente sobre estas unidades geográficas, facilitando así la identificación de patrones espaciales y desigualdades regionales. De acuerdo con @sf2026, @tmap2026 y @Pebesma2018sf, para construir este tipo de mapas en `R` se requiere información geoespacial en formato *shapefile*, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo `shapeBigCity/BigCity.shp`, cuyas regiones corresponden a las definidas en la base de datos `BigCity`. 
 
 En `R`, las librerías `sf` y `tmap` permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta. La librería `sf` permite leer y manipular objetos espaciales modernos, mientras que `tmap` proporciona herramientas para elaborar mapas temáticos. La instrucción `tmap_mode("plot")` establece el modo de visualización estática de los mapas, apropiado para documentos y reportes. Finalmente, la función `read_sf()` importa el archivo geográfico `BigCity.shp`, almacenándolo en el objeto `bigcity_shape`, el cual contiene los polígonos correspondientes a las regiones de análisis.
@@ -1106,6 +1102,7 @@ shape_cv_map +
 
 Los polígonos con tonos más oscuros corresponden a regiones donde la estimación del ingreso presenta mayor variabilidad relativa. Un coeficiente de variación elevado indica menor precisión relativa, pero no permite atribuirla únicamente a un tamaño muestral insuficiente, pues también puede reflejar la ponderación y otras características del diseño.
 
+### Mapas bivariantes {#mapas-bivariantes}
 De acuerdo con @biscale2025 y @cowplot2025, cuando se desea representar simultáneamente dos variables (por ejemplo, la proporción de pobreza y su coeficiente de variación) es posible construir un mapa bivariante utilizando `ggplot2` junto con los paquetes `biscale` y `cowplot`. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la @fig-mapa-bivariante. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.
 
 ```{r mapas-bivar-setup, echo=TRUE, eval=TRUE}
