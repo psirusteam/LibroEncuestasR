@@ -2091,15 +2091,14 @@ F = 0.5, ndf = 3, ddf = 358, p-value = 0.7</code></pre>
 </section>
 <section id="viz-categoricas" class="level2" data-number="4.8">
 <h2 data-number="4.8" class="anchored" data-anchor-id="viz-categoricas"><span class="header-section-number">4.8</span> Visualización de variables categóricas</h2>
-<p>De acuerdo con <span class="citation" data-cites="Wickham2016ggplot2">Wickham (<a href="references.html#ref-Wickham2016ggplot2" role="doc-biblioref">2016</a>)</span> y <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa, West, y Berglund (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, la visualización de variables categóricas es fundamental en el análisis de encuestas de hogares, ya que permite comunicar de manera clara la distribución de grupos poblacionales y las comparaciones entre ellos. Al igual que en el análisis de variables continuas, los gráficos deben incorporar los pesos muestrales para que la representación visual corresponda a estimaciones válidas a nivel poblacional. Cuando la precisión estadística es relevante, es recomendable acompañar las barras con intervalos de confianza, que comunican tanto el valor central como la incertidumbre asociada al proceso de estimación.</p>
-<p>En esta sección se utiliza el paquete <code>ggplot2</code>.</p>
+<p>La visualización de variables categóricas es fundamental en el análisis de encuestas de hogares, ya que permite comunicar de manera clara la distribución de grupos poblacionales y las comparaciones entre ellos. Al igual que en el análisis de variables continuas, los gráficos deben permitir que la representación visual corresponda a estimaciones válidas a nivel poblacional.</p>
+<section id="graficos-de-barras" class="level3" data-number="4.8.1">
+<h3 data-number="4.8.1" class="anchored" data-anchor-id="graficos-de-barras"><span class="header-section-number">4.8.1</span> Gráficos de barras</h3>
+<p>La construcción de gráficos de barras en <code>R</code> requiere, como paso previo, obtener las estimaciones que se desean representar visualmente. En el contexto de encuestas complejas, estas estimaciones pueden calcularse mediante las funciones <code>survey_total()</code> o <code>survey_prop()</code> del paquete <code>srvyr</code>, dependiendo de si el interés se centra en totales poblacionales o proporciones. En esta sección se utiliza el paquete <code>ggplot2</code> para construir los gráficos.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="graficos-de-barras" class="level3" data-number="4.8.1">
-<h3 data-number="4.8.1" class="anchored" data-anchor-id="graficos-de-barras"><span class="header-section-number">4.8.1</span> Gráficos de barras</h3>
-<p>La construcción de gráficos de barras en <code>R</code> requiere, como paso previo, obtener las estimaciones que se desean representar visualmente. En el contexto de encuestas complejas, estas estimaciones pueden calcularse mediante las funciones <code>survey_total()</code> o <code>survey_prop()</code> del paquete <code>srvyr</code>, dependiendo de si el interés se centra en totales poblacionales o proporciones.</p>
-<p>A continuación, se ilustra este procedimiento utilizando el tamaño poblacional estimado por zona de residencia. Los resultados gráficos correspondientes se presentan en la <a href="#fig-barras-zona" class="quarto-xref">figura&nbsp;<span>4.1</span></a>:</p>
+<p>Para representar adecuadamente la variabilidad de las estimaciones derivada del diseño muestral, los gráficos de barras deberían incorporar los correspondientes intervalos de confianza obtenidos mediante los procedimientos descritos en este capítulo. De esta manera, el gráfico no solo muestra la magnitud de las estimaciones puntuales, sino también la incertidumbre asociada a cada una de ellas, lo que permite realizar una interpretación más completa de los resultados. A continuación, se ilustra este procedimiento utilizando las estimaciones del tamaño poblacional según zona de residencia. Los resultados se presentan en la <a href="#fig-barras-zona" class="quarto-xref">figura&nbsp;<span>4.1</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>zone_size <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
@@ -2107,14 +2106,14 @@ F = 0.5, ndf = 3, ddf = 358, p-value = 0.7</code></pre>
 <span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>zone_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Urban =</span> <span class="st">"#48C9B0"</span>, <span class="at">Rural =</span> <span class="st">"#117864"</span>)</span>
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> zone_size,</span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Zone, <span class="at">y =</span> size,</span>
-<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> size_upp, <span class="at">ymin =</span> size_low,</span>
-<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> Zone</span>
-<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> zone_size,</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> Zone,</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> size,</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">ymax =</span> size_upp,</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">ymin =</span> size_low,</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">fill =</span> Zone</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>       )) <span class="sc">+</span></span>
 <span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
 <span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
@@ -2127,30 +2126,33 @@ F = 0.5, ndf = 3, ddf = 358, p-value = 0.7</code></pre>
 <img src="../figures/fig-barras-zona-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-barras-zona-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4.1: Gráfico de barras del tamaño poblacional por zona geográfica
+Figura&nbsp;4.1: Estimación del tamaño poblacional por zona geográfica
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El procedimiento anterior también puede aplicarse a variables con más de dos categorías. En estos casos, el gráfico de barras permite comparar de manera sencilla las estimaciones asociadas a cada categoría de la variable de interés. Por ejemplo, a continuación se presenta la distribución estimada de la población según la condición de pobreza, cuyos resultados gráficos se muestran en la <a href="#fig-barras-pobreza" class="quarto-xref">figura&nbsp;<span>4.2</span></a>.</p>
+<p>El código comienza estimando, para cada categoría de la variable <code>Zone</code>, el tamaño poblacional mediante <code>survey_total()</code>, teniendo en cuenta el diseño muestral complejo. Además de la estimación puntual, se solicitan el error estándar y los límites del intervalo de confianza mediante <code>vartype = c("se", "ci")</code>, cuyos resultados se almacenan en el objeto <code>zone_size</code>. Posteriormente, se define una paleta de colores específica para las zonas urbana y rural y se construye el gráfico con <code>ggplot2</code>. En la estética del gráfico, <code>size</code> determina la altura de cada barra, mientras que <code>size_low</code> y <code>size_upp</code> establecen los límites inferior y superior de las barras de error. La función <code>geom_bar()</code> representa los tamaños poblacionales estimados y <code>geom_errorbar()</code> añade los intervalos de confianza correspondientes. Finalmente, <code>scale_fill_manual()</code> asigna los colores definidos previamente, <code>theme_bw()</code> aplica un formato visual limpio y <code>theme(legend.position = "top")</code> ubica la leyenda en la parte superior del gráfico.</p>
+<p>El procedimiento anterior puede extenderse naturalmente a variables con más de dos categorías. En estos casos, el gráfico de barras facilita la comparación simultánea de las estimaciones correspondientes a cada categoría y, al incorporar sus intervalos de confianza, permite apreciar también la precisión asociada a cada una de ellas. A modo de ejemplo, a continuación se presenta la distribución estimada de la población según su condición de pobreza; los resultados gráficos se muestran en la <a href="#fig-barras-pobreza" class="quarto-xref">figura&nbsp;<span>4.2</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>poverty_size <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Poverty) <span class="sc">%&gt;%</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">survey_total</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> poverty_size,</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty, <span class="at">y =</span> size,</span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> size_upp, <span class="at">ymin =</span> size_low,</span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> Poverty</span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>poverty_size <span class="ot">&lt;-</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Poverty) <span class="sc">%&gt;%</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fu">survey_total</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> poverty_size,</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> Poverty,</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> size,</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">ymax =</span> size_upp,</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">ymin =</span> size_low,</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">fill =</span> Poverty</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>       )) <span class="sc">+</span></span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-barras-pobreza" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2158,38 +2160,40 @@ Figura&nbsp;4.1: Gráfico de barras del tamaño poblacional por zona geográfica
 <img src="../figures/fig-barras-pobreza-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-barras-pobreza-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4.2: Gráfico de barras del tamaño poblacional por condición de pobreza
+Figura&nbsp;4.2: Estimación del número de personas según condición de pobreza
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Una de las ventajas de los gráficos de barras es que pueden extenderse fácilmente a comparaciones entre dos variables categóricas. Por ejemplo, se puede analizar el tamaño poblacional por nivel de pobreza cruzado con el estado de ocupación, presentada en la <a href="#fig-barras-empleo-pobreza" class="quarto-xref">figura&nbsp;<span>4.3</span></a>:</p>
+<p>Una de las ventajas de los gráficos de barras es que pueden extenderse fácilmente al análisis conjunto de dos variables categóricas. En este contexto, permiten comparar las estimaciones correspondientes a las distintas combinaciones de categorías y apreciar de manera visual las diferencias entre grupos. A modo de ejemplo, se presenta la estimación del número de personas según su condición de pobreza y estado de ocupación, cuyos resultados se muestran en la <a href="#fig-barras-empleo-pobreza" class="quarto-xref">figura&nbsp;<span>4.3</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>employment_poverty_size <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unemployed, Poverty) <span class="sc">%&gt;%</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">survey_total</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">unemployed =</span> <span class="fu">case_when</span>(</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>      unemployed <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Occupied"</span>,</span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>      unemployed <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Unemployed"</span>,</span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(unemployed) <span class="sc">~</span> <span class="st">"Not in the Labour Force"</span></span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> employment_poverty_size,</span>
-<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty, <span class="at">y =</span> size,</span>
-<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> size_upp, <span class="at">ymin =</span> size_low,</span>
-<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">as.factor</span>(unemployed)</span>
-<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>employment_poverty_size <span class="ot">&lt;-</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(unemployed, Poverty) <span class="sc">%&gt;%</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fu">survey_total</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">unemployed =</span> <span class="fu">case_when</span>(</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>      unemployed <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Occupied"</span>,</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>      unemployed <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Unemployed"</span>,</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(unemployed) <span class="sc">~</span> <span class="st">"Not in the Labour Force"</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> employment_poverty_size,</span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty, <span class="at">y =</span> size,</span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> size_upp, <span class="at">ymin =</span> size_low,</span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">as.factor</span>(unemployed)</span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-barras-empleo-pobreza" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2197,31 +2201,35 @@ Figura&nbsp;4.2: Gráfico de barras del tamaño poblacional por condición de po
 <img src="../figures/fig-barras-empleo-pobreza-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-barras-empleo-pobreza-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4.3: Gráfico de barras del tamaño poblacional por estado de ocupación y pobreza
+Figura&nbsp;4.3: Estimación del número de personas por estado de ocupación y situación de pobreza
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Este tipo de análisis gráfico resulta especialmente útil para identificar intersecciones de vulnerabilidad, al mostrar de manera simultánea dos o más características poblacionales. También es posible presentar proporciones en lugar de conteos. Por ejemplo, la proporción de hombres en condición de pobreza por zona, presentada en la <a href="#fig-barras-prop-zona-hombre" class="quarto-xref">figura&nbsp;<span>4.4</span></a>:</p>
+<p>Este tipo de análisis gráfico resulta especialmente útil para examinar posibles intersecciones de vulnerabilidad, ya que permite representar simultáneamente dos o más características de la población y comparar los resultados entre distintos grupos. Además de mostrar conteos o tamaños poblacionales estimados, los gráficos de barras pueden emplearse para representar proporciones, junto con sus correspondientes medidas de precisión. A modo de ejemplo, se presenta la proporción estimada de hombres en condición de pobreza según zona de residencia, incorporando los intervalos de confianza asociados a cada estimación. Los resultados se muestran en la <a href="#fig-barras-prop-zona-hombre" class="quarto-xref">figura&nbsp;<span>4.4</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>male_zone_poverty_proportion <span class="ot">&lt;-</span> male_subset <span class="sc">%&gt;%</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone, Poverty) <span class="sc">%&gt;%</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> male_zone_poverty_proportion,</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty, <span class="at">y =</span> proportion,</span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> proportion_upp, <span class="at">ymin =</span> proportion_low,</span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> Zone</span>
-<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
-<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>male_zone_poverty_proportion <span class="ot">&lt;-</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  male_subset <span class="sc">%&gt;%</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone, Poverty) <span class="sc">%&gt;%</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> male_zone_poverty_proportion,</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Poverty,</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> proportion,</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> proportion_upp,</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin =</span> proportion_low,</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> Zone</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-barras-prop-zona-hombre" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2235,25 +2243,29 @@ Figura&nbsp;4.4: Proporción de hombres en condición de pobreza por zona geogr�
 </div>
 </div>
 </div>
-<p>De forma análoga, se puede graficar la proporción de hombres en condición de pobreza desagregada por región, presentada en la <a href="#fig-barras-prop-region-hombre" class="quarto-xref">figura&nbsp;<span>4.5</span></a>:</p>
+<p>De manera análoga, este tipo de representación puede extenderse a niveles más detallados de desagregación geográfica. Por ejemplo, es posible comparar la proporción estimada de hombres en condición de pobreza entre las distintas regiones, incorporando en cada caso sus correspondientes intervalos de confianza. Esta representación permite identificar diferencias territoriales en las estimaciones y, al mismo tiempo, evaluar la precisión con la que han sido obtenidas. Los resultados se presentan en la <a href="#fig-barras-prop-region-hombre" class="quarto-xref">figura&nbsp;<span>4.5</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>male_region_poverty_proportion <span class="ot">&lt;-</span> male_subset <span class="sc">%&gt;%</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, poor) <span class="sc">%&gt;%</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>()</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> male_region_poverty_proportion,</span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Region, <span class="at">y =</span> proportion,</span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> proportion_upp, <span class="at">ymin =</span> proportion_low,</span>
-<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">as.factor</span>(poor)</span>
-<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>male_region_poverty_proportion <span class="ot">&lt;-</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  male_subset <span class="sc">%&gt;%</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, poor) <span class="sc">%&gt;%</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">proportion =</span> <span class="fu">survey_prop</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>()</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> male_region_poverty_proportion,</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> Region,</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> proportion,</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> proportion_upp,</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin =</span> proportion_low,</span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">as.factor</span>(poor)</span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>), <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-barras-prop-region-hombre" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2267,20 +2279,18 @@ Figura&nbsp;4.5: Proporción de hombres en condición de pobreza por región
 </div>
 </div>
 </div>
-<p>En síntesis, los gráficos de barras junto con sus correspondientes errores estándar o intervalos de confianza permiten una descripción clara de los patrones de pobreza, empleo u otras variables categóricas en la población y, cuando se aplican correctamente, constituyen una herramienta poderosa para comunicar hallazgos de encuestas de hogares manteniendo el rigor estadístico en la representación de los resultados.</p>
 </section>
 <section id="viz-mapas" class="level3" data-number="4.8.2">
 <h3 data-number="4.8.2" class="anchored" data-anchor-id="viz-mapas"><span class="header-section-number">4.8.2</span> Mapas</h3>
-<p>Como explica <span class="citation" data-cites="Tennekes2018tmap">Tennekes (<a href="references.html#ref-Tennekes2018tmap" role="doc-biblioref">2018</a>)</span>, los mapas temáticos constituyen una herramienta de visualización especialmente útil en el análisis de encuestas de hogares, ya que permiten representar la distribución territorial de indicadores sociales y demográficos. En este contexto, las estimaciones de proporciones calculadas en secciones anteriores —como el porcentaje de pobreza o desempleo por región— pueden proyectarse directamente sobre unidades geográficas, facilitando así la identificación de patrones espaciales y desigualdades regionales.</p>
-<p>De acuerdo con <span class="citation" data-cites="sf2026">Pebesma et&nbsp;al. (<a href="references.html#ref-sf2026" role="doc-biblioref">2026</a>)</span>, <span class="citation" data-cites="tmap2026">Tennekes (<a href="references.html#ref-tmap2026" role="doc-biblioref">2026</a>)</span> y <span class="citation" data-cites="Pebesma2018sf">Pebesma (<a href="references.html#ref-Pebesma2018sf" role="doc-biblioref">2018</a>)</span>, para construir este tipo de mapas en <code>R</code> se requiere información geoespacial en formato <em>shapefile</em>, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo <code>shapeBigCity/BigCity.shp</code>, cuyas regiones corresponden a las definidas en la base de datos <code>BigCity</code>. Los paquetes <code>sf</code> y <code>tmap</code> permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta.</p>
-<p>El siguiente código carga los paquetes necesarios para trabajar con información geoespacial y visualización cartográfica en <code>R</code>. La librería <code>sf</code> permite leer y manipular objetos espaciales modernos, mientras que <code>tmap</code> proporciona herramientas para elaborar mapas temáticos. La instrucción <code>tmap_mode("plot")</code> establece el modo de visualización estática de los mapas, apropiado para documentos y reportes. Finalmente, la función <code>read_sf()</code> importa el archivo geográfico <code>BigCity.shp</code>, almacenándolo en el objeto <code>bigcity_shape</code>, el cual contiene los polígonos correspondientes a las regiones de análisis.</p>
+<p>Como explica <span class="citation" data-cites="Tennekes2018tmap">Tennekes (<a href="references.html#ref-Tennekes2018tmap" role="doc-biblioref">2018</a>)</span>, los mapas temáticos constituyen una herramienta de visualización especialmente útil en el análisis de encuestas de hogares, ya que permiten representar la distribución territorial de indicadores sociales y demográficos. En este contexto, las estimaciones calculadas en secciones anteriores pueden proyectarse directamente sobre estas unidades geográficas, facilitando así la identificación de patrones espaciales y desigualdades regionales. De acuerdo con <span class="citation" data-cites="sf2026">Pebesma et&nbsp;al. (<a href="references.html#ref-sf2026" role="doc-biblioref">2026</a>)</span>, <span class="citation" data-cites="tmap2026">Tennekes (<a href="references.html#ref-tmap2026" role="doc-biblioref">2026</a>)</span> y <span class="citation" data-cites="Pebesma2018sf">Pebesma (<a href="references.html#ref-Pebesma2018sf" role="doc-biblioref">2018</a>)</span>, para construir este tipo de mapas en <code>R</code> se requiere información geoespacial en formato <em>shapefile</em>, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo <code>shapeBigCity/BigCity.shp</code>, cuyas regiones corresponden a las definidas en la base de datos <code>BigCity</code>.</p>
+<p>En <code>R</code>, las librerías <code>sf</code> y <code>tmap</code> permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta. La librería <code>sf</code> permite leer y manipular objetos espaciales modernos, mientras que <code>tmap</code> proporciona herramientas para elaborar mapas temáticos. La instrucción <code>tmap_mode("plot")</code> establece el modo de visualización estática de los mapas, apropiado para documentos y reportes. Finalmente, la función <code>read_sf()</code> importa el archivo geográfico <code>BigCity.shp</code>, almacenándolo en el objeto <code>bigcity_shape</code>, el cual contiene los polígonos correspondientes a las regiones de análisis.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>bigcity_shape <span class="ot">&lt;-</span> <span class="fu">read_sf</span>(<span class="st">"../Data/shapeBigCity/BigCity.shp"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Con el shapefile cargado, se puede generar un mapa de las regiones usando <code>tm_shape()</code> y <code>tm_polygons()</code>, como se muestra en la <a href="#fig-mapa-regiones" class="quarto-xref">figura&nbsp;<span>4.6</span></a>:</p>
+<p>Con el <em>shapefile</em> cargado, se puede generar un mapa de las regiones usando <code>tm_shape()</code> y <code>tm_polygons()</code>, como se muestra en la <a href="#fig-mapa-regiones" class="quarto-xref">figura&nbsp;<span>4.6</span></a>:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(bigcity_shape) <span class="sc">+</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="st">"Region"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2336,24 +2346,25 @@ Figura&nbsp;4.7: Proporción de hombres en condición de pobreza por región
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>region_mean <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">survey_mean</span>(Income,</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"cv"</span>)))</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>cv_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="dv">1</span>)</span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>shape_cv_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(</span>
-<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>  bigcity_shape <span class="sc">%&gt;%</span></span>
-<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(region_mean, <span class="at">by =</span> <span class="st">"Region"</span>)</span>
-<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>shape_cv_map <span class="sc">+</span></span>
-<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mean_cv"</span>,</span>
-<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> cv_breaks,</span>
-<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mean income CV"</span>,</span>
-<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#FFFFFF"</span>, <span class="st">"#000000"</span>)</span>
-<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">asp =</span> <span class="dv">0</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="fu">survey_mean</span>(Income, </span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.rm =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"cv"</span>)))</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>cv_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="dv">1</span>)</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>shape_cv_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>  bigcity_shape <span class="sc">%&gt;%</span></span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(region_mean, <span class="at">by =</span> <span class="st">"Region"</span>)</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>shape_cv_map <span class="sc">+</span></span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mean_cv"</span>,</span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> cv_breaks,</span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mean income CV"</span>,</span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#FFFFFF"</span>, <span class="st">"#000000"</span>)</span>
+<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">asp =</span> <span class="dv">0</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-mapa-cv-ingreso" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2370,10 +2381,13 @@ Figura&nbsp;4.8: Coeficiente de variación del ingreso medio por región
 <p>Los polígonos con tonos más oscuros corresponden a regiones donde la estimación del ingreso presenta mayor variabilidad relativa. Un coeficiente de variación elevado indica menor precisión relativa, pero no permite atribuirla únicamente a un tamaño muestral insuficiente, pues también puede reflejar la ponderación y otras características del diseño.</p>
 <p>De acuerdo con <span class="citation" data-cites="biscale2025">Prener, Grossenbacher, y Zehr (<a href="references.html#ref-biscale2025" role="doc-biblioref">2025</a>)</span> y <span class="citation" data-cites="cowplot2025">Wilke (<a href="references.html#ref-cowplot2025" role="doc-biblioref">2025</a>)</span>, cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando <code>ggplot2</code> junto con los paquetes <code>biscale</code> y <code>cowplot</code>. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la <a href="#fig-mapa-bivariante" class="quarto-xref">figura&nbsp;<span>4.9</span></a>. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>region_sex_poverty_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, Zone, Sex, poor) <span class="sc">%&gt;%</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_mean</span>(<span class="at">vartype =</span> <span class="st">"cv"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(poor <span class="sc">==</span> <span class="dv">1</span>, Zone <span class="sc">==</span> <span class="st">"Rural"</span>, Sex <span class="sc">==</span> <span class="st">"Female"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>region_sex_poverty_proportion <span class="ot">&lt;-</span> </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region, Zone, Sex, poor) <span class="sc">%&gt;%</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_mean</span>(<span class="at">vartype =</span> <span class="st">"cv"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(poor <span class="sc">==</span> <span class="dv">1</span>, </span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>         Zone <span class="sc">==</span> <span class="st">"Rural"</span>, </span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>         Sex <span class="sc">==</span> <span class="st">"Female"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>El siguiente código construye un mapa bivariado que permite visualizar simultáneamente la proporción de pobreza femenina rural y el coeficiente de variación asociado a dicha estimación por región. En primer lugar, se integran las estimaciones contenidas en <code>region_sex_poverty_proportion</code> con la información geográfica del shapefile mediante <code>left_join()</code>. Posteriormente, la función <code>bi_class()</code> del paquete <code>biscale</code> clasifica conjuntamente las variables <code>proportion</code> y <code>proportion_cv</code> en una cuadrícula de (3 ) categorías (<code>dim = 3</code>), empleando el método de clasificación de Fisher (<code>style = "fisher"</code>). Luego, con <code>ggplot2</code> y <code>geom_sf()</code>, se genera el mapa temático utilizando colores bivariados definidos por <code>bi_scale_fill()</code>, mientras que <code>bi_theme()</code> aplica un estilo minimalista y se elimina la leyenda predeterminada.</p>
 <p>A continuación, la función <code>bi_legend()</code> crea una leyenda especializada que permite interpretar simultáneamente ambas dimensiones del mapa: el coeficiente de variación y la pobreza femenina rural. Finalmente, mediante las funciones <code>ggdraw()</code> y <code>draw_plot()</code> del paquete <code>cowplot</code>, se combinan el mapa y la leyenda en una única visualización.</p>
@@ -2485,9 +2499,6 @@ Tennekes, Martijn. 2018. <span>«tmap: Thematic Maps in R»</span>. <em>Journal 
 </div>
 <div id="ref-thomas1987chisquare" class="csl-entry" role="listitem">
 Thomas, D. Roland, y Jon N. K. Rao. 1987. <span>«Small-sample comparisons of level and power for simple goodness-of-fit statistics under cluster sampling»</span>. <em>Journal of the American Statistical Association</em> 82 (398): 630-36.
-</div>
-<div id="ref-Wickham2016ggplot2" class="csl-entry" role="listitem">
-Wickham, Hadley. 2016. <em>ggplot2: Elegant Graphics for Data Analysis</em>. 2.ª ed. Cham: Springer. <a href="https://doi.org/10.1007/978-3-319-24277-4">https://doi.org/10.1007/978-3-319-24277-4</a>.
 </div>
 <div id="ref-cowplot2025" class="csl-entry" role="listitem">
 Wilke, Claus O. 2025. <em>cowplot: Streamlined Plot Theme and Plot Annotations for ’ggplot2’</em>. <a href="https://doi.org/10.32614/CRAN.package.cowplot">https://doi.org/10.32614/CRAN.package.cowplot</a>.

@@ -869,35 +869,33 @@ Por otro lado, esta prueba de independencia entre las variables `Region` y `poor
 
 ## Visualización de variables categóricas {#viz-categoricas}
 
-De acuerdo con @Wickham2016ggplot2 y @HeeringaWestBerglund2017, la visualización de variables categóricas es fundamental en el análisis de encuestas de hogares, ya que permite comunicar de manera clara la distribución de grupos poblacionales y las comparaciones entre ellos. Al igual que en el análisis de variables continuas, los gráficos deben incorporar los pesos muestrales para que la representación visual corresponda a estimaciones válidas a nivel poblacional. Cuando la precisión estadística es relevante, es recomendable acompañar las barras con intervalos de confianza, que comunican tanto el valor central como la incertidumbre asociada al proceso de estimación.
+La visualización de variables categóricas es fundamental en el análisis de encuestas de hogares, ya que permite comunicar de manera clara la distribución de grupos poblacionales y las comparaciones entre ellos. Al igual que en el análisis de variables continuas, los gráficos deben permitir que la representación visual corresponda a estimaciones válidas a nivel poblacional. 
 
-En esta sección se utiliza el paquete `ggplot2`.
+### Gráficos de barras {#graficos-de-barras}
+
+La construcción de gráficos de barras en `R` requiere, como paso previo, obtener las estimaciones que se desean representar visualmente. En el contexto de encuestas complejas, estas estimaciones pueden calcularse mediante las funciones `survey_total()` o `survey_prop()` del paquete `srvyr`, dependiendo de si el interés se centra en totales poblacionales o proporciones. En esta sección se utiliza el paquete `ggplot2` para construir los gráficos.
 
 ```{r setup-graficos-categoricas, message=FALSE, warning=FALSE}
 library(ggplot2)
 ```
 
-### Gráficos de barras {#graficos-de-barras}
+Para representar adecuadamente la variabilidad de las estimaciones derivada del diseño muestral, los gráficos de barras deberían incorporar los correspondientes intervalos de confianza obtenidos mediante los procedimientos descritos en este capítulo. De esta manera, el gráfico no solo muestra la magnitud de las estimaciones puntuales, sino también la incertidumbre asociada a cada una de ellas, lo que permite realizar una interpretación más completa de los resultados. A continuación, se ilustra este procedimiento utilizando las estimaciones del tamaño poblacional según zona de residencia. Los resultados se presentan en la @fig-barras-zona.
 
-La construcción de gráficos de barras en `R` requiere, como paso previo, obtener las estimaciones que se desean representar visualmente. En el contexto de encuestas complejas, estas estimaciones pueden calcularse mediante las funciones `survey_total()` o `survey_prop()` del paquete `srvyr`, dependiendo de si el interés se centra en totales poblacionales o proporciones.
-
-A continuación, se ilustra este procedimiento utilizando el tamaño poblacional estimado por zona de residencia. Los resultados gráficos correspondientes se presentan en la @fig-barras-zona:
-
-```{r fig-barras-zona, fig.cap="Gráfico de barras del tamaño poblacional por zona geográfica", fig.align='center', out.width='70%', echo=TRUE}
+```{r fig-barras-zona, fig.cap="Estimación del tamaño poblacional por zona geográfica", fig.align='center', out.width='70%', echo=TRUE}
 zone_size <- survey_design %>%
   group_by(Zone) %>%
   summarise(size = survey_total(vartype = c("se", "ci")))
 
 zone_colors <- c(Urban = "#48C9B0", Rural = "#117864")
 
-ggplot(
-  data = zone_size,
-  aes(
-    x = Zone, y = size,
-    ymax = size_upp, ymin = size_low,
-    fill = Zone
-  )
-) +
+ggplot(data = zone_size,
+       aes(
+         x = Zone,
+         y = size,
+         ymax = size_upp,
+         ymin = size_low,
+         fill = Zone
+       )) +
   geom_bar(stat = "identity", position = "dodge") +
   geom_errorbar(position = position_dodge(width = 0.9), width = 0.3) +
   scale_fill_manual(values = zone_colors) +
@@ -905,33 +903,39 @@ ggplot(
   theme(legend.position = "top")
 ```
 
-El procedimiento anterior también puede aplicarse a variables con más de dos categorías. En estos casos, el gráfico de barras permite comparar de manera sencilla las estimaciones asociadas a cada categoría de la variable de interés. Por ejemplo, a continuación se presenta la distribución estimada de la población según la condición de pobreza, cuyos resultados gráficos se muestran en la @fig-barras-pobreza.
+El código comienza estimando, para cada categoría de la variable `Zone`, el tamaño poblacional mediante `survey_total()`, teniendo en cuenta el diseño muestral complejo. Además de la estimación puntual, se solicitan el error estándar y los límites del intervalo de confianza mediante `vartype = c("se", "ci")`, cuyos resultados se almacenan en el objeto `zone_size`. Posteriormente, se define una paleta de colores específica para las zonas urbana y rural y se construye el gráfico con `ggplot2`. En la estética del gráfico, `size` determina la altura de cada barra, mientras que `size_low` y `size_upp` establecen los límites inferior y superior de las barras de error. La función `geom_bar()` representa los tamaños poblacionales estimados y `geom_errorbar()` añade los intervalos de confianza correspondientes. Finalmente, `scale_fill_manual()` asigna los colores definidos previamente, `theme_bw()` aplica un formato visual limpio y `theme(legend.position = "top")` ubica la leyenda en la parte superior del gráfico.
 
-```{r fig-barras-pobreza, fig.cap="Gráfico de barras del tamaño poblacional por condición de pobreza", fig.align='center', out.width='70%', echo=TRUE}
-poverty_size <- survey_design %>%
+El procedimiento anterior puede extenderse naturalmente a variables con más de dos categorías. En estos casos, el gráfico de barras facilita la comparación simultánea de las estimaciones correspondientes a cada categoría y, al incorporar sus intervalos de confianza, permite apreciar también la precisión asociada a cada una de ellas. A modo de ejemplo, a continuación se presenta la distribución estimada de la población según su condición de pobreza; los resultados gráficos se muestran en la @fig-barras-pobreza.
+
+```{r fig-barras-pobreza, fig.cap="Estimación del número de personas según condición de pobreza", fig.align='center', out.width='70%', echo=TRUE}
+poverty_size <- 
+  survey_design %>%
   group_by(Poverty) %>%
-  summarise(size = survey_total(vartype = c("se", "ci")))
+  summarise(
+    size = survey_total(vartype = c("se", "ci")))
 
-ggplot(
-  data = poverty_size,
-  aes(
-    x = Poverty, y = size,
-    ymax = size_upp, ymin = size_low,
-    fill = Poverty
-  )
-) +
+ggplot(data = poverty_size,
+       aes(
+         x = Poverty,
+         y = size,
+         ymax = size_upp,
+         ymin = size_low,
+         fill = Poverty
+       )) +
   geom_bar(stat = "identity", position = "dodge") +
   geom_errorbar(position = position_dodge(width = 0.9), width = 0.3) +
   theme_bw() +
   theme(legend.position = "top")
 ```
 
-Una de las ventajas de los gráficos de barras es que pueden extenderse fácilmente a comparaciones entre dos variables categóricas. Por ejemplo, se puede analizar el tamaño poblacional por nivel de pobreza cruzado con el estado de ocupación, presentada en la @fig-barras-empleo-pobreza:
+Una de las ventajas de los gráficos de barras es que pueden extenderse fácilmente al análisis conjunto de dos variables categóricas. En este contexto, permiten comparar las estimaciones correspondientes a las distintas combinaciones de categorías y apreciar de manera visual las diferencias entre grupos. A modo de ejemplo, se presenta la estimación del número de personas según su condición de pobreza y estado de ocupación, cuyos resultados se muestran en la @fig-barras-empleo-pobreza.
 
-```{r fig-barras-empleo-pobreza, fig.cap="Gráfico de barras del tamaño poblacional por estado de ocupación y pobreza", fig.align='center', out.width='80%', echo=TRUE}
-employment_poverty_size <- survey_design %>%
+```{r fig-barras-empleo-pobreza, fig.cap="Estimación del número de personas por estado de ocupación y situación de pobreza", fig.align='center', out.width='80%', echo=TRUE}
+employment_poverty_size <- 
+  survey_design %>%
   group_by(unemployed, Poverty) %>%
-  summarise(size = survey_total(vartype = c("se", "ci"))) %>%
+  summarise(
+    size = survey_total(vartype = c("se", "ci"))) %>%
   as.data.frame() %>%
   mutate(
     unemployed = case_when(
@@ -955,18 +959,22 @@ ggplot(
   theme(legend.position = "top")
 ```
 
-Este tipo de análisis gráfico resulta especialmente útil para identificar intersecciones de vulnerabilidad, al mostrar de manera simultánea dos o más características poblacionales. También es posible presentar proporciones en lugar de conteos. Por ejemplo, la proporción de hombres en condición de pobreza por zona, presentada en la @fig-barras-prop-zona-hombre:
+Este tipo de análisis gráfico resulta especialmente útil para examinar posibles intersecciones de vulnerabilidad, ya que permite representar simultáneamente dos o más características de la población y comparar los resultados entre distintos grupos. Además de mostrar conteos o tamaños poblacionales estimados, los gráficos de barras pueden emplearse para representar proporciones, junto con sus correspondientes medidas de precisión. A modo de ejemplo, se presenta la proporción estimada de hombres en condición de pobreza según zona de residencia, incorporando los intervalos de confianza asociados a cada estimación. Los resultados se muestran en la @fig-barras-prop-zona-hombre.
 
 ```{r fig-barras-prop-zona-hombre, fig.cap="Proporción de hombres en condición de pobreza por zona geográfica", fig.align='center', out.width='70%', echo=TRUE}
-male_zone_poverty_proportion <- male_subset %>%
+male_zone_poverty_proportion <- 
+  male_subset %>%
   group_by(Zone, Poverty) %>%
-  summarise(proportion = survey_prop(vartype = c("se", "ci")))
+  summarise(proportion = 
+              survey_prop(vartype = c("se", "ci")))
 
 ggplot(
   data = male_zone_poverty_proportion,
   aes(
-    x = Poverty, y = proportion,
-    ymax = proportion_upp, ymin = proportion_low,
+    x = Poverty,
+    y = proportion,
+    ymax = proportion_upp,
+    ymin = proportion_low,
     fill = Zone
   )
 ) +
@@ -977,19 +985,23 @@ ggplot(
   theme(legend.position = "top")
 ```
 
-De forma análoga, se puede graficar la proporción de hombres en condición de pobreza desagregada por región, presentada en la @fig-barras-prop-region-hombre:
+De manera análoga, este tipo de representación puede extenderse a niveles más detallados de desagregación geográfica. Por ejemplo, es posible comparar la proporción estimada de hombres en condición de pobreza entre las distintas regiones, incorporando en cada caso sus correspondientes intervalos de confianza. Esta representación permite identificar diferencias territoriales en las estimaciones y, al mismo tiempo, evaluar la precisión con la que han sido obtenidas. Los resultados se presentan en la @fig-barras-prop-region-hombre.
 
 ```{r fig-barras-prop-region-hombre, fig.cap="Proporción de hombres en condición de pobreza por región", fig.align='center', out.width='75%', echo=TRUE}
-male_region_poverty_proportion <- male_subset %>%
+male_region_poverty_proportion <- 
+  male_subset %>%
   group_by(Region, poor) %>%
-  summarise(proportion = survey_prop(vartype = c("se", "ci"))) %>%
+  summarise(
+    proportion = survey_prop(vartype = c("se", "ci"))) %>%
   data.frame()
 
 ggplot(
   data = male_region_poverty_proportion,
   aes(
-    x = Region, y = proportion,
-    ymax = proportion_upp, ymin = proportion_low,
+    x = Region,
+    y = proportion,
+    ymax = proportion_upp,
+    ymin = proportion_low,
     fill = as.factor(poor)
   )
 ) +
@@ -999,16 +1011,11 @@ ggplot(
   theme(legend.position = "top")
 ```
 
-En síntesis, los gráficos de barras junto con sus correspondientes errores estándar o intervalos de confianza permiten una descripción clara de los patrones de pobreza, empleo u otras variables categóricas en la población y, cuando se aplican correctamente, constituyen una herramienta poderosa para comunicar hallazgos de encuestas de hogares manteniendo el rigor estadístico en la representación de los resultados.
-
-
 ### Mapas {#viz-mapas}
 
-Como explica @Tennekes2018tmap, los mapas temáticos constituyen una herramienta de visualización especialmente útil en el análisis de encuestas de hogares, ya que permiten representar la distribución territorial de indicadores sociales y demográficos. En este contexto, las estimaciones de proporciones calculadas en secciones anteriores —como el porcentaje de pobreza o desempleo por región— pueden proyectarse directamente sobre unidades geográficas, facilitando así la identificación de patrones espaciales y desigualdades regionales.
+Como explica @Tennekes2018tmap, los mapas temáticos constituyen una herramienta de visualización especialmente útil en el análisis de encuestas de hogares, ya que permiten representar la distribución territorial de indicadores sociales y demográficos. En este contexto, las estimaciones calculadas en secciones anteriores pueden proyectarse directamente sobre estas unidades geográficas, facilitando así la identificación de patrones espaciales y desigualdades regionales. De acuerdo con @sf2026, @tmap2026 y @Pebesma2018sf, para construir este tipo de mapas en `R` se requiere información geoespacial en formato *shapefile*, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo `shapeBigCity/BigCity.shp`, cuyas regiones corresponden a las definidas en la base de datos `BigCity`. 
 
-De acuerdo con @sf2026, @tmap2026 y @Pebesma2018sf, para construir este tipo de mapas en `R` se requiere información geoespacial en formato *shapefile*, la cual contiene los polígonos asociados a cada unidad geográfica de análisis. En este capítulo se utiliza el archivo `shapeBigCity/BigCity.shp`, cuyas regiones corresponden a las definidas en la base de datos `BigCity`. Los paquetes `sf` y `tmap` permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta.
-
-El siguiente código carga los paquetes necesarios para trabajar con información geoespacial y visualización cartográfica en `R`. La librería `sf` permite leer y manipular objetos espaciales modernos, mientras que `tmap` proporciona herramientas para elaborar mapas temáticos. La instrucción `tmap_mode("plot")` establece el modo de visualización estática de los mapas, apropiado para documentos y reportes. Finalmente, la función `read_sf()` importa el archivo geográfico `BigCity.shp`, almacenándolo en el objeto `bigcity_shape`, el cual contiene los polígonos correspondientes a las regiones de análisis.
+En `R`, las librerías `sf` y `tmap` permiten cargar, manipular y visualizar esta información geográfica de manera integrada con los resultados obtenidos a partir de la encuesta. La librería `sf` permite leer y manipular objetos espaciales modernos, mientras que `tmap` proporciona herramientas para elaborar mapas temáticos. La instrucción `tmap_mode("plot")` establece el modo de visualización estática de los mapas, apropiado para documentos y reportes. Finalmente, la función `read_sf()` importa el archivo geográfico `BigCity.shp`, almacenándolo en el objeto `bigcity_shape`, el cual contiene los polígonos correspondientes a las regiones de análisis.
 
 ```{r mapas-setup, echo=TRUE, eval=TRUE}
 library(sf)
@@ -1017,7 +1024,7 @@ tmap_mode("plot")
 bigcity_shape <- read_sf("../Data/shapeBigCity/BigCity.shp")
 ```
 
-Con el shapefile cargado, se puede generar un mapa de las regiones usando `tm_shape()` y `tm_polygons()`, como se muestra en la @fig-mapa-regiones:
+Con el *shapefile* cargado, se puede generar un mapa de las regiones usando `tm_shape()` y `tm_polygons()`, como se muestra en la @fig-mapa-regiones:
 
 ```{r fig-mapa-regiones, fig.cap="Mapa de regiones geográficas de BigCity", fig.align='center', out.width='70%', echo=TRUE}
 tm_shape(bigcity_shape) +
@@ -1058,9 +1065,10 @@ El siguiente código calcula y representa geográficamente el coeficiente de var
 ```{r fig-mapa-cv-ingreso, fig.cap="Coeficiente de variación del ingreso medio por región", fig.align='center', out.width='70%', echo=TRUE}
 region_mean <- survey_design %>%
   group_by(Region) %>%
-  summarise(mean = survey_mean(Income,
-                               na.rm = TRUE,
-                               vartype = c("cv")))
+  summarise(
+    mean = survey_mean(Income, 
+                       na.rm = TRUE, 
+                       vartype = c("cv")))
 
 cv_breaks <- c(0, 0.1, 0.2, 1)
 shape_cv_map <- tm_shape(
@@ -1083,10 +1091,13 @@ Los polígonos con tonos más oscuros corresponden a regiones donde la estimaci�
 De acuerdo con @biscale2025 y @cowplot2025, cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando `ggplot2` junto con los paquetes `biscale` y `cowplot`. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la @fig-mapa-bivariante. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.
 
 ```{r mapas-bivar-setup, echo=TRUE, eval=TRUE}
-region_sex_poverty_proportion <- survey_design %>%
+region_sex_poverty_proportion <- 
+  survey_design %>%
   group_by(Region, Zone, Sex, poor) %>%
   summarise(proportion = survey_mean(vartype = "cv")) %>%
-  filter(poor == 1, Zone == "Rural", Sex == "Female")
+  filter(poor == 1, 
+         Zone == "Rural", 
+         Sex == "Female")
 ```
 
 
