@@ -2307,7 +2307,7 @@ Figura&nbsp;4.6: Mapa de regiones geográficas de BigCity
 </div>
 </div>
 </div>
-<p>Por ejemplo, si se desea representar geográficamente la proporción de hombres en condición de pobreza por región, estimada previamente en la <a href="#fig-barras-prop-region-hombre" class="quarto-xref">figura&nbsp;<span>4.5</span></a>, es necesario integrar las estimaciones obtenidas con la información espacial del shapefile. Para ello, el objeto <code>male_region_poverty_proportion</code>, que contiene las proporciones estimadas para cada región, se vincula con el archivo geográfico mediante la función <code>left_join()</code>. Posteriormente, se filtran únicamente las observaciones correspondientes a la categoría de pobreza (<code>poor == 1</code>), de manera que el mapa represente exclusivamente la distribución espacial de la población masculina en condición de pobreza.</p>
+<p>Por ejemplo, si se desea representar geográficamente la proporción de hombres en condición de pobreza por región, mostrada previamente en la <a href="#fig-barras-prop-region-hombre" class="quarto-xref">figura&nbsp;<span>4.5</span></a>, es necesario integrar las estimaciones obtenidas con la información espacial del shapefile. Para ello, el objeto <code>male_region_poverty_proportion</code>, que contiene las proporciones estimadas para cada región, se vincula con el archivo geográfico mediante la función <code>left_join()</code>. Posteriormente, se filtran únicamente las observaciones correspondientes a la categoría de pobreza (<code>poor == 1</code>), de manera que el mapa represente exclusivamente la distribución espacial de la población masculina en condición de pobreza.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>shape_region_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  bigcity_shape <span class="sc">%&gt;%</span></span>
@@ -2323,11 +2323,16 @@ Figura&nbsp;4.6: Mapa de regiones geográficas de BigCity
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>poverty_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="dv">1</span>)</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>shape_region_map <span class="sc">+</span></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"proportion"</span>,</span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> poverty_breaks,</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Poverty proportion"</span>,</span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"YlOrRd"</span></span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"proportion"</span>,</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> poverty_breaks,</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">"YlOrRd"</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Poverty proportion"</span>,</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.show =</span> <span class="cn">FALSE</span></span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-mapa-pobreza-hombre" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2359,12 +2364,17 @@ Figura&nbsp;4.7: Proporción de hombres en condición de pobreza por región
 <span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>shape_cv_map <span class="sc">+</span></span>
 <span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mean_cv"</span>,</span>
-<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> cv_breaks,</span>
-<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mean income CV"</span>,</span>
-<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#FFFFFF"</span>, <span class="st">"#000000"</span>)</span>
-<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">asp =</span> <span class="dv">0</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"mean_cv"</span>,</span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> cv_breaks,</span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#F2F2F2"</span>, <span class="st">"#8C8C8C"</span>, <span class="st">"#1A1A1A"</span>)</span>
+<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
+<span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Mean income CV"</span>,</span>
+<span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.show =</span> <span class="cn">FALSE</span></span>
+<span id="cb56-24"><a href="#cb56-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb56-25"><a href="#cb56-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-26"><a href="#cb56-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">asp =</span> <span class="dv">0</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-mapa-cv-ingreso" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2379,7 +2389,7 @@ Figura&nbsp;4.8: Coeficiente de variación del ingreso medio por región
 </div>
 </div>
 <p>Los polígonos con tonos más oscuros corresponden a regiones donde la estimación del ingreso presenta mayor variabilidad relativa. Un coeficiente de variación elevado indica menor precisión relativa, pero no permite atribuirla únicamente a un tamaño muestral insuficiente, pues también puede reflejar la ponderación y otras características del diseño.</p>
-<p>De acuerdo con <span class="citation" data-cites="biscale2025">Prener, Grossenbacher, y Zehr (<a href="references.html#ref-biscale2025" role="doc-biblioref">2025</a>)</span> y <span class="citation" data-cites="cowplot2025">Wilke (<a href="references.html#ref-cowplot2025" role="doc-biblioref">2025</a>)</span>, cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando <code>ggplot2</code> junto con los paquetes <code>biscale</code> y <code>cowplot</code>. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la <a href="#fig-mapa-bivariante" class="quarto-xref">figura&nbsp;<span>4.9</span></a>. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.</p>
+<p>De acuerdo con <span class="citation" data-cites="biscale2025">Prener, Grossenbacher, y Zehr (<a href="references.html#ref-biscale2025" role="doc-biblioref">2025</a>)</span> y <span class="citation" data-cites="cowplot2025">Wilke (<a href="references.html#ref-cowplot2025" role="doc-biblioref">2025</a>)</span>, cuando se desea representar simultáneamente dos variables (por ejemplo, la proporción de pobreza y su coeficiente de variación) es posible construir un mapa bivariante utilizando <code>ggplot2</code> junto con los paquetes <code>biscale</code> y <code>cowplot</code>. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la <a href="#fig-mapa-bivariante" class="quarto-xref">figura&nbsp;<span>4.9</span></a>. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>region_sex_poverty_proportion <span class="ot">&lt;-</span> </span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  survey_design <span class="sc">%&gt;%</span></span>
@@ -2389,7 +2399,7 @@ Figura&nbsp;4.8: Coeficiente de variación del ingreso medio por región
 <span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>         Zone <span class="sc">==</span> <span class="st">"Rural"</span>, </span>
 <span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>         Sex <span class="sc">==</span> <span class="st">"Female"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>El siguiente código construye un mapa bivariado que permite visualizar simultáneamente la proporción de pobreza femenina rural y el coeficiente de variación asociado a dicha estimación por región. En primer lugar, se integran las estimaciones contenidas en <code>region_sex_poverty_proportion</code> con la información geográfica del shapefile mediante <code>left_join()</code>. Posteriormente, la función <code>bi_class()</code> del paquete <code>biscale</code> clasifica conjuntamente las variables <code>proportion</code> y <code>proportion_cv</code> en una cuadrícula de (3 ) categorías (<code>dim = 3</code>), empleando el método de clasificación de Fisher (<code>style = "fisher"</code>). Luego, con <code>ggplot2</code> y <code>geom_sf()</code>, se genera el mapa temático utilizando colores bivariados definidos por <code>bi_scale_fill()</code>, mientras que <code>bi_theme()</code> aplica un estilo minimalista y se elimina la leyenda predeterminada.</p>
+<p>El siguiente código construye un mapa bivariado que permite visualizar simultáneamente la proporción de pobreza femenina rural y el coeficiente de variación asociado a dicha estimación por región. En primer lugar, se integran las estimaciones contenidas en <code>region_sex_poverty_proportion</code> con la información geográfica del shapefile mediante <code>left_join()</code>. Posteriormente, la función <code>bi_class()</code> del paquete <code>biscale</code> clasifica conjuntamente las variables <code>proportion</code> y <code>proportion_cv</code> en una cuadrícula de <span class="math inline">\((3 \times 3)\)</span> categorías (<code>dim = 3</code>), empleando el método de clasificación de Fisher (<code>style = "fisher"</code>). Luego, con <code>ggplot2</code> y <code>geom_sf()</code>, se genera el mapa temático utilizando colores bivariados definidos por <code>bi_scale_fill()</code>, mientras que <code>bi_theme()</code> aplica un estilo minimalista y se elimina la leyenda predeterminada.</p>
 <p>A continuación, la función <code>bi_legend()</code> crea una leyenda especializada que permite interpretar simultáneamente ambas dimensiones del mapa: el coeficiente de variación y la pobreza femenina rural. Finalmente, mediante las funciones <code>ggdraw()</code> y <code>draw_plot()</code> del paquete <code>cowplot</code>, se combinan el mapa y la leyenda en una única visualización.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biscale)</span>
@@ -2399,36 +2409,37 @@ Figura&nbsp;4.8: Coeficiente de variación del ingreso medio por región
 <span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(region_sex_poverty_proportion, <span class="at">by =</span> <span class="st">"Region"</span>)</span>
 <span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>bivariate_data <span class="ot">&lt;-</span> <span class="fu">bi_class</span>(</span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>  bivariate_shape,</span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> proportion,</span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> proportion_cv,</span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> k,</span>
-<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">style =</span> <span class="st">"fisher"</span></span>
-<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>bivariate_map <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(</span>
-<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> bivariate_data,</span>
-<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">fill =</span> bi_class, <span class="at">geometry =</span> geometry),</span>
-<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"white"</span>,</span>
-<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.1</span></span>
-<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bi_scale_fill</span>(<span class="at">pal =</span> <span class="st">"GrPink"</span>, <span class="at">dim =</span> k) <span class="sc">+</span></span>
-<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bi_theme</span>() <span class="sc">+</span></span>
-<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
-<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a>bivariate_legend <span class="ot">&lt;-</span> <span class="fu">bi_legend</span>(</span>
-<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">pal =</span> <span class="st">"GrPink"</span>,</span>
-<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> k,</span>
-<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Coefficient of variation"</span>,</span>
-<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Rural female poverty"</span>,</span>
-<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">8</span></span>
-<span id="cb58-33"><a href="#cb58-33" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb58-34"><a href="#cb58-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-35"><a href="#cb58-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>() <span class="sc">+</span></span>
-<span id="cb58-36"><a href="#cb58-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(bivariate_map, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="at">scale =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb58-37"><a href="#cb58-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(bivariate_legend, <span class="fl">0.75</span>, <span class="fl">0.4</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>bivariate_palette <span class="ot">&lt;-</span> <span class="st">"DkViolet"</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>bivariate_data <span class="ot">&lt;-</span> <span class="fu">bi_class</span>(</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>  bivariate_shape,</span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> proportion,</span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> proportion_cv,</span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> k,</span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">style =</span> <span class="st">"fisher"</span></span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>bivariate_map <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(</span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> bivariate_data,</span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">fill =</span> bi_class, <span class="at">geometry =</span> geometry),</span>
+<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"white"</span>,</span>
+<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.1</span></span>
+<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bi_scale_fill</span>(<span class="at">pal =</span> bivariate_palette, <span class="at">dim =</span> k) <span class="sc">+</span></span>
+<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bi_theme</span>() <span class="sc">+</span></span>
+<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a>bivariate_legend <span class="ot">&lt;-</span> <span class="fu">bi_legend</span>(</span>
+<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">pal =</span> bivariate_palette,</span>
+<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> k,</span>
+<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Coefficient of variation"</span>,</span>
+<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Rural female poverty"</span>,</span>
+<span id="cb58-33"><a href="#cb58-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">6</span></span>
+<span id="cb58-34"><a href="#cb58-34" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb58-35"><a href="#cb58-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-36"><a href="#cb58-36" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>() <span class="sc">+</span></span>
+<span id="cb58-37"><a href="#cb58-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(bivariate_map, <span class="fl">0.02</span>, <span class="fl">0.04</span>, <span class="fl">0.68</span>, <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb58-38"><a href="#cb58-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(bivariate_legend, <span class="fl">0.67</span>, <span class="fl">0.25</span>, <span class="fl">0.3</span>, <span class="fl">0.38</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-mapa-bivariante" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">

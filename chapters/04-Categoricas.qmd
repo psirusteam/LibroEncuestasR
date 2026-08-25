@@ -1031,7 +1031,7 @@ tm_shape(bigcity_shape) +
   tm_polygons(col = "Region")
 ```
 
-Por ejemplo, si se desea representar geográficamente la proporción de hombres en condición de pobreza por región, estimada previamente en la @fig-barras-prop-region-hombre, es necesario integrar las estimaciones obtenidas con la información espacial del shapefile. Para ello, el objeto `male_region_poverty_proportion`, que contiene las proporciones estimadas para cada región, se vincula con el archivo geográfico mediante la función `left_join()`. Posteriormente, se filtran únicamente las observaciones correspondientes a la categoría de pobreza (`poor == 1`), de manera que el mapa represente exclusivamente la distribución espacial de la población masculina en condición de pobreza.
+Por ejemplo, si se desea representar geográficamente la proporción de hombres en condición de pobreza por región, mostrada previamente en la @fig-barras-prop-region-hombre, es necesario integrar las estimaciones obtenidas con la información espacial del shapefile. Para ello, el objeto `male_region_poverty_proportion`, que contiene las proporciones estimadas para cada región, se vincula con el archivo geográfico mediante la función `left_join()`. Posteriormente, se filtran únicamente las observaciones correspondientes a la categoría de pobreza (`poor == 1`), de manera que el mapa represente exclusivamente la distribución espacial de la población masculina en condición de pobreza.
 
 
 ```{r mapas-pobreza-setup, echo=TRUE, eval=TRUE}
@@ -1051,10 +1051,15 @@ Una vez construido el objeto espacial con las estimaciones de interés, el argum
 poverty_breaks <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
 shape_region_map +
   tm_polygons(
-    col = "proportion",
-    breaks = poverty_breaks,
-    title = "Poverty proportion",
-    palette = "YlOrRd"
+    fill = "proportion",
+    fill.scale = tm_scale_intervals(
+      breaks = poverty_breaks,
+      values = "YlOrRd"
+    ),
+    fill.legend = tm_legend(
+      title = "Poverty proportion",
+      na.show = FALSE
+    )
   )
 ```
 
@@ -1078,17 +1083,22 @@ shape_cv_map <- tm_shape(
 
 shape_cv_map +
   tm_polygons(
-    "mean_cv",
-    breaks = cv_breaks,
-    title = "Mean income CV",
-    palette = c("#FFFFFF", "#000000")
+    fill = "mean_cv",
+    fill.scale = tm_scale_intervals(
+      breaks = cv_breaks,
+      values = c("#F2F2F2", "#8C8C8C", "#1A1A1A")
+    ),
+    fill.legend = tm_legend(
+      title = "Mean income CV",
+      na.show = FALSE
+    )
   ) +
   tm_layout(asp = 0)
 ```
 
 Los polígonos con tonos más oscuros corresponden a regiones donde la estimación del ingreso presenta mayor variabilidad relativa. Un coeficiente de variación elevado indica menor precisión relativa, pero no permite atribuirla únicamente a un tamaño muestral insuficiente, pues también puede reflejar la ponderación y otras características del diseño.
 
-De acuerdo con @biscale2025 y @cowplot2025, cuando se desea representar simultáneamente dos variables —por ejemplo, la proporción de pobreza y su coeficiente de variación— es posible construir un mapa bivariante utilizando `ggplot2` junto con los paquetes `biscale` y `cowplot`. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la @fig-mapa-bivariante. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.
+De acuerdo con @biscale2025 y @cowplot2025, cuando se desea representar simultáneamente dos variables (por ejemplo, la proporción de pobreza y su coeficiente de variación) es posible construir un mapa bivariante utilizando `ggplot2` junto con los paquetes `biscale` y `cowplot`. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la @fig-mapa-bivariante. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando así una base de datos lista para la construcción de un mapa bivariado.
 
 ```{r mapas-bivar-setup, echo=TRUE, eval=TRUE}
 region_sex_poverty_proportion <- 
@@ -1101,7 +1111,7 @@ region_sex_poverty_proportion <-
 ```
 
 
-El siguiente código construye un mapa bivariado que permite visualizar simultáneamente la proporción de pobreza femenina rural y el coeficiente de variación asociado a dicha estimación por región. En primer lugar, se integran las estimaciones contenidas en `region_sex_poverty_proportion` con la información geográfica del shapefile mediante `left_join()`. Posteriormente, la función `bi_class()` del paquete `biscale` clasifica conjuntamente las variables `proportion` y `proportion_cv` en una cuadrícula de \(3 \times 3\) categorías (`dim = 3`), empleando el método de clasificación de Fisher (`style = "fisher"`). Luego, con `ggplot2` y `geom_sf()`, se genera el mapa temático utilizando colores bivariados definidos por `bi_scale_fill()`, mientras que `bi_theme()` aplica un estilo minimalista y se elimina la leyenda predeterminada.
+El siguiente código construye un mapa bivariado que permite visualizar simultáneamente la proporción de pobreza femenina rural y el coeficiente de variación asociado a dicha estimación por región. En primer lugar, se integran las estimaciones contenidas en `region_sex_poverty_proportion` con la información geográfica del shapefile mediante `left_join()`. Posteriormente, la función `bi_class()` del paquete `biscale` clasifica conjuntamente las variables `proportion` y `proportion_cv` en una cuadrícula de $(3 \times 3)$ categorías (`dim = 3`), empleando el método de clasificación de Fisher (`style = "fisher"`). Luego, con `ggplot2` y `geom_sf()`, se genera el mapa temático utilizando colores bivariados definidos por `bi_scale_fill()`, mientras que `bi_theme()` aplica un estilo minimalista y se elimina la leyenda predeterminada.
 
 A continuación, la función `bi_legend()` crea una leyenda especializada que permite interpretar simultáneamente ambas dimensiones del mapa: el coeficiente de variación y la pobreza femenina rural. Finalmente, mediante las funciones `ggdraw()` y `draw_plot()` del paquete `cowplot`, se combinan el mapa y la leyenda en una única visualización.
 
@@ -1114,6 +1124,7 @@ bivariate_shape <- bigcity_shape %>%
   left_join(region_sex_poverty_proportion, by = "Region")
 
 k <- 3
+bivariate_palette <- "DkViolet"
 bivariate_data <- bi_class(
   bivariate_shape,
   y = proportion,
@@ -1129,21 +1140,21 @@ bivariate_map <- ggplot() +
     colour = "white",
     size = 0.1
   ) +
-  bi_scale_fill(pal = "GrPink", dim = k) +
+  bi_scale_fill(pal = bivariate_palette, dim = k) +
   bi_theme() +
   theme(legend.position = "none")
 
 bivariate_legend <- bi_legend(
-  pal = "GrPink",
+  pal = bivariate_palette,
   dim = k,
   xlab = "Coefficient of variation",
   ylab = "Rural female poverty",
-  size = 8
+  size = 6
 )
 
 ggdraw() +
-  draw_plot(bivariate_map, 0, 0, 1, scale = 0.7) +
-  draw_plot(bivariate_legend, 0.75, 0.4, 0.2, 0.2)
+  draw_plot(bivariate_map, 0.02, 0.04, 0.68, 0.9) +
+  draw_plot(bivariate_legend, 0.67, 0.25, 0.3, 0.38)
 ```
 
 En este mapa, cada celda de la leyenda combina un tono de la proporción de pobreza (eje vertical) con un tono del coeficiente de variación (eje horizontal), permitiendo identificar simultáneamente regiones con alta pobreza y alta incertidumbre en la estimación. Este tipo de representación puede ayudar a priorizar una evaluación del diseño y de la precisión en zonas geográficas específicas; por sí solo, sin embargo, no determina automáticamente que deba ampliarse el tamaño muestral.
