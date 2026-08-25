@@ -667,32 +667,27 @@ $$
 
 donde $w_{hik}$ representa el factor de expansión asociado al elemento $k$ de la UPM $i$ perteneciente al estrato $h$, mientras que $I(x_{hik}=r,\ y_{hik}=c)$ corresponde a una función indicadora que toma el valor de uno cuando la unidad observada pertenece simultáneamente a la categoría $r$ de la variable $x$ y a la categoría $c$ de la variable $y$, y toma el valor de cero en cualquier otro caso.
 
-Además de las frecuencias conjuntas, también es posible estimar los tamaños marginales por filas y columnas, definidos respectivamente como $\hat{N}_{r+} = \sum_{c=1}^{C} \hat{N}_{rc}$ y $\hat{N}_{+c} = \sum_{r=1}^{R} \hat{N}_{rc}$. Mientras que el total general se expresa como $\hat{N}_{++} = \sum_{r=1}^{R}\sum_{c=1}^{C} \hat{N}_{rc}$. La estructura general de una tabla de contingencia con $R$ filas y $C$ columnas se presenta en la @tbl-estructura-contingencia:
+Además de las frecuencias conjuntas, también es posible estimar los tamaños marginales por filas y columnas, definidos respectivamente como $\hat{N}_{r+} = \sum_{c=1}^{C} \hat{N}_{rc}$ y $\hat{N}_{+c} = \sum_{r=1}^{R} \hat{N}_{rc}$. Mientras que el total general se expresa como $\hat{N}_{++} = \sum_{r=1}^{R}\sum_{c=1}^{C} \hat{N}_{rc}$. Tradicionalmente, las tablas de contingencia se representan mediante arreglos bidimensionales de dimensión $R \times C$, donde $R$ corresponde al número de filas y $C$ al número de columnas. La @tbl-estructura-contingencia presenta la estructura general de este tipo de tablas:
 
-| Variable 2        | Variable 1 |               | $\cdots$ |               | Marginal fila |
-|-------------------|-------------|---------------|-----------|---------------|----------------|
-|                   | $1$         | $2$           | $\cdots$  | $C$           |                |
-| $1$               | $\hat{N}_{11}$ | $\hat{N}_{12}$ | $\cdots$ | $\hat{N}_{1C}$ | $\hat{N}_{1+}$ |
-| $2$               | $\hat{N}_{21}$ | $\hat{N}_{22}$ | $\cdots$ | $\hat{N}_{2C}$ | $\hat{N}_{2+}$ |
-| $\vdots$          | $\vdots$    | $\vdots$      | $\ddots$ | $\vdots$      | $\vdots$       |
-| $R$               | $\hat{N}_{R1}$ | $\hat{N}_{R2}$ | $\cdots$ | $\hat{N}_{RC}$ | $\hat{N}_{R+}$ |
-| Marginal columna  | $\hat{N}_{+1}$ | $\hat{N}_{+2}$ | $\cdots$ | $\hat{N}_{+C}$ | $\hat{N}_{++}$ |
-
+|          | $1$                   | $2$                   | $\cdots$ | $C$                   | **Total**               |
+|:--------:|:---------------------:|:---------------------:|:--------:|:---------------------:|:-----------------------:|
+| $1$      | $\widehat{N}_{11}$    | $\widehat{N}_{12}$    | $\cdots$ | $\widehat{N}_{1C}$    | $\widehat{N}_{1+}$      |
+| $2$      | $\widehat{N}_{21}$    | $\widehat{N}_{22}$    | $\cdots$ | $\widehat{N}_{2C}$    | $\widehat{N}_{2+}$      |
+| $\vdots$ | $\vdots$              | $\vdots$              | $\ddots$ | $\vdots$              | $\vdots$                |
+| $R$      | $\widehat{N}_{R1}$    | $\widehat{N}_{R2}$    | $\cdots$ | $\widehat{N}_{RC}$    | $\widehat{N}_{R+}$      |
+| **Total**| $\widehat{N}_{+1}$    | $\widehat{N}_{+2}$    | $\cdots$ | $\widehat{N}_{+C}$    | $\widehat{N}_{++}$      |
 : Estructura general de una tabla de contingencia con $R$ filas y $C$ columnas {#tbl-estructura-contingencia}
 
-De manera tradicional, las tablas de contingencia suelen representarse como arreglos bidimensionales de dimensión $R \times C$. Sin embargo, también pueden extenderse para incorporar una o más variables adicionales, generando subconjuntos o subtablas que permiten estudiar relaciones más complejas entre variables categóricas. A partir de los tamaños estimados, también pueden estimarse proporciones para cada celda de la tabla de contingencia, de la siguiente manera:
+Sin embargo, las tablas de contingencia también pueden extenderse para incorporar más variables adicionales, generando subconjuntos o subtablas que permiten estudiar relaciones más complejas entre variables categóricas. A partir de los tamaños estimados, también pueden estimarse proporciones para cada celda de la tabla de contingencia, de la siguiente manera:
 
 $$
 \hat{p}_{rc}=\frac{\hat{N}_{rc}}{\hat{N}_{++}}
 $$
 
 
-A continuación, y siguiendo con la base de datos de ejemplo, se estima la distribución porcentual de hombres y mujeres según su condición de pobreza, incorporando además sus respectivos errores estándar e intervalos de confianza. Los resultados se presentan en la @tbl-contingencia-pobreza-sexo. Este tipo de análisis permite describir la composición de la población pobre según sexo y evaluar la precisión de las estimaciones obtenidas a partir del diseño muestral.
-
-
+Aunque las tablas de contingencia se representan tradicionalmente como arreglos bidimensionales de dimensión $R \times C$, en las aplicaciones que siguen los resultados se presentan en formato largo. En esta disposición, cada combinación de categorías de las variables involucradas ocupa una fila de la tabla. Esta reorganización no altera las estimaciones contenidas en la tabla de contingencia original, sino que facilita la incorporación, para cada una de ellas, de medidas de precisión como el error estándar y los límites del intervalo de confianza. Siguiendo con la base de datos de ejemplo, se estima la distribución porcentual por sexo dentro de cada condición de pobreza, junto con sus respectivos errores estándar e intervalos de confianza. Los resultados se presentan en la @tbl-contingencia-pobreza-sexo. Esta forma de presentación permite describir la composición por sexo de la población según su condición de pobreza y, al mismo tiempo, evaluar la precisión de las estimaciones teniendo en cuenta el diseño muestral.
 
 ```{r crear-diseno-pobreza-factor}
-
 poverty_design <- survey_design %>%
   mutate(poor = factor(
     poor,
@@ -718,39 +713,7 @@ poverty_design %>%
 
 ```
 
-Los resultados indican que el 52.3% de la población en condición de pobreza corresponde a mujeres, mientras que el 47.6% corresponde a hombres. Para las mujeres, el intervalo de confianza al 95% se encuentra entre 49.2% y 55.5%, mientras que para los hombres el intervalo correspondiente se ubica entre 44.5% y 50.7%. Estas estimaciones permiten observar la distribución relativa de la pobreza según sexo, considerando además la incertidumbre inherente al proceso de muestreo.
-
-Con el mismo enfoque de `srvyr` también puede estimarse la tabla de contingencia mediante `group_by()` y `summarise()`. En el siguiente ejemplo se estima la distribución de la condición de pobreza según sexo, obteniendo además medidas de precisión como errores estándar e intervalos de confianza. El código correspondiente y sus resultados se presentan en la @tbl-svyby-pobreza-sexo.
-
-```{r cod-svyby-pobreza-sexo}
-sex_by_poverty_proportion <- poverty_design %>%
-  group_by(poor, Sex) %>%
-  summarise(proportion = survey_prop(vartype = c("se", "ci")))
-```
-
-```{r}
-#| label: tbl-svyby-pobreza-sexo
-#| tbl-cap: "Proporción de hombres y mujeres por condición de pobreza "
-#| echo: false
-sex_by_poverty_proportion %>%
-  tabla_fmt()
-```
-
-Los intervalos de confianza ya fueron calculados por `survey_prop(vartype = c("se", "ci"))`. El siguiente código no vuelve a estimarlos mediante `confint()`; utiliza `select()` para extraer las columnas que contienen sus límites inferior y superior. Los resultados se presentan en la @tbl-confint-sexo-pobreza y coinciden, por construcción, con los generados anteriormente.
-
-```{r cod-confint-sexo-pobreza, eval=FALSE}
-sex_by_poverty_proportion %>%
-  dplyr::select(poor, Sex, proportion_low, proportion_upp)
-```
-
-```{r}
-#| label: tbl-confint-sexo-pobreza
-#| tbl-cap: "Intervalos de confianza para la proporción por sexo y pobreza"
-#| echo: false
-sex_by_poverty_proportion %>%
-  dplyr::select(poor, Sex, proportion_low, proportion_upp) %>%
-  tabla_fmt()
-```
+Los resultados indican que el 52.4% de la población en condición de pobreza corresponde a mujeres, mientras que el 47.6% corresponde a hombres. Para las mujeres, el intervalo de confianza al 95% se encuentra entre 49.2% y 55.5%, mientras que para los hombres el intervalo correspondiente se ubica entre 44.5% y 50.8%. Estas estimaciones permiten observar la distribución relativa de la pobreza según sexo, considerando además la incertidumbre inherente al proceso de muestreo.
 
 Otro análisis de interés relacionado con tablas de doble entrada en encuestas de hogares consiste en estimar el porcentaje de personas desempleadas según sexo. El procedimiento correspondiente y sus resultados se presentan en la @tbl-svyby-empleo-sexo.
 
@@ -769,23 +732,7 @@ sex_by_employment_proportion %>%
   tabla_fmt()
 ```
 
-De la anterior salida se puede observar que el 27.2% de las personas desempleadas son mujeres y el 72.7% son hombres, con errores estándar de 5.3 puntos porcentuales para ambas estimaciones. Los intervalos de confianza correspondientes se presentan en la @tbl-confint-empleo-sexo:
-
-```{r cod-confint-empleo-sexo, eval=FALSE}
-sex_by_employment_proportion %>%
-  dplyr::select(Employment, Sex, proportion_low, proportion_upp)
-```
-```{r}
-#| label: tbl-confint-empleo-sexo
-#| tbl-cap: "Intervalos de confianza para la proporción por sexo y ocupación"
-#| echo: false
-sex_by_employment_proportion %>%
-  dplyr::select(Employment, Sex, proportion_low, proportion_upp) %>%
-  tabla_fmt()
-```
-
-
-Si ahora el objetivo es estimar la pobreza por región, se utiliza la variable numérica `poor` dentro de un flujo `srvyr`, como se muestra en la @tbl-svyby-region-pobreza.
+De la anterior salida se puede observar que el 27.2% de las personas desempleadas son mujeres y el 72.7% son hombres, con errores estándar de 5.3 puntos porcentuales para ambas estimaciones. Si ahora el objetivo es estimar la pobreza por región, se utiliza la variable numérica `poor` dentro de un flujo `srvyr`, como se muestra en la @tbl-svyby-region-pobreza.
 
 
 ```{r cod-svyby-region-pobreza}
@@ -802,13 +749,13 @@ region_poverty_proportion %>%
   tabla_fmt()
 ```
 
-De lo anterior se puede concluir que, en la región Norte, el 35% de las personas están en estado de pobreza, mientras que en el Sur la proporción es del 34%. La proporción estimada más alta se observa en la región Oriente, con un 45%. Los errores estándar reportados permiten evaluar la precisión de estas estimaciones.
+Los resultados muestran diferencias regionales relevantes en la incidencia de la pobreza. La mayor proporción estimada se observa en Oriente, donde el 45.2% de la población se encuentra en condición de pobreza, seguida de Occidente con 40.1%; en contraste, Sur presenta la menor proporción, con 34.4%, mientras que Norte y Centro registran valores de 35.9% y 36.5%, respectivamente. Sin embargo, estas diferencias deben interpretarse con cautela, ya que la precisión de las estimaciones varía considerablemente entre regiones: Oriente y Centro presentan los errores estándar más altos y, en consecuencia, intervalos de confianza más amplios. De hecho, el notable solapamiento de los intervalos de confianza sugiere que las diferencias observadas entre regiones no necesariamente reflejan diferencias estadísticamente significativas. 
 
 ## La razón de *odds* {#la-razon-de-odds}
 
-De acuerdo con @DiazMoralesLeon2018 y @Agresti2019Intro, la razón de *odds* es una medida ampliamente utilizada para estudiar la asociación entre dos variables categóricas, especialmente cuando el interés se centra en comparar la probabilidad de ocurrencia de un evento entre distintos grupos poblacionales. Su interpretación se basa en comparar las ventajas relativas (*odds*) de ocurrencia de un evento entre dos categorías de análisis.
+De acuerdo con @Agresti2019Intro, la razón de *odds* es una medida ampliamente utilizada para estudiar la asociación entre dos variables categóricas, especialmente cuando el interés se centra en comparar la probabilidad de ocurrencia de un evento entre distintos grupos poblacionales. Su interpretación se basa en comparar las ventajas relativas (*odds*) de ocurrencia de un evento entre dos categorías de análisis [@DiazMoralesLeon2018].
 
-Como explican @HeeringaWestBerglund2017, en este sentido, este parámetro permite evaluar cómo cambia dicha ventaja entre diferentes grupos de interés y constituye una herramienta fundamental en estudios sociales, económicos y de salud; además, esta medida también puede utilizarse para cuantificar la relación entre los niveles de una variable y un factor categórico, comparando las ventajas relativas de ocurrencia del evento en cada grupo.
+En este sentido, este parámetro permite evaluar cómo cambia dicha ventaja entre diferentes grupos de interés y constituye una herramienta fundamental en estudios sociales, económicos y de salud; además, esta medida también puede utilizarse para cuantificar la relación entre los niveles de una variable y un factor categórico, comparando las ventajas relativas de ocurrencia del evento en cada grupo.
 
 Por ejemplo, suponga que se desea estudiar la asociación entre el sexo de las personas y la condición de pobreza. En particular, interesa evaluar si la ventaja relativa de pertenecer al grupo de personas no pobres frente al grupo de personas pobres es diferente entre mujeres y hombres. Para ello, puede expresarse la siguiente razón de *odds*:
 
@@ -827,32 +774,29 @@ $$
 
 La expresión del numerador representa, entre las mujeres, la ventaja relativa de encontrarse en condición de no pobreza respecto de encontrarse en pobreza. De manera análoga, el denominador representa esa misma ventaja entre los hombres. Por tanto, la razón de odds compara ambas ventajas relativas y permite cuantificar si la asociación entre sexo y pobreza favorece más a un grupo que a otro.
 
-Un valor igual a uno indicaría ausencia de asociación entre las variables, es decir, que la relación entre sexo y condición de pobreza es similar para hombres y mujeres. Valores superiores a uno indicarían una mayor ventaja relativa para las mujeres en comparación con los hombres, mientras que valores inferiores a uno sugerirían una mayor ventaja relativa para los hombres. En el contexto de encuestas de hogares, este tipo de medidas resulta especialmente útil para estudiar desigualdades sociodemográficas y brechas en condiciones de bienestar entre distintos grupos poblacionales.
+Un valor igual a uno indicaría ausencia de asociación entre las variables, es decir, que la relación entre sexo y condición de pobreza es similar para hombres y mujeres. Valores superiores a uno indicarían una mayor ventaja relativa para las mujeres en comparación con los hombres, mientras que valores inferiores a uno sugerirían una mayor ventaja relativa para los hombres. En el contexto de encuestas de hogares, este tipo de medidas resulta especialmente útil para estudiar desigualdades sociodemográficas y brechas en condiciones de bienestar entre distintos grupos poblacionales [@HeeringaWestBerglund2017].
 
-El procedimiento para realizarlo en `R` sería primero estimar las proporciones de la tabla cruzada entre las variables sexo y pobreza, presentada en la @tbl-interaccion-sexo-pobreza:
+El procedimiento en `R` comienza con la estimación de las proporciones correspondientes a cada una de las celdas de la tabla cruzada entre las variables sexo y condición de pobreza, presentada en la @tbl-interaccion-sexo-pobreza. Para ello, se crea una agrupación por las categorías de `Sex` y `poor` y se utiliza la función `survey_prop()`. El objeto `sex_poverty_interaction_proportion` contiene, por tanto, las estimaciones que pueden utilizarse directamente para presentar y describir la distribución conjunta de ambas variables.
+
+El procedimiento en `R` comienza con la estimación de las proporciones correspondientes a cada una de las celdas de la tabla cruzada entre las variables sexo y condición de pobreza, presentada en la @tbl-interaccion-sexo-pobreza. Para ello, se agrupa el diseño muestral sobre la variable categórica definida por `interaction(Sex, poor)`. Esta función combina las categorías de sexo y pobreza en un único factor, de manera que cada nivel representa una celda de la tabla de contingencia. Como ambas variables tienen dos categorías, la interacción produce cuatro categorías correspondientes a las cuatro combinaciones posibles, conservando en un único objeto tanto las estimaciones de las celdas como su matriz de varianzas y covarianzas. Esta información es necesaria para construir posteriormente contrastes entre las proporciones mediante funciones como `svycontrast()`, ya que el error estándar de una función que involucra varias celdas depende no solo de la varianza de cada estimación por separado, sino también de las covarianzas existentes entre ellas. 
 
 ```{r cod-interaccion-sexo-pobreza}
-sex_poverty_interaction_proportion <- survey_design %>%
-  group_by(Sex, poor) %>%
-  summarise(proportion = survey_prop(vartype = c("se", "ci")))
-
-sex_poverty_odds_contrast <- svymean(x = ~interaction(Sex, poor),
-                                     design = survey_design,
-                                     se = TRUE, na.rm = TRUE, ci = TRUE,
-                                     keep.vars = TRUE)
+sex_poverty_odds_contrast <- 
+  svymean(x = ~interaction(Sex, poor),
+          design = survey_design,
+          se = TRUE, na.rm = TRUE, ci = TRUE,
+          keep.vars = TRUE)
 ```
 
 ```{r}
 #| label: tbl-interaccion-sexo-pobreza
 #| tbl-cap: "Proporciones conjuntas de sexo y condición de pobreza"
 #| echo: false
-sex_poverty_interaction_proportion %>%
+sex_poverty_odds_contrast %>%
   tabla_fmt()
-
 ```
 
-Luego, la función `svycontrast()` realiza el contraste dividiendo cada uno de los elementos de la expresión mostrada anteriormente:
-
+Luego, la función `svycontrast()` realiza el contraste dividiendo cada uno de los elementos de la expresión mostrada anteriormente. Note que el *odds* estimado de que una mujer no se encuentre en situación de pobreza, en comparación con un hombre, es igual a 1.02. Esto significa que, sin considerar otras variables de la encuesta, las mujeres presentan una razón de probabilidades de no estar en pobreza aproximadamente 2% mayor que la observada en los hombres. En otras palabras, la probabilidad relativa de no encontrarse en condición de pobreza es ligeramente superior para las mujeres respecto a los hombres.
 
 ```{r cod-razon-odds-pobreza-sexo, echo=TRUE, eval=TRUE}
 odds_ratio <- quote(
@@ -868,7 +812,6 @@ svycontrast(
 )
 ```
 
-Obteniendo que el *odds* estimado de que una mujer no se encuentre en situación de pobreza, en comparación con un hombre, es igual a 1.02. Esto significa que, sin considerar otras variables de la encuesta, las mujeres presentan una razón de probabilidades de no estar en pobreza aproximadamente 2% mayor que la observada en los hombres. En otras palabras, la probabilidad relativa de no encontrarse en condición de pobreza es ligeramente superior para las mujeres respecto a los hombres.
 
 ## Prueba de independencia $\chi^{2}$ {#prueba-de-independencia-chi}
 
