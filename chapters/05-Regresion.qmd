@@ -659,9 +659,8 @@ Si el interés fuera predecir $y_{k,\mathrm{nuevo}}$ y no únicamente su media c
 
 $$
 \widehat{Var}\left(
-y_{k,\mathrm{nuevo}}
--
-\hat{\mu}_{k,\mathrm{nuevo}}
+\hat{\mu}_{k,\mathrm{nuevo}} +
+\varepsilon_{k,\mathrm{nuevo}}
 \right)
 =
 \mathbf{x}'_{k,\mathrm{nuevo}}
@@ -671,7 +670,7 @@ y_{k,\mathrm{nuevo}}
 \hat{\sigma}^{2}_{y\mid x}.
 $$
 
-En donde $\hat{\sigma}^{2}*{y\mid x}$ corresponde a la varianza residual estimada; es decir, la parte de la variabilidad de la variable respuesta que no es explicada por las covariables incluidas en el modelo. La incorporación de este segundo componente es fundamental cuando se desea predecir sobre unidades no observadas, ya que reconoce explícitamente la existencia de variabilidad individual alrededor de la media estimada.
+En donde $\hat{\sigma}^{2}_{y\mid x}$ corresponde a la varianza residual estimada; es decir, la parte de la variabilidad de la variable respuesta que no es explicada por las covariables incluidas en el modelo. La incorporación de este segundo componente es fundamental cuando se desea predecir sobre unidades no observadas, ya que reconoce explícitamente la existencia de variabilidad individual alrededor de la media estimada.
 
 En consecuencia, los intervalos de predicción suelen ser más amplios que los intervalos de confianza para la media, reflejando una mayor incertidumbre asociada a la predicción de valores individuales. De esta manera, el intervalo de predicción para una nueva observación puede expresarse como:
 

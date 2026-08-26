@@ -1246,9 +1246,8 @@ y_{k,\mathrm{nuevo}}
 <p>Si el interés fuera predecir <span class="math inline">\(y_{k,\mathrm{nuevo}}\)</span> y no únicamente su media condicional, sería necesario incorporar adicionalmente la variabilidad residual del modelo. En ese caso,</p>
 <p><span class="math display">\[
 \widehat{Var}\left(
-y_{k,\mathrm{nuevo}}
--
-\hat{\mu}_{k,\mathrm{nuevo}}
+\hat{\mu}_{k,\mathrm{nuevo}} +
+\varepsilon_{k,\mathrm{nuevo}}
 \right)
 =
 \mathbf{x}'_{k,\mathrm{nuevo}}
@@ -1257,7 +1256,7 @@ y_{k,\mathrm{nuevo}}
 +
 \hat{\sigma}^{2}_{y\mid x}.
 \]</span></p>
-<p>En donde <span class="math inline">\(\hat{\sigma}^{2}*{y\mid x}\)</span> corresponde a la varianza residual estimada; es decir, la parte de la variabilidad de la variable respuesta que no es explicada por las covariables incluidas en el modelo. La incorporación de este segundo componente es fundamental cuando se desea predecir sobre unidades no observadas, ya que reconoce explícitamente la existencia de variabilidad individual alrededor de la media estimada.</p>
+<p>En donde <span class="math inline">\(\hat{\sigma}^{2}_{y\mid x}\)</span> corresponde a la varianza residual estimada; es decir, la parte de la variabilidad de la variable respuesta que no es explicada por las covariables incluidas en el modelo. La incorporación de este segundo componente es fundamental cuando se desea predecir sobre unidades no observadas, ya que reconoce explícitamente la existencia de variabilidad individual alrededor de la media estimada.</p>
 <p>En consecuencia, los intervalos de predicción suelen ser más amplios que los intervalos de confianza para la media, reflejando una mayor incertidumbre asociada a la predicción de valores individuales. De esta manera, el intervalo de predicción para una nueva observación puede expresarse como:</p>
 <p><span class="math display">\[
 \mathbf{x}_{k}\hat{\boldsymbol{\beta}}
