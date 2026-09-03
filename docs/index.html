@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,6 +10,9 @@
 
 <title>Análisis de Encuestas de Hogares usando R</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -38,10 +41,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9e3e5b9121e68b3f077afb32f2c64d95.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -56,7 +59,7 @@ ul.task-list li input[type="checkbox"] {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "Sin resultados",
+    "search-no-results-text": "No se han encontrado resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
@@ -71,20 +74,35 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <script>
+
 window.MathJax = {
+
   tex: {
+
     macros: {
+
       E: "\\mathbb{E}",
+
       Var: "\\operatorname{Var}",
+
       Cov: "\\operatorname{Cov}",
+
       Corr: "\\operatorname{Corr}",
+
       Pr: "\\operatorname{Pr}",
+
       deff: "\\operatorname{deff}",
+
       bold: ["\\boldsymbol{#1}", 1]
+
     }
+
   }
+
 };
+
 </script>
+
 
 
 <link rel="stylesheet" href="styles.css">
@@ -239,7 +257,7 @@ window.MathJax = {
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">26 de agosto de 2026</p>
+      <p class="date">3 de septiembre de 2026</p>
     </div>
   </div>
   
@@ -268,131 +286,257 @@ window.MathJax = {
 
 </main> <!-- /main -->
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
+
   const labels = {
+
     note: "Nota",
+
     tip: "Consejo",
+
     important: "Importante",
+
     warning: "Advertencia",
+
     caution: "Precaución"
+
   };
+
+
 
   Object.keys(labels).forEach(function (type) {
+
     document.querySelectorAll(".callout-" + type).forEach(function (callout, index) {
+
       const title = callout.querySelector(".callout-title-container");
+
       if (!title || title.dataset.numbered === "true") {
+
         return;
+
       }
+
+
 
       const text = title.textContent.trim();
+
       if (!text || text === labels[type]) {
+
         title.textContent = labels[type] + " " + (index + 1);
+
       } else if (!new RegExp("^" + labels[type] + "\\s+\\d+").test(text)) {
+
         title.textContent = labels[type] + " " + (index + 1) + ". " + text;
+
       }
+
       title.dataset.numbered = "true";
+
     });
+
   });
+
 });
+
 </script>
+
 <script>
+
 (() => {
+
   const initTocScrollspy = () => {
+
     const toc = document.querySelector("#TOC.toc-active");
 
+
+
     if (!toc || toc.dataset.aehrScrollspy === "true") {
+
       return;
+
     }
+
+
 
     const links = Array.from(
+
       toc.querySelectorAll("a[data-scroll-target]")
+
     );
 
+
+
     const entries = links
+
       .map((link) => {
+
         const target = link.getAttribute("data-scroll-target");
 
+
+
         if (!target || !target.startsWith("#")) {
+
           return null;
+
         }
+
+
 
         let id;
+
         try {
+
           id = decodeURIComponent(target.slice(1));
+
         } catch {
+
           id = target.slice(1);
+
         }
+
+
 
         const section = document.getElementById(id);
+
         return section ? { link, section } : null;
+
       })
+
       .filter(Boolean);
 
+
+
     if (entries.length === 0) {
+
       return;
+
     }
 
+
+
     const nestedLists = Array.from(toc.querySelectorAll("ul ul"));
+
     let scheduled = false;
 
+
+
     const updateNestedLists = (activeLink) => {
+
       nestedLists.forEach((list) => {
+
         const parentLink = Array.from(list.parentElement.children).find(
+
           (element) => element.matches("a[data-scroll-target]")
+
         );
+
         const shouldOpen =
+
           parentLink === activeLink || list.contains(activeLink);
 
+
+
         list.classList.toggle("collapse", !shouldOpen);
+
       });
+
     };
+
+
 
     const updateActiveLink = () => {
+
       scheduled = false;
 
+
+
       const position = window.scrollY + 200;
+
       let activeEntry = entries[0];
 
+
+
       entries.forEach((entry) => {
+
         if (entry.section.offsetTop <= position) {
+
           activeEntry = entry;
+
         }
+
       });
+
+
 
       const atPageEnd =
+
         window.innerHeight + window.scrollY >=
+
         document.documentElement.scrollHeight - 2;
 
+
+
       if (atPageEnd) {
+
         activeEntry = entries[entries.length - 1];
+
       }
+
+
 
       links.forEach((link) => {
+
         link.classList.toggle("active", link === activeEntry.link);
+
       });
+
       updateNestedLists(activeEntry.link);
+
     };
+
+
 
     const scheduleUpdate = () => {
+
       if (!scheduled) {
+
         scheduled = true;
+
         window.requestAnimationFrame(updateActiveLink);
+
       }
+
     };
 
+
+
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
+
     window.addEventListener("resize", scheduleUpdate, { passive: true });
+
     toc.dataset.aehrScrollspy = "true";
+
     updateActiveLink();
+
   };
 
+
+
   if (document.readyState === "loading") {
+
     document.addEventListener("DOMContentLoaded", initTocScrollspy);
+
   } else {
+
     initTocScrollspy();
+
   }
+
 })();
+
 </script>
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -444,13 +588,14 @@ document.addEventListener("DOMContentLoaded", function () {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>5&nbsp; Modelos de regresión – &lt;span style='font-weight: 700'&gt;Análisis de Encuestas de Hogares&lt;/span&gt;&lt;br/&gt;&lt;i style='color: #00b7ff'&gt;usando R&lt;/i&gt;</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -59,7 +62,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -93,10 +95,10 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-9e3e5b9121e68b3f077afb32f2c64d95.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -111,7 +113,7 @@ div.csl-indent {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "Sin resultados",
+    "search-no-results-text": "No se han encontrado resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
@@ -126,23 +128,38 @@ div.csl-indent {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <script>
+
 window.MathJax = {
+
   tex: {
+
     macros: {
+
       E: "\\mathbb{E}",
+
       Var: "\\operatorname{Var}",
+
       Cov: "\\operatorname{Cov}",
+
       Corr: "\\operatorname{Corr}",
+
       Pr: "\\operatorname{Pr}",
+
       deff: "\\operatorname{deff}",
+
       bold: ["\\boldsymbol{#1}", 1]
+
     }
+
   }
+
 };
+
 </script>
 
+
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -155,7 +172,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -331,14 +348,14 @@ window.Quarto = {
 </header>
 
 
-<p>Los modelos de regresión constituyen una de las herramientas más utilizadas en el análisis de datos provenientes de encuestas, ya que permiten estudiar la relación entre una variable de interés y un conjunto de variables explicativas <span class="citation" data-cites="ChambersSkinner2003 HeeringaWestBerglund2017">(<a href="references.html#ref-ChambersSkinner2003" role="doc-biblioref">Chambers y Skinner 2003</a>; <a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">Heeringa, West, y Berglund 2017</a>)</span>. A través de estos modelos, es posible evaluar cómo cambian determinadas características de la población según factores demográficos, sociales o económicos observados en la muestra. No obstante, la validez de los resultados obtenidos depende de una adecuada especificación del modelo y de la correcta consideración de las características del diseño muestral de la encuesta.</p>
+<p>Los modelos de regresión constituyen una de las herramientas más utilizadas en el análisis de datos provenientes de encuestas, ya que permiten estudiar la relación entre una variable de interés y un conjunto de variables explicativas <span class="citation" data-cites="ChambersSkinner2003 HeeringaWestBerglund2017">(<a href="references.html#ref-ChambersSkinner2003" role="doc-biblioref">Chambers y Skinner 2003</a>; <a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">Heeringa et&nbsp;al. 2017</a>)</span>. A través de estos modelos, es posible evaluar cómo cambian determinadas características de la población según factores demográficos, sociales o económicos observados en la muestra. No obstante, la validez de los resultados obtenidos depende de una adecuada especificación del modelo y de la correcta consideración de las características del diseño muestral de la encuesta.</p>
 <p>En términos generales, los modelos de regresión buscan describir y cuantificar la asociación entre una variable respuesta (dependiente) y una o más variables explicativas (independientes), proporcionando elementos para la interpretación estadística y la formulación de inferencias sobre la población de estudio. No obstante la validez de los resultados obtenidos depende, en gran medida, de una adecuada especificación del modelo y de la correcta consideración de las características del diseño muestral de la encuesta.</p>
 <p>Por ejemplo, es posible analizar el comportamiento del ingreso de los hogares como variable de respuesta, en función de características como la edad del jefe de hogar, el nivel educativo alcanzado y la situación laboral de sus integrantes, consideradas variables explicativas. Utilizando información proveniente de encuestas de hogares, este tipo de modelos permite identificar patrones de asociación, cuantificar el efecto de distintos factores socioeconómicos sobre el ingreso y generar evidencia empírica útil para el diseño, seguimiento y evaluación de políticas públicas.</p>
 <p>Como explica <span class="citation" data-cites="pfeffermann2011modelling">Pfeffermann (<a href="references.html#ref-pfeffermann2011modelling" role="doc-biblioref">2011</a>)</span>, dado que las encuestas de hogares están sustentadas en diseños de muestreo complejos, los métodos clásicos de regresión, desarrollados bajo supuestos de muestreo aleatorio simple, pueden resultar inapropiados. Ignorar el diseño puede sesgar los coeficientes cuando la selección es informativa o el modelo está mal especificado y, aun cuando los coeficientes no cambien de manera apreciable, puede producir errores estándar y pruebas de hipótesis incorrectos.</p>
 <p>En consecuencia, el análisis de datos provenientes de encuestas exige una atención detallada al diseño de muestreo. La incorporación de los pesos de la encuesta y los ajustes correspondientes a la estratificación y la conglomeración permite obtener inferencias válidas y precisas. Adicionalmente, en algunos casos se han propuesto alternativas simplificadas, como el uso de pesos normalizados o enfoques de ponderación aproximada, que buscan equilibrar la complejidad metodológica con la factibilidad práctica del análisis.</p>
 <p>El estudio de la regresión bajo diseños de muestreo complejos cuenta con una trayectoria bien documentada. Como señalaron <span class="citation" data-cites="kish1974inference">Kish y Frankel (<a href="references.html#ref-kish1974inference" role="doc-biblioref">1974</a>)</span>, estos diseños afectan las inferencias derivadas de modelos de regresión. Posteriormente, <span class="citation" data-cites="fuller1975regression">Fuller (<a href="references.html#ref-fuller1975regression" role="doc-biblioref">1975</a>)</span> desarrolló estimadores de varianza apoyados en técnicas de linealización para modelos de regresión lineal múltiple con ponderación desigual y métodos específicos para diseños estratificados y de dos etapas.</p>
-<p>Más adelante, <span class="citation" data-cites="shah1977inference">Shah, Holt, y Folsom (<a href="references.html#ref-shah1977inference" role="doc-biblioref">1977</a>)</span> y <span class="citation" data-cites="binder1983variances">David A. Binder (<a href="references.html#ref-binder1983variances" role="doc-biblioref">1983</a>)</span> abordaron el problema de las violaciones a los supuestos clásicos al trabajar con datos de encuestas mediante alternativas de inferencia robusta para los parámetros. En paralelo, las distribuciones muestrales de los estimadores de regresión en poblaciones finitas se incorporaron a procedimientos para estimar varianzas bajo esquemas complejos.</p>
-<p>En los años siguientes, <span class="citation" data-cites="skinner1989analysis">Skinner, Holt, y Smith (<a href="references.html#ref-skinner1989analysis" role="doc-biblioref">1989</a>)</span> y <span class="citation" data-cites="fuller2002regression">Fuller (<a href="references.html#ref-fuller2002regression" role="doc-biblioref">2002</a>)</span> ampliaron estos aportes mediante estimadores de varianza para los coeficientes de regresión que incorporan la estratificación y la conglomeración, así como mediante compendios de métodos de estimación aplicables a modelos de regresión en encuestas complejas. La discusión reciente incluye, además, métodos de ponderación <em>q-weighted</em> y evidencia empírica sobre su utilidad.</p>
+<p>Más adelante, <span class="citation" data-cites="shah1977inference">Shah et&nbsp;al. (<a href="references.html#ref-shah1977inference" role="doc-biblioref">1977</a>)</span> y <span class="citation" data-cites="binder1983variances">Binder (<a href="references.html#ref-binder1983variances" role="doc-biblioref">1983</a>)</span> abordaron el problema de las violaciones a los supuestos clásicos al trabajar con datos de encuestas mediante alternativas de inferencia robusta para los parámetros. En paralelo, las distribuciones muestrales de los estimadores de regresión en poblaciones finitas se incorporaron a procedimientos para estimar varianzas bajo esquemas complejos.</p>
+<p>En los años siguientes, <span class="citation" data-cites="skinner1989analysis">Skinner et&nbsp;al. (<a href="references.html#ref-skinner1989analysis" role="doc-biblioref">1989</a>)</span> y <span class="citation" data-cites="fuller2002regression">Fuller (<a href="references.html#ref-fuller2002regression" role="doc-biblioref">2002</a>)</span> ampliaron estos aportes mediante estimadores de varianza para los coeficientes de regresión que incorporan la estratificación y la conglomeración, así como mediante compendios de métodos de estimación aplicables a modelos de regresión en encuestas complejas. La discusión reciente incluye, además, métodos de ponderación <em>q-weighted</em> y evidencia empírica sobre su utilidad.</p>
 <section id="formulacion-del-modelo" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="formulacion-del-modelo"><span class="header-section-number">5.1</span> Formulación del modelo</h2>
 <p>Los modelos de regresión bajo diseños de muestreo complejos permiten trascender las estadísticas descriptivas y estudiar asociaciones o realizar predicciones. Su correcta aplicación abre la posibilidad de examinar cómo las características sociodemográficas y económicas se asocian con distintos resultados de interés, aportando evidencia clave para la formulación de políticas públicas. Como explican <span class="citation" data-cites="FoxWeisberg2019">Fox y Weisberg (<a href="references.html#ref-FoxWeisberg2019" role="doc-biblioref">2019</a>)</span>, la formulación más básica corresponde al modelo de regresión lineal simple, el cual describe la relación entre una variable respuesta y una única variable explicativa mediante la siguiente expresión:</p>
@@ -346,7 +363,7 @@ window.Quarto = {
 y = \beta_{0} + \beta_{1}x + \varepsilon
 \]</span></p>
 <p>En donde <span class="math inline">\(y\)</span> representa la variable de respuesta (dependiente), <span class="math inline">\(x\)</span> la variable explicativa (independiente), <span class="math inline">\(\beta_{0}\)</span> el intercepto del modelo, <span class="math inline">\(\beta_{1}\)</span> el coeficiente asociado a la variable independiente y <span class="math inline">\(\varepsilon\)</span> el término de error, que recoge la variabilidad no explicada por el modelo y puede interpretarse como la diferencia entre el valor observado y el valor estimado por el modelo, denotado por <span class="math inline">\(\hat{y}_k\)</span>.</p>
-<p>En muchas aplicaciones empíricas, y especialmente en el análisis de encuestas de hogares, el fenómeno de interés depende simultáneamente de múltiples factores <span class="citation" data-cites="HeeringaWestBerglund2017">(<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">Heeringa, West, y Berglund 2017</a>)</span>. En estos casos se emplean modelos de regresión lineal múltiple, los cuales incorporan varias variables explicativas:</p>
+<p>En muchas aplicaciones empíricas, y especialmente en el análisis de encuestas de hogares, el fenómeno de interés depende simultáneamente de múltiples factores <span class="citation" data-cites="HeeringaWestBerglund2017">(<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">Heeringa et&nbsp;al. 2017</a>)</span>. En estos casos se emplean modelos de regresión lineal múltiple, los cuales incorporan varias variables explicativas:</p>
 <p><span class="math display">\[
 y = \beta_{0} + \beta_{1}x_{1} + \cdots + \beta_{p}x_{p} + \varepsilon,
 \]</span></p>
@@ -365,9 +382,9 @@ E(y \mid \mathbf{x}) = {\beta}_{0} + {\beta}_{1}x_{1} + \cdots + {\beta}_{p}x_{p
 <h2 data-number="5.2" class="anchored" data-anchor-id="uso-de-los-pesos-de-muestreo"><span class="header-section-number">5.2</span> Uso de los pesos de muestreo</h2>
 <p>Cuando se trabaja con datos provenientes de encuestas basadas en diseños muestrales complejos, los supuestos clásicos de los modelos de regresión rara vez se cumplen de manera estricta, puesto que las observaciones no provienen de muestras aleatorias simples e independientes, sino de esquemas de selección que incorporan elementos como estratificación, conglomeración y probabilidades desiguales de selección. Por ejemplo, la presencia de conglomeración puede violar el supuesto de independencia de los errores, ya que individuos pertenecientes a un mismo hogar, segmento o área geográfica tienden a compartir características similares. Del mismo modo, las probabilidades desiguales de selección y los ajustes de ponderación pueden generar heterogeneidad en la varianza de las observaciones, incumpliendo el supuesto de homocedasticidad.</p>
 <p>En este contexto, surge una pregunta fundamental: ¿de qué manera deben incorporarse los pesos muestrales en los modelos de regresión? La respuesta no es sencilla, ya que los pesos de la encuesta reflejan no solo las probabilidades de selección, sino también diversos ajustes asociados a la no respuesta, calibración y correcciones de cobertura. Aunque su utilización permite producir estimaciones representativas de la población, la incorporación directa de ponderaciones en los modelos también puede reducir la eficiencia estadística e incrementar la variabilidad de los estimadores.</p>
-<p>En términos generales, <span class="citation" data-cites="pfeffermann2011modelling">Pfeffermann (<a href="references.html#ref-pfeffermann2011modelling" role="doc-biblioref">2011</a>)</span> distingue dos enfoques principales para abordar este problema. El primero corresponde al enfoque basado en el diseño muestral, cuyo objetivo es obtener inferencias válidas para la población objetivo respetando las características del proceso de selección de la muestra. De acuerdo con <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa, West, y Berglund (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, desde esta perspectiva, los pesos muestrales son esenciales para corregir las probabilidades desiguales de inclusión y producir estimaciones insesgadas de los coeficientes de regresión. Sin embargo, este enfoque no protege frente a posibles errores de especificación del modelo; es decir, aun cuando las estimaciones sean válidas desde el punto de vista del diseño, el modelo puede no representar adecuadamente las relaciones existentes en la población.</p>
+<p>En términos generales, <span class="citation" data-cites="pfeffermann2011modelling">Pfeffermann (<a href="references.html#ref-pfeffermann2011modelling" role="doc-biblioref">2011</a>)</span> distingue dos enfoques principales para abordar este problema. El primero corresponde al enfoque basado en el diseño muestral, cuyo objetivo es obtener inferencias válidas para la población objetivo respetando las características del proceso de selección de la muestra. De acuerdo con <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, desde esta perspectiva, los pesos muestrales son esenciales para corregir las probabilidades desiguales de inclusión y producir estimaciones insesgadas de los coeficientes de regresión. Sin embargo, este enfoque no protege frente a posibles errores de especificación del modelo; es decir, aun cuando las estimaciones sean válidas desde el punto de vista del diseño, el modelo puede no representar adecuadamente las relaciones existentes en la población.</p>
 <p>El segundo corresponde al enfoque orientado al modelo, según el cual los pesos no son necesariamente requeridos siempre que el modelo esté correctamente especificado y el mecanismo de muestreo sea no informativo. Bajo este supuesto, las relaciones entre las variables observadas en la muestra coinciden con las de la población, de manera que el diseño muestral no introduce sesgos relevantes en la estimación de los parámetros. Desde esta perspectiva, incorporar ponderaciones podría incluso resultar contraproducente, al aumentar innecesariamente la varianza de los estimadores y, en consecuencia, los errores estándar.</p>
-<p>Según <span class="citation" data-cites="skinner1989analysis">Skinner, Holt, y Smith (<a href="references.html#ref-skinner1989analysis" role="doc-biblioref">1989</a>)</span>, la discusión sobre la conveniencia de utilizar ponderaciones en modelos de regresión ha sido ampliamente desarrollada en la literatura especializada. En la práctica, una recomendación metodológica frecuente consiste en estimar los modelos tanto con ponderaciones como sin ellas y comparar posteriormente los resultados obtenidos <span class="citation" data-cites="UNhandbook">(<a href="references.html#ref-UNhandbook" role="doc-biblioref">Naciones Unidas 2026</a>)</span>. Si la inclusión de los pesos produce cambios importantes en los coeficientes estimados o modifica las conclusiones sustantivas del análisis, ello sugiere que el diseño de muestreo es informativo o que el modelo presenta problemas de especificación, por lo que el uso de ponderaciones resulta aconsejable. Por el contrario, si los coeficientes permanecen relativamente estables y las ponderaciones únicamente incrementan los errores estándar, puede considerarse que el modelo captura adecuadamente la estructura de los datos y que el uso de pesos no es estrictamente necesario.</p>
+<p>Según <span class="citation" data-cites="skinner1989analysis">Skinner et&nbsp;al. (<a href="references.html#ref-skinner1989analysis" role="doc-biblioref">1989</a>)</span>, la discusión sobre la conveniencia de utilizar ponderaciones en modelos de regresión ha sido ampliamente desarrollada en la literatura especializada. En la práctica, una recomendación metodológica frecuente consiste en estimar los modelos tanto con ponderaciones como sin ellas y comparar posteriormente los resultados obtenidos <span class="citation" data-cites="UNhandbook">(<a href="references.html#ref-UNhandbook" role="doc-biblioref">Naciones Unidas 2026</a>)</span>. Si la inclusión de los pesos produce cambios importantes en los coeficientes estimados o modifica las conclusiones sustantivas del análisis, ello sugiere que el diseño de muestreo es informativo o que el modelo presenta problemas de especificación, por lo que el uso de ponderaciones resulta aconsejable. Por el contrario, si los coeficientes permanecen relativamente estables y las ponderaciones únicamente incrementan los errores estándar, puede considerarse que el modelo captura adecuadamente la estructura de los datos y que el uso de pesos no es estrictamente necesario.</p>
 <p>En términos aplicados, esta decisión suele depender del propósito analítico del estudio. Cuando el objetivo es realizar inferencia descriptiva y producir estimaciones representativas de la población, la utilización de ponderaciones es indispensable. En cambio, en contextos de inferencia analítica orientados al estudio de asociaciones, relaciones causales o contrastes de hipótesis, pueden emplearse tanto modelos ponderados como no ponderados, especialmente cuando el modelo incorpora variables relacionadas con el diseño muestral, como estratos o conglomerados. No obstante, el uso de modelos no ponderados debe justificarse cuidadosamente, dado que implica asumir condiciones más restrictivas sobre el mecanismo de selección de la muestra y la correcta especificación del modelo estadístico.</p>
 <p>En resumen, cuando se opta por ponderar, las ponderaciones corrigen posibles sesgos de sobre o subrepresentación de determinados grupos y contribuyen a obtener estimaciones de varianza más exactas. Dentro del enfoque basado en el diseño, esto permite que los resultados se aproximen a valores insesgados comparables a los que se obtendrían en un censo completo, incluso cuando el modelo no esté formulado de manera óptima. Sin embargo, cuando los pesos presentan gran dispersión, pueden aumentar la varianza de los parámetros estimados y volver inestables las estimaciones, razón por la que en contextos explicativos o analíticos los modelos sin ponderar pueden, en ocasiones, arrojar resultados más consistentes y eficientes.</p>
 <p>En cualquier caso, si el modelo se encuentra mal especificado, ignorar las ponderaciones muestrales puede conducir a estimaciones sesgadas, poco informativas o incluso carentes de validez inferencial. Por esta razón, la selección adecuada de las variables incluidas en el modelo constituye un aspecto fundamental del análisis. Con el fin de abordar estas problemáticas, se han propuesto diversas estrategias de ajuste orientadas a lograr un equilibrio entre ambos objetivos. Entre los procedimientos más utilizados se destacan los siguientes:</p>
@@ -379,7 +396,7 @@ E(y \mid \mathbf{x}) = {\beta}_{0} + {\beta}_{1}x_{1} + \cdots + {\beta}_{p}x_{p
 </section>
 <section id="estimacion-de-los-parametros-del-modelo" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="estimacion-de-los-parametros-del-modelo"><span class="header-section-number">5.3</span> Estimación de los parámetros del modelo</h2>
-<p>De acuerdo con <span class="citation" data-cites="molina1992pseudo">Molina y Skinner (<a href="references.html#ref-molina1992pseudo" role="doc-biblioref">1992</a>)</span> y <span class="citation" data-cites="binder2011estimating">David A. Binder (<a href="references.html#ref-binder2011estimating" role="doc-biblioref">2011</a>)</span>, en términos del ajuste de modelos de regresión con encuestas de hogares, se han desarrollado metodologías inferenciales avanzadas que integran las fuentes de incertidumbre en un mismo marco analítico, buscando reflejar tanto la estructura del diseño como los supuestos y limitaciones del modelo. Entre las aproximaciones más relevantes se encuentran la pseudo-verosimilitud y la inferencia combinada.</p>
+<p>De acuerdo con <span class="citation" data-cites="molina1992pseudo">Molina y Skinner (<a href="references.html#ref-molina1992pseudo" role="doc-biblioref">1992</a>)</span> y <span class="citation" data-cites="binder2011estimating">Binder (<a href="references.html#ref-binder2011estimating" role="doc-biblioref">2011</a>)</span>, en términos del ajuste de modelos de regresión con encuestas de hogares, se han desarrollado metodologías inferenciales avanzadas que integran las fuentes de incertidumbre en un mismo marco analítico, buscando reflejar tanto la estructura del diseño como los supuestos y limitaciones del modelo. Entre las aproximaciones más relevantes se encuentran la pseudo-verosimilitud y la inferencia combinada.</p>
 <p>El método de pseudo-verosimilitud extiende las técnicas tradicionales de máxima verosimilitud para ajustarlas a las particularidades de los diseños muestrales complejos. En este enfoque, la distribución de muestreo definida por el diseño ocupa un rol central, mientras que la distribución del modelo pasa a un segundo plano. Si bien en contextos de modelos bien especificados los estimadores basados en pseudo-verosimilitud tienden a ser insesgados o consistentes, su principal virtud radica en evitar los sesgos que se originarían al ignorar el diseño muestral. En términos prácticos, este método traduce el modelo tradicional en uno que respeta la forma en que los datos fueron obtenidos, garantizando inferencias más sólidas.</p>
 <p>En contraste, la inferencia combinada propone un marco unificado en el que se integran simultáneamente la variabilidad del muestreo y la incertidumbre del modelo. Considerar ambas fuentes permite caracterizar de manera más completa la variabilidad total, aunque sus propiedades dependen del diseño y de la especificación del modelo. Un desarrollo teórico más detallado de este enfoque, acompañado de simulaciones computacionales, se presenta en el <a href="A2-MPVbinder.html">segundo anexo</a>.</p>
 <p>Además, tal como explica <span class="citation" data-cites="Wolter2007Variance">Wolter (<a href="references.html#ref-Wolter2007Variance" role="doc-biblioref">2007</a>)</span>, cuando se desea estimar los parámetros de un modelo de regresión lineal a partir de una muestra con un diseño complejo, el enfoque estándar cambia. En consecuencia, los estimadores tradicionales, como los obtenidos por máxima verosimilitud o mínimos cuadrados, pueden resultar sesgados y producir errores estándar poco confiables. Frente a esta situación, los métodos de estimación de varianza, como la linealización de Taylor y el bootstrap, son válidos en la medida en que su implementación reproduzca las características pertinentes del diseño.</p>
@@ -413,7 +430,7 @@ E(y \mid \mathbf{x}) = {\beta}_{0} + {\beta}_{1}x_{1} + \cdots + {\beta}_{p}x_{p
 \]</span></p>
 <p>En este capítulo se mostrará cómo implementar estos modelos en <code>R</code> mediante las librerías <code>survey</code> y <code>srvyr</code>, junto con <code>tidyverse</code> para organizar el flujo de trabajo. Se abordará la especificación del diseño muestral, la estimación de modelos lineales y logísticos, así como la obtención de errores estándar y pruebas de hipótesis ajustadas al diseño, integrando los fundamentos teóricos con ejemplos prácticos reproducibles. Para ejemplificar los conceptos desarrollados hasta este punto, se empleará la misma base de datos utilizada a lo largo del libro. El proceso inicia con la carga de las librerías, los datos y la definición del diseño de muestreo:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(srvyr)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -426,18 +443,18 @@ E(y \mid \mathbf{x}) = {\beta}_{0} + {\beta}_{1}x_{1} + \cdots + {\beta}_{p}x_{p
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">ids =</span> PSU,</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> wk,</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">nest =</span> <span class="cn">TRUE</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Con el objetivo de ajustar un modelo de regresión entre las variables ingreso y gasto, resulta conveniente explorar previamente la relación existente entre ambas variables. Para ello, se construye un diagrama de dispersión mediante <code>ggplot2</code>, el cual permite evaluar visualmente la forma y la intensidad de la asociación. El resultado se presenta en la <a href="#fig-scatter-muestra-sinP" class="quarto-xref">figura&nbsp;<span>5.1</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>unweighted_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>unweighted_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Expenditure, <span class="at">y =</span> Income)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>unweighted_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>unweighted_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-scatter-muestra-sinP" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -454,13 +471,13 @@ Figura&nbsp;5.1: Diagrama de dispersión entre gasto e ingreso en la muestra (si
 <p>Los datos muestrales conservan una relación aproximadamente lineal entre ingreso y gasto, aunque se observa una mayor dispersión en los valores correspondientes a hogares con niveles de gasto más elevados. Una vez completada la exploración gráfica de los datos, se procede al ajuste de los modelos de regresión lineal.</p>
 <p>Para ajustar modelos incorporando los factores de expansión se usa la función <code>svyglm</code> de la librería <code>survey</code>, que permite estimar modelos lineales incorporando explícitamente las características del diseño muestral. En este caso, la expresión <code>Income ~ Expenditure + Zone + Sex</code> especifica que la variable <code>Income</code> se modela en función de las variable <code>Expenditure</code>, <code>Zone</code> y <code>Sex</code>; es decir, se ajusta una regresión lineal múltiple en la que el gasto, la zona y el sexo actúan como variables explicativas del ingreso. El argumento <code>design = survey_design</code> indica que el modelo debe utilizar el objeto de diseño muestral previamente definido, mientras que <code>family = stats::gaussian()</code> especifica que se ajusta un modelo lineal con distribución normal, equivalente a una regresión lineal clásica.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fit_svy <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fit_svy <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  Income <span class="sc">~</span> Expenditure <span class="sc">+</span> Zone <span class="sc">+</span> Sex,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> stats<span class="sc">::</span><span class="fu">gaussian</span>()</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>fit_svy</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>fit_svy</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Stratified 1 - level Cluster Sampling design (with replacement)
 With (238) clusters.
@@ -493,7 +510,7 @@ Residual Deviance: 309000000    AIC: 38300</code></pre>
 <section id="coeficiente-de-determinacion" class="level3" data-number="5.4.1">
 <h3 data-number="5.4.1" class="anchored" data-anchor-id="coeficiente-de-determinacion"><span class="header-section-number">5.4.1</span> Coeficiente de determinación</h3>
 <p>Una de las medidas más utilizadas para evaluar el ajuste de un modelo de regresión es el coeficiente de determinación, denotado por <span class="math inline">\(R^{2}\)</span>. Este indicador cuantifica la proporción de la variabilidad de la variable dependiente que es explicada por el modelo <span class="citation" data-cites="FoxWeisberg2019">(<a href="references.html#ref-FoxWeisberg2019" role="doc-biblioref">Fox y Weisberg 2019</a>)</span>. Sus valores oscilan entre cero y uno: cuanto más cercano se encuentre a la unidad, mayor será la capacidad explicativa del modelo; en contraste, valores próximos a cero indican un bajo nivel de explicación de la variabilidad observada. La magnitud del <span class="math inline">\(R^{2}\)</span> no debe evaluarse en términos absolutos, sino considerando el fenómeno estudiado y el tipo de información disponible.</p>
-<p>El coeficiente se calcula a partir de las sumas de cuadrados totales y de error, como <span class="math inline">\(R^{2} = 1 - \frac{SSE}{SST}\)</span>; en donde <span class="math inline">\(SST\)</span> representa la suma de cuadrados totales y <span class="math inline">\(SSE\)</span> la suma de cuadrados del error. Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa, West, y Berglund (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, en encuestas con diseños de muestreo complejos, esta medida debe ajustarse para incorporar la estructura del diseño y los pesos muestrales. El estimador ponderado del coeficiente de determinación se define como:</p>
+<p>El coeficiente se calcula a partir de las sumas de cuadrados totales y de error, como <span class="math inline">\(R^{2} = 1 - \frac{SSE}{SST}\)</span>; en donde <span class="math inline">\(SST\)</span> representa la suma de cuadrados totales y <span class="math inline">\(SSE\)</span> la suma de cuadrados del error. Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, en encuestas con diseños de muestreo complejos, esta medida debe ajustarse para incorporar la estructura del diseño y los pesos muestrales. El estimador ponderado del coeficiente de determinación se define como:</p>
 <p><span class="math display">\[
 \hat{R}^2 = 1 - \frac{\widehat{SSE}}{\widehat{SST}}
 \]</span></p>
@@ -502,26 +519,26 @@ Residual Deviance: 309000000    AIC: 38300</code></pre>
 <p>De esta manera, el ajuste permite evaluar la capacidad explicativa del modelo controlando el efecto derivado de la incorporación de nuevas variables. Este ajuste facilita una comparación más equitativa entre modelos con distinto número de predictores y resulta particularmente útil en el análisis de encuestas, donde la complejidad del diseño y el uso de ponderaciones pueden influir notablemente en la magnitud del <span class="math inline">\(R^{2}\)</span>.</p>
 <p>En <code>R</code>, el coeficiente de determinación <span class="math inline">\(R^{2}\)</span> puede estimarse a partir de los modelos ajustados previamente. Para ello, se ajusta inicialmente un modelo nulo (incluyendo únicamente el intercepto), el cual permite calcular la suma total ponderada de cuadrados (<span class="math inline">\(\widehat{SST}\)</span>).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>null_model <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(Income <span class="sc">~</span> <span class="dv">1</span>, <span class="at">design =</span> survey_design)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>null_model <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(Income <span class="sc">~</span> <span class="dv">1</span>, <span class="at">design =</span> survey_design)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit_svy)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>s0 <span class="ot">&lt;-</span> <span class="fu">summary</span>(null_model)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>wsst <span class="ot">&lt;-</span> s0<span class="sc">$</span>dispersion[<span class="dv">1</span>]</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>wsse <span class="ot">&lt;-</span> s1<span class="sc">$</span>dispersion[<span class="dv">1</span>]</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>wsse <span class="ot">&lt;-</span> s1<span class="sc">$</span>dispersion[<span class="dv">1</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La estimación del coeficiente de determinación y su contraparte ajustada se obtiene a partir del siguiente cálculo:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(survey_design)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(survey_design)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(fit_svy))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>r2 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> wsse <span class="sc">/</span> wsst</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>r2_adj <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> ((n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (n <span class="sc">-</span> p)) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> r2)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>r2</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>r2</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.5138</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>r2_adj</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>r2_adj</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.5133</code></pre>
 </div>
@@ -530,7 +547,7 @@ Residual Deviance: 309000000    AIC: 38300</code></pre>
 <section id="residuales" class="level3" data-number="5.4.2">
 <h3 data-number="5.4.2" class="anchored" data-anchor-id="residuales"><span class="header-section-number">5.4.2</span> Residuales</h3>
 <p>En el diagnóstico de modelos, el análisis de los residuales es una de las herramientas más relevantes <span class="citation" data-cites="FoxWeisberg2019">(<a href="references.html#ref-FoxWeisberg2019" role="doc-biblioref">Fox y Weisberg 2019</a>)</span>. Si el modelo está correctamente especificado, los residuales actúan como una aproximación de los errores no observados y permiten evaluar, de forma indirecta, si los supuestos del modelo se cumplen razonablemente en los datos. Su revisión sistemática permite identificar posibles desviaciones en la especificación, lo que ayuda a determinar si el ajuste es adecuado o si, por el contrario, es necesario reconsiderar la forma funcional del modelo o el método de estimación utilizado.</p>
-<p>Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa, West, y Berglund (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, en encuestas con diseños de muestreo complejos, los residuales de Pearson constituyen una herramienta habitual para evaluar las discrepancias entre los valores observados y los valores esperados bajo el modelo ajustado. Estos se definen como:</p>
+<p>Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, en encuestas con diseños de muestreo complejos, los residuales de Pearson constituyen una herramienta habitual para evaluar las discrepancias entre los valores observados y los valores esperados bajo el modelo ajustado. Estos se definen como:</p>
 <p><span class="math display">\[
 r_{k} = \frac{y_k - \hat\mu_k}{\sqrt{\widehat{Var}(\hat\mu_k)/w_k}},
 \]</span></p>
@@ -539,16 +556,16 @@ r_{k} = \frac{y_k - \hat\mu_k}{\sqrt{\widehat{Var}(\hat\mu_k)/w_k}},
 <p>La normalidad de los errores puede examinarse como diagnóstico, aunque no es un requisito estricto para la estimación de los coeficientes y su importancia inferencial depende del método de varianza y del tamaño de la muestra. Para ello, una herramienta estándar es el gráfico cuantil-cuantil (QQ-plot), el cual compara los cuantiles de los residuos observados con los cuantiles teóricos de una distribución normal con la misma media y varianza. Una alineación aproximada de los puntos sobre la recta de 45° indica que el supuesto de normalidad resulta razonable dentro del contexto del modelo.</p>
 <p>De acuerdo con <span class="citation" data-cites="Valliant2024">Valliant (<a href="references.html#ref-Valliant2024" role="doc-biblioref">2024</a>)</span>, a continuación, estos diagnósticos se aplican a los modelos previamente ajustados. Para ello, se utiliza el paquete <code>svydiags</code>, una extensión del paquete <code>survey</code> para el diagnóstico de modelos estimados bajo diseños muestrales complejos. Este paquete permite obtener los residuales estandarizados de manera directa, facilitando la evaluación de los supuestos del modelo en este tipo de contextos:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(svydiags)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(svydiags)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>stdresids <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">svystdres</span>(fit_svy)<span class="sc">$</span>stdresids)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>survey_design<span class="sc">$</span>variables <span class="ot">&lt;-</span> </span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  survey_design<span class="sc">$</span>variables <span class="sc">%&gt;%</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stdresids =</span> stdresids)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stdresids =</span> stdresids)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>El análisis de normalidad puede complementarse con el histograma de los residuales estandarizados, presentado en la <a href="#fig-hist-residuales" class="quarto-xref">figura&nbsp;<span>5.2</span></a>. El histograma sugiere una desviación respecto a la curva normal teórica (en rojo), pero la inspección gráfica por sí sola no constituye una prueba formal ni demuestra que el modelo sea inválido. La distribución de los residuos (representada en azul) muestra un pico mucho más agudo y estrecho que la curva normal, además de una asimetría positiva marcada con una cola extendida hacia la derecha. Esta discrepancia motiva examinar transformaciones de la variable dependiente o familias más flexibles, además de evaluar la especificación de la media.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_design<span class="sc">$</span>variables,</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> stdresids)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
@@ -560,7 +577,7 @@ r_{k} = \frac{y_k - \hat\mu_k}{\sqrt{\widehat{Var}(\hat\mu_k)/w_k}},
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">colour =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> dnorm, <span class="at">colour =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">""</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-hist-residuales" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -577,7 +594,7 @@ Figura&nbsp;5.2: Histograma de residuales estandarizados con curva de densidad e
 <p>Según <span class="citation" data-cites="ChambersSkinner2003">Chambers y Skinner (<a href="references.html#ref-ChambersSkinner2003" role="doc-biblioref">2003</a>)</span>, la homocedasticidad de los errores (varianza constante) constituye uno de los supuestos centrales en los modelos de regresión. Su incumplimiento afecta la eficiencia de los estimadores y las varianzas basadas exclusivamente en el modelo; las varianzas robustas ajustadas al diseño ofrecen protección adicional, aunque no corrigen una especificación incorrecta de la media. Dado que los residuos representan las discrepancias entre los valores observados y los valores ajustados por el modelo, su análisis en función de los valores predichos o de las covariables constituye una herramienta diagnóstica fundamental. Bajo un modelo adecuadamente especificado, se espera que los residuos se distribuyan de forma aleatoria alrededor de cero, sin patrones estructurados; en cambio, la aparición de formas sistemáticas (como estructuras en embudo o curvaturas) sugiere la presencia de heterocedasticidad (varianza no constante) o posibles relaciones funcionales no captadas por la especificación del modelo.</p>
 <p>Para evaluar este supuesto, se analizan gráficamente los residuos en función de los valores estimados <span class="math inline">\(\hat{\mu}_{k}\)</span> o de covariables específicas del modelo. La aparición de patrones sistemáticos en estos gráficos constituye evidencia de heterocedasticidad o de posibles problemas de especificación funcional. En particular, para evaluar la homocedasticidad respecto de las covariables incluidas en el modelo, se construyen gráficos de residuos frente a cada una de ellas y se combinan con <code>patchwork</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_design<span class="sc">$</span>variables,</span>
@@ -600,7 +617,7 @@ Figura&nbsp;5.2: Histograma de residuales estandarizados con curva de densidad e
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>)</span>
 <span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>(g1 <span class="sc">|</span> g2 <span class="sc">|</span> g3)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>(g1 <span class="sc">|</span> g2 <span class="sc">|</span> g3)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-residuales-covariables" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -619,14 +636,14 @@ Figura&nbsp;5.3: Gráficos de residuales estandarizados frente a cada covariable
 <section id="observaciones-influyentes" class="level3" data-number="5.4.3">
 <h3 data-number="5.4.3" class="anchored" data-anchor-id="observaciones-influyentes"><span class="header-section-number">5.4.3</span> Observaciones influyentes</h3>
 <p>En el análisis diagnóstico, la identificación de observaciones influyentes es una técnica de especial importancia. Estas son unidades muestrales cuyo impacto sobre el ajuste del modelo resulta desproporcionado respecto al resto de la muestra. Conviene subrayar que una observación influyente no necesariamente corresponde a un valor atípico: mientras un atípico puede estar alejado del patrón general de los datos sin afectar sustancialmente el ajuste, una observación influyente puede alterar de manera significativa las estimaciones de los parámetros, incluso si no luce inusual.</p>
-<p>Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa, West, y Berglund (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017, 213</a>)</span>, la distancia de Cook mide el impacto que tendría la eliminación de la observación <span class="math inline">\(k\)</span> sobre el ajuste global del modelo, al combinar simultáneamente la magnitud del residuo, la varianza estimada del modelo y su apalancamiento (<em>leverage</em>). En el contexto de encuestas con diseños muestrales complejos, la distancia de Cook suele denotarse como <span class="math inline">\(c_k\)</span> y su expresión incorpora explícitamente los pesos muestrales. Para evaluar la magnitud de este estadístico, se utiliza una aproximación basada en su comparación con una distribución <span class="math inline">\(F\)</span>, mediante la expresión:</p>
+<p>Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017, 213</a>)</span>, la distancia de Cook mide el impacto que tendría la eliminación de la observación <span class="math inline">\(k\)</span> sobre el ajuste global del modelo, al combinar simultáneamente la magnitud del residuo, la varianza estimada del modelo y su apalancamiento (<em>leverage</em>). En el contexto de encuestas con diseños muestrales complejos, la distancia de Cook suele denotarse como <span class="math inline">\(c_k\)</span> y su expresión incorpora explícitamente los pesos muestrales. Para evaluar la magnitud de este estadístico, se utiliza una aproximación basada en su comparación con una distribución <span class="math inline">\(F\)</span>, mediante la expresión:</p>
 <p><span class="math display">\[
 \frac{(df-p+1)\,c_{k}}{df} \sim F_{(p,\,df-p)},
 \]</span></p>
 <p>Donde <span class="math inline">\(p\)</span> denota los parámetros del modelo y <span class="math inline">\(df\)</span> representa los grados de libertad asociados al diseño muestral. En la práctica, una observación puede considerarse influyente si su distancia de Cook supera valores de referencia aproximados entre 2 y 3.</p>
 <p>En <code>R</code>, se evalúa la presencia de observaciones influyentes mediante la distancia de Cook, estimada con la función <code>svyCooksD</code> del paquete <code>svydiags</code>. Los resultados obtenidos se presentan en la <a href="#fig-cook" class="quarto-xref">figura&nbsp;<span>5.4</span></a>, en donde se observa que ninguna de las distancias de Cook supera el umbral de referencia de 3, por lo que, bajo este criterio diagnóstico, no se identifican observaciones con influencia práctica elevada sobre el ajuste.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cook_values <span class="ot">&lt;-</span> <span class="fu">svyCooksD</span>(fit_svy, <span class="at">doplot =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cook_values <span class="ot">&lt;-</span> <span class="fu">svyCooksD</span>(fit_svy, <span class="at">doplot =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-cook" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -649,10 +666,10 @@ Figura&nbsp;5.4: Distancia de Cook para cada observación de la muestra
 \]</span></p>
 <p>Donde <span class="math inline">\(z\)</span> toma comúnmente valores de 2 o 3, <span class="math inline">\(n_I\)</span> representa el número de UPMs seleccionadas en la muestra de la primera etapa y <span class="math inline">\(DEFF\)</span> corresponde al efecto de diseño asociado a la variable respuesta. A continuación, se evalúa la influencia de las observaciones sobre los coeficientes del modelo de ejemplo mediante la función <code>svydfbetas</code>. Los resultados correspondientes a las primeras diez observaciones se presentan en la <a href="#tbl-dfbetas-primeros" class="quarto-xref">tabla&nbsp;<span>5.1</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>d_dfbetas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">t</span>(<span class="fu">svydfbetas</span>(fit_svy)<span class="sc">$</span>Dfbetas))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>d_dfbetas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">t</span>(<span class="fu">svydfbetas</span>(fit_svy)<span class="sc">$</span>Dfbetas))</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(d_dfbetas) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Beta_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>d_dfbetas <span class="sc">%&gt;%</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-dfbetas-primeros" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -662,7 +679,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 </figcaption>
 <div aria-describedby="tbl-dfbetas-primeros-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">Beta_1</th>
@@ -741,7 +758,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 </div>
 <p>Una vez obtenidos los valores de la medida DFBETA para cada observación y coeficiente del modelo, se calcula el correspondiente umbral de influencia a partir de los resultados generados por la función <code>svydfbetas</code>. Con base en este criterio, se construye una variable dicotómica que permite clasificar las observaciones según su nivel de influencia sobre las estimaciones del modelo. Los resultados de esta clasificación se presentan en la <a href="#tbl-dfbetas-influyentes" class="quarto-xref">tabla&nbsp;<span>5.2</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>d_dfbetas<span class="sc">$</span>id <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(d_dfbetas)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>d_dfbetas<span class="sc">$</span>id <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(d_dfbetas)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>d_dfbetas <span class="ot">&lt;-</span> reshape2<span class="sc">::</span><span class="fu">melt</span>(d_dfbetas, <span class="at">id.vars =</span> <span class="st">"id"</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">svydfbetas</span>(fit_svy)<span class="sc">$</span>cutoff</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>d_dfbetas <span class="ot">&lt;-</span> d_dfbetas <span class="sc">%&gt;%</span></span>
@@ -752,7 +769,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(value))) <span class="sc">%&gt;%</span></span>
 <span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span>
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>label_text</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>label_text</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-dfbetas-influyentes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -762,7 +779,7 @@ Tabla&nbsp;5.2: Las diez observaciones más influyentes según el criterio DfBet
 </figcaption>
 <div aria-describedby="tbl-dfbetas-influyentes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: right;">id</th>
@@ -841,7 +858,7 @@ Tabla&nbsp;5.2: Las diez observaciones más influyentes según el criterio DfBet
 </div>
 <p>Los resultados muestran que varias observaciones superan el umbral establecido por el criterio DFBETAS, lo que indica que dichas unidades ejercen una influencia importante sobre la estimación de algunos coeficientes del modelo, sugiriendo la presencia de unidades con alto impacto sobre la estabilidad del ajuste. La <a href="#fig-dfbetas" class="quarto-xref">figura&nbsp;<span>5.5</span></a> muestra la representación gráfica de los valores de <span class="math inline">\(D_f\text{Beta}\)</span> junto con el umbral de referencia utilizado para identificar observaciones influyentes. En la figura, los puntos resaltados en rojo corresponden a las observaciones que exceden dicho umbral y que, por tanto, requieren una revisión más detallada dentro del proceso de diagnóstico del modelo.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_dfbetas, <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">abs</span>(value), <span class="at">x =</span> id)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_dfbetas, <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">abs</span>(value), <span class="at">x =</span> id)) <span class="sc">+</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">col =</span> criterion)) <span class="sc">+</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> label_text,</span>
@@ -853,7 +870,7 @@ Tabla&nbsp;5.2: Las diez observaciones más influyentes según el criterio DfBet
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(. <span class="sc">~</span> variable, <span class="at">nrow =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Yes"</span> <span class="ot">=</span> <span class="st">"red"</span>, <span class="st">"No"</span> <span class="ot">=</span> <span class="st">"black"</span>)</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-dfbetas" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -872,7 +889,7 @@ Figura&nbsp;5.5: Valores DfBetas por parámetro: observaciones influyentes seña
 |D_f\text{Fits}_{(k)}| \geq z\sqrt{\frac{p}{n\times DEFF}}
 \]</span> Donde <span class="math inline">\(z\)</span> toma comúnmente valores de 2 o 3, mientras que <span class="math inline">\(n\)</span> representa el tamaño muestral total de elementos incluidos en la encuesta y <span class="math inline">\(DEFF\)</span> es el efecto de diseño asociado a la variable respuesta. En <code>R</code>, el cálculo de este estadístico puede realizarse mediante la función <code>svydffits</code> del paquete <code>svydiags</code>, la cual obtiene las medidas de influencia considerando explícitamente la estructura del diseño muestral. Los resultados gráficos correspondientes se presentan en la <a href="#fig-dffits" class="quarto-xref">figura&nbsp;<span>5.6</span></a>, en donde se confirma la existencia de algunas observaciones influyentes (señaladas en rojo).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>d_dffits <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>d_dffits <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">dffits =</span> <span class="fu">svydffits</span>(fit_svy)<span class="sc">$</span>Dffits,</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">svydffits</span>(fit_svy)<span class="sc">$</span>Dffits)</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -885,7 +902,7 @@ Figura&nbsp;5.5: Valores DfBetas por parámetro: observaciones influyentes seña
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> cutoff) <span class="sc">+</span></span>
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Yes"</span> <span class="ot">=</span> <span class="st">"red"</span>, <span class="st">"No"</span> <span class="ot">=</span> <span class="st">"black"</span>)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-dffits" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -903,7 +920,7 @@ Figura&nbsp;5.6: Valores DfFits: observaciones influyentes sobre el ajuste globa
 </section>
 <section id="inferencia-sobre-los-parametros-del-modelo" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="inferencia-sobre-los-parametros-del-modelo"><span class="header-section-number">5.5</span> Inferencia sobre los parámetros del modelo</h2>
-<p>Una vez evaluado el ajuste del modelo y examinados los supuestos asociados a los errores, el siguiente paso consiste en determinar la significación estadística de los parámetros estimados. Este análisis permite establecer si las covariables incluidas en el modelo aportan información relevante para explicar la variabilidad de la variable respuesta. De acuerdo con <span class="citation" data-cites="ChambersSkinner2003">Chambers y Skinner (<a href="references.html#ref-ChambersSkinner2003" role="doc-biblioref">2003</a>)</span> y <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa, West, y Berglund (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, en modelos ajustados con datos provenientes de encuestas complejas, las pruebas de hipótesis sobre los coeficientes de regresión se construyen utilizando estimadores de varianza consistentes con el diseño muestral. Para evaluar el efecto de una covariable asociada al parámetro <span class="math inline">\(\beta_j\)</span>, se considera usualmente el contraste</p>
+<p>Una vez evaluado el ajuste del modelo y examinados los supuestos asociados a los errores, el siguiente paso consiste en determinar la significación estadística de los parámetros estimados. Este análisis permite establecer si las covariables incluidas en el modelo aportan información relevante para explicar la variabilidad de la variable respuesta. De acuerdo con <span class="citation" data-cites="ChambersSkinner2003">Chambers y Skinner (<a href="references.html#ref-ChambersSkinner2003" role="doc-biblioref">2003</a>)</span> y <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, en modelos ajustados con datos provenientes de encuestas complejas, las pruebas de hipótesis sobre los coeficientes de regresión se construyen utilizando estimadores de varianza consistentes con el diseño muestral. Para evaluar el efecto de una covariable asociada al parámetro <span class="math inline">\(\beta_j\)</span>, se considera usualmente el contraste</p>
 <p><span class="math display">\[
 H_0:\beta_j=0
 \qquad \text{frente a} \qquad
@@ -926,7 +943,7 @@ t_{1-\frac{\alpha}{2},\,df}
 <p>donde <span class="math inline">\(t_{1-\frac{\alpha}{2},\,df}\)</span> representa el cuantil de orden <span class="math inline">\(1-\alpha/2\)</span> de la distribución <span class="math inline">\(t\)</span> de Student con <span class="math inline">\(df\)</span> grados de libertad.</p>
 <p>Para implementar estos procedimientos en <code>R</code>, se utilizan las funciones <code>summary.svyglm</code> y <code>confint.svyglm</code>, las cuales permiten obtener, respectivamente, las pruebas de significación basadas en el estadístico <span class="math inline">\(t\)</span> y los intervalos de confianza de los coeficientes estimados bajo el diseño muestral complejo. Los resultados correspondientes se presentan en la <a href="#tbl-inferencia-modelo" class="quarto-xref">tabla&nbsp;<span>5.3</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>summary_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit_svy)<span class="sc">$</span>coefficients <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>summary_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit_svy)<span class="sc">$</span>coefficients <span class="sc">%&gt;%</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"Parameter"</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -938,7 +955,7 @@ t_{1-\frac{\alpha}{2},\,df}
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  summary_table,</span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  confidence_table,</span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"Parameter"</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Se incorporan explícitamente los límites producidos por <code>confint()</code> para que la tabla contenga tanto las pruebas <span class="math inline">\(t\)</span> como los intervalos de confianza anunciados.</p>
 <div class="cell" data-layout-align="center">
@@ -949,7 +966,7 @@ Tabla&nbsp;5.3: Pruebas t e intervalos de confianza al 95% para los parámetros 
 </figcaption>
 <div aria-describedby="tbl-inferencia-modelo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <colgroup>
 <col style="width: 15%">
 <col style="width: 11%">
@@ -1018,7 +1035,7 @@ Tabla&nbsp;5.3: Pruebas t e intervalos de confianza al 95% para los parámetros 
 </section>
 <section id="estimacion-y-prediccion" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="estimacion-y-prediccion"><span class="header-section-number">5.6</span> Estimación y predicción</h2>
-<p>Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa, West, y Berglund (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, los modelos de regresión cumplen dos objetivos fundamentales: el primero consiste en explicar la variabilidad de la variable respuesta a partir de las covariables disponibles, propósito que ha sido desarrollado a lo largo de este capítulo; el segundo corresponde a la predicción del valor esperado de la variable de interés para nuevas observaciones, tanto dentro como fuera del dominio muestral. La siguiente expresión representa el valor esperado de la variable respuesta <span class="math inline">\(y_k\)</span> condicionada al vector de covariables observadas <span class="math inline">\(\mathbf{x}_{k}\)</span>.</p>
+<p>Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, los modelos de regresión cumplen dos objetivos fundamentales: el primero consiste en explicar la variabilidad de la variable respuesta a partir de las covariables disponibles, propósito que ha sido desarrollado a lo largo de este capítulo; el segundo corresponde a la predicción del valor esperado de la variable de interés para nuevas observaciones, tanto dentro como fuera del dominio muestral. La siguiente expresión representa el valor esperado de la variable respuesta <span class="math inline">\(y_k\)</span> condicionada al vector de covariables observadas <span class="math inline">\(\mathbf{x}_{k}\)</span>.</p>
 <p><span class="math display">\[
 \hat \mu_k = \hat{E}(y_{k}\mid\mathbf{x}_{k})=\mathbf{x}_{k}\hat{\boldsymbol{\beta}}
 \]</span> En otras palabras, el modelo utiliza la información disponible de las variables explicativas para estimar el valor promedio esperado de la variable de interés para la unidad <span class="math inline">\(k\)</span>. Asimismo, la varianza asociada a la estimación del valor esperado, definida como <span class="math inline">\({Var}(\hat{\mu}_k) = {Var}(\mathbf{x}_{k}\hat{\boldsymbol{\beta}})\)</span>, puede estimarse mediante la siguiente expresión:</p>
@@ -1036,7 +1053,7 @@ Tabla&nbsp;5.4: Coeficientes estimados del modelo de regresión con diseño mues
 </figcaption>
 <div aria-describedby="tbl-coeficientes-modelo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">term</th>
@@ -1088,12 +1105,12 @@ Tabla&nbsp;5.4: Coeficientes estimados del modelo de regresión con diseño mues
 \]</span></p>
 <p>En la expresión anterior se unifica el subíndice <span class="math inline">\(k\)</span> para que coincida con la unidad definida en la formulación del modelo. El siguiente código calcula las predicciones del modelo de regresión para las diez primeras observaciones incluidas en la muestra, utilizando la matriz de diseño y el vector de coeficientes estimados:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>x_obs <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(fit_svy) <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>x_obs <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(fit_svy) <span class="sc">%&gt;%</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>hat_beta <span class="ot">&lt;-</span> <span class="fu">coef</span>(fit_svy)</span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(x_obs <span class="sc">%*%</span> hat_beta)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 517.6 496.9 496.9 517.6 496.9 553.1 553.1 573.7 553.1 184.8</code></pre>
 </div>
@@ -1101,9 +1118,9 @@ Tabla&nbsp;5.4: Coeficientes estimados del modelo de regresión con diseño mues
 <p>En primer lugar, la instrucción <code>model.matrix(fit_svy)</code> construye la matriz de diseño asociada al modelo ajustado, incorporando automáticamente las variables explicativas. A continuación, <code>coef(fit_svy)</code> extrae explícitamente el vector de coeficientes estimados; posteriormente, se obtienen las estimaciones mediante el producto matricial <code>x_obs %*% hat_beta</code>. Finalmente, la función <code>head(10)</code> permite visualizar las primeras diez estimaciones obtenidas.</p>
 <p>Para calcular la varianza de las estimaciones se requiere la matriz de varianzas y covarianzas de los parámetros del modelo. Los elementos de la diagonal principal corresponden a las varianzas de los parámetros estimados, mientras que los elementos fuera de la diagonal representan las covarianzas entre pares de coeficientes. La matriz estimada de varianzas y covarianzas se presenta en la <a href="#tbl-vcov-modelo" class="quarto-xref">tabla&nbsp;<span>5.5</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(fit_svy) <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(fit_svy) <span class="sc">%&gt;%</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"Parameter"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"Parameter"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-vcov-modelo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -1113,7 +1130,7 @@ Tabla&nbsp;5.5: Matriz de varianzas y covarianzas de los coeficientes del modelo
 </figcaption>
 <div aria-describedby="tbl-vcov-modelo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Parameter</th>
@@ -1161,11 +1178,11 @@ Tabla&nbsp;5.5: Matriz de varianzas y covarianzas de los coeficientes del modelo
 </div>
 <p>En términos computacionales, esto implica combinar el vector de covariables de cada observación con la matriz <span class="math inline">\(\hat{\boldsymbol{\Sigma}}\)</span> para obtener la precisión de las predicciones individuales. El siguiente código calcula la varianza asociada a las predicciones obtenidas a partir del modelo de regresión:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cov_beta <span class="ot">&lt;-</span> <span class="fu">vcov</span>(fit_svy) <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cov_beta <span class="ot">&lt;-</span> <span class="fu">vcov</span>(fit_svy) <span class="sc">%&gt;%</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>mu_variance <span class="ot">&lt;-</span> <span class="fu">diag</span>(x_obs <span class="sc">%*%</span> cov_beta <span class="sc">%*%</span> <span class="fu">t</span>(x_obs))</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>mu_variance <span class="sc">%&gt;%</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   1    2    3    4    5    6    7    8    9   10 
 1375  874  874 1375  874 1218 1218 1667 1218 2998 </code></pre>
@@ -1179,13 +1196,13 @@ Tabla&nbsp;5.5: Matriz de varianzas y covarianzas de los coeficientes del modelo
 \]</span></p>
 <p>De acuerdo con <span class="citation" data-cites="Lumley2026">Lumley et&nbsp;al. (<a href="references.html#ref-Lumley2026" role="doc-biblioref">2026</a>)</span>, en <code>R</code>, la función <code>predict(fit_svy, type = "link")</code> genera estimaciones del valor medio en la escala del predictor lineal, es decir, utilizando directamente la combinación lineal de las covariables y los coeficientes estimados. Posteriormente, la función <code>confint()</code> calcula los intervalos de confianza asociados a dichas estimaciones.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">predict</span>(fit_svy, <span class="at">type =</span> <span class="st">"link"</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">predict</span>(fit_svy, <span class="at">type =</span> <span class="st">"link"</span>))</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>mu_ci <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">confint</span>(<span class="fu">predict</span>(fit_svy, <span class="at">type =</span> <span class="st">"link"</span>)))</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mu_ci) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"lower_limit"</span>, <span class="st">"upper_limit"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mu_ci) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"lower_limit"</span>, <span class="st">"upper_limit"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Las estimaciones obtenidas a partir del modelo, junto con sus respectivos intervalos de confianza, pueden visualizarse gráficamente en la <a href="#fig-pred-intervalos" class="quarto-xref">figura&nbsp;<span>5.7</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">cbind</span>(hat_mu, mu_ci)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">cbind</span>(hat_mu, mu_ci)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>pred<span class="sc">$</span>Expenditure <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>Expenditure</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>pd <span class="ot">&lt;-</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.2</span>)</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
@@ -1199,7 +1216,7 @@ Tabla&nbsp;5.5: Matriz de varianzas y covarianzas de los coeficientes del modelo
 <span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="dv">1</span></span>
 <span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">position =</span> pd) <span class="sc">+</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-pred-intervalos" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1272,18 +1289,18 @@ t_{\left(1-\frac{\alpha}{2},df\right)}
 \]</span></p>
 <p>Supóngase, por ejemplo, que se desea obtener la predicción del modelo para una nueva observación correspondiente a un individuo de sexo masculino (<code>Male</code>), residente en zona urbana (<code>Urban</code>) y con un nivel de gasto (<code>Expenditure</code>) igual a 1600. Este perfil puede definirse en <code>R</code> mediante el siguiente conjunto de datos:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Expenditure =</span> <span class="dv">1600</span>,</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sex =</span> <span class="st">"Male"</span>,</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Zone =</span> <span class="st">"Urban"</span></span>
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit_svy, <span class="at">newdata =</span> new_data, <span class="at">type =</span> <span class="st">"link"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(fit_svy, <span class="at">newdata =</span> new_data, <span class="at">type =</span> <span class="st">"link"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  link  SE
 1 2117 243</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(<span class="fu">predict</span>(fit_svy, <span class="at">newdata =</span> new_data))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(<span class="fu">predict</span>(fit_svy, <span class="at">newdata =</span> new_data))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  2.5 % 97.5 %
 1  1641   2593</code></pre>
@@ -1292,7 +1309,7 @@ t_{\left(1-\frac{\alpha}{2},df\right)}
 <p>En primer lugar, el objeto <code>new_data</code> especifica los valores de las covariables incluidas en el modelo. Posteriormente, la función <code>predict()</code> calcula la predicción puntual asociada a dicha observación. El argumento <code>newdata = new_data</code> indica que la predicción debe realizarse utilizando la nueva información suministrada, mientras que <code>type = "link"</code> solicita el resultado en la escala del predictor lineal. Finalmente, <code>confint()</code> aplicado al resultado de <code>predict.svyglm()</code> produce un intervalo de confianza para el valor medio estimado; no incorpora automáticamente el término residual requerido para un intervalo de predicción individual.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-binder1983variances" class="csl-entry" role="listitem">
 Binder, David A. 1983. <span>«On the variances of asymptotically normal estimators from complex surveys»</span>. <em>International Statistical Review/Revue Internationale de Statistique</em>, 279-92.
 </div>
@@ -1300,19 +1317,19 @@ Binder, David A. 1983. <span>«On the variances of asymptotically normal estimat
 Binder, David A. 2011. <span>«Estimating model parameters from a complex survey under a model-design randomization framework»</span>. <em>Pakistan Journal of Statistics</em> 27 (4).
 </div>
 <div id="ref-ChambersSkinner2003" class="csl-entry" role="listitem">
-Chambers, Raymond L., y Chris J. Skinner, eds. 2003. <em>Analysis of Survey Data</em>. Chichester: John Wiley &amp; Sons. <a href="https://doi.org/10.1002/0470867205">https://doi.org/10.1002/0470867205</a>.
+Chambers, Raymond L., y Chris J. Skinner, eds. 2003. <em>Analysis of Survey Data</em>. John Wiley &amp; Sons. <a href="https://doi.org/10.1002/0470867205">https://doi.org/10.1002/0470867205</a>.
 </div>
 <div id="ref-FoxWeisberg2019" class="csl-entry" role="listitem">
-Fox, John, y Sanford Weisberg. 2019. <em>An R Companion to Applied Regression</em>. 3.ª ed. Thousand Oaks, CA: SAGE Publications.
+Fox, John, y Sanford Weisberg. 2019. <em>An R Companion to Applied Regression</em>. 3.ª ed. SAGE Publications.
 </div>
 <div id="ref-fuller1975regression" class="csl-entry" role="listitem">
 Fuller, Wayne A. 1975. <span>«Regression analysis for sample survey»</span>. <em>Sankhya, Series C</em> 37: 117-32.
 </div>
 <div id="ref-fuller2002regression" class="csl-entry" role="listitem">
-———. 2002. <span>«Regression estimation for survey samples»</span>. <em>Survey Methodology</em> 28 (1): 5-23.
+Fuller, Wayne A. 2002. <span>«Regression estimation for survey samples»</span>. <em>Survey Methodology</em> 28 (1): 5-23.
 </div>
 <div id="ref-HeeringaWestBerglund2017" class="csl-entry" role="listitem">
-Heeringa, Steven G., Brady T. West, y Patricia A. Berglund. 2017. <em>Applied Survey Data Analysis</em>. 2.ª ed. Boca Raton: Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/9781315153278">https://doi.org/10.1201/9781315153278</a>.
+Heeringa, Steven G., Brady T. West, y Patricia A. Berglund. 2017. <em>Applied Survey Data Analysis</em>. 2.ª ed. Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/9781315153278">https://doi.org/10.1201/9781315153278</a>.
 </div>
 <div id="ref-kish1974inference" class="csl-entry" role="listitem">
 Kish, Leslie, y Martin R. Frankel. 1974. <span>«Inference from complex samples»</span>. <em>Journal of the Royal Statistical Society, Series B</em> 36: 1-37.
@@ -1339,144 +1356,270 @@ Robinson, David, Alex Hayes, Simon Couch, y Emil Hvitfeldt. 2026. <em>broom: Con
 Shah, Babubhai V., Maurice M. Holt, y Ralph F. Folsom. 1977. <span>«Inference about regression models from sample survey data»</span>. <em>Bulletin of the International Statistical Institute</em> 41 (3): 43-57.
 </div>
 <div id="ref-skinner1989analysis" class="csl-entry" role="listitem">
-Skinner, Chris J., David Holt, y Tom M. F. Smith, eds. 1989. <em>Analysis of complex surveys</em>. New York: John Wiley &amp; Sons.
+Skinner, Chris J., David Holt, y Tom M. F. Smith, eds. 1989. <em>Analysis of complex surveys</em>. John Wiley &amp; Sons.
 </div>
 <div id="ref-Valliant2024" class="csl-entry" role="listitem">
 Valliant, Richard. 2024. <em>svydiags: Regression Model Diagnostics for Survey Data</em>. <a href="https://doi.org/10.32614/CRAN.package.svydiags">https://doi.org/10.32614/CRAN.package.svydiags</a>.
 </div>
 <div id="ref-Wolter2007Variance" class="csl-entry" role="listitem">
-Wolter, Kirk M. 2007. <em>Introduction to Variance Estimation</em>. 2.ª ed. Springer Series en Statistics. New York, NY: Springer. <a href="https://doi.org/10.1007/978-0-387-35099-8">https://doi.org/10.1007/978-0-387-35099-8</a>.
+Wolter, Kirk M. 2007. <em>Introduction to Variance Estimation</em>. 2.ª ed. Springer Series en Statistics. Springer. <a href="https://doi.org/10.1007/978-0-387-35099-8">https://doi.org/10.1007/978-0-387-35099-8</a>.
 </div>
 </div>
 </section>
 
 </main> <!-- /main -->
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
+
   const labels = {
+
     note: "Nota",
+
     tip: "Consejo",
+
     important: "Importante",
+
     warning: "Advertencia",
+
     caution: "Precaución"
+
   };
+
+
 
   Object.keys(labels).forEach(function (type) {
+
     document.querySelectorAll(".callout-" + type).forEach(function (callout, index) {
+
       const title = callout.querySelector(".callout-title-container");
+
       if (!title || title.dataset.numbered === "true") {
+
         return;
+
       }
+
+
 
       const text = title.textContent.trim();
+
       if (!text || text === labels[type]) {
+
         title.textContent = labels[type] + " " + (index + 1);
+
       } else if (!new RegExp("^" + labels[type] + "\\s+\\d+").test(text)) {
+
         title.textContent = labels[type] + " " + (index + 1) + ". " + text;
+
       }
+
       title.dataset.numbered = "true";
+
     });
+
   });
+
 });
+
 </script>
+
 <script>
+
 (() => {
+
   const initTocScrollspy = () => {
+
     const toc = document.querySelector("#TOC.toc-active");
 
+
+
     if (!toc || toc.dataset.aehrScrollspy === "true") {
+
       return;
+
     }
+
+
 
     const links = Array.from(
+
       toc.querySelectorAll("a[data-scroll-target]")
+
     );
 
+
+
     const entries = links
+
       .map((link) => {
+
         const target = link.getAttribute("data-scroll-target");
 
+
+
         if (!target || !target.startsWith("#")) {
+
           return null;
+
         }
+
+
 
         let id;
+
         try {
+
           id = decodeURIComponent(target.slice(1));
+
         } catch {
+
           id = target.slice(1);
+
         }
+
+
 
         const section = document.getElementById(id);
+
         return section ? { link, section } : null;
+
       })
+
       .filter(Boolean);
 
+
+
     if (entries.length === 0) {
+
       return;
+
     }
 
+
+
     const nestedLists = Array.from(toc.querySelectorAll("ul ul"));
+
     let scheduled = false;
 
+
+
     const updateNestedLists = (activeLink) => {
+
       nestedLists.forEach((list) => {
+
         const parentLink = Array.from(list.parentElement.children).find(
+
           (element) => element.matches("a[data-scroll-target]")
+
         );
+
         const shouldOpen =
+
           parentLink === activeLink || list.contains(activeLink);
 
+
+
         list.classList.toggle("collapse", !shouldOpen);
+
       });
+
     };
+
+
 
     const updateActiveLink = () => {
+
       scheduled = false;
 
+
+
       const position = window.scrollY + 200;
+
       let activeEntry = entries[0];
 
+
+
       entries.forEach((entry) => {
+
         if (entry.section.offsetTop <= position) {
+
           activeEntry = entry;
+
         }
+
       });
+
+
 
       const atPageEnd =
+
         window.innerHeight + window.scrollY >=
+
         document.documentElement.scrollHeight - 2;
 
+
+
       if (atPageEnd) {
+
         activeEntry = entries[entries.length - 1];
+
       }
+
+
 
       links.forEach((link) => {
+
         link.classList.toggle("active", link === activeEntry.link);
+
       });
+
       updateNestedLists(activeEntry.link);
+
     };
+
+
 
     const scheduleUpdate = () => {
+
       if (!scheduled) {
+
         scheduled = true;
+
         window.requestAnimationFrame(updateActiveLink);
+
       }
+
     };
 
+
+
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
+
     window.addEventListener("resize", scheduleUpdate, { passive: true });
+
     toc.dataset.aehrScrollspy = "true";
+
     updateActiveLink();
+
   };
 
+
+
   if (document.readyState === "loading") {
+
     document.addEventListener("DOMContentLoaded", initTocScrollspy);
+
   } else {
+
     initTocScrollspy();
+
   }
+
 })();
+
 </script>
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -1528,13 +1671,14 @@ document.addEventListener("DOMContentLoaded", function () {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

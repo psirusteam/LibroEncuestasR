@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>2&nbsp; Conceptos básicos en encuestas de hogares – &lt;span style='font-weight: 700'&gt;Análisis de Encuestas de Hogares&lt;/span&gt;&lt;br/&gt;&lt;i style='color: #00b7ff'&gt;usando R&lt;/i&gt;</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -24,7 +27,6 @@ ul.task-list li input[type="checkbox"] {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -58,10 +60,10 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-9e3e5b9121e68b3f077afb32f2c64d95.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -76,7 +78,7 @@ div.csl-indent {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "Sin resultados",
+    "search-no-results-text": "No se han encontrado resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
@@ -91,23 +93,38 @@ div.csl-indent {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <script>
+
 window.MathJax = {
+
   tex: {
+
     macros: {
+
       E: "\\mathbb{E}",
+
       Var: "\\operatorname{Var}",
+
       Cov: "\\operatorname{Cov}",
+
       Corr: "\\operatorname{Corr}",
+
       Pr: "\\operatorname{Pr}",
+
       deff: "\\operatorname{deff}",
+
       bold: ["\\boldsymbol{#1}", 1]
+
     }
+
   }
+
 };
+
 </script>
 
+
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -120,7 +137,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -343,7 +360,7 @@ window.Quarto = {
 </section>
 <section id="estratificación" class="level3" data-number="2.2.3">
 <h3 data-number="2.2.3" class="anchored" data-anchor-id="estratificación"><span class="header-section-number">2.2.3</span> Estratificación</h3>
-<p>La estratificación consiste en dividir previamente la población en grupos mutuamente excluyentes, denominados estratos, y seleccionar una muestra independiente dentro de cada uno de ellos <span class="citation" data-cites="sarndal2003model">(<a href="references.html#ref-sarndal2003model" role="doc-biblioref">Särndal, Swensson, y Wretman 2003</a>)</span>. Los estratos pueden definirse a partir de criterios geográficos, administrativos, demográficos o socioeconómicos. En las encuestas de hogares, es frecuente utilizar combinaciones de región, área urbana o rural y características socioeconómicas para formar los estratos del diseño <span class="citation" data-cites="CEPAL2023Diseno">(<a href="references.html#ref-CEPAL2023Diseno" role="doc-biblioref">CEPAL 2023</a>)</span>.</p>
+<p>La estratificación consiste en dividir previamente la población en grupos mutuamente excluyentes, denominados estratos, y seleccionar una muestra independiente dentro de cada uno de ellos <span class="citation" data-cites="sarndal2003model">(<a href="references.html#ref-sarndal2003model" role="doc-biblioref">Särndal et&nbsp;al. 2003</a>)</span>. Los estratos pueden definirse a partir de criterios geográficos, administrativos, demográficos o socioeconómicos. En las encuestas de hogares, es frecuente utilizar combinaciones de región, área urbana o rural y características socioeconómicas para formar los estratos del diseño <span class="citation" data-cites="CEPAL2023Diseno">(<a href="references.html#ref-CEPAL2023Diseno" role="doc-biblioref">CEPAL 2023</a>)</span>.</p>
 <p>Este procedimiento permite garantizar la presencia en la muestra de grupos relevantes que podrían quedar insuficientemente representados bajo una selección no estratificada. También puede mejorar la precisión de las estimaciones cuando las unidades pertenecientes a un mismo estrato son relativamente homogéneas y existen diferencias importantes entre los estratos. La asignación de la muestra entre ellos puede realizarse de manera proporcional a su tamaño o mediante asignaciones no proporcionales orientadas a satisfacer objetivos específicos de precisión <span class="citation" data-cites="cochran1977sampling Gutierrez2016">(<a href="references.html#ref-cochran1977sampling" role="doc-biblioref">Cochran 1977</a>; <a href="references.html#ref-Gutierrez2016" role="doc-biblioref">Gutiérrez 2016</a>)</span>.</p>
 <p>La estratificación también puede producir probabilidades de selección diferentes entre las unidades. Por ejemplo, una región pequeña puede recibir una fracción de muestreo mayor para asegurar un número suficiente de observaciones, mientras que una región más poblada puede recibir una fracción menor. Esta asignación desigual genera factores de expansión diferentes y refuerza la necesidad de considerar conjuntamente los estratos y los pesos de muestreo durante el análisis <span class="citation" data-cites="UnitedNations2005">(<a href="references.html#ref-UnitedNations2005" role="doc-biblioref">Naciones Unidas 2005</a>)</span>.</p>
 </section>
@@ -351,7 +368,7 @@ window.Quarto = {
 <section id="estimadores-de-muestreo" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="estimadores-de-muestreo"><span class="header-section-number">2.3</span> Estimadores de muestreo</h2>
 <p>Al analizar datos provenientes de encuestas complejas, es fundamental definir con precisión el parámetro de interés. Este corresponde a una cantidad fija, aunque generalmente desconocida, que se obtiene a partir de los valores de todas las unidades que conforman la población finita, denotada por <span class="math inline">\(U\)</span>, y que resume alguna de sus características. Entre los parámetros más comunes se encuentran las proporciones, los totales, las medias, las razones, entre otros. Dado que, en la práctica, no es posible observar a toda la población, las encuestas por muestreo permiten inferir estos parámetros a partir de una muestra, denotada como <span class="math inline">\(s\)</span>.</p>
-<p>En el muestreo probabilístico, cada unidad de la población tiene una probabilidad de inclusión conocida y mayor que cero de ser seleccionada en la muestra. Estas probabilidades constituyen la base para el cálculo de los pesos básicos de muestreo, los cuales se utilizan posteriormente para estimar los parámetros poblacionales mediante sumas ponderadas de los datos recolectados en la encuesta. Cuando el diseño y la selección se implementan correctamente, los estimadores resultantes son insesgados respecto del diseño; es decir, su valor esperado, calculado sobre todas las muestras posibles, coincide exactamente con el parámetro poblacional <span class="citation" data-cites="sarndal2003model">(<a href="references.html#ref-sarndal2003model" role="doc-biblioref">Särndal, Swensson, y Wretman 2003</a>)</span>.</p>
+<p>En el muestreo probabilístico, cada unidad de la población tiene una probabilidad de inclusión conocida y mayor que cero de ser seleccionada en la muestra. Estas probabilidades constituyen la base para el cálculo de los pesos básicos de muestreo, los cuales se utilizan posteriormente para estimar los parámetros poblacionales mediante sumas ponderadas de los datos recolectados en la encuesta. Cuando el diseño y la selección se implementan correctamente, los estimadores resultantes son insesgados respecto del diseño; es decir, su valor esperado, calculado sobre todas las muestras posibles, coincide exactamente con el parámetro poblacional <span class="citation" data-cites="sarndal2003model">(<a href="references.html#ref-sarndal2003model" role="doc-biblioref">Särndal et&nbsp;al. 2003</a>)</span>.</p>
 <p>La estimación de totales constituye un paso central en el análisis estadístico aplicado a poblaciones finitas. Gran parte de los indicadores de interés para la formulación de políticas públicas (como por ejemplo, el número de personas en situación de pobreza, el total de ocupados o el gasto agregado de los hogares) se derivan de un total poblacional. Por esta razón, comprender cómo se definen y estiman los totales resulta fundamental para garantizar la calidad y pertinencia de la información producida.</p>
 <p>En términos formales, si <span class="math inline">\(y_k\)</span> denota el valor de una variable de interés para la unidad <span class="math inline">\(k \in U\)</span>, el total poblacional se define como</p>
 <p><span class="math display">\[t_y = \sum_{U} y_k\]</span></p>
@@ -387,7 +404,7 @@ window.Quarto = {
 </section>
 <section id="inferencia-encuestas" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="inferencia-encuestas"><span class="header-section-number">2.5</span> Inferencia en encuestas complejas</h2>
-<p>Tal como destacan <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa, West, y Berglund (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, el cálculo de totales y medias poblacionales, junto con sus varianzas, ha sido esencial para el desarrollo de la teoría del muestreo probabilístico y la interpretación adecuada de los resultados de encuestas de hogares. La determinación de los totales poblacionales constituye uno de los pilares fundamentales del análisis de encuestas. Tanto las medias como las proporciones y las razones se derivan de estos totales. Un total se define como la suma de una variable específica (por ejemplo, ingreso o gasto) a nivel de toda la población.</p>
+<p>Tal como destacan <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, el cálculo de totales y medias poblacionales, junto con sus varianzas, ha sido esencial para el desarrollo de la teoría del muestreo probabilístico y la interpretación adecuada de los resultados de encuestas de hogares. La determinación de los totales poblacionales constituye uno de los pilares fundamentales del análisis de encuestas. Tanto las medias como las proporciones y las razones se derivan de estos totales. Un total se define como la suma de una variable específica (por ejemplo, ingreso o gasto) a nivel de toda la población.</p>
 <p>En el análisis de encuestas de hogares, es habitual estimar estadísticas descriptivas como totales, medias y razones, las cuales permiten sintetizar las principales características de la población y proporcionan información relevante para la toma de decisiones y monitoreo de indicadores. En este apartado se presentan los fundamentos teóricos de la inferencia basada en el diseño de muestreo, necesarios para estimar adecuadamente los distintos parámetros de interés y evaluar la incertidumbre asociada a dichas estimaciones.</p>
 <section id="estimacion-puntual" class="level3" data-number="2.5.1">
 <h3 data-number="2.5.1" class="anchored" data-anchor-id="estimacion-puntual"><span class="header-section-number">2.5.1</span> Estimación puntual</h3>
@@ -409,14 +426,14 @@ a_j a_k \, Cov(\hat{\theta}_j,\hat{\theta}_k).\]</span></p>
 <p>Este resultado es especialmente relevante, pues abarca numerosos casos de interés práctico que se desarrollarán a lo largo de este documento. No obstante, la estimación de la varianza bajo diseños de muestreo complejos puede resultar difícil, ya que depende de las características particulares de cada diseño. Para abordar esta dificultad, se han desarrollado diversos enfoques metodológicos que permiten cuantificar adecuadamente la incertidumbre y evaluar la precisión de las estimaciones. Con el apoyo de softwares estadísticos especializado, estos métodos pueden implementarse de manera eficiente y contribuir a la obtención de resultados rigurosos y confiables.</p>
 <section id="ultimo-conglomerado" class="level4" data-number="2.5.2.1">
 <h4 data-number="2.5.2.1" class="anchored" data-anchor-id="ultimo-conglomerado"><span class="header-section-number">2.5.2.1</span> Último conglomerado</h4>
-<p>El método del último conglomerado es un enfoque ampliamente utilizado para estimar la varianza de totales en encuestas con diseños de muestreo estratificados y multietápicos. Desarrollado por <span class="citation" data-cites="hansen1953sample">Hansen et&nbsp;al. (<a href="references.html#ref-hansen1953sample" role="doc-biblioref">1953</a>)</span>, este método simplifica el tratamiento de las distintas etapas de selección al concentrar la estimación de la varianza en las unidades primarias de muestreo (UPM). Para su aplicación, se supone que, dentro de cada estrato, las UPM se seleccionan de manera independiente y con reemplazo, posiblemente con probabilidades desiguales. La aplicación de este método requiere disponer de estimadores insesgados del total de la variable de interés para cada UPM seleccionada. Asimismo, cuando el diseño incorpora estratificación en la primera etapa, es necesario contar con al menos dos UPM seleccionadas en cada estrato, para que sea posible estimar la variabilidad entre conglomerados dentro de este.</p>
+<p>El método del último conglomerado es un enfoque ampliamente utilizado para estimar la varianza de totales en encuestas con diseños de muestreo estratificados y multietápicos. Desarrollado por <span class="citation" data-cites="hansen1953sample"><span class="nocase">Hansen et&nbsp;al.</span> (<a href="references.html#ref-hansen1953sample" role="doc-biblioref">1953</a>)</span>, este método simplifica el tratamiento de las distintas etapas de selección al concentrar la estimación de la varianza en las unidades primarias de muestreo (UPM). Para su aplicación, se supone que, dentro de cada estrato, las UPM se seleccionan de manera independiente y con reemplazo, posiblemente con probabilidades desiguales. La aplicación de este método requiere disponer de estimadores insesgados del total de la variable de interés para cada UPM seleccionada. Asimismo, cuando el diseño incorpora estratificación en la primera etapa, es necesario contar con al menos dos UPM seleccionadas en cada estrato, para que sea posible estimar la variabilidad entre conglomerados dentro de este.</p>
 <p>Considere un diseño de muestreo en múltiples etapas donde se seleccionan <span class="math inline">\(n_h\)</span> UPM en el estrato <span class="math inline">\(h\)</span>, (<span class="math inline">\(h=1,\dots,H\)</span>). Una estimación del total de la variable de interés en la UPM <span class="math inline">\(i\)</span> del estrato <span class="math inline">\(h\)</span> es:</p>
 <p><span class="math display">\[\hat{t}_{y_i} = \sum_{k\in s_{hi}} w_{hik} \ y_{hik}\]</span></p>
 <p>En donde <span class="math inline">\(s_{hi}\)</span> corresponde a la muestra de unidades en la UPM <span class="math inline">\(i\)</span> del estrato <span class="math inline">\(h\)</span>; por tanto, un estimador insesgado del total poblacional se expresaría como</p>
 <p><span class="math display">\[\hat{t}_{y}  = \sum_{h}\sum_{i} \hat{t}_{y_i}\]</span></p>
 <p>Según el método del último conglomerado, suponiendo que <span class="math inline">\(\hat{\bar t}_{y_h}=(1/{n_h}) \sum_{i} \hat{t}_{y_i}\)</span> es la media muestral de los totales estimados de las UPM en el estrato <span class="math inline">\(h\)</span>, un estimador aproximado de la varianza de <span class="math inline">\(\hat t_y\)</span> se obtiene mediante al siguiente expresión:</p>
 <p><span class="math display">\[\widehat{Var}(\hat{t}_y) = \sum_{h} \frac{n_h}{n_h-1} \sum_{i} (\hat{t}_{y_i} - \hat{\bar t}_{y_h})^2\]</span></p>
-<p>Para más detalles, véase <span class="citation" data-cites="hansen1953sample">Hansen et&nbsp;al. (<a href="references.html#ref-hansen1953sample" role="doc-biblioref">1953, 258</a>)</span> o <span class="citation" data-cites="Wolter2007Variance">Wolter (<a href="references.html#ref-Wolter2007Variance" role="doc-biblioref">2007</a>)</span>. Aunque este método se propuso originalmente para calcular varianzas de estimadores de totales, el método puede combinarse con otras técnicas para derivar varianzas de otros parámetros poblacionales más complejos. Esta flexibilidad hace que el método sea aplicable a diversos contextos de análisis de encuestas de hogares.</p>
+<p>Para más detalles, véase <span class="citation" data-cites="hansen1953sample"><span class="nocase">Hansen et&nbsp;al.</span> (<a href="references.html#ref-hansen1953sample" role="doc-biblioref">1953, 258</a>)</span> o <span class="citation" data-cites="Wolter2007Variance">Wolter (<a href="references.html#ref-Wolter2007Variance" role="doc-biblioref">2007</a>)</span>. Aunque este método se propuso originalmente para calcular varianzas de estimadores de totales, el método puede combinarse con otras técnicas para derivar varianzas de otros parámetros poblacionales más complejos. Esta flexibilidad hace que el método sea aplicable a diversos contextos de análisis de encuestas de hogares.</p>
 <p>Aunque los métodos más sofisticados que consideran todas las etapas del diseño pueden ofrecer estimaciones de varianza ligeramente más precisas, su aplicación requiere información más detallada y mayor complejidad computacional. Por el contrario, el método del último conglomerado proporciona una aproximación confiable y eficiente, especialmente útil al estimar totales o medias en encuestas de hogares.</p>
 <p>Un supuesto fundamental de esta técnica es que, dentro de cada estrato, las UPM se eligen de forma independiente y con reemplazo. En la práctica, la mayoría de las encuestas selecciona sus UPM sin reemplazo, generando diseños más eficientes. En consecuencia, las varianzas calculadas bajo la hipótesis de independencia constituyen aproximaciones a las verdaderas varianzas de muestreo. Cuando la fracción muestral es pequeña, dichas aproximaciones suelen ser suficientemente precisas para su utilización por parte de las oficinas nacionales de estadística o de otros analistas.</p>
 </section>
@@ -467,14 +484,14 @@ w_k
 <section id="bootstrap" class="level4" data-number="2.5.2.3">
 <h4 data-number="2.5.2.3" class="anchored" data-anchor-id="bootstrap"><span class="header-section-number">2.5.2.3</span> Bootstrap</h4>
 <p>Como alternativa a los métodos analíticos, se desarrollaron los métodos de replicación, que generan múltiples conjuntos de pesos o réplicas de la muestra, calculan el estimador de interés en cada una de ellas y utilizan la variabilidad entre las estimaciones replicadas para aproximar la varianza del estimador original. Su principal ventaja es que pueden aplicarse de manera relativamente uniforme a una amplia variedad de parámetros, incluso cuando la derivación analítica de la varianza resulta difícil <span class="citation" data-cites="RustRao1996 Wolter2007Variance">(<a href="references.html#ref-RustRao1996" role="doc-biblioref">Rust y Rao 1996</a>; <a href="references.html#ref-Wolter2007Variance" role="doc-biblioref">Wolter 2007</a>)</span>.</p>
-<p>Por ejemplo, el Bootstrap es una herramienta de replicación robusta y versátil. Originalmente introducido por <span class="citation" data-cites="efron1979bootstrap">Efron (<a href="references.html#ref-efron1979bootstrap" role="doc-biblioref">1979</a>)</span> para datos que no provenían de encuestas, su adaptación más usada para encuestas de hogares es el Bootstrap de Reescalamiento propuesto por <span class="citation" data-cites="rao1992resampling">Rao, Wu, y Yue (<a href="references.html#ref-rao1992resampling" role="doc-biblioref">1992</a>)</span>. Este método se ajusta de manera óptima a diseños de muestreo estratificados y multietápicos, y es ampliamente empleado para la estimación de varianzas en encuestas complejas. El procedimiento consiste en generar muchas réplicas de la muestra original, simulando extracciones repetidas de la población. Cada réplica se construye mediante la creación de columnas adicionales de pesos de replicación en la base de datos, siguiendo este proceso:</p>
+<p>Por ejemplo, el Bootstrap es una herramienta de replicación robusta y versátil. Originalmente introducido por <span class="citation" data-cites="efron1979bootstrap">Efron (<a href="references.html#ref-efron1979bootstrap" role="doc-biblioref">1979</a>)</span> para datos que no provenían de encuestas, su adaptación más usada para encuestas de hogares es el Bootstrap de Reescalamiento propuesto por <span class="citation" data-cites="rao1992resampling">Rao et&nbsp;al. (<a href="references.html#ref-rao1992resampling" role="doc-biblioref">1992</a>)</span>. Este método se ajusta de manera óptima a diseños de muestreo estratificados y multietápicos, y es ampliamente empleado para la estimación de varianzas en encuestas complejas. El procedimiento consiste en generar muchas réplicas de la muestra original, simulando extracciones repetidas de la población. Cada réplica se construye mediante la creación de columnas adicionales de pesos de replicación en la base de datos, siguiendo este proceso:</p>
 <ul>
 <li>Para cada estrato, se seleccionan aleatoriamente las UPM con reemplazo; algunas pueden repetirse y otras no aparecer. Cada UPM elegida se incorpora con todas sus observaciones. Si el tamaño de la muestra de primera etapa en el estrato <span class="math inline">\(h\)</span> es mayor que dos (<span class="math inline">\(n_h &gt; 2\)</span>), el número de UPM seleccionadas por réplica es <span class="math inline">\(n_h - 1\)</span>.</li>
 <li>Este proceso se repite muchas veces, habitualmente cientos, generando un gran número de réplicas. La cantidad de veces que una UPM <span class="math inline">\(i\)</span> del estrato <span class="math inline">\(h\)</span> aparece en la réplica <span class="math inline">\(r\)</span> se denota <span class="math inline">\(n_{hi}^{(r)}\)</span>, variando entre 0 y <span class="math inline">\(n_h - 1\)</span>.</li>
 <li>A partir de cada réplica se calculan nuevos pesos bootstrap para todas las unidades, reflejando cuántas veces fue seleccionada su UPM. El peso de la unidad <span class="math inline">\(k\)</span> en la réplica <span class="math inline">\(r\)</span> se calcula como: <span class="math display">\[w_{hik}^{(r)} = w_{hik} \times \frac{n_h}{n_h - 1} \times n_{hi}^{(r)}\]</span> Si los pesos originales incluyen ajustes por no respuesta o calibración, estos deben aplicarse también a cada conjunto de pesos bootstrap.</li>
 <li>Para cada réplica <span class="math inline">\(r\)</span>, se calcula el parámetro de interés <span class="math inline">\(\hat{\theta}^{(r)}\)</span> usando los pesos bootstrap <span class="math inline">\(w_{hik}^{(r)}\)</span>. Asumiendo que <span class="math inline">\(\tilde{\theta} = \frac{1}{R} \sum_{r=1}^{R} \hat{\theta}^{(r)}\)</span>, entonces la varianza del estimador se aproxima mediante la variabilidad entre todas las réplicas: <span class="math display">\[\widehat{Var}_B(\hat{\theta}) = \frac{1}{R} \sum_{r=1}^{R} \left(\hat{\theta}^{(r)} - \tilde{\theta}\right)^2\]</span></li>
 </ul>
-<p>Este enfoque asegura que la dispersión entre réplicas capture fielmente la incertidumbre del parámetro. El Bootstrap ofrece múltiples ventajas, a pesar de requerir un mayor procesamiento computacional, es eficaz para diseños de encuesta complejos y permite estimar parámetros difíciles de calcular con métodos tradicionales, como medianas u otras estadísticas no lineales. La simplicidad del método facilita su aplicación incluso sin software estadístico especializado. No obstante, su uso no es recomendable en encuestas repetidas con muestras superpuestas ni en situaciones con fracciones de muestreo grandes y tamaños de muestra pequeños <span class="citation" data-cites="bruch2011variance">(<a href="references.html#ref-bruch2011variance" role="doc-biblioref">Bruch, Münnich, y Zins 2011</a>)</span>.</p>
+<p>Este enfoque asegura que la dispersión entre réplicas capture fielmente la incertidumbre del parámetro. El Bootstrap ofrece múltiples ventajas, a pesar de requerir un mayor procesamiento computacional, es eficaz para diseños de encuesta complejos y permite estimar parámetros difíciles de calcular con métodos tradicionales, como medianas u otras estadísticas no lineales. La simplicidad del método facilita su aplicación incluso sin software estadístico especializado. No obstante, su uso no es recomendable en encuestas repetidas con muestras superpuestas ni en situaciones con fracciones de muestreo grandes y tamaños de muestra pequeños <span class="citation" data-cites="bruch2011variance">(<a href="references.html#ref-bruch2011variance" role="doc-biblioref">Bruch et&nbsp;al. 2011</a>)</span>.</p>
 </section>
 </section>
 <section id="intervalos-de-confianza" class="level3" data-number="2.5.3">
@@ -486,7 +503,7 @@ w_k
 <p>donde <span class="math inline">\(m\)</span> representa el número total de UPM observadas en la muestra y <span class="math inline">\(H\)</span> el número de estratos. Esta aproximación refleja la cantidad efectiva de información independiente disponible para estimar la variabilidad muestral. A medida que los grados de libertad aumentan, la distribución <span class="math inline">\(t\)</span> de Student converge hacia la distribución normal estándar. Esta propiedad explica por qué muchas veces se utilizan aproximaciones normales para reportar intervalos de confianza, especialmente en encuestas de hogares de gran escala. Sin embargo, cuando el número de conglomerados es reducido o existen estratos con pocas UPM, la aproximación normal puede subestimar la incertidumbre y producir intervalos excesivamente estrechos.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-binder1983variances" class="csl-entry" role="listitem">
 Binder, David A. 1983. <span>«On the variances of asymptotically normal estimators from complex surveys»</span>. <em>International Statistical Review/Revue Internationale de Statistique</em>, 279-92.
 </div>
@@ -494,7 +511,7 @@ Binder, David A. 1983. <span>«On the variances of asymptotically normal estimat
 Bruch, Christian, Ralf Münnich, y Stefan Zins. 2011. <span>«Variance estimation for complex surveys»</span>. <em>Deliverable D3</em> 1.
 </div>
 <div id="ref-CEPAL2023Diseno" class="csl-entry" role="listitem">
-CEPAL. 2023. <em>Diseño y análisis estadístico de las encuestas de hogares de América Latina</em>. Metodologías de la CEPAL 5. Santiago: Naciones Unidas. <a href="https://repositorio.cepal.org/server/api/core/bitstreams/14d443ec-8f1e-44a7-b22b-9f124f205abe/content">https://repositorio.cepal.org/server/api/core/bitstreams/14d443ec-8f1e-44a7-b22b-9f124f205abe/content</a>.
+CEPAL. 2023. <em>Diseño y análisis estadístico de las encuestas de hogares de América Latina</em>. Metodologías de la CEPAL 5. Naciones Unidas. <a href="https://repositorio.cepal.org/server/api/core/bitstreams/14d443ec-8f1e-44a7-b22b-9f124f205abe/content">https://repositorio.cepal.org/server/api/core/bitstreams/14d443ec-8f1e-44a7-b22b-9f124f205abe/content</a>.
 </div>
 <div id="ref-cochran1977sampling" class="csl-entry" role="listitem">
 Cochran, William Gemmell. 1977. <em>Sampling techniques</em>. John Wiley &amp; Sons.
@@ -509,25 +526,25 @@ Efron, Bradley. 1979. <span>«Bootstrap methods: Another look at the jackknife»
 Ferreira, Juan Pablo. 2026. <em>weightflow: Declarative API for Staged Survey Weights</em>. <a href="https://doi.org/10.32614/CRAN.package.weightflow">https://doi.org/10.32614/CRAN.package.weightflow</a>.
 </div>
 <div id="ref-Fuller2009" class="csl-entry" role="listitem">
-Fuller, Wayne A. 2009. <em>Sampling Statistics</em>. Wiley Series en Survey Methodology. Hoboken, New Jersey: John Wiley &amp; Sons. <a href="https://doi.org/10.1002/9780470523551">https://doi.org/10.1002/9780470523551</a>.
+Fuller, Wayne A. 2009. <em>Sampling Statistics</em>. Wiley Series en Survey Methodology. John Wiley &amp; Sons. <a href="https://doi.org/10.1002/9780470523551">https://doi.org/10.1002/9780470523551</a>.
 </div>
 <div id="ref-gambino2009sampling" class="csl-entry" role="listitem">
-Gambino, Jack G, y Pedro Luis do Nascimento Silva. 2009. <span>«Sampling and estimation in household surveys»</span>. En <em>Handbook of Statistics</em>, 29:407-39. Elsevier.
+Gambino, Jack G, y Pedro Luis do Nascimento Silva. 2009. <span>«Sampling and estimation in household surveys»</span>. En <em>Handbook of Statistics</em>, vol. 29. Elsevier.
 </div>
 <div id="ref-Groves2009" class="csl-entry" role="listitem">
-Groves, Robert M., Floyd J. Fowler, Mick P. Couper, James M. Lepkowski, Eleanor Singer, y Roger Tourangeau. 2009. <em>Survey Methodology</em>. 2.ª ed. Hoboken, NJ: John Wiley &amp; Sons.
+Groves, Robert M., Floyd J. Fowler, Mick P. Couper, James M. Lepkowski, Eleanor Singer, y Roger Tourangeau. 2009. <em>Survey Methodology</em>. 2.ª ed. John Wiley &amp; Sons.
 </div>
 <div id="ref-Gutierrez2016" class="csl-entry" role="listitem">
 Gutiérrez, Andrés. 2016. <em>Estrategias de muestreo: diseño de encuestas y estimación de parámetros</em>. Segunda edición. Ediciones de la U.
 </div>
 <div id="ref-GutierrezBabativa2023" class="csl-entry" role="listitem">
-Gutiérrez, Andrés, y Giovany Babativa-Márquez. 2023. <span>«Efectos de diseño para indicadores sociales en Am<span>é</span>rica Latina: función generalizada de varianza para estimadores directos provenientes de encuestas de hogares»</span>. LC/TS.2023/95 106. CEPAL - Serie Estudios Estadísticos. Santiago: CEPAL. <a href="https://repositorio.cepal.org/server/api/core/bitstreams/feb8c8be-6434-41f2-8fd9-f12f71a0739a/content">https://repositorio.cepal.org/server/api/core/bitstreams/feb8c8be-6434-41f2-8fd9-f12f71a0739a/content</a>.
+Gutiérrez, Andrés, y Giovany Babativa-Márquez. 2023. <em>Efectos de diseño para indicadores sociales en Am<span>é</span>rica Latina: función generalizada de varianza para estimadores directos provenientes de encuestas de hogares</em>. LC/TS.2023/95 No. 106. CEPAL - Serie Estudios Estadísticos. CEPAL. <a href="https://repositorio.cepal.org/server/api/core/bitstreams/feb8c8be-6434-41f2-8fd9-f12f71a0739a/content">https://repositorio.cepal.org/server/api/core/bitstreams/feb8c8be-6434-41f2-8fd9-f12f71a0739a/content</a>.
 </div>
 <div id="ref-hansen1953sample" class="csl-entry" role="listitem">
-Hansen, Morris H, William N Hurwitz, William G Madow, et&nbsp;al. 1953. <span>«Sample survey methods and theory»</span>.
+<span class="nocase">Hansen, Morris H, William N Hurwitz, William G Madow, et&nbsp;al.</span> 1953. <em>Sample survey methods and theory</em>.
 </div>
 <div id="ref-HeeringaWestBerglund2017" class="csl-entry" role="listitem">
-Heeringa, Steven G., Brady T. West, y Patricia A. Berglund. 2017. <em>Applied Survey Data Analysis</em>. 2.ª ed. Boca Raton: Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/9781315153278">https://doi.org/10.1201/9781315153278</a>.
+Heeringa, Steven G., Brady T. West, y Patricia A. Berglund. 2017. <em>Applied Survey Data Analysis</em>. 2.ª ed. Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/9781315153278">https://doi.org/10.1201/9781315153278</a>.
 </div>
 <div id="ref-HorvitzThompson1952" class="csl-entry" role="listitem">
 Horvitz, Daniel G., y Donovan J. Thompson. 1952. <span>«A Generalization of Sampling Without Replacement from a Finite Universe»</span>. <em>Journal of the American Statistical Association</em> 47 (260): 663-85. <a href="https://doi.org/10.1080/01621459.1952.10483446">https://doi.org/10.1080/01621459.1952.10483446</a>.
@@ -536,7 +553,7 @@ Horvitz, Daniel G., y Donovan J. Thompson. 1952. <span>«A Generalization of Sam
 Kalton, Graham, y Ismael Flores-Cervantes. 2003. <span>«Weighting methods»</span>. <em>Journal of official statistics</em> 19 (2): 81.
 </div>
 <div id="ref-kish1965survey" class="csl-entry" role="listitem">
-Kish, Leslie. 1965. <span>«Survey sampling.»</span>
+Kish, Leslie. 1965. <em>Survey sampling.</em>
 </div>
 <div id="ref-kish1974inference" class="csl-entry" role="listitem">
 Kish, Leslie, y Martin R. Frankel. 1974. <span>«Inference from complex samples»</span>. <em>Journal of the Royal Statistical Society, Series B</em> 36: 1-37.
@@ -545,19 +562,19 @@ Kish, Leslie, y Martin R. Frankel. 1974. <span>«Inference from complex samples�
 Korn, Edward L, y Barry I Graubard. 1995. <span>«Analysis of large health surveys: accounting for the sampling design»</span>. <em>Journal of the Royal Statistical Society: Series A (Statistics in Society)</em> 158 (2): 263-95.
 </div>
 <div id="ref-UnitedNations2005" class="csl-entry" role="listitem">
-Naciones Unidas. 2005. <em>Designing Household Survey Samples: Practical Guidelines</em>. Studies en Methods, Series F, No. 98. New York: United Nations.
+Naciones Unidas. 2005. <em>Designing Household Survey Samples: Practical Guidelines</em>. Studies en Methods, Series F, No. 98. United Nations.
 </div>
 <div id="ref-ONUDeff" class="csl-entry" role="listitem">
-———. 2009. <em>Diseño de Muestras para Encuestas de Hogares: Directrices Prácticas.</em> Estudios de Métodos, Serie F 98. Nueva York: Naciones Unidas. <a href="https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf">https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf</a>.
+Naciones Unidas. 2009. <em>Diseño de Muestras para Encuestas de Hogares: Directrices Prácticas.</em> Estudios de Métodos, Serie F 98. Naciones Unidas. <a href="https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf">https://unstats.un.org/unsd/publication/seriesf/seriesf_98s.pdf</a>.
 </div>
 <div id="ref-unitednations2021householdsurveys" class="csl-entry" role="listitem">
-———. 2021. <span>«Report of the Intersecretariat Working Group on Household Surveys»</span>. E/CN.3/2021/16. United Nations Statistical Commission.
+Naciones Unidas. 2021. <em>Report of the Intersecretariat Working Group on Household Surveys</em>. E/CN.3/2021/16. United Nations Statistical Commission.
 </div>
 <div id="ref-UNhandbook" class="csl-entry" role="listitem">
-———. 2026. <em>Handbook of Surveys on Households and Individuals Foundations and Emerging Approaches</em>. Naciones Unidas.
+Naciones Unidas. 2026. <em>Handbook of Surveys on Households and Individuals Foundations and Emerging Approaches</em>. Naciones Unidas.
 </div>
 <div id="ref-Park2003Design" class="csl-entry" role="listitem">
-Park, Inho, Marianne Winglee, Jay Clark, Keith Rust, Andrea Sedlak, y David Morganstein. 2003. <span>«Design Effects and Survey Planning»</span>. En <em>Proceedings of the Section on Survey Research Methods</em>, 3179-86. <a href="https://www.asasrms.org/Proceedings/y2003/Files/JSM2003-000156.pdf">https://www.asasrms.org/Proceedings/y2003/Files/JSM2003-000156.pdf</a>.
+Park, Inho, Marianne Winglee, Jay Clark, Keith Rust, Andrea Sedlak, y David Morganstein. 2003. <span>«Design Effects and Survey Planning»</span>. <em>Proceedings of the Section on Survey Research Methods</em>, 3179-86. <a href="https://www.asasrms.org/Proceedings/y2003/Files/JSM2003-000156.pdf">https://www.asasrms.org/Proceedings/y2003/Files/JSM2003-000156.pdf</a>.
 </div>
 <div id="ref-rao1992resampling" class="csl-entry" role="listitem">
 Rao, J. N. K., C. F. J. Wu, y K. Yue. 1992. <span>«Some recent work on resampling methods for complex surveys»</span>. <em>Survey Methodology</em> 18: 209-17.
@@ -575,7 +592,7 @@ Särndal, Carl-Erik, Bengt Swensson, y Jan Wretman. 2003. <em>Model assisted sur
 Valliant, Richard, y Jill A. Dever. 2017. <em>Survey Weights: A Step-by-step Guide to Calculation</em>. 1 edition. Stata Press.
 </div>
 <div id="ref-Wolter2007Variance" class="csl-entry" role="listitem">
-Wolter, Kirk M. 2007. <em>Introduction to Variance Estimation</em>. 2.ª ed. Springer Series en Statistics. New York, NY: Springer. <a href="https://doi.org/10.1007/978-0-387-35099-8">https://doi.org/10.1007/978-0-387-35099-8</a>.
+Wolter, Kirk M. 2007. <em>Introduction to Variance Estimation</em>. 2.ª ed. Springer Series en Statistics. Springer. <a href="https://doi.org/10.1007/978-0-387-35099-8">https://doi.org/10.1007/978-0-387-35099-8</a>.
 </div>
 <div id="ref-Woodruff1952" class="csl-entry" role="listitem">
 Woodruff, Ralph S. 1952. <span>«Confidence Intervals for Medians and Other Position Measures»</span>. <em>Journal of the American Statistical Association</em> 47 (260): 635-46. <a href="https://doi.org/10.1080/01621459.1952.10483443">https://doi.org/10.1080/01621459.1952.10483443</a>.
@@ -586,131 +603,257 @@ Woodruff, Ralph S. 1952. <span>«Confidence Intervals for Medians and Other Posi
 
 </main> <!-- /main -->
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
+
   const labels = {
+
     note: "Nota",
+
     tip: "Consejo",
+
     important: "Importante",
+
     warning: "Advertencia",
+
     caution: "Precaución"
+
   };
+
+
 
   Object.keys(labels).forEach(function (type) {
+
     document.querySelectorAll(".callout-" + type).forEach(function (callout, index) {
+
       const title = callout.querySelector(".callout-title-container");
+
       if (!title || title.dataset.numbered === "true") {
+
         return;
+
       }
+
+
 
       const text = title.textContent.trim();
+
       if (!text || text === labels[type]) {
+
         title.textContent = labels[type] + " " + (index + 1);
+
       } else if (!new RegExp("^" + labels[type] + "\\s+\\d+").test(text)) {
+
         title.textContent = labels[type] + " " + (index + 1) + ". " + text;
+
       }
+
       title.dataset.numbered = "true";
+
     });
+
   });
+
 });
+
 </script>
+
 <script>
+
 (() => {
+
   const initTocScrollspy = () => {
+
     const toc = document.querySelector("#TOC.toc-active");
 
+
+
     if (!toc || toc.dataset.aehrScrollspy === "true") {
+
       return;
+
     }
+
+
 
     const links = Array.from(
+
       toc.querySelectorAll("a[data-scroll-target]")
+
     );
 
+
+
     const entries = links
+
       .map((link) => {
+
         const target = link.getAttribute("data-scroll-target");
 
+
+
         if (!target || !target.startsWith("#")) {
+
           return null;
+
         }
+
+
 
         let id;
+
         try {
+
           id = decodeURIComponent(target.slice(1));
+
         } catch {
+
           id = target.slice(1);
+
         }
+
+
 
         const section = document.getElementById(id);
+
         return section ? { link, section } : null;
+
       })
+
       .filter(Boolean);
 
+
+
     if (entries.length === 0) {
+
       return;
+
     }
 
+
+
     const nestedLists = Array.from(toc.querySelectorAll("ul ul"));
+
     let scheduled = false;
 
+
+
     const updateNestedLists = (activeLink) => {
+
       nestedLists.forEach((list) => {
+
         const parentLink = Array.from(list.parentElement.children).find(
+
           (element) => element.matches("a[data-scroll-target]")
+
         );
+
         const shouldOpen =
+
           parentLink === activeLink || list.contains(activeLink);
 
+
+
         list.classList.toggle("collapse", !shouldOpen);
+
       });
+
     };
+
+
 
     const updateActiveLink = () => {
+
       scheduled = false;
 
+
+
       const position = window.scrollY + 200;
+
       let activeEntry = entries[0];
 
+
+
       entries.forEach((entry) => {
+
         if (entry.section.offsetTop <= position) {
+
           activeEntry = entry;
+
         }
+
       });
+
+
 
       const atPageEnd =
+
         window.innerHeight + window.scrollY >=
+
         document.documentElement.scrollHeight - 2;
 
+
+
       if (atPageEnd) {
+
         activeEntry = entries[entries.length - 1];
+
       }
+
+
 
       links.forEach((link) => {
+
         link.classList.toggle("active", link === activeEntry.link);
+
       });
+
       updateNestedLists(activeEntry.link);
+
     };
+
+
 
     const scheduleUpdate = () => {
+
       if (!scheduled) {
+
         scheduled = true;
+
         window.requestAnimationFrame(updateActiveLink);
+
       }
+
     };
 
+
+
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
+
     window.addEventListener("resize", scheduleUpdate, { passive: true });
+
     toc.dataset.aehrScrollspy = "true";
+
     updateActiveLink();
+
   };
 
+
+
   if (document.readyState === "loading") {
+
     document.addEventListener("DOMContentLoaded", initTocScrollspy);
+
   } else {
+
     initTocScrollspy();
+
   }
+
 })();
+
 </script>
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -762,13 +905,14 @@ document.addEventListener("DOMContentLoaded", function () {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
