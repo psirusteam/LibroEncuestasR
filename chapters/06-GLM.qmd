@@ -118,7 +118,7 @@ De acuerdo con @molina1992pseudo y @ChambersSkinner2003, bajo condiciones de reg
 
 La matriz de varianzas y covarianzas de los parámetros estimados, denotada por $\text{Var}(\hat{\boldsymbol{\beta}})=\boldsymbol{\Sigma}$, se obtiene a partir de una aproximación lineal de las ecuaciones de estimación alrededor del verdadero valor de los parámetros. Esta matriz describe la precisión de los estimadores, ya que sus elementos diagonales corresponden a las varianzas de cada coeficiente, mientras que los elementos fuera de la diagonal representan las covarianzas entre pares de coeficientes. Su estimación constituye la base para el cálculo de errores estándar, la construcción de intervalos de confianza y la realización de pruebas de hipótesis sobre los parámetros del modelo.
 
-Siguiendo con la encuesta de ejemplo, y con el fin de analizar los factores asociados a la condición de pobreza, se ajusta un modelo de regresión logística utilizando como variables explicativas el gasto, la situación en el empleo y el sexo. Dado que los datos provienen de una encuesta con diseño muestral complejo, la estimación se realiza mediante la función `svyglm()` del paquete `survey`, especificando `family = binomial` para indicar que la variable respuesta es dicotómica y que se utilizará la función de enlace logit. Los resultados del ajuste se presentan en la @tbl-ic-logistica.
+Siguiendo con la encuesta de ejemplo, y con el fin de analizar los factores asociados a la condición de pobreza, se ajusta un modelo de regresión logística utilizando como variables explicativas el gasto, la situación en el empleo y el sexo. Dado que los datos provienen de una encuesta con diseño muestral complejo, la estimación se realiza mediante la función `svyglm()` del paquete `survey`, especificando `family = binomial` para indicar que la variable respuesta es dicotómica y que se utilizará la función de enlace logit. 
 
 ```{r mod-logistico-base, echo = TRUE, eval = TRUE}
 logit_model <- svyglm(
@@ -128,9 +128,8 @@ logit_model <- svyglm(
 )
 ```
 
-En la especificación del modelo, el argumento `formula = poor ~ Expenditure + Employment + Sex` define la relación entre la variable respuesta `poor` y las covariables incluidas en el predictor lineal. Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento `design = survey_design` incorpora la información del diseño muestral. El objeto resultante, `logit_model`, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo.
+En la especificación del modelo, el argumento `formula = poor ~ Expenditure + Employment + Sex` define la relación entre la variable respuesta `poor` y las covariables incluidas en el predictor lineal (`Expenditure`, `Employment` y `Sex`). Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento `design = survey_design` incorpora la información del diseño muestral. El objeto resultante, `logit_model`, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo.
 
-Los resultados de la @tbl-ic-logistica muestran las estimaciones de los coeficientes de regresión, junto con sus errores estándar, intervalos de confianza y valores-*p*. Del modelo se deduce que un mayor nivel de gasto se asocia con una menor probabilidad de encontrarse en condición de pobreza. Asimismo, en comparación con la categoría de referencia (desocupados), tanto las personas inactivas como las ocupadas presentan una menor propensión a ser pobres, siendo este efecto más marcado entre estas últimas. En contraste, el sexo tiene una influencia muy reducida sobre la probabilidad de pobreza una vez controlado el efecto de las demás covariables incluidas en el modelo.
 
 ```{r cod-resultados-logistica, echo = FALSE}
 logit_results <- tidy(logit_model, conf.int = TRUE, conf.level = 0.95)
@@ -146,6 +145,9 @@ logit_results %>%
   tibble::rownames_to_column("Parameter") %>%
   tabla_fmt()
 ```
+
+Los resultados de la @tbl-ic-logistica muestran las estimaciones de los coeficientes de regresión, junto con sus errores estándar, intervalos de confianza y valores-*p*. Del modelo se deduce que un mayor nivel de gasto se asocia con una menor probabilidad de encontrarse en condición de pobreza. Asimismo, en comparación con la categoría de referencia (desocupados), tanto las personas inactivas como las ocupadas presentan una menor propensión a ser pobres, siendo este efecto más marcado entre estas últimas. En contraste, el sexo tiene una influencia muy reducida sobre la probabilidad de pobreza una vez controlado el efecto de las demás covariables incluidas en el modelo.
+
 
 La @fig-logistica-base presenta la distribución de los estimadores de los coeficientes de regresión. Se observa que, para todas las covariables excepto el sexo, los intervalos de confianza no incluyen el valor cero, lo que proporciona evidencia de una asociación estadísticamente significativa. En contraste, el intervalo de confianza asociado a la variable sexo contiene el valor cero, por lo que no se encuentra evidencia suficiente para concluir que esta variable tenga un efecto significativo una vez controladas las demás covariables incluidas en el modelo.
 
@@ -204,7 +206,7 @@ En las encuestas de hogares es frecuente encontrar variables de respuesta con m�
 
 Este modelo permite estimar la probabilidad de pertenecer a cada categoría de la variable respuesta en función de variables explicativas de naturaleza continua o categórica. Su aplicación requiere que las categorías de respuesta sean exhaustivas y mutuamente excluyentes y que no exista multicolinealidad severa entre las covariables. Además, para las covariables continuas, se asume que existe una relación lineal entre estas y el logaritmo de las razones de probabilidades (*log-odds*) de cada categoría respecto a una categoría de referencia.
 
-El modelo logístico multinomial especifica, la probabilidad $\theta_{k(j)}$ de que la unidad $k$ pertenezca a la categoría $j$, con $j=1,\ldots,J$, dado el vector de covariables $\mathbf{x}_k$, mediante la siguiente expresión:
+El modelo logístico multinomial especifica la probabilidad $\theta_{k(j)}$ de que la unidad $k$ pertenezca a la categoría $j$, con $j=1,\ldots,J$, dado el vector de covariables $\mathbf{x}_k$, mediante la siguiente expresión:
 
 $$
 Pr(Y_{k} = j \mid \mathbf{x}_{k})
@@ -217,7 +219,7 @@ $$
 
 En donde $\boldsymbol{\beta}_j$ es el vector de coeficientes de regresión para la $j$-ésima categoría. Para que el modelo sea identificable, debe fijarse el vector de una categoría de referencia en cero; de ese modo, la expresión produce $J-1$ conjuntos de coeficientes estimables. Aunque existen parametrizaciones alternativas que facilitan la interpretación de los parámetros, esta formulación expresa directamente las probabilidades de pertenencia a cada categoría, y en la práctica resulta más conveniente reescribir el modelo utilizando una categoría de referencia, ya que cada conjunto de coeficientes describe el efecto de las covariables sobre el logaritmo de las razones de probabilidades (*log-odds*) de pertenecer a una determinada categoría en comparación con la categoría de referencia.
 
-Según @HeeringaWestBerglund2017, la estimación de los parámetros del modelo se realiza mediante el enfoque de pseudo-máxima verosimilitud. La función de pseudo-verosimilitud multinomial se define como
+Según @HeeringaWestBerglund2017, la estimación de los parámetros del modelo se realiza mediante el enfoque de pseudo-máxima verosimilitud, definida de la siguiente manera:
 
 
 $$
@@ -229,7 +231,7 @@ PL(\boldsymbol{\beta} \mid \mathbf{X}) =
 \right\}^{w_{k}}
 $$
 
-En donde $k$ representa las unidades de observación pertenecientes a la muestra compleja. Asimismo, $y_{k(j)}$ es una variable indicadora que toma el valor de uno cuando dicha unidad pertenece a la categoría $j$ y cero en caso contrario, y $w_{k}$ corresponde al factor de expansión asociado a la unidad observada. Por conveniencia matemática y computacional, la estimación de los parámetros se realiza a partir de la pseudo-logverosimilitud, cuya maximización conduce a los mismos estimadores que la pseudo-verosimilitud original.
+En donde $k$ representa las unidades de observación pertenecientes a la muestra compleja. Asimismo, $y_{k(j)}$ es una variable indicadora que toma el valor de uno cuando dicha unidad pertenece a la categoría $j$ y cero en caso contrario, y $w_{k}$ corresponde al factor de expansión asociado a la unidad observada. Por conveniencia matemática y computacional, la estimación de los parámetros se realiza a partir de la pseudo-logverosimilitud, $\ell(\boldsymbol{\beta})$,  cuya maximización conduce a los mismos estimadores que la pseudo-verosimilitud original.
 
 $$
 \ell(\boldsymbol{\beta})
@@ -244,24 +246,22 @@ La inferencia estadística para los parámetros de interés se basa en estimacio
 
 Como referencia inicial, se estiman las proporciones de personas por estado de empleo, restringiendo las unidades de interés a mayores de 15 años, como se presenta en la @tbl-prop-empleo-15.
 
-```{r cod-prop-empleo-15, echo = FALSE}
+```{r cod-prop-empleo-15, eval = FALSE}
 survey_design %>%
   filter(Age >= 15) %>%
   group_by(Employment) %>%
   summarise(proportion = survey_mean(vartype = c("se", "ci")))
 ```
 
-```{r calcular-prop-empleo-15, echo = TRUE}
-employment_proportion <- survey_design %>%
-  filter(Age >= 15) %>%
-  group_by(Employment) %>%
-  summarise(proportion = survey_mean(vartype = c("se", "ci")))
-```
 
 ```{r}
 #| label: tbl-prop-empleo-15
 #| tbl-cap: "Proporción estimada de personas por estado de empleo (mayores de 15 años)"
 #| echo: FALSE
+employment_proportion <- survey_design %>%
+  filter(Age >= 15) %>%
+  group_by(Employment) %>%
+  summarise(proportion = survey_mean(vartype = c("se", "ci")))
 employment_proportion %>%
   tabla_fmt()
 ```
@@ -408,24 +408,14 @@ f(y_{k}\mid\mu_{k},\phi)
 \right]
 $$
 
-En donde $k$ representa las unidades de observación de la muestra y $w_k$ corresponde al factor de expansión asociado a cada una de ellas. Esta función define el criterio de optimización utilizado para estimar los parámetros del modelo bajo el enfoque de pseudo-máxima verosimilitud, descrito para encuestas complejas por @ChambersSkinner2003. En `R`, se hace necesario primero definir el diseño de muestreo.
+En donde $k$ representa las unidades de observación de la muestra y $w_k$ corresponde al factor de expansión asociado a cada una de ellas. Esta función define el criterio de optimización utilizado para estimar los parámetros del modelo bajo el enfoque de pseudo-máxima verosimilitud, descrito para encuestas complejas por @ChambersSkinner2003. 
 
-```{r preparar-diseno-gamma, echo = TRUE, eval = TRUE}
-gamma_design <- survey_data %>%
-  as_survey_design(
-    strata = Stratum,
-    ids = PSU,
-    weights = wk,
-    nest = TRUE
-  )
-```
-
-El siguiente código ajusta, mediante `svyglm()`, un modelo de regresión Gamma para la variable de ingresos del hogar (`Income`), incorporando el diseño complejo de la encuesta definido en el objeto `gamma_design`. El modelo utiliza como variables explicativas el gasto del hogar (`Expenditure`), la edad (`Age`), el sexo (`Sex`) y la zona de residencia (`Zone`). Asimismo, se especifica una función de enlace logarítmica, garantizando predicciones positivas y permitiendo interpretar los efectos de las variables explicativas en términos multiplicativos sobre el ingreso esperado. Los coeficientes estimados se presentan en la @tbl-gamma-coeficientes:
+El siguiente código ajusta, mediante `svyglm()`, un modelo de regresión Gamma para la variable de ingresos del hogar (`Income`), incorporando el diseño complejo de la encuesta definido en el objeto `survey_design `. El modelo utiliza como variables explicativas el gasto del hogar (`Expenditure`), la edad (`Age`), el sexo (`Sex`) y la zona de residencia (`Zone`). Asimismo, se especifica una función de enlace logarítmica, garantizando predicciones positivas y permitiendo interpretar los efectos de las variables explicativas en términos multiplicativos sobre el ingreso esperado. Los coeficientes estimados se presentan en la @tbl-gamma-coeficientes:
 
 ```{r ajustar-modelo-gamma, echo = TRUE, eval = TRUE}
 gamma_model <- svyglm(
   formula = Income ~ Expenditure + Age + Sex + Zone,
-  design = gamma_design,
+  design = survey_design ,
   family = Gamma(link = "log")
 )
 ```
