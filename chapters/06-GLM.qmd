@@ -244,7 +244,7 @@ La inferencia estadística para los parámetros de interés se basa en estimacio
 
 Como referencia inicial, se estiman las proporciones de personas por estado de empleo, restringiendo las unidades de interés a mayores de 15 años, como se presenta en la @tbl-prop-empleo-15.
 
-```{r cod-prop-empleo-15, eval = FALSE}
+```{r cod-prop-empleo-15, echo = FALSE}
 survey_design %>%
   filter(Age >= 15) %>%
   group_by(Employment) %>%
@@ -286,11 +286,7 @@ multinomial_model <- svy_vglm(
 ```
 
 
-Dado que `broom::tidy()` no puede aplicarse directamente a objetos de clase `svyVGAM`, se define la siguiente función auxiliar para estructurar los resultados del modelo en un formato tabular estandarizado[^fn-tidyvglm]:
-
-[^fn-tidyvglm]: Adaptada de https://tech.popdata.org/pma-data-hub/posts/2021-08-15-covid-analysis/
-
-```{r definir-tidy-svyvglm, echo = TRUE, eval = TRUE}
+```{r definir-tidy-svyvglm, echo = FALSE, eval = TRUE}
 tidy.svyVGAM <- function(x,
                          conf.int = FALSE,
                          conf.level = 0.95,
@@ -324,10 +320,6 @@ tidy.svyVGAM <- function(x,
 
 La @tbl-multinomial-coef presenta los coeficientes estimados del modelo logístico multinomial, tomando la categoría `Unemployed` como referencia. Los resultados muestran que la edad tiene una asociación positiva y estadísticamente significativa con las probabilidades relativas de pertenecer a las categorías `Inactive` y `Employed` frente a `Unemployed`. Asimismo, la variable `SexMale` presenta coeficientes negativos y significativos, indicando que los hombres tienen menores probabilidades relativas que las mujeres de ubicarse en dichas categorías. Por el contrario, la variable de zona de residencia no muestra efectos estadísticamente significativos al nivel convencional del 5%.
 
-```{r cod-multinomial-coef, eval = FALSE}
-tidy.svyVGAM(multinomial_model, exponentiate = FALSE, conf.int = FALSE)
-```
-
 ```{r calcular-multinomial-coef, echo = FALSE}
 multinomial_results <- tidy.svyVGAM(
   multinomial_model,
@@ -340,6 +332,7 @@ multinomial_results <- tidy.svyVGAM(
 ```{r}
 #| label: tbl-multinomial-coef
 #| tbl-cap: "Coeficientes estimados del modelo de regresión multinomial"
+#| echo: FALSE
 multinomial_results %>%
   tabla_fmt()
 ```
@@ -354,7 +347,11 @@ multinomial_results %>%
   ) %>%
   dotwhisker::dwplot(
     dodge_size = 0.3,
-    vline = geom_vline(xintercept = 0, colour = "grey60", linetype = 2)
+    vline = geom_vline(
+      xintercept = 0,
+      colour = "grey60",
+      linetype = 2
+    )
   ) +
   guides(color = guide_legend(reverse = TRUE)) +
   theme_bw() +
@@ -363,7 +360,7 @@ multinomial_results %>%
 
 ## Modelo de regresión Gamma {#sec-gamma}
 
-Según @McCullaghNelder1989, la regresión Gamma constituye una extensión de los modelos lineales generalizados adecuada para variables respuesta continuas, estrictamente positivas y cuya variabilidad aumenta con la media. Este comportamiento es frecuente en variables económicas y sociales, como los ingresos de los hogares o los gastos en consumo.
+La regresión Gamma constituye una extensión de los modelos lineales generalizados adecuada para variables respuesta continuas, estrictamente positivas y cuya variabilidad aumenta con la media [@McCullaghNelder1989]. Este comportamiento es frecuente en variables económicas y sociales, como los ingresos de los hogares o los gastos en consumo.
 
 Si $Y_{k}$, la variable de interés observada para la unidad $k$, sigue una distribución Gamma con media $\mu_{k}$ y parámetro de dispersión $\phi$, el modelo relaciona el valor esperado de la variable respuesta con un conjunto de covariables mediante una función de enlace. El enlace logarítmico es una opción frecuente y garantiza predicciones positivas, aunque el enlace canónico de la familia Gamma es el inverso. En este caso, el modelo se expresa como
 
@@ -433,13 +430,11 @@ gamma_model <- svyglm(
 )
 ```
 
-```{r calcular-gamma-coeficientes, echo = FALSE}
-gamma_results <- broom::tidy(gamma_model)
-```
-
 ```{r}
 #| label: tbl-gamma-coeficientes
 #| tbl-cap: "Coeficientes del modelo Gamma para el ingreso de los hogares"
+#| echo: FALSE
+gamma_results <- broom::tidy(gamma_model)
 gamma_results %>%
   tabla_fmt()
 ```
