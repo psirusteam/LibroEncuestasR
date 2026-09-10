@@ -260,7 +260,7 @@
 \subtitle{usando R}
 \author{Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa, Cristian
 Téllez y Xavier Mancero}
-\date{4 de septiembre de 2026}
+\date{9 de septiembre de 2026}
 \begin{document}
 \frontmatter
 \maketitle
@@ -8383,8 +8383,7 @@ situación en el empleo y el sexo. Dado que los datos provienen de una
 encuesta con diseño muestral complejo, la estimación se realiza mediante
 la función \texttt{svyglm()} del paquete \texttt{survey}, especificando
 \texttt{family\ =\ binomial} para indicar que la variable respuesta es
-dicotómica y que se utilizará la función de enlace logit. Los resultados
-del ajuste se presentan en la tabla~\ref{tbl-ic-logistica}.
+dicotómica y que se utilizará la función de enlace logit.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8399,8 +8398,9 @@ del ajuste se presentan en la tabla~\ref{tbl-ic-logistica}.
 En la especificación del modelo, el argumento
 \texttt{formula\ =\ poor\ \textasciitilde{}\ Expenditure\ +\ Employment\ +\ Sex}
 define la relación entre la variable respuesta \texttt{poor} y las
-covariables incluidas en el predictor lineal. Para las variables
-categóricas, la función genera automáticamente las variables indicadoras
+covariables incluidas en el predictor lineal (\texttt{Expenditure},
+\texttt{Employment} y \texttt{Sex}). Para las variables categóricas, la
+función genera automáticamente las variables indicadoras
 correspondientes y estima sus efectos con respecto a una categoría de
 referencia. Por su parte, el argumento
 \texttt{design\ =\ survey\_design} incorpora la información del diseño
@@ -8408,17 +8408,6 @@ muestral. El objeto resultante, \texttt{logit\_model}, contiene los
 parámetros estimados, sus medidas de precisión y las estadísticas
 necesarias para realizar inferencia sobre la relación entre la condición
 de pobreza y las variables explicativas consideradas en el modelo.
-
-Los resultados de la tabla~\ref{tbl-ic-logistica} muestran las
-estimaciones de los coeficientes de regresión, junto con sus errores
-estándar, intervalos de confianza y valores-\emph{p}. Del modelo se
-deduce que un mayor nivel de gasto se asocia con una menor probabilidad
-de encontrarse en condición de pobreza. Asimismo, en comparación con la
-categoría de referencia (desocupados), tanto las personas inactivas como
-las ocupadas presentan una menor propensión a ser pobres, siendo este
-efecto más marcado entre estas últimas. En contraste, el sexo tiene una
-influencia muy reducida sobre la probabilidad de pobreza una vez
-controlado el efecto de las demás covariables incluidas en el modelo.
 
 {
 
@@ -8471,6 +8460,17 @@ conf.high
 \end{longtable}
 
 }
+
+Los resultados de la tabla~\ref{tbl-ic-logistica} muestran las
+estimaciones de los coeficientes de regresión, junto con sus errores
+estándar, intervalos de confianza y valores-\emph{p}. Del modelo se
+deduce que un mayor nivel de gasto se asocia con una menor probabilidad
+de encontrarse en condición de pobreza. Asimismo, en comparación con la
+categoría de referencia (desocupados), tanto las personas inactivas como
+las ocupadas presentan una menor propensión a ser pobres, siendo este
+efecto más marcado entre estas últimas. En contraste, el sexo tiene una
+influencia muy reducida sobre la probabilidad de pobreza una vez
+controlado el efecto de las demás covariables incluidas en el modelo.
 
 La figura~\ref{fig-logistica-base} presenta la distribución de los
 estimadores de los coeficientes de regresión. Se observa que, para todas
@@ -8654,7 +8654,7 @@ las covariables continuas, se asume que existe una relación lineal entre
 estas y el logaritmo de las razones de probabilidades (\emph{log-odds})
 de cada categoría respecto a una categoría de referencia.
 
-El modelo logístico multinomial especifica, la probabilidad
+El modelo logístico multinomial especifica la probabilidad
 \(\theta_{k(j)}\) de que la unidad \(k\) pertenezca a la categoría
 \(j\), con \(j=1,\ldots,J\), dado el vector de covariables
 \(\mathbf{x}_k\), mediante la siguiente expresión:
@@ -8683,8 +8683,7 @@ categoría en comparación con la categoría de referencia.
 
 Según Heeringa et~al. (\citeproc{ref-HeeringaWestBerglund2017}{2017}),
 la estimación de los parámetros del modelo se realiza mediante el
-enfoque de pseudo-máxima verosimilitud. La función de
-pseudo-verosimilitud multinomial se define como
+enfoque de pseudo-máxima verosimilitud, definida de la siguiente manera:
 
 \[
 PL(\boldsymbol{\beta} \mid \mathbf{X}) =
@@ -8701,8 +8700,8 @@ que toma el valor de uno cuando dicha unidad pertenece a la categoría
 \(j\) y cero en caso contrario, y \(w_{k}\) corresponde al factor de
 expansión asociado a la unidad observada. Por conveniencia matemática y
 computacional, la estimación de los parámetros se realiza a partir de la
-pseudo-logverosimilitud, cuya maximización conduce a los mismos
-estimadores que la pseudo-verosimilitud original.
+pseudo-logverosimilitud, \(\ell(\boldsymbol{\beta})\), cuya maximización
+conduce a los mismos estimadores que la pseudo-verosimilitud original.
 
 \[
 \ell(\boldsymbol{\beta})
@@ -8727,18 +8726,9 @@ Como referencia inicial, se estiman las proporciones de personas por
 estado de empleo, restringiendo las unidades de interés a mayores de 15
 años, como se presenta en la tabla~\ref{tbl-prop-empleo-15}.
 
-\begin{verbatim}
-# A tibble: 3 x 5
-  Employment proportion proportion_se proportion_low proportion_upp
-  <fct>           <dbl>         <dbl>          <dbl>          <dbl>
-1 Unemployed     0.0429       0.00715         0.0288         0.0571
-2 Inactive       0.384        0.0152          0.354          0.414 
-3 Employed       0.573        0.0140          0.545          0.601 
-\end{verbatim}
-
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{employment\_proportion }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{survey\_design }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{filter}\NormalTok{(Age }\SpecialCharTok{\textgreater{}=} \DecValTok{15}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{group\_by}\NormalTok{(Employment) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{summarise}\NormalTok{(}\AttributeTok{proportion =} \FunctionTok{survey\_mean}\NormalTok{(}\AttributeTok{vartype =} \FunctionTok{c}\NormalTok{(}\StringTok{"se"}\NormalTok{, }\StringTok{"ci"}\NormalTok{)))}
@@ -8974,25 +8964,12 @@ En donde \(k\) representa las unidades de observación de la muestra y
 Esta función define el criterio de optimización utilizado para estimar
 los parámetros del modelo bajo el enfoque de pseudo-máxima
 verosimilitud, descrito para encuestas complejas por Chambers y Skinner
-(\citeproc{ref-ChambersSkinner2003}{2003}). En \texttt{R}, se hace
-necesario primero definir el diseño de muestreo.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{gamma\_design }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{as\_survey\_design}\NormalTok{(}
-    \AttributeTok{strata =}\NormalTok{ Stratum,}
-    \AttributeTok{ids =}\NormalTok{ PSU,}
-    \AttributeTok{weights =}\NormalTok{ wk,}
-    \AttributeTok{nest =} \ConstantTok{TRUE}
-\NormalTok{  )}
-\end{Highlighting}
-\end{Shaded}
+(\citeproc{ref-ChambersSkinner2003}{2003}).
 
 El siguiente código ajusta, mediante \texttt{svyglm()}, un modelo de
 regresión Gamma para la variable de ingresos del hogar
 (\texttt{Income}), incorporando el diseño complejo de la encuesta
-definido en el objeto \texttt{gamma\_design}. El modelo utiliza como
+definido en el objeto \texttt{survey\_design}. El modelo utiliza como
 variables explicativas el gasto del hogar (\texttt{Expenditure}), la
 edad (\texttt{Age}), el sexo (\texttt{Sex}) y la zona de residencia
 (\texttt{Zone}). Asimismo, se especifica una función de enlace
@@ -9005,7 +8982,7 @@ presentan en la tabla~\ref{tbl-gamma-coeficientes}:
 \begin{Highlighting}[]
 \NormalTok{gamma\_model }\OtherTok{\textless{}{-}} \FunctionTok{svyglm}\NormalTok{(}
   \AttributeTok{formula =}\NormalTok{ Income }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Expenditure }\SpecialCharTok{+}\NormalTok{ Age }\SpecialCharTok{+}\NormalTok{ Sex }\SpecialCharTok{+}\NormalTok{ Zone,}
-  \AttributeTok{design =}\NormalTok{ gamma\_design,}
+  \AttributeTok{design =}\NormalTok{ survey\_design ,}
   \AttributeTok{family =} \FunctionTok{Gamma}\NormalTok{(}\AttributeTok{link =} \StringTok{"log"}\NormalTok{)}
 \NormalTok{)}
 \end{Highlighting}
@@ -9054,21 +9031,21 @@ que influyen sobre el ingreso.
 
 \chapter{Modelos multinivel}\label{cap7}
 
-De acuerdo con Goldstein (\citeproc{ref-goldstein2011multilevel}{2011})
-y Rabe-Hesketh y Skrondal
-(\citeproc{ref-rabehesketh2012multilevel}{2012}), los modelos
-multinivel, también conocidos como modelos jerárquicos, son una técnica
-estadística diseñada para el análisis de datos con estructura
-jerárquica, como los que provienen de encuestas de hogares, en donde las
-unidades de observación no son independientes entre sí. Los individuos
-pertenecen a hogares, los hogares se ubican en áreas geográficas
-específicas (UPMs) y estas, a su vez, forman parte de unidades
-territoriales más amplias (estratos o dominios). Como consecuencia, las
-observaciones que comparten un mismo contexto suelen presentar
-características más similares entre sí que aquellas pertenecientes a
-contextos diferentes. Esta estructura de dependencia viola uno de los
-supuestos fundamentales de los modelos de regresión convencionales y
-puede conducir a estimaciones ineficientes e inferencias incorrectas.
+Los modelos multinivel, también conocidos como modelos jerárquicos, son
+una técnica estadística diseñada para el análisis de datos con
+estructura jerárquica, como los que provienen de encuestas de hogares,
+en donde las unidades de observación no son independientes entre sí
+(\citeproc{ref-goldstein2011multilevel}{Goldstein 2011};
+\citeproc{ref-rabehesketh2012multilevel}{Rabe-Hesketh y Skrondal 2012}).
+Los individuos pertenecen a hogares, los hogares se ubican en áreas
+geográficas específicas (UPMs) y estas, a su vez, forman parte de
+unidades territoriales más amplias (estratos o dominios). Como
+consecuencia, las observaciones que comparten un mismo contexto suelen
+presentar características más similares entre sí que aquellas
+pertenecientes a contextos diferentes. Esta estructura de dependencia
+viola uno de los supuestos fundamentales de los modelos de regresión
+convencionales y puede conducir a estimaciones ineficientes e
+inferencias incorrectas.
 
 A diferencia de los modelos de regresión convencionales, los modelos
 multinivel reconocen que las observaciones pueden estar agrupadas en
@@ -9098,22 +9075,18 @@ desarrollo teórico y metodológico de los modelos multinivel ha sido
 ampliamente documentado en la literatura de muestreo. Sus fundamentos
 conceptuales, estrategias de estimación y aplicaciones en contextos
 sociales y demográficos se encuentran consolidados en distintas
-referencias especializadas.
-
-Como muestra Browne y Draper
-(\citeproc{ref-browne2006comparison}{2006}), por otra parte, la
-comparación entre enfoques de estimación para modelos jerárquicos
-permite evaluar diferencias entre los métodos basados en máxima
-verosimilitud y los enfoques bayesianos.
+referencias especializadas. Por otra parte, la comparación entre
+enfoques de estimación para modelos jerárquicos permite evaluar
+diferencias entre los métodos basados en máxima verosimilitud y los
+enfoques bayesianos (\citeproc{ref-browne2006comparison}{Browne y Draper
+2006}).
 
 Según Merlo et~al. (\citeproc{ref-merlo2006brief}{2006}), en el ámbito
 de la epidemiología social, los modelos multinivel resultan útiles para
 estudiar fenómenos contextuales, mostrando cómo factores asociados al
 entorno pueden contribuir a explicar desigualdades en salud y otros
-resultados de interés poblacional.
-
-Como advierten Pfeffermann et~al.
-(\citeproc{ref-pfeffermann1998weighting}{1998}) y Carle
+resultados de interés poblacional. Ademas, como advierten Pfeffermann
+et~al. (\citeproc{ref-pfeffermann1998weighting}{1998}) y Carle
 (\citeproc{ref-Carle2009}{2009}), es necesario distinguir entre la
 jerarquía sustantiva que se desea modelar y la estructura del diseño
 muestral: una UPM, un estrato de diseño o un dominio no constituye
@@ -9123,23 +9096,19 @@ conceptual y suficiente información en cada grupo.
 
 \section{Motivación}\label{sec-motivacionMult}
 
-De acuerdo con Bates et~al. (\citeproc{ref-BatesEtAl2015}{2015}), para
-iniciar este capítulo, se cargan \texttt{tidyverse} para la manipulación
-de datos y la generación de gráficos, y \texttt{lme4} para la estimación
-de modelos multinivel. Asimismo, se importa la base de datos que será
-utilizada a lo largo de los ejemplos. Los títulos matemáticos de algunas
-figuras se formatean con \texttt{latex2exp}, llamado de forma explícita
-en el código.
+Para iniciar este capítulo, se cargan las librearía \texttt{tidyverse}
+para la manipulación de datos y la generación de gráficos, y
+\texttt{lme4} para la estimación de modelos multinivel
+(\citeproc{ref-BatesEtAl2015}{Bates et~al. 2015}). Asimismo, se importa
+la base de datos que será utilizada a lo largo de los ejemplos. Los
+títulos matemáticos de algunas figuras se formatean con
+\texttt{latex2exp}, llamado de forma explícita en el código.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(tidyverse)}
 \FunctionTok{library}\NormalTok{(lme4)}
-\end{Highlighting}
-\end{Shaded}
 
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{survey\_data }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"../Data/encuesta.rds"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{mutate}\NormalTok{(}\AttributeTok{poor =} \FunctionTok{ifelse}\NormalTok{(Poverty }\SpecialCharTok{!=} \StringTok{"NotPoor"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
 \end{Highlighting}
@@ -9178,17 +9147,13 @@ estimada junto con los datos observados.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data,}
-       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
   \FunctionTok{geom\_jitter}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{formula =}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{ggtitle}\NormalTok{(latex2exp}\SpecialCharTok{::}\FunctionTok{TeX}\NormalTok{(}
-    \StringTok{"$Income\_\{i\} }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{sim }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{beta\}\_\{0\} + }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{beta\}\_\{1\}Expenditure\_\{i\} + }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{epsilon\_\{i\}$"}
-\NormalTok{  )) }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}
-    \AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
-    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{)}
-\NormalTok{  )}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{formula =}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x,}
+              \AttributeTok{method =} \StringTok{"lm"}\NormalTok{,}
+              \AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
+        \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -9217,13 +9182,13 @@ gasto sea semejante. Ignorar esta estructura jerárquica puede conducir a
 estimaciones incorrectas de los errores estándar y, en consecuencia, a
 inferencias estadísticas poco confiables.
 
-Con fines exclusivamente ilustrativos, se incorpora gradualmente la
-estructura jerárquica de los datos al proceso de modelación. Para ello,
-se ajusta inicialmente un modelo que permite que cada estrato tenga su
-propio intercepto, mientras mantiene una pendiente común para todas las
-observaciones. Esta especificación resulta útil para visualizar cómo los
-niveles promedio de ingreso pueden diferir entre estratos, aun cuando la
-relación entre ingreso y gasto se considere constante.
+Para incorporar gradualmente la estructura jerárquica de los datos al
+proceso de modelación, se ajusta inicialmente un modelo que permite que
+cada estrato tenga su propio intercepto, mientras mantiene una pendiente
+común para todas las observaciones. Esta especificación resulta útil
+para visualizar cómo los niveles promedio de ingreso pueden diferir
+entre estratos, aun cuando la relación entre ingreso y gasto se
+considere constante.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -9244,18 +9209,18 @@ con interceptos diferenciados por estrato:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data,}
-       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
   \FunctionTok{geom\_jitter}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{geom\_abline}\NormalTok{(}\AttributeTok{data =}\NormalTok{ model\_coef,}
-              \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{slope =}\NormalTok{ beta\_1, }\AttributeTok{intercept =}\NormalTok{ beta\_0, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
-  \FunctionTok{ggtitle}\NormalTok{(latex2exp}\SpecialCharTok{::}\FunctionTok{TeX}\NormalTok{(}
-    \StringTok{"$Income\_\{kj\} }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{sim }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{beta\}\_\{0j\} + }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{beta\}\_\{1\}Expenditure\_\{kj\} + }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{epsilon\_\{kj\}$"}
-\NormalTok{  )) }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}
-    \AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
-    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{)}
-\NormalTok{  )}
+  \FunctionTok{geom\_abline}\NormalTok{(}
+    \AttributeTok{data =}\NormalTok{ model\_coef,}
+    \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}
+      \AttributeTok{slope =}\NormalTok{ beta\_1,}
+      \AttributeTok{intercept =}\NormalTok{ beta\_0,}
+      \AttributeTok{colour =}\NormalTok{ Stratum}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
+        \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -9296,18 +9261,18 @@ para cada estrato.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data,}
-       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
   \FunctionTok{geom\_jitter}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{geom\_abline}\NormalTok{(}\AttributeTok{data =}\NormalTok{ model\_coef,}
-              \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{slope =}\NormalTok{ beta\_1, }\AttributeTok{intercept =}\NormalTok{ beta\_0, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
-  \FunctionTok{ggtitle}\NormalTok{(latex2exp}\SpecialCharTok{::}\FunctionTok{TeX}\NormalTok{(}
-    \StringTok{"$Income\_\{kj\} }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{sim }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{beta\}\_\{0\} + }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{beta\}\_\{1j\}Expenditure\_\{kj\} + }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{epsilon\_\{kj\}$"}
-\NormalTok{  )) }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}
-    \AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
-    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{)}
-\NormalTok{  )}
+  \FunctionTok{geom\_abline}\NormalTok{(}
+    \AttributeTok{data =}\NormalTok{ model\_coef,}
+    \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}
+      \AttributeTok{slope =}\NormalTok{ beta\_1,}
+      \AttributeTok{intercept =}\NormalTok{ beta\_0,}
+      \AttributeTok{colour =}\NormalTok{ Stratum}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
+        \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -9348,18 +9313,18 @@ ajustadas para cada estrato bajo esta especificación.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data,}
-       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
   \FunctionTok{geom\_jitter}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{geom\_abline}\NormalTok{(}\AttributeTok{data =}\NormalTok{ model\_coef,}
-              \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{slope =}\NormalTok{ beta\_1, }\AttributeTok{intercept =}\NormalTok{ beta\_0, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
-  \FunctionTok{ggtitle}\NormalTok{(latex2exp}\SpecialCharTok{::}\FunctionTok{TeX}\NormalTok{(}
-    \StringTok{"$Income\_\{kj\} }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{sim }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{beta\}\_\{0j\} + }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{beta\}\_\{1j\}Expenditure\_\{kj\} + }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{epsilon\_\{kj\}$"}
-\NormalTok{  )) }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}
-    \AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
-    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{)}
-\NormalTok{  )}
+  \FunctionTok{geom\_abline}\NormalTok{(}
+    \AttributeTok{data =}\NormalTok{ model\_coef,}
+    \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}
+      \AttributeTok{slope =}\NormalTok{ beta\_1,}
+      \AttributeTok{intercept =}\NormalTok{ beta\_0,}
+      \AttributeTok{colour =}\NormalTok{ Stratum}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
+        \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -9385,42 +9350,17 @@ patrones similares, lo que puede generar estimaciones inestables,
 especialmente en aquellos grupos con un número reducido de
 observaciones.
 
-Según Gelman y Hill (\citeproc{ref-gelman2006data}{2006}) y Goldstein
-(\citeproc{ref-goldstein2011multilevel}{2011}), los modelos multinivel
-superan esta dificultad mediante un mecanismo conocido como encogimiento
-(\emph{shrinkage}), en el cual las estimaciones específicas de cada
-grupo se obtienen combinando la información propia del grupo con la
-información proveniente del conjunto de la población. De esta manera, se
-logra un equilibrio entre la representación de las diferencias entre
+Los modelos multinivel superan esta dificultad mediante un mecanismo
+conocido como encogimiento (\emph{shrinkage}), en el cual las
+estimaciones específicas de cada grupo se obtienen combinando la
+información propia del grupo con la información proveniente del conjunto
+de la población (\citeproc{ref-gelman2006data}{Gelman y Hill 2006};
+\citeproc{ref-goldstein2011multilevel}{Goldstein 2011}). De esta manera,
+se logra un equilibrio entre la representación de las diferencias entre
 estratos y la eficiencia estadística de las estimaciones.
 
-\section{\texorpdfstring{Pesos
-\emph{q-weighted}}{Pesos q-weighted}}\label{pesos-q-weighted}
-
-De acuerdo con Pfeffermann et~al.
-(\citeproc{ref-pfeffermann1998weighting}{1998}), Asparouhov
-(\citeproc{ref-asparouhov2006general}{2006}), Rabe-Hesketh y Skrondal
-(\citeproc{ref-rabehesketh2006multilevel}{2006}), Carle
-(\citeproc{ref-Carle2009}{2009}) y Cai
-(\citeproc{ref-cai2013investigation}{2013}), en relación con la
-incorporación de pesos de muestreo en modelos multinivel, existen
-enfoques basados en pseudo-máxima verosimilitud, en particular mediante
-procedimientos de mínimos cuadrados generalizados ponderados, así como
-métodos basados en algoritmos EM para la estimación de modelos
-jerárquicos con ponderaciones. La incorporación de los pesos resulta
-importante cuando el muestreo es informativo, aunque no existe una única
-estrategia metodológica para su implementación.
-
-Según Kreft y De Leeuw (\citeproc{ref-kreft1998introducing}{1998}) y
-Bates et~al. (\citeproc{ref-BatesEtAl2015}{2015}), desde una perspectiva
-general, el enfoque de máxima verosimilitud consiste en estimar los
-parámetros del modelo identificando aquellos valores que maximizan la
-probabilidad de observar los datos disponibles bajo la especificación
-asumida. Una extensión importante de este enfoque es la máxima
-verosimilitud restringida (REML), la cual mejora la estimación de los
-componentes de varianza al considerar la pérdida de grados de libertad
-debida a la estimación de los efectos fijos, produciendo en muchos casos
-estimaciones menos sesgadas que la máxima verosimilitud convencional.
+\section{Incorporación de pesos de muestreo en modelos
+multinivel}\label{pesos-q-weighted}
 
 En el contexto de los modelos multinivel con datos provenientes de
 encuestas, una dificultad adicional radica en la incorporación coherente
@@ -9431,6 +9371,44 @@ log-verosimilitud no puede descomponerse como una suma simple de
 contribuciones individuales. En su lugar, es necesario considerar
 explícitamente la dependencia entre los distintos niveles del diseño
 muestral para lograr inferencias adecuadas.
+
+La incorporación de los pesos de muestreo en modelos multinivel ha
+recibido una atención considerable en la literatura, especialmente
+cuando el diseño de la encuesta puede ser informativo. En estos casos,
+la probabilidad de inclusión de las unidades puede estar relacionada con
+las variables de interés, incluso después de condicionar por las
+covariables incluidas en el modelo. Ignorar esta característica del
+diseño puede afectar la estimación de los parámetros y, en consecuencia,
+la validez de las inferencias obtenidas a partir del modelo
+(\citeproc{ref-pfeffermann1998weighting}{Pfeffermann et~al. 1998};
+\citeproc{ref-asparouhov2006general}{Asparouhov 2006}).
+
+Una de las principales alternativas consiste en extender los métodos de
+estimación habituales mediante procedimientos de pseudo-máxima
+verosimilitud, incorporando los pesos de muestreo en la función objetivo
+utilizada para estimar los parámetros. Como se ha mencionado a lo largo
+de este documento, dentro de este enfoque se han propuesto diferentes
+formas de ponderar las contribuciones de las unidades y de los
+conglomerados a la función de verosimilitud
+(\citeproc{ref-rabehesketh2006multilevel}{Rabe-Hesketh y Skrondal 2006};
+\citeproc{ref-Carle2009}{Carle 2009}). Estas estrategias buscan
+preservar, en la medida de lo posible, las ventajas de la modelación
+jerárquica al tiempo que incorporan información procedente del diseño
+muestral.
+
+También se han desarrollado procedimientos de estimación basados en
+algoritmos iterativos, incluidos enfoques que utilizan variantes del
+algoritmo EM para incorporar las ponderaciones dentro de la estimación
+de modelos jerárquicos (\citeproc{ref-cai2013investigation}{Cai 2013}).
+En conjunto, estos trabajos muestran que no existe una única manera de
+incorporar los pesos de muestreo en modelos multinivel. La elección del
+procedimiento depende, entre otros factores, de la estructura del diseño
+muestral, del nivel o los niveles en los que se produce la selección
+informativa y del objetivo inferencial del análisis. Por esta razón, más
+que considerar la ponderación como una corrección mecánica, resulta
+conveniente evaluar explícitamente las características del diseño y el
+posible carácter informativo del mecanismo de selección antes de definir
+la estrategia de estimación.
 
 Como explica Pfeffermann
 (\citeproc{ref-pfeffermann2011modelling}{2011}), para ajustar modelos
@@ -9503,7 +9481,8 @@ incluidas en el modelo multinivel.
 \begin{Highlighting}[]
 \NormalTok{mod\_qw }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(wk }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Expenditure, }\AttributeTok{data =}\NormalTok{ survey\_data)}
 \NormalTok{predicted\_weights }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(mod\_qw)}
-\FunctionTok{stopifnot}\NormalTok{(}\FunctionTok{all}\NormalTok{(}\FunctionTok{is.finite}\NormalTok{(predicted\_weights)), }\FunctionTok{all}\NormalTok{(predicted\_weights }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{))}
+\FunctionTok{stopifnot}\NormalTok{(}\FunctionTok{all}\NormalTok{(}\FunctionTok{is.finite}\NormalTok{(predicted\_weights)), }
+          \FunctionTok{all}\NormalTok{(predicted\_weights }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{))}
 \NormalTok{survey\_data}\SpecialCharTok{$}\NormalTok{qk }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data}\SpecialCharTok{$}\NormalTok{wk }\SpecialCharTok{/}\NormalTok{ predicted\_weights}
 \end{Highlighting}
 \end{Shaded}
@@ -9530,21 +9509,20 @@ y varianzas constantes.
 
 \subsection{Modelo nulo}\label{sec-multinivel-muestras-complejas}
 
-De acuerdo con Goldstein (\citeproc{ref-goldstein2011multilevel}{2011})
-y Rabe-Hesketh y Skrondal
-(\citeproc{ref-rabehesketh2012multilevel}{2012}), en el análisis de
-regresión multinivel, se distinguen dos tipos de parámetros: los
-coeficientes de regresión, conocidos como parámetros fijos, y los
-componentes de varianza asociados a los efectos aleatorios. Una etapa
-inicial fundamental en este tipo de análisis consiste en descomponer la
-variabilidad total de la variable dependiente en los distintos niveles
-de la estructura jerárquica. En el contexto del ejemplo anterior, esta
-descomposición permite separar la variación del ingreso en una
-componente atribuible a diferencias dentro de los estratos y otra
-asociada a diferencias entre estratos.
+En el análisis de regresión multinivel, se distinguen dos tipos de
+parámetros: los coeficientes de regresión, conocidos como parámetros
+fijos, y los componentes de varianza asociados a los efectos aleatorios
+(\citeproc{ref-goldstein2011multilevel}{Goldstein 2011};
+\citeproc{ref-rabehesketh2012multilevel}{Rabe-Hesketh y Skrondal 2012},
+e). Una etapa inicial fundamental en este tipo de análisis consiste en
+descomponer la variabilidad total de la variable dependiente en los
+distintos niveles de la estructura jerárquica. En el contexto del
+ejemplo anterior, esta descomposición permite separar la variación del
+ingreso en una componente atribuible a diferencias dentro de los
+estratos y otra asociada a diferencias entre estratos.
 
 Según Snijders y Bosker (\citeproc{ref-snijders2011}{2011}), el punto de
-partida para esta descomposición es, el denominado modelo nulo, el cual
+partida para esta descomposición es el denominado modelo nulo, el cual
 no incorpora variables explicativas y se expresa como
 
 \[
@@ -9592,13 +9570,14 @@ Donde \(\sigma_{\epsilon}^{2}\) representa la variabilidad residual
 dentro de los estratos. A partir de este modelo se define el coeficiente
 de correlación intraclase (ICC, por sus siglas en inglés), que
 cuantifica la proporción de la varianza total explicada por las
-diferencias entre estratos:
+diferencias entre estratos. Su definición se presenta a continuación:
 
 \[
 \rho = \frac{\sigma_{\tau}^{2}}{\sigma_{\tau}^{2} + \sigma_{\epsilon}^{2}}
 \]
 
-Un valor elevado del ICC indica que una proporción importante de la
+De acuerdo con Bates et~al. (\citeproc{ref-BatesEtAl2015}{2015}), un
+valor elevado de ICC indica que una proporción importante de la
 variabilidad total de la variable de interés se debe a diferencias entre
 estratos, lo que sugiere la presencia de heterogeneidad relevante entre
 grupos y la necesidad de incorporar explícitamente dicha estructura en
@@ -9612,8 +9591,7 @@ para cuantificar qué proporción de la variabilidad total se debe a
 diferencias entre estratos y qué proporción corresponde a diferencias
 entre hogares dentro de un mismo estrato.
 
-De acuerdo con Bates et~al. (\citeproc{ref-BatesEtAl2015}{2015}), la
-estimación de modelos multinivel en \texttt{R} se realiza mediante el
+La estimación de modelos multinivel en \texttt{R} se realiza mediante el
 paquete \texttt{lme4}. En particular, la función \texttt{lmer()} permite
 especificar los efectos aleatorios mediante expresiones de la forma
 \texttt{(efecto\ \textbar{}\ grupo)}. En este contexto, la expresión
@@ -9658,16 +9636,7 @@ datos.
 \begin{Highlighting}[]
 \NormalTok{coef\_mod\_null }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(mod\_null)}\SpecialCharTok{$}\NormalTok{Stratum}
 \NormalTok{coef\_mod\_null }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{L)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{coef\_mod\_null }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(mod\_null)}\SpecialCharTok{$}\NormalTok{Stratum}
-\NormalTok{coef\_mod\_null }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{L) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{tabla\_fmt}\NormalTok{()}
+  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{L)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -9676,7 +9645,7 @@ datos.
 \begin{longtable}[]{@{}lr@{}}
 
 \caption{\label{tbl-interceptos-nulos}Interceptos estimados por estrato
-bajo pesos q-weighted (modelo nulo, primeros 12 estratos)}
+bajo pesos q-weighted (modelo nulo, primeros 10 estratos)}
 
 \tabularnewline
 
@@ -9696,8 +9665,6 @@ idStrt007 & 477 \\
 idStrt008 & 377 \\
 idStrt009 & 218 \\
 idStrt010 & 594 \\
-idStrt011 & 590 \\
-idStrt012 & 362 \\
 
 \end{longtable}
 
@@ -9716,14 +9683,6 @@ obtenidos se presentan en la tabla~\ref{tbl-icc-nulo}.
 \begin{Highlighting}[]
 \NormalTok{performance}\SpecialCharTok{::}\FunctionTok{icc}\NormalTok{(mod\_null) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{as.data.frame}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{performance}\SpecialCharTok{::}\FunctionTok{icc}\NormalTok{(mod\_null) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{as.data.frame}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{tabla\_fmt}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -9809,40 +9768,25 @@ de los componentes de varianza estimados.
   \AttributeTok{data =}\NormalTok{ survey\_data,}
   \AttributeTok{weights =}\NormalTok{ qk}
 \NormalTok{)}
+
 \NormalTok{performance}\SpecialCharTok{::}\FunctionTok{icc}\NormalTok{(random\_intercept\_model)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-# Intraclass Correlation Coefficient
-
-    Adjusted ICC: 0.203
-  Unadjusted ICC: 0.109
-\end{verbatim}
-
-Según Snijders y Bosker (\citeproc{ref-snijders2011}{2011}), la
-correlación intraclase ajustada de 0.196 indica que, después de
-controlar por el gasto del hogar (\texttt{Expenditure}), aproximadamente
-el 20\% de la variabilidad residual del ingreso sigue siendo atribuible
-a diferencias entre estratos. Aunque este valor evidencia agrupamiento
-residual, el ICC por sí solo no justifica una especificación multinivel
-concreta; también deben considerarse la definición sustantiva de los
-grupos, el ajuste y los diagnósticos del modelo. Los coeficientes
-estimados por estrato se presentan en la
+La correlación intraclase ajustada es de 0.203, lo cual indica que,
+después de controlar por el gasto del hogar (\texttt{Expenditure}),
+aproximadamente el 20\% de la variabilidad residual del ingreso sigue
+siendo atribuible a diferencias entre estratos. Aunque este valor
+evidencia agrupamiento residual, el ICC por sí solo no justifica una
+especificación multinivel concreta; también deben considerarse la
+definición sustantiva de los grupos, el ajuste y los diagnósticos del
+modelo. Los coeficientes estimados por estrato se presentan en la
 tabla~\ref{tbl-coef-intercepto-aleatorio}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{coef}\NormalTok{(random\_intercept\_model)}\SpecialCharTok{$}\NormalTok{Stratum }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{8}\NormalTok{L)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{coef}\NormalTok{(random\_intercept\_model)}\SpecialCharTok{$}\NormalTok{Stratum }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{8}\NormalTok{L) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{tabla\_fmt}\NormalTok{()}
+  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{L)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -9851,7 +9795,7 @@ tabla~\ref{tbl-coef-intercepto-aleatorio}:
 \begin{longtable}[]{@{}lrr@{}}
 
 \caption{\label{tbl-coef-intercepto-aleatorio}Coeficientes del modelo
-con intercepto aleatorio por estrato (primeros 8 estratos)}
+con intercepto aleatorio por estrato (primeros 10 estratos)}
 
 \tabularnewline
 
@@ -9869,6 +9813,8 @@ idStrt005 & -32.4 & 1.19 \\
 idStrt006 & 53.8 & 1.19 \\
 idStrt007 & 12.5 & 1.19 \\
 idStrt008 & 107.1 & 1.19 \\
+idStrt009 & -44.7 & 1.19 \\
+idStrt010 & 252.3 & 1.19 \\
 
 \end{longtable}
 
@@ -9899,17 +9845,18 @@ estrato.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data,}
-       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
   \FunctionTok{geom\_jitter}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{geom\_abline}\NormalTok{(}\AttributeTok{data =}\NormalTok{ estimated\_coef,}
-              \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{slope =}\NormalTok{ Expenditure,}
-                            \AttributeTok{intercept =} \StringTok{\textasciigrave{}}\AttributeTok{(Intercept)}\StringTok{\textasciigrave{}}\NormalTok{,}
-                            \AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}
-    \AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
-    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{)}
-\NormalTok{  )}
+  \FunctionTok{geom\_abline}\NormalTok{(}
+    \AttributeTok{data =}\NormalTok{ estimated\_coef,}
+    \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}
+      \AttributeTok{slope =}\NormalTok{ Expenditure,}
+      \AttributeTok{intercept =} \StringTok{\textasciigrave{}}\AttributeTok{(Intercept)}\StringTok{\textasciigrave{}}\NormalTok{,}
+      \AttributeTok{colour =}\NormalTok{ Stratum}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
+        \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -9987,14 +9934,26 @@ niveles promedio de la variable respuesta, sino también la
 heterogeneidad existente en el efecto de la covariable cuyo coeficiente
 se modela como aleatorio.
 
-El siguiente código ajusta un modelo multinivel con intercepto y
-pendiente aleatorios en el que el ingreso (\texttt{Income}) se explica a
-partir del gasto del hogar (\texttt{Expenditure}); aunque la redacción
-anterior mencionaba \texttt{Zone}, esa variable no aparece en la fórmula
+A continuación se ajusta un modelo multinivel con intercepto y pendiente
+aleatorios en el que el ingreso (\texttt{Income}) se explica a partir
+del gasto del hogar (\texttt{Expenditure}); aunque la redacción anterior
+mencionaba \texttt{Zone}, esa variable no aparece en la fórmula
 estimada. En este caso, tanto el intercepto como el efecto del gasto
 pueden variar entre estratos mediante efectos aleatorios asociados a
 \texttt{Stratum}, empleando además los pesos \emph{q-weighted}
 almacenados en la variable \texttt{qk}.
+
+Nótese que en la especificación del código se incluye simultáneamente
+efectos fijos y efectos aleatorios para el intercepto y la variable
+\texttt{Expenditure}. Los términos ubicados fuera del paréntesis,
+\texttt{1\ +\ Expenditure}, corresponden a los efectos fijos del modelo
+y permiten estimar el intercepto promedio global y la pendiente promedio
+global asociada al gasto. Por su parte, la expresión
+\texttt{(1\ +\ Expenditure\ \textbar{}\ Stratum)} incorpora las
+desviaciones específicas de cada estrato respecto a dichos promedios. La
+inclusión explícita de los efectos fijos es fundamental, ya que los
+efectos aleatorios se interpretan como desviaciones alrededor de una
+media poblacional.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -10008,45 +9967,22 @@ almacenados en la variable \texttt{qk}.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-# Intraclass Correlation Coefficient
-
-    Adjusted ICC: 0.690
-  Unadjusted ICC: 0.457
-\end{verbatim}
-
-Nótese que en la especificación del código se incluye simultáneamente
-efectos fijos y efectos aleatorios para el intercepto y la variable
-\texttt{Expenditure}. Los términos ubicados fuera del paréntesis,
-\texttt{1\ +\ Expenditure}, corresponden a los efectos fijos del modelo
-y permiten estimar el intercepto promedio global y la pendiente promedio
-global asociada al gasto. Por su parte, la expresión
-\texttt{(1\ +\ Expenditure\ \textbar{}\ Stratum)} incorpora las
-desviaciones específicas de cada estrato respecto a dichos promedios. La
-inclusión explícita de los efectos fijos es fundamental, ya que los
-efectos aleatorios se interpretan como desviaciones alrededor de una
-media poblacional. Los coeficientes del modelo por estrato se presentan
-en la tabla~\ref{tbl-coef-pendiente-aleatoria}:
-
-Como recomiendan Bates et~al. (\citeproc{ref-BatesEtAl2015}{2015}), los
-modelos con pendientes aleatorias requieren suficientes grupos y
-variación interna para estimar de manera estable la varianza y la
-covarianza de los efectos aleatorios; por ello, conviene revisar
-advertencias de convergencia y ajustes singulares antes de interpretar
-estos componentes.
+Para este modelo, el ICC ajustado se estimó en 0.690, lo que significa
+que, una vez considerados los efectos fijos del modelo, aproximadamente
+el 69\% de la variabilidad residual se debe a diferencias entre los
+grupos. Como recomiendan Bates et~al.
+(\citeproc{ref-BatesEtAl2015}{2015}), los modelos con pendientes
+aleatorias requieren suficientes grupos y variación interna para estimar
+de manera estable la varianza y la covarianza de los efectos aleatorios;
+por ello, conviene revisar advertencias de convergencia y ajustes
+singulares antes de interpretar estos componentes. Los coeficientes del
+modelo por estrato se presentan en la
+tabla~\ref{tbl-coef-pendiente-aleatoria}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{coef}\NormalTok{(random\_slope\_model)}\SpecialCharTok{$}\NormalTok{Stratum }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{L)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{coef}\NormalTok{(random\_slope\_model)}\SpecialCharTok{$}\NormalTok{Stratum }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{L) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{tabla\_fmt}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -10106,17 +10042,18 @@ la relación entre ingreso y gasto.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data,}
-       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ Income, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
   \FunctionTok{geom\_jitter}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{geom\_abline}\NormalTok{(}\AttributeTok{data =}\NormalTok{ estimated\_coef,}
-              \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{slope =}\NormalTok{ Expenditure,}
-                            \AttributeTok{intercept =} \StringTok{\textasciigrave{}}\AttributeTok{(Intercept)}\StringTok{\textasciigrave{}}\NormalTok{,}
-                            \AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}
-    \AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
-    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{)}
-\NormalTok{  )}
+  \FunctionTok{geom\_abline}\NormalTok{(}
+    \AttributeTok{data =}\NormalTok{ estimated\_coef,}
+    \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}
+      \AttributeTok{slope =}\NormalTok{ Expenditure,}
+      \AttributeTok{intercept =} \StringTok{\textasciigrave{}}\AttributeTok{(Intercept)}\StringTok{\textasciigrave{}}\NormalTok{,}
+      \AttributeTok{colour =}\NormalTok{ Stratum}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
+        \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -10189,8 +10126,7 @@ probabilidad de pobreza, con una curva logística ajustada.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ survey\_data,}
-       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ poor, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ survey\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ poor, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
   \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{geom\_smooth}\NormalTok{(}
     \AttributeTok{formula =}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x,}
@@ -10283,8 +10219,7 @@ Así, la correlación intraclase del modelo logístico se expresa como
 {\sigma_\tau^2 + \frac{\pi^2}{3}}
 \]
 
-De acuerdo con Bates et~al. (\citeproc{ref-BatesEtAl2015}{2015}), un
-valor elevado de \(\rho\) indica que la probabilidad del evento presenta
+Un valor elevado de ICC indica que la probabilidad del evento presenta
 una estructura de agrupamiento importante, es decir, que dos unidades
 pertenecientes al mismo estrato tienden a parecerse más entre sí que dos
 unidades tomadas de estratos distintos. En contraste, un valor bajo
@@ -10302,8 +10237,14 @@ siguiente manera:
   \AttributeTok{weights =}\NormalTok{ qk,}
   \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{)}
 \NormalTok{)}
+
+\NormalTok{performance}\SpecialCharTok{::}\FunctionTok{icc}\NormalTok{(logistic\_null\_model)}
 \end{Highlighting}
 \end{Shaded}
+
+La correlación intraclase asciende a 0.315. Dado que el modelo no
+incluye covariables, estas diferencias reflejan exclusivamente la
+variación entre estratos en la prevalencia del evento.
 
 Los coeficientes del modelo nulo logístico por estrato se presentan en
 la tabla~\ref{tbl-coef-logit-nulo}. Los interceptos estimados en el
@@ -10318,15 +10259,7 @@ mucho mayores.
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{coef}\NormalTok{(logistic\_null\_model)}\SpecialCharTok{$}\NormalTok{Stratum }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{L)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{coef}\NormalTok{(logistic\_null\_model)}\SpecialCharTok{$}\NormalTok{Stratum }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{L) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{tabla\_fmt}\NormalTok{()}
+  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{L)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -10335,7 +10268,7 @@ mucho mayores.
 \begin{longtable}[]{@{}lr@{}}
 
 \caption{\label{tbl-coef-logit-nulo}Interceptos estimados por estrato en
-el modelo logístico nulo (primeros 12 estratos)}
+el modelo logístico nulo (primeros 10 estratos)}
 
 \tabularnewline
 
@@ -10355,29 +10288,10 @@ idStrt007 & -1.018 \\
 idStrt008 & 0.156 \\
 idStrt009 & 1.913 \\
 idStrt010 & -0.609 \\
-idStrt011 & -1.275 \\
-idStrt012 & 0.203 \\
 
 \end{longtable}
 
 }
-
-La correlación intraclase asciende a 0.315. Dado que el modelo no
-incluye covariables, estas diferencias reflejan exclusivamente la
-variación entre estratos en la prevalencia del evento.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{performance}\SpecialCharTok{::}\FunctionTok{icc}\NormalTok{(logistic\_null\_model)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-# Intraclass Correlation Coefficient
-
-    Adjusted ICC: 0.315
-  Unadjusted ICC: 0.315
-\end{verbatim}
 
 \subsection{Modelo logístico con intercepto
 aleatorio}\label{modelo-logistico-con-intercepto-aleatorio}
@@ -10420,16 +10334,14 @@ pobreza se resume mediante una pendiente común.
   \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{),}
   \AttributeTok{weights =}\NormalTok{ qk}
 \NormalTok{)}
+
 \NormalTok{performance}\SpecialCharTok{::}\FunctionTok{icc}\NormalTok{(random\_intercept\_logit\_model)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-# Intraclass Correlation Coefficient
-
-    Adjusted ICC: 0.298
-  Unadjusted ICC: 0.171
-\end{verbatim}
+Aun después de controlar por el gasto, la correlación intraclase
+ajustada permanece alta, alrededor de 0.298, lo que muestra que las
+diferencias entre estratos continúan siendo relevantes.
 
 Los coeficientes estimados por estrato se recogen en la
 tabla~\ref{tbl-coef-logit-int-aleatorio}. Al incorporar el gasto del
@@ -10444,22 +10356,10 @@ elevados presentan una mayor probabilidad base de pobreza para un mismo
 nivel de gasto, mientras que los estratos con interceptos negativos
 muestran una probabilidad base menor.
 
-Aun después de controlar por el gasto, la correlación intraclase
-ajustada permanece alta, alrededor de 0.298, lo que muestra que las
-diferencias entre estratos continúan siendo relevantes.
-
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{coef}\NormalTok{(random\_intercept\_logit\_model)}\SpecialCharTok{$}\NormalTok{Stratum }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{L)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{coef}\NormalTok{(random\_intercept\_logit\_model)}\SpecialCharTok{$}\NormalTok{Stratum }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{L) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{tabla\_fmt}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -10493,6 +10393,37 @@ idStrt010 & 1.175 & -0.007 \\
 
 }
 
+El siguiente código construye un conjunto de datos auxiliar para obtener
+las probabilidades predichas por el modelo logístico multinivel para
+distintos valores de gasto dentro de cada estrato. Se construye un
+conjunto de datos denominado \texttt{prediction\_data} para representar
+la relación estimada entre el gasto y la probabilidad predicha por el
+modelo logístico multinivel. Primero, \texttt{group\_by(Stratum)} separa
+los datos según cada estrato y, mediante \texttt{reframe()}, genera para
+cada uno una secuencia de 100 valores de \texttt{Expenditure},
+comprendidos entre el gasto mínimo y máximo observado en ese estrato.
+Posteriormente, \texttt{mutate()} utiliza la función \texttt{predict()}
+para obtener, para cada combinación de estrato y nivel de gasto, la
+probabilidad estimada por el modelo
+\texttt{random\_intercept\_logit\_model}; el argumento
+\texttt{type\ =\ "response"} indica que las predicciones se expresan
+directamente como probabilidades y no en la escala del logit.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prediction\_data }\OtherTok{\textless{}{-}}\NormalTok{ plot\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Stratum) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{reframe}\NormalTok{(}\AttributeTok{Expenditure =} \FunctionTok{seq}\NormalTok{(}\FunctionTok{min}\NormalTok{(Expenditure),}
+                            \FunctionTok{max}\NormalTok{(Expenditure),}
+                            \AttributeTok{length.out =} \DecValTok{100}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{probability =} \FunctionTok{predict}\NormalTok{(}
+\NormalTok{    random\_intercept\_logit\_model,}
+    \AttributeTok{newdata =}\NormalTok{ .,}
+    \AttributeTok{type =} \StringTok{"response"}
+\NormalTok{  ))}
+\end{Highlighting}
+\end{Shaded}
+
 La figura~\ref{fig-logit-int-aleatorio} presenta las curvas de
 probabilidad predichas mediante un modelo logístico con intercepto
 aleatorio por estrato. Se observa una relación inversa entre el gasto y
@@ -10501,26 +10432,6 @@ gasto presentan una menor probabilidad de ser clasificados como pobres.
 Asimismo, las diferencias entre las curvas reflejan la heterogeneidad
 existente entre estratos, capturada mediante los interceptos aleatorios
 del modelo.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{prediction\_data }\OtherTok{\textless{}{-}}\NormalTok{ plot\_data }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{group\_by}\NormalTok{(Stratum) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{summarise}\NormalTok{(}
-    \AttributeTok{Expenditure =} \FunctionTok{list}\NormalTok{(}\FunctionTok{seq}\NormalTok{(}\FunctionTok{min}\NormalTok{(Expenditure), }\FunctionTok{max}\NormalTok{(Expenditure), }\AttributeTok{len =} \DecValTok{100}\NormalTok{))}
-\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
-\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{unnest\_legacy}\NormalTok{()}
-
-\NormalTok{prediction\_data }\OtherTok{\textless{}{-}}\NormalTok{ prediction\_data }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{mutate}\NormalTok{(}
-    \AttributeTok{probability =} \FunctionTok{predict}\NormalTok{(}
-\NormalTok{      random\_intercept\_logit\_model,}
-      \AttributeTok{newdata =}\NormalTok{ prediction\_data,}
-      \AttributeTok{type =} \StringTok{"response"}
-\NormalTok{    )}
-\NormalTok{  )}
-\end{Highlighting}
-\end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -10585,16 +10496,10 @@ aparta el estrato \(j\) de esos promedios. La implementación en
   \AttributeTok{weights =}\NormalTok{ qk,}
   \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{)}
 \NormalTok{)}
+
 \NormalTok{performance}\SpecialCharTok{::}\FunctionTok{icc}\NormalTok{(random\_slope\_logit\_model)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-# Intraclass Correlation Coefficient
-
-    Adjusted ICC: 0.875
-  Unadjusted ICC: 0.631
-\end{verbatim}
 
 De acuerdo con Bates et~al. (\citeproc{ref-BatesEtAl2015}{2015}), la
 estimación del modelo con intercepto y pendiente aleatoria indica una
@@ -10611,14 +10516,6 @@ tabla~\ref{tbl-coef-logit-pendiente}.
 \begin{Highlighting}[]
 \FunctionTok{coef}\NormalTok{(random\_slope\_logit\_model)}\SpecialCharTok{$}\NormalTok{Stratum }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{L)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{coef}\NormalTok{(random\_slope\_logit\_model)}\SpecialCharTok{$}\NormalTok{Stratum }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{L) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{tabla\_fmt}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -10661,38 +10558,46 @@ niveles de gasto reducen la probabilidad de pobreza. Sin embargo,
 también aparecen pendientes cercanas a cero e incluso positivas en
 algunos estratos, lo que sugiere patrones locales distintos. Esta
 variabilidad es precisamente la que el modelo busca capturar mediante el
-efecto aleatorio de la pendiente. La
-figura~\ref{fig-logit-pendiente-aleatoria} muestra que las curvas
-predichas son más heterogéneas entre estratos que en el modelo anterior:
+efecto aleatorio de la pendiente.
+
+Para visualizar las probabilidades estimadas por el modelo con pendiente
+aleatoria, se construye una secuencia de valores de gasto dentro de cada
+estrato. A partir de estos valores, se obtienen las probabilidades
+predichas correspondientes mediante el modelo ajustado.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{prediction\_data }\OtherTok{\textless{}{-}}\NormalTok{ plot\_data }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{group\_by}\NormalTok{(Stratum) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{summarise}\NormalTok{(}
-    \AttributeTok{Expenditure =} \FunctionTok{list}\NormalTok{(}\FunctionTok{seq}\NormalTok{(}\FunctionTok{min}\NormalTok{(Expenditure), }\FunctionTok{max}\NormalTok{(Expenditure), }\AttributeTok{len =} \DecValTok{100}\NormalTok{))}
+  \FunctionTok{reframe}\NormalTok{(}
+    \AttributeTok{Expenditure =} \FunctionTok{seq}\NormalTok{(}\FunctionTok{min}\NormalTok{(Expenditure),}
+                      \FunctionTok{max}\NormalTok{(Expenditure), }
+                      \AttributeTok{length.out =} \DecValTok{100}\NormalTok{)}
 \NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
-\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{unnest\_legacy}\NormalTok{()}
-
-\NormalTok{prediction\_data }\OtherTok{\textless{}{-}}\NormalTok{ prediction\_data }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{mutate}\NormalTok{(}
     \AttributeTok{probability =} \FunctionTok{predict}\NormalTok{(}
 \NormalTok{      random\_slope\_logit\_model,}
-      \AttributeTok{newdata =}\NormalTok{ prediction\_data,}
+      \AttributeTok{newdata =}\NormalTok{ .,}
       \AttributeTok{type =} \StringTok{"response"}
 \NormalTok{    )}
 \NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
 
+La figura~\ref{fig-logit-pendiente-aleatoria} muestra que las curvas
+predichas son más heterogéneas entre estratos que en el modelo anterior:
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ prediction\_data,}
-       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ probability, }\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ prediction\_data, }
+       \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ probability, }
+           \AttributeTok{x =}\NormalTok{ Expenditure, }
+           \AttributeTok{colour =}\NormalTok{ Stratum)) }\SpecialCharTok{+}
   \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data,}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{data =}\NormalTok{ plot\_data, }
              \FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ poor, }\AttributeTok{x =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
-  \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{"Poverty probability"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Expenditure"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{"Poverty probability"}\NormalTok{, }
+       \AttributeTok{x =} \StringTok{"Expenditure"}\NormalTok{) }\SpecialCharTok{+}
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -10716,17 +10621,15 @@ aleatoria}
 \chapter{\texorpdfstring{Manejo de bases de datos con
 \texttt{R}}{Manejo de bases de datos con R}}\label{ap1}
 
-De acuerdo con R Core Team (\citeproc{ref-RCoreTeam2026}{2026a}),
-\texttt{R}, descrito en la literatura es un software estadístico
-ampliamente utilizado para el análisis de datos y la generación de
-gráficos y permite un ambiente integrado para el análisis estadístico,
-en particular de bases de datos. Esto significa que permite realizar
-procesos de análisis, programación, visualización y manejo de datos
-dentro de un mismo entorno.
-
-En este anexo se utiliza el enfoque del \texttt{tidyverse}, cuya
-organización de datos se relaciona con los principios expuestos por
-Wickham (\citeproc{ref-Wickham2014}{2014}), y en particular el paquete
+\texttt{R} es un software estadístico ampliamente utilizado para el
+análisis de datos y la generación de gráficos y permite un ambiente
+integrado para el análisis estadístico, en particular de bases de datos
+(\citeproc{ref-RCoreTeam2026}{R Core Team 2026a}). Esto significa que
+permite realizar procesos de análisis, programación, visualización y
+manejo de datos dentro de un mismo entorno. En este anexo se utiliza el
+enfoque del \texttt{tidyverse}, cuya organización de datos se relaciona
+con los principios expuestos por Wickham
+(\citeproc{ref-Wickham2014}{2014}), y en particular la librería
 \texttt{dplyr}, para organizar una secuencia lógica de trabajo con bases
 de datos: cargar la información, inspeccionarla, seleccionar variables,
 filtrar registros, ordenar filas, crear variables y producir resúmenes.
@@ -10734,36 +10637,30 @@ filtrar registros, ordenar filas, crear variables y producir resúmenes.
 \section{Preparación del entorno de
 trabajo}\label{preparacion-del-entorno-de-trabajo}
 
-\texttt{R} es un lenguaje de programación de carácter colaborativo, lo
-que permite que su comunidad de usuarios y desarrolladores contribuya
-continuamente mediante la creación de funciones, paquetes y librerías
-especializadas. Gracias a este ecosistema abierto, es posible ampliar
-sus capacidades para distintos tipos de análisis estadístico y
+Dado que \texttt{R} es un lenguaje de programación de carácter
+colaborativo, permite que su comunidad de usuarios y desarrolladores
+contribuya continuamente mediante la creación de funciones, paquetes y
+librerías especializadas. Gracias a este ecosistema abierto, es posible
+ampliar sus capacidades para distintos tipos de análisis estadístico y
 procesamiento de datos. Entre las librerías más utilizadas para el
 análisis de bases de datos se encuentran las siguientes:
 
 \begin{itemize}
 \item
-  De acuerdo con Wickham, Averick, et~al.
-  (\citeproc{ref-tidyverse2026}{2026}), la librería \texttt{tidyverse}
-  corresponde a un conjunto de paquetes de \texttt{R} diseñados para
-  apoyar distintas etapas del trabajo con datos, desde su importación y
-  transformación hasta su exploración, análisis y visualización. Su uso
-  se ha extendido ampliamente en ciencia de datos porque ofrece una
-  forma de trabajo consistente y ordenada.
+  la librería \texttt{tidyverse} corresponde a un conjunto de paquetes
+  de \texttt{R} diseñados para apoyar distintas etapas del trabajo con
+  datos, desde su importación y transformación hasta su exploración,
+  análisis y visualización (\citeproc{ref-tidyverse2026}{Wickham,
+  Averick, et~al. 2026}). Su uso se ha extendido ampliamente en ciencia
+  de datos porque ofrece una forma de trabajo consistente y ordenada.
 \item
-  Según Wickham, François, et~al. (\citeproc{ref-dplyr2026}{2026}), el
-  paquete \texttt{dplyr} ofrece herramientas para organizar y
+  la librería \texttt{dplyr} ofrece herramientas para organizar y
   transformar bases de datos rectangulares. Su utilidad radica en que
   reúne, en una sintaxis simple y consistente, las operaciones más
   frecuentes del trabajo analítico con datos: seleccionar variables,
   filtrar registros, crear nuevas columnas, ordenar observaciones y
-  resumir información.
-\item
-  De acuerdo con Gutiérrez (\citeproc{ref-GutierrezT2020}{2020}), el
-  paquete \texttt{TeachingSampling} ofrece funciones para seleccionar
-  muestras probabilísticas y realizar inferencia sobre poblaciones
-  finitas bajo diversos diseños de muestreo.
+  resumir información (\citeproc{ref-dplyr2026}{Wickham, François,
+  et~al. 2026}).
 \end{itemize}
 
 Antes de poder utilizar las diferentes funciones que cada librería
@@ -11605,17 +11502,43 @@ ingresos para cada categoría de ocupación.
 
 \chapter{Inferencia en poblaciones finitas}\label{ap2}
 
-De acuerdo con Skinner et~al. (\citeproc{ref-skinner1989analysis}{1989})
-y Kish (\citeproc{ref-kish1987statistical}{1987}), una cuestión
-fundamental en el análisis de encuestas es identificar cuál es la medida
-de probabilidad que rige la inferencia. En la inferencia estadística
-clásica se suele asumir que las observaciones disponibles son variables
-aleatorias independientes e idénticamente distribuidas (IID). Bajo ese
-enfoque, la aleatoriedad proviene del modelo que genera los datos. Sin
-embargo, este supuesto no describe adecuadamente la información
-proveniente de encuestas con diseños muestrales complejos, donde las
-observaciones son seleccionadas mediante estratificación, conglomeración
-y probabilidades de inclusión desiguales.
+La inferencia estadística con datos provenientes de encuestas por
+muestreo requiere reconocer que la aleatoriedad puede tener orígenes
+distintos. En la inferencia estadística clásica, las observaciones
+suelen concebirse como realizaciones de un modelo probabilístico que
+genera los datos. En la teoría de muestreo, en cambio, la población
+finita se considera fija y la aleatoriedad proviene del mecanismo
+mediante el cual se seleccionan las unidades que conforman la muestra
+(\citeproc{ref-Gutierrez2016}{Gutiérrez 2016}). Esta distinción resulta
+fundamental cuando se analizan encuestas con diseños complejos.
+
+Este capítulo desarrolla ambos marcos inferenciales y muestra
+posteriormente cómo pueden integrarse. Primero se presenta la diferencia
+entre la inferencia basada en modelos y la inferencia basada en el
+diseño, utilizando ejemplos y simulaciones que permiten identificar las
+fuentes de aleatoriedad involucradas y observar las consecuencias de
+ignorar las probabilidades de selección. A continuación, se introduce la
+idea de inferencia doble, en la cual intervienen simultáneamente el
+modelo de superpoblación que genera los valores de las variables y el
+diseño probabilístico que determina cuáles unidades son observadas.
+Sobre esta base se revisan los principios de máxima verosimilitud y
+máxima pseudo-verosimilitud, mostrando cómo los pesos de muestreo pueden
+incorporarse directamente en las ecuaciones de estimación.
+
+Los resultados desarrollados en este capítulo constituyen la base
+inferencial para el análisis apropiado de modelos estadísticos con datos
+de encuestas complejas. En particular, permiten comprender por qué la
+incorporación de los pesos de muestreo y de la estructura del diseño no
+debe limitarse a la estimación de medias, totales o proporciones, sino
+extenderse también a modelos de regresión lineal, modelos lineales
+generalizados y modelos multinivel. La máxima pseudo-verosimilitud
+proporciona un vínculo natural entre la teoría del muestreo y la
+estimación de estos modelos, al modificar las contribuciones
+individuales a las ecuaciones de estimación de acuerdo con las
+probabilidades de inclusión. Esta perspectiva será fundamental en los
+capítulos posteriores para desarrollar procedimientos de estimación y de
+inferencia que sean coherentes tanto con el modelo estadístico como con
+la forma en que los datos fueron efectivamente seleccionados.
 
 \section{Dos posibles inferencias}\label{dos-posibles-inferencias}
 
@@ -11660,40 +11583,40 @@ mecanismo de selección de la muestra; por ello, sus elementos centrales
 son las probabilidades de inclusión \(\pi_k\) y los pesos de muestreo
 \(w_k\).
 
-Como demuestran Horvitz y Thompson
-(\citeproc{ref-HorvitzThompson1952}{1952}), por el contrario, la
-inferencia basada en modelos considera que los valores de la variable de
-interés en toda la población se conciben como realizaciones de un
-proceso estocástico, usualmente denotado por \(\xi\). Así, mientras la
-inferencia basada en los modelos estudia propiedades como
-\(E_{\xi}(Y_k)\) y \(Var_{\xi}(Y_k)\), la inferencia basada en el diseño
-se orienta a incorporar las características del plan muestral en los
-estimadores. La inferencia basada en el diseño no garantiza que todo
-estimador sea exactamente insesgado; esa propiedad debe verificarse para
-cada estimador y diseño. En particular, el total de Horvitz--Thompson
-satisface \(E_{p}(\hat{t}_y) = t_y\) bajo probabilidades de inclusión
-positivas.
+La inferencia basada en modelos considera que los valores de la variable
+de interés en toda la población se conciben como realizaciones de un
+proceso estocástico, usualmente denotado por \(\xi\), y por ende la
+característica de interés se convierte en una variable aleatoria
+(\(Y_k\)). Entonces, en la inferencia basada en los modelos es de
+interés estudiar propiedades como \(E_{\xi}(Y_k)\) y \(Var_{\xi}(Y_k)\).
+A diferencia de la inferencia basada en el diseño, que se orienta a
+incorporar las características del plan muestral en los estimadores.
 
-De acuerdo con Binder (\citeproc{ref-binder2011estimating}{2011}), esta
-distinción permite entender por qué, aun cuando exista un modelo
-razonable para la variable de interés, el diseño muestral debe
-incorporarse explícitamente si se desea obtener inferencias válidas para
-la población objetivo. Para comprender la distinción entre inferencia
-basada en el modelo e inferencia basada en el diseño, partimos de un
-ejemplo sencillo. Supóngase que se generan \(N=100\) realizaciones
-independientes de una variable Bernoulli con parámetro \(\theta=0.3\),
-donde \(\theta\) representa la proporción esperada de personas
-desempleadas en una población generada por un modelo. Si
-\(Y_k \sim Bernoulli(\theta)\), entonces la esperanza bajo el modelo es
-\(E_{\xi}(Y_k) = \theta\), mientras que la varianza bajo el modelo es
+La inferencia basada en el diseño garantiza la existencia de estimadores
+que son exacta o aproximadamente insesgados. En particular, el estimador
+de Horvitz--Thompson satisface \(E_{p}(\hat{t}_y) = t_y\) bajo
+probabilidades de inclusión positivas. De acuerdo con Binder
+(\citeproc{ref-binder2011estimating}{2011}), esta distinción permite
+entender por qué, aun cuando exista un modelo razonable para la variable
+de interés, el diseño muestral debe incorporarse explícitamente si se
+desea obtener inferencias válidas para la población objetivo.
+
+Para comprender la distinción entre inferencia basada en el modelo e
+inferencia basada en el diseño, partimos de un ejemplo sencillo.
+Supóngase que se generan \(N=100\) realizaciones independientes de una
+variable Bernoulli con parámetro \(\theta=0.3\), donde \(\theta\)
+representa la proporción esperada de personas con una característica
+particular en una población generada por un modelo \(\xi\). Asumiendo
+que \(Y_k \sim Bernoulli(\theta)\), entonces bajo el modelo se tiene que
+\(E_{\xi}(Y_k) = \theta\) y además
 \(Var_{\xi}(Y_k) = \theta(1-\theta)\).
 
 En la literatura especializada, el modelo \(\xi\) recibe el nombre de
-modelo de superpoblación, pues genera poblaciones finitas. De esta
-forma, para una población finita generada por ese modelo, la media
-poblacional es \(\bar{Y}_U = \frac{1}{N}\sum_{k \in U}Y_k\). Nótese que,
-bajo el modelo \(\xi\), esta media es insesgada para \(\theta\), puesto
-que
+modelo de superpoblación, pues se asuem que es un proceso generador de
+poblaciones finitas. De esta forma, para una población finita generada
+por ese modelo, la media poblacional es
+\(\bar{Y}_U = \frac{1}{N}\sum_{k \in U}Y_k\). Nótese que, bajo el modelo
+\(\xi\), esta media es insesgada para \(\theta\), puesto que
 
 \[
 E_{\xi}(\bar{Y}_U) =
@@ -11744,12 +11667,13 @@ deben a que se usan 1000 simulaciones, no un número infinito de
 repeticiones.
 
 En la teoría de muestreo, en cambio, las características de interés son
-parámetros fijos de la población. Si una persona está desempleada, su
-estado se considera un valor fijo de la población finita. Lo aleatorio
-es el mecanismo mediante el cual se selecciona la muestra. El total
-poblacional se define como \(t_y = \sum_{k \in U} y_k\), mientras que la
-media poblacional es \(\bar{y}_U = \frac{t_y}{N}\). Si se observa una
-muestra \(s\), se propone estimar el total como
+parámetros fijos de la población. por ejemplo, si una persona está
+desempleada, su estado se considera un valor fijo de la población
+finita. Lo aleatorio es el mecanismo mediante el cual se selecciona la
+muestra. El total poblacional se define como
+\(t_y = \sum_{k \in U} y_k\), mientras que la media poblacional es
+\(\bar{y}_U = \frac{t_y}{N}\). Si se observa una muestra \(s\), se
+propone estimar el total como
 
 \[
 \hat{t}_{y} = \sum_{k \in s}\frac{y_k}{\pi_k}
@@ -11766,16 +11690,19 @@ mediante el estimador de razón ponderado, definido como
 {\sum_{k \in s}w_k}
 \]
 
-Según Cochran (\citeproc{ref-cochran1977sampling}{1977}), estos
-estimadores incorporan las probabilidades de inclusión en su forma
+Estos estimadores incorporan las probabilidades de inclusión en su forma
 funcional y esa es la diferencia central frente al promedio simple no
-ponderado de una muestra. Para ilustrar el impacto del diseño, supóngase
-que la población anterior se divide en \(N_I\) UPMs. La UPM \(i\) tiene
-tamaño \(N_i\), total \(t_{y_i}=\sum_{k \in U_i}y_{ik}\) y media
+ponderado de una muestra (\citeproc{ref-cochran1977sampling}{Cochran
+1977}).
+
+Para ilustrar el impacto del diseño, supóngase que la población anterior
+se encuentra particionada en \(N_I\) unidades primarias de muestreo
+(UPM). De esta forma, se asume que la UPM \(i\) tiene tamaño \(N_i\),
+total \(t_{y_i}=\sum_{k \in U_i}y_{ik}\) y media
 \(\bar{y}_i=t_{y_i}/N_i\). Bajo un diseño de tamaño fijo que asigna
 probabilidades de inclusión de primer orden proporcionales a \(N_i\),
-siempre que todas sean menores o iguales que uno, estas probabilidades
-toman la siguiente forma:
+siempre que todas sean postivas y menores o iguales que uno. Estas
+probabilidades toman la siguiente forma:
 
 \[
 \pi_{Ii} = \frac{n_I N_i}{N}
@@ -11804,18 +11731,20 @@ las personas observadas en las UPMs seleccionadas, sería:
      {\sum_{i \in S_I}N_i},
 \]
 
-el cual trata la muestra como si fuera autoponderada. Este estimador
-puede ser sesgado cuando las probabilidades de selección son desiguales,
+el cual trata la muestra como si fuera autoponderada. Este estimador es
+sesgado cuando las probabilidades de selección son desiguales,
 especialmente si el tamaño del conglomerado se relaciona con la variable
-de interés. La siguiente simulación fija una población finita y repite
-muchas veces la selección de hogares con probabilidades proporcionales
-al tamaño mediante \texttt{S.piPS()} del paquete
-\texttt{TeachingSampling}. En cada muestra se calculan dos estimadores:
-\texttt{design\_estimates}, que corresponde a \(\hat{\bar{y}}\), y
-\texttt{simple\_estimates}, que corresponde al promedio simple de las
-personas observadas en las UPMs seleccionadas, \(\bar{y}_s\). Además,
-estos estimadores se comparan con el parámetro del modelo
-\texttt{theta\_population}, correspondiente a \(\theta = 0.3\).
+de interés.
+
+La siguiente simulación fija una población finita y repite muchas veces
+la selección de hogares con probabilidades proporcionales al tamaño
+mediante \texttt{S.piPS()} del paquete \texttt{TeachingSampling}. En
+cada muestra se calculan dos estimadores: \texttt{design\_estimates},
+que corresponde a \(\hat{\bar{y}}\), y \texttt{simple\_estimates}, que
+corresponde al promedio simple de las personas observadas en las UPMs
+seleccionadas, \(\bar{y}_s\). Además, estos estimadores se comparan con
+el parámetro del modelo \texttt{theta\_population}, correspondiente a
+\(\theta = 0.3\).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -11866,7 +11795,7 @@ estos estimadores se comparan con el parámetro del modelo
 
 El primer bloque del código genera hogares de tamaños desiguales, entre
 2 y 6 personas. Para hacer visible el efecto del diseño, la probabilidad
-individual de desempleo varía suavemente con el tamaño del hogar, pero
+individual de desempleo varía ligeramente con el tamaño del hogar, pero
 se centra de manera que el promedio esperado de la población siga siendo
 cercano a \texttt{theta}. Luego se calcula \texttt{theta\_population},
 que es la proporción real de desempleo en esa población específica. En
@@ -11877,6 +11806,24 @@ La salida compara ambos estimadores con \texttt{theta\_population}. El
 sesgo de Monte Carlo de \texttt{expected\_pps} es cercano a cero,
 mientras que el de \texttt{expected\_simple} no lo es, mostrando
 resultado de ignorar el diseño en este ejercicio.
+
+La simulación muestra que el estimador que toma en cuenta el diseño de
+muestreo recupera adecuadamente el valor poblacional. La proporción
+verdadera en la población es 0.3, mientras que el promedio de las
+estimaciones obtenidas en las 1.000 muestras es 0.304, una pequeña
+diferencia atribuible a la variabilidad de Monte Carlo. En consecuencia,
+el estimador basado en la media de los conglomerados seleccionados bajo
+PPS presenta un comportamiento aproximadamente insesgado.
+
+En contraste, el estimador que calcula la proporción directamente a
+partir del total de personas observadas en los conglomerados
+seleccionados alcanza un valor esperado de 0.358, con un sesgo positivo
+de 0.0585. Esto ocurre porque los conglomerados de mayor tamaño tienen
+una mayor probabilidad de ser seleccionados y, además, en la simulación
+presentan mayores probabilidades de ocurrencia del evento de interés. Al
+calcular la estimación sin corregir este efecto del diseño, los
+conglomerados grandes reciben una influencia excesiva, produciendo una
+sobreestimación sistemática de la proporción poblacional.
 
 \section{La integración de ambas
 inferencias}\label{la-integracion-de-ambas-inferencias}
@@ -11921,25 +11868,24 @@ modelos para datos de encuestas.
 
 \subsection{Método de la máxima verosimilitud}\label{sec-mv}
 
-El método de máxima verosimilitud, presentado formalmente por Casella y
-Berger (\citeproc{ref-CasellaBerger2002}{2002}), parte de una muestra
-aleatoria \(y_1,\ldots,y_n\) generada por una distribución con densidad
-o función de probabilidad \(f(y;\theta)\). Si las observaciones son
-independientes e idénticamente distribuidas (IID), la función de
-verosimilitud se define como
+El método de máxima verosimilitud
+(\citeproc{ref-CasellaBerger2002}{Casella y Berger 2002}), parte de una
+población \(Y_1,\ldots,Y_N\) generada por un modelo \(\xi\), que asume
+una distribución con densidad o función de probabilidad \(f(Y;\theta)\).
+Si las observaciones son independientes e idénticamente distribuidas
+(IID), la función de verosimilitud se define como
 
 \[
 L(\theta)
-= \prod_{k=1}^{n} f(y_k;\theta).
+= \prod_{k=1}^{N} f(Y_k;\theta).
 \]
 
-El límite superior correcto es el tamaño muestral \(n\), no el tamaño
-poblacional \(N\). Como los productos pueden ser difíciles de manipular,
-se utiliza la log-verosimilitud:
+Como los productos pueden ser difíciles de manipular, se utiliza la
+log-verosimilitud:
 
 \[
 \ell(\theta)
-= \sum_{k=1}^{n}\log f(y_k;\theta)
+= \sum_{k=1}^{N}\log f(Y_k;\theta)
 \]
 
 El estimador de máxima verosimilitud \(\hat{\theta}\) es el valor de
@@ -11954,18 +11900,18 @@ U(\theta)
 \]
 
 donde
-\(u_k(\theta) = \frac{\partial}{\partial\theta}\log f(y_k;\theta)\) es
-la contribución de la unidad \(k\) al score total. Para una distribución
-Bernoulli con parámetro \(\theta\), la función de probabilidad es
-\(f(y_k;\theta) = \theta^{y_k}(1-\theta)^{1-y_k}\), para
-\(y_k \in \{0,1\}\). La log-verosimilitud es
+\(u_k(\theta) = \frac{\partial}{\partial\theta}\log f(Y_k;\theta)\) es
+la contribución de la unidad \(k\) al score total. En particular, para
+una distribución Bernoulli con parámetro \(\theta\), la función de
+probabilidad es \(f(Y_k;\theta) = \theta^{Y_k}(1-\theta)^{1-Y_k}\), para
+\(Y_k \in \{0,1\}\). La log-verosimilitud es
 
 \[
 \ell(\theta)
 = \sum_{k=1}^{N}
 \left[
-y_k\log(\theta)
-+(1-y_k)\log(1-\theta)
+Y_k\log(\theta)
++(1-Y_k)\log(1-\theta)
 \right]
 \]
 
@@ -11974,28 +11920,29 @@ definido por:
 
 \[
 \hat{\theta}_{MV}
-= \frac{1}{n}\sum_{k=1}^{n}y_k
+= \frac{1}{N}\sum_{k=1}^{N}Y_k
 \]
 
-Así, la proporción muestral es el estimador natural del parámetro
-Bernoulli. El punto clave es que este resultado depende del supuesto de
-que las observaciones tienen igual distribución y no provienen de un
-diseño con probabilidades desiguales.
+Por ende, la proporción poblacional es el estimador natural del
+parámetro \(\theta\) en una distribución Bernoulli. El punto clave es
+que este resultado depende del supuesto de que las observaciones tienen
+igual distribución y no provienen de un diseño con probabilidades
+desiguales.
 
 Por otro lado, en un modelo de regresión lineal múltiple con errores
 normales, se tiene que
-\(\mathbf{y} \sim N(\mathbf{X}\boldsymbol{\beta},\sigma^2 I)\). En este
+\(\mathbf{Y} \sim N(\mathbf{X}\boldsymbol{\beta},\sigma^2 I)\). En este
 caso, la log-verosimilitud, omitiendo constantes, puede escribirse como
 
 \[
-\ell(\boldsymbol{\beta},\sigma^2) = -\frac{n}{2}\log(\sigma^2) -\frac{1}{2\sigma^2}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})'(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})
+\ell(\boldsymbol{\beta},\sigma^2) = -\frac{N}{2}\log(\sigma^2) -\frac{1}{2\sigma^2}(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})'(\mathbf{Y}-\mathbf{X}\boldsymbol{\beta})
 \]
 
 Maximizar esta expresión respecto de \(\beta\) equivale a minimizar la
 suma de cuadrados de los residuos. Por ello, el estimador de máxima
 verosimilitud de \(\beta\) coincide con el estimador de mínimos
 cuadrados ordinarios
-\(\hat{\boldsymbol{\beta}}_{MV} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{y}\).
+\(\hat{\boldsymbol{\beta}}_{MV} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}\).
 Este resultado es importante porque muestra que muchos procedimientos
 estadísticos usuales pueden interpretarse como máxima verosimilitud bajo
 supuestos de modelo específicos. Sin embargo, si los datos provienen de
@@ -12014,19 +11961,18 @@ estimaciones que describen la muestra, pero no la población objetivo.
 
 La máxima pseudo-verosimilitud, desarrollada a partir de los resultados
 de Binder (\citeproc{ref-binder1983variances}{1983}), incorpora los
-pesos de muestreo en la log-verosimilitud. Para unidades observadas
-\(k \in s\), se define
+pesos de muestreo en la log-verosimilitud. Para las unidades observadas
+en la muestra \(k \in s\), se define la log-verosimiliutd ponderada:
 
 \[
 \ell_p(\theta)
 = \sum_{k \in s} w_k \log f(y_k;\theta)
 \]
 
-En la notación de esta sección, el peso \(w_k=1/\pi_k\) indica cuántas
-unidades de la población representa la observación \(y_k\). Por eso, la
-contribución de una unidad con baja probabilidad de inclusión se
-amplifica en la pseudo-verosimilitud. Las ecuaciones de estimación
-resultantes son
+En donde el peso \(w_k=1/\pi_k\) indica cuántas unidades de la población
+representa la observación \(y_k\). Por eso, la contribución de una
+unidad con baja probabilidad de inclusión se amplifica en la
+pseudo-verosimilitud. Las ecuaciones de estimación resultantes son
 
 \[
 U_p(\theta)
@@ -12125,7 +12071,9 @@ de la muestra.
 \NormalTok{population\_size }\OtherTok{\textless{}{-}} \DecValTok{100}
 \NormalTok{theta }\OtherTok{\textless{}{-}} \FloatTok{0.3}
 \NormalTok{n\_sim\_population }\OtherTok{\textless{}{-}} \DecValTok{100}
-\NormalTok{expected\_design\_estimates }\OtherTok{\textless{}{-}}\NormalTok{ expected\_simple\_estimates }\OtherTok{\textless{}{-}}\NormalTok{ population\_means }\OtherTok{\textless{}{-}}
+\NormalTok{expected\_design\_estimates }\OtherTok{\textless{}{-}} 
+\NormalTok{  expected\_simple\_estimates }\OtherTok{\textless{}{-}} 
+\NormalTok{  population\_means }\OtherTok{\textless{}{-}}
   \FunctionTok{rep}\NormalTok{(}\ConstantTok{NA}\NormalTok{, n\_sim\_population)}
 
 \NormalTok{cluster\_size }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{2}\SpecialCharTok{:}\DecValTok{6}\NormalTok{, }\AttributeTok{each =} \DecValTok{5}\NormalTok{)}
@@ -12140,7 +12088,7 @@ de la muestra.
 \NormalTok{  population\_means[population\_sim] }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(outcome)}
 \NormalTok{  cluster\_totals }\OtherTok{\textless{}{-}} \FunctionTok{tapply}\NormalTok{(outcome, cluster\_id, sum)}
 \NormalTok{  cluster\_means }\OtherTok{\textless{}{-}} \FunctionTok{tapply}\NormalTok{(outcome, cluster\_id, mean)}
-
+  
 \NormalTok{  design\_estimates }\OtherTok{\textless{}{-}}\NormalTok{ simple\_estimates }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\DecValTok{100}\NormalTok{)}
   \ControlFlowTok{for}\NormalTok{ (sample\_sim }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(}\DecValTok{100}\NormalTok{)) \{}
 \NormalTok{    pps\_sample }\OtherTok{\textless{}{-}} \FunctionTok{S.piPS}\NormalTok{(sampled\_cluster\_count, cluster\_size)}
@@ -12186,17 +12134,42 @@ pequeño. La comparación con \texttt{expected\_simple} muestra por qué la
 inferencia basada en encuestas requiere pesos y varianzas de diseño,
 incluso cuando se parte de un modelo estadístico sencillo.
 
-Como explica Pfeffermann (\citeproc{ref-pfeffermann1993role}{1993}), en
-síntesis, la máxima verosimilitud ordinaria es adecuada cuando las
-observaciones pueden tratarse como IID bajo un modelo probabilístico. En
-encuestas complejas, la máxima pseudo-verosimilitud ofrece una extensión
-natural: conserva la estructura de las ecuaciones de estimación, pero
-pondera cada contribución individual por su peso muestral. La
-ponderación protege frente a ciertos diseños informativos o a
-determinadas especificaciones incorrectas, pero su necesidad y sus
-propiedades dependen del diseño y del modelo. Así, los modelos
-estadísticos se ajustan de manera más coherente con la población que la
-encuesta busca representar.
+Los resultados de la simulación muestran con claridad el efecto de
+respetar (o ignorar) el diseño complejo cuando el tamaño del
+conglomerado está relacionado con la variable de interés. En la
+simulación, el parámetro poblacional se fija en \texttt{theta\ =\ 0.3} y
+la media observada entre las 100 poblaciones simuladas es
+\texttt{0.304}, una pequeña diferencia atribuible a la variabilidad de
+Monte Carlo. El estimador basado en el promedio simple de las medias de
+los conglomerados seleccionados alcanza \texttt{0.302}. Esto ocurre
+porque la probabilidad de seleccionar cada conglomerado es proporcional
+a su tamaño: al promediar las medias de los conglomerados seleccionados,
+la selección introduce precisamente la ponderación por tamaño necesaria
+para recuperar la media a nivel de personas. Por ello, el sesgo
+reportado es prácticamente nulo (\texttt{0.00248}).
+
+En contraste, el estimador que combina todos los individuos
+pertenecientes a los conglomerados seleccionados como si constituyeran
+una muestra simple, tiene una media de \texttt{0.332} presentando un
+sesgo positivo (\texttt{0.0317}). El problema es que los conglomerados
+grandes ya tienen una probabilidad mayor de ser seleccionados por el
+diseño y, posteriormente, al calcular la media agrupando todos sus
+individuos, vuelven a recibir mayor peso debido a que contienen más
+personas. Se produce así una especie de doble ponderación por tamaño. El
+ejercicio ilustra, por tanto, que ignorar las probabilidades de
+selección puede producir sesgo cuando el diseño es informativo.
+
+En síntesis, como explica Pfeffermann
+(\citeproc{ref-pfeffermann1993role}{1993}), la máxima verosimilitud es
+adecuada cuando las observaciones pueden tratarse como IID bajo un
+modelo probabilístico. En encuestas complejas, la máxima
+pseudo-verosimilitud ofrece una extensión natural: conserva la
+estructura de las ecuaciones de estimación, pero pondera cada
+contribución individual por su peso muestral. La ponderación protege
+frente a ciertos diseños informativos o a determinadas especificaciones
+incorrectas, pero su necesidad y sus propiedades dependen del diseño y
+del modelo. Así, los modelos estadísticos se ajustan de manera más
+coherente con la población que la encuesta busca representar.
 
 \bookmarksetup{startatroot}
 
@@ -12430,10 +12403,6 @@ Kalton, Graham, y Ismael Flores-Cervantes. 2003. {«Weighting methods»}.
 \bibitem[\citeproctext]{ref-kish1965survey}
 Kish, Leslie. 1965. \emph{Survey sampling.}
 
-\bibitem[\citeproctext]{ref-kish1987statistical}
-Kish, Leslie. 1987. \emph{Statistical Design for Research}. John Wiley
-\& Sons.
-
 \bibitem[\citeproctext]{ref-kish1974inference}
 Kish, Leslie, y Martin R. Frankel. 1974. {«Inference from complex
 samples»}. \emph{Journal of the Royal Statistical Society, Series B} 36:
@@ -12460,10 +12429,6 @@ Equations Approach»}. \emph{Journal of Official Statistics} 13 (1):
 Kovar, JG, JNK Rao, y CFJ Wu. 1988. {«Bootstrap and other methods to
 measure errors in survey estimates»}. \emph{Canadian Journal of
 Statistics} 16 (S1): 25-45.
-
-\bibitem[\citeproctext]{ref-kreft1998introducing}
-Kreft, Ita G. G., y Jan De Leeuw. 1998. \emph{Introducing Multilevel
-Modeling}. Sage Publications.
 
 \bibitem[\citeproctext]{ref-LangelTille2013}
 Langel, Matti, y Yves Tillé. 2013. {«Variance Estimation of the Gini
