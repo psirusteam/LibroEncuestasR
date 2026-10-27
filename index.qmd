@@ -4,7 +4,7 @@ La versión online de este libro está licenciada bajo una [Licencia Internacion
 
 También puede descargar la versión en PDF aquí: [Descargar libro en PDF](Libro.pdf){download="Libro.pdf" type="application/pdf"}.
 
-Este libro es el resultado de un compendio de las experiencias internacionales prácticas adquiridas por los autores en su asesoría a los países de América Latina y el Caribe desde la División de Estadísticas de la CEPAL.
+Este libro es el resultado de un compendio de las experiencias internacionales prácticas adquiridas por los autores en su asesoría a los países de América Latina y el Caribe desde la División de Estadísticas de la CEPAL. Se agradece la revisión detallada de Xavier MAncero, jefe de la Unidad de Estadísticas Sociales de la CEPAL, asi como de Gabriel Mendes Borgues, de la División de Población de la CEPAL, y de Álvaro Fuentes, de la División de EStadísticas de la CEPAL.
 
 # Resumen {#resumen .unnumbered}
 
