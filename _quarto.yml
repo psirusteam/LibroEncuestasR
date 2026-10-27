@@ -31,6 +31,7 @@ book:
       chapters:
         - chapters/A1-TidyVerse.qmd
         - chapters/A2-MPVbinder.qmd
+        - chapters/A3-Imputacion.qmd
     - chapters/references.qmd
   page-footer: "Análisis de encuestas de hogares usando R"
 

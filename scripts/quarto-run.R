@@ -50,6 +50,44 @@ find_quarto_bin <- function() {
   stop("No se encontró Quarto. Instale Quarto o use una versión reciente de RStudio.")
 }
 
+patch_quarto_html_write <- function(quarto_source) {
+  needle <- "  await Deno.writeTextFile(path3, output);"
+  matches <- gregexpr(needle, quarto_source, fixed = TRUE)[[1]]
+  if (length(matches) != 1L || matches[[1]] == -1L) {
+    stop(
+      "La versión instalada de Quarto no coincide con el ajuste de escritura HTML. ",
+      "Actualice el script scripts/quarto-run.R."
+    )
+  }
+
+  # Windows puede mantener un HTML mapeado brevemente mientras otro proceso
+  # lo lee. Reintenta solo el error 1224 y conserva los demás errores.
+  replacement <- paste(c(
+    "  const maxWriteAttempts = 12;",
+    "  for (let attempt = 0; attempt < maxWriteAttempts; attempt++) {",
+    "    try {",
+    "      await Deno.writeTextFile(path3, output);",
+    "      return;",
+    "    } catch (error) {",
+    "      if (!/\\bos error 1224\\b/.test(String(error))) throw error;",
+    "      if (attempt === maxWriteAttempts - 1) {",
+    "        throw new Error(",
+    "          'El archivo HTML sigue bloqueado por Windows: ' + path3 +",
+    "          '. Cierre las vistas previas de ese archivo y compruebe si otro programa lo mantiene abierto antes de recompilar.',",
+    "          { cause: error }",
+    "        );",
+    "      }",
+    "      if (attempt === 0) {",
+    "        console.warn('Archivo HTML bloqueado temporalmente; reintentando: ' + path3);",
+    "      }",
+    "      await new Promise((resolve) => setTimeout(resolve, Math.min(500 * 2 ** attempt, 2000)));",
+    "    }",
+    "  }"
+  ), collapse = "\n")
+
+  sub(needle, replacement, quarto_source, fixed = TRUE)
+}
+
 run_quarto <- function(args) {
   quarto_bin <- find_quarto_bin()
 
@@ -109,6 +147,7 @@ run_quarto <- function(args) {
       quarto_source,
       fixed = TRUE
     )
+    quarto_source <- patch_quarto_html_write(quarto_source)
     patched_quarto <- tempfile(
       pattern = "quarto-unicode-",
       fileext = ".js"

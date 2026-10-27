@@ -17,30 +17,22 @@ render_pdf <- function() {
 
   source("scripts/quarto-run.R", local = environment(), encoding = "UTF-8")
 
-  # Conserva las figuras PDF que ya existían y retira solo las creadas por
-  # esta compilación, para no mezclar recursos del PDF con el libro HTML.
-  figure_pdfs_before <- list.files(
-    "figures",
-    pattern = "\\.pdf$",
-    full.names = TRUE,
-    ignore.case = TRUE
-  )
-  on.exit({
-    figure_pdfs_after <- list.files(
-      "figures",
-      pattern = "\\.pdf$",
-      full.names = TRUE,
-      ignore.case = TRUE
-    )
-    generated_figure_pdfs <- setdiff(
-      figure_pdfs_after,
-      figure_pdfs_before
-    )
+  # Los procesos de R iniciados por Quarto deben reconocer los acentos de
+  # la ruta del proyecto, también al leer archivos geográficos con sf.
+  if (.Platform$OS.type == "windows") {
+    previous_locale <- Sys.getenv("LC_ALL", unset = NA_character_)
+    on.exit({
+      if (is.na(previous_locale)) {
+        Sys.unsetenv("LC_ALL")
+      } else {
+        Sys.setenv(LC_ALL = previous_locale)
+      }
+    }, add = TRUE)
+    Sys.setenv(LC_ALL = "English_United States.utf8")
+  }
 
-    if (length(generated_figure_pdfs) > 0) {
-      unlink(generated_figure_pdfs, force = TRUE)
-    }
-  }, add = TRUE)
+  # Las figuras PDF son dependencias del archivo TeX y deben conservarse
+  # para recompilarlo. Se ejecutan los chunks para regenerar las ausentes.
 
   run_quarto(c(
     "render",
@@ -48,7 +40,8 @@ render_pdf <- function() {
     "--profile",
     "pdf",
     "--to",
-    "pdf"
+    "pdf",
+    "--execute"
   ))
 
   pdf_output <- file.path("docs", "Libro.pdf")

@@ -238,6 +238,10 @@
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
 \hypersetup{
   pdftitle={Análisis de Encuestas de Hogares},
   pdfauthor={Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa, Cristian Téllez y Xavier Mancero},
@@ -260,7 +264,7 @@
 \subtitle{usando R}
 \author{Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa, Cristian
 Téllez y Xavier Mancero}
-\date{9 de septiembre de 2026}
+\date{27 de octubre de 2026}
 \begin{document}
 \frontmatter
 \maketitle
@@ -1995,9 +1999,9 @@ Zone & mean & mean\_se & mean\_low & mean\_upp \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Mean expenditure & 371 & 13.3 & 344 & 397 \\
 Rural & 274 & 10.3 & 254 & 294 \\
 Urban & 460 & 22.2 & 416 & 504 \\
+Mean expenditure & 371 & 13.3 & 344 & 397 \\
 
 \end{longtable}
 
@@ -2037,7 +2041,6 @@ Zone & Region & mean & mean\_se & mean\_low & mean\_upp \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Mean expenditure & Mean expenditure & 371 & 13.3 & 344 & 397 \\
 Rural & Norte & 307 & 18.4 & 271 & 343 \\
 Rural & Sur & 317 & 14.6 & 288 & 346 \\
 Rural & Centro & 337 & 42.8 & 252 & 422 \\
@@ -2050,6 +2053,7 @@ Urban & Centro & 531 & 53.1 & 426 & 636 \\
 Urban & Occidente & 376 & 20.9 & 334 & 417 \\
 Urban & Oriente & 466 & 45.3 & 377 & 556 \\
 Urban & Mean expenditure & 460 & 22.2 & 416 & 504 \\
+Mean expenditure & Mean expenditure & 371 & 13.3 & 344 & 397 \\
 
 \end{longtable}
 
@@ -7042,7 +7046,7 @@ Coefficients:
 
 Degrees of Freedom: 2604 Total (i.e. Null);  116 Residual
 Null Deviance:      635000000 
-Residual Deviance: 309000000    AIC: 38300
+Residual Deviance: 309000000    AIC: NA
 \end{verbatim}
 
 La salida anterior corresponde al ajuste de un modelo de regresión
@@ -10280,13 +10284,13 @@ el modelo logístico nulo (primeros 10 estratos)}
 \endlastfoot
 idStrt001 & -0.852 \\
 idStrt002 & -0.038 \\
-idStrt003 & -2.378 \\
-idStrt004 & -2.618 \\
+idStrt003 & -2.380 \\
+idStrt004 & -2.619 \\
 idStrt005 & -1.037 \\
-idStrt006 & 0.902 \\
+idStrt006 & 0.903 \\
 idStrt007 & -1.018 \\
 idStrt008 & 0.156 \\
-idStrt009 & 1.913 \\
+idStrt009 & 1.914 \\
 idStrt010 & -0.609 \\
 
 \end{longtable}
@@ -10378,16 +10382,16 @@ logístico con intercepto aleatorio por estrato (primeros 10 estratos)}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-idStrt001 & 1.044 & -0.007 \\
-idStrt002 & 1.918 & -0.007 \\
+idStrt001 & 1.045 & -0.007 \\
+idStrt002 & 1.920 & -0.007 \\
 idStrt003 & -0.454 & -0.007 \\
 idStrt004 & 0.062 & -0.007 \\
-idStrt005 & 1.760 & -0.007 \\
-idStrt006 & 3.194 & -0.007 \\
+idStrt005 & 1.762 & -0.007 \\
+idStrt006 & 3.197 & -0.007 \\
 idStrt007 & 0.658 & -0.007 \\
-idStrt008 & 1.711 & -0.007 \\
-idStrt009 & 3.721 & -0.007 \\
-idStrt010 & 1.175 & -0.007 \\
+idStrt008 & 1.712 & -0.007 \\
+idStrt009 & 3.724 & -0.007 \\
+idStrt010 & 1.176 & -0.007 \\
 
 \end{longtable}
 
@@ -10535,16 +10539,16 @@ estratos)}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-idStrt001 & 4.864 & -0.025 \\
-idStrt002 & 9.860 & -0.035 \\
+idStrt001 & 4.865 & -0.025 \\
+idStrt002 & 9.862 & -0.035 \\
 idStrt003 & -1.133 & -0.007 \\
-idStrt004 & 1.897 & -0.015 \\
-idStrt005 & 8.029 & -0.026 \\
+idStrt004 & 1.899 & -0.015 \\
+idStrt005 & 8.030 & -0.026 \\
 idStrt006 & -1.153 & 0.009 \\
-idStrt007 & 0.973 & -0.012 \\
+idStrt007 & 0.974 & -0.012 \\
 idStrt008 & 1.488 & -0.006 \\
 idStrt009 & 3.660 & -0.005 \\
-idStrt010 & 4.132 & -0.020 \\
+idStrt010 & 4.133 & -0.020 \\
 
 \end{longtable}
 
@@ -12171,6 +12175,1766 @@ incorrectas, pero su necesidad y sus propiedades dependen del diseño y
 del modelo. Así, los modelos estadísticos se ajustan de manera más
 coherente con la población que la encuesta busca representar.
 
+\chapter{Imputación usando R}\label{ap3}
+
+La ausencia de respuesta es un fenómeno frecuente en las encuestas de
+hogares, especialmente después de la pandemia de COVID-19. Sus causas
+son múltiples: cuestionarios extensos, renuencia de las personas
+encuestadas a proporcionar información sensible y dificultades para
+acceder a las áreas seleccionadas debido a desastres naturales o
+situaciones de violencia, entre otras. Una proporción elevada de valores
+faltantes en una variable puede comprometer la calidad de las
+estimaciones obtenidas con los estimadores clásicos.
+
+El objetivo de este anexo es examinar las posibles causas de la ausencia
+de respuesta en las encuestas de hogares, su impacto en la estimación de
+indicadores y algunas alternativas para tratar los datos faltantes.
+Entre los avances metodológicos en el contexto de muestras complejas se
+encuentran la imputación múltiple
+(\citeproc{ref-vanbuuren2012flexible}{Buuren 2012};
+\citeproc{ref-carpenter2013multiple}{Carpenter y Kenward 2013};
+\citeproc{ref-berglund2014multiple}{Berglund y Heeringa 2014};
+\citeproc{ref-raghunathan2016missing}{Raghunathan 2016}) y la imputación
+fraccional (\citeproc{ref-kim2004fractional}{Kim y Fuller 2004};
+\citeproc{ref-kim2014statistical}{Kim y Shao 2014}).
+
+\section{Tres patrones para la ausencia de
+respuesta}\label{tres-patrones-para-la-ausencia-de-respuesta}
+
+Para describir la ausencia de respuesta, sea
+\(\boldsymbol{X}_{n \times p} = x_{ij}\) una matriz completa (sin
+valores faltantes), donde \(X_{ij}\) es el valor de la variable \(j\)
+para el individuo \(i\), con \(j=1, \dots, p\) e \(i=1, \dots, n\).
+Además, se define la matriz indicadora
+\(\boldsymbol{M}_{n \times p} = m_{ij}\), donde \(m_{ij} = 1\) si el
+valor de \(x_{ij}\) es un dato faltante y \(m_{ij}=0\) si \(x_{ij}\)
+está presente. La matriz \(M\) describe el patrón de datos faltantes, y
+la media de cada columna representa la proporción de valores faltantes
+de la variable correspondiente. A continuación, se describen tres
+mecanismos de ausencia de respuesta:
+
+\begin{itemize}
+\tightlist
+\item
+  La matriz \(\boldsymbol{M}_{n \times p}\) presenta un comportamiento
+  completamente al azar (MCAR, por sus siglas en inglés) si la
+  probabilidad de respuesta es completamente independiente de las
+  variables observadas y de las no observadas. En este caso, el
+  mecanismo de respuesta es ignorable tanto para inferencias basadas en
+  muestreo como en máxima verosimilitud.
+\item
+  La matriz \(\boldsymbol{M}_{n \times p}\) presenta un comportamiento
+  al azar (MAR, por sus siglas en inglés) si la probabilidad de
+  respuesta es completamente independiente de las variables no
+  observadas y no de las observadas. En este caso, el mecanismo de
+  respuesta se considera ignorable para inferencias basadas en máxima
+  verosimilitud.
+\item
+  La matriz \(\boldsymbol{M}_{n \times p}\) presenta un comportamiento
+  no al azar (MNAR, por sus siglas en inglés) si la probabilidad de
+  respuesta no es completamente independiente de las variables no
+  observadas y posiblemente también de las observadas. El mecanismo de
+  respuesta es no ignorable.
+\end{itemize}
+
+La tabla~\ref{tbl-ap3-patron-no-monotono} ilustra datos faltantes en
+posiciones dispersas. Cada fila representa un caso y cada columna
+\(X_j\) una variable. \textbf{O} indica un dato observado y \textbf{?}
+un dato faltante.
+
+\begin{longtable}[]{@{}cccccccl@{}}
+\caption{Patrón no monótono de datos faltantes. Adaptación de
+\emph{Applied Survey Data Analysis}
+(\citeproc{ref-HeeringaWestBerglund2017}{Heeringa et~al.
+2017}).}\label{tbl-ap3-patron-no-monotono}\tabularnewline
+\toprule\noalign{}
+Caso & \(X_1\) & \(X_2\) & \(X_3\) & \(X_4\) & \(X_5\) & \(X_6\) & Tipo
+de caso \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Caso & \(X_1\) & \(X_2\) & \(X_3\) & \(X_4\) & \(X_5\) & \(X_6\) & Tipo
+de caso \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & O & O & O & O & O & O & Completo \\
+2 & O & O & O & O & O & O & Completo \\
+3 & O & O & O & O & O & O & Completo \\
+4 & O & O & O & O & O & O & Completo \\
+5 & O & O & O & O & ? & ? & Incompleto \\
+6 & ? & O & O & O & O & O & Incompleto \\
+7 & O & ? & O & O & O & ? & Incompleto \\
+8 & ? & O & ? & O & ? & ? & Incompleto \\
+\end{longtable}
+
+Como en los capítulos anteriores, se carga la base de datos de la
+muestra seleccionada. Para ilustrar el tratamiento de los datos
+faltantes, se introducirán pérdidas de información de forma simulada. La
+base se carga de la siguiente manera:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"../Data/encuesta.rds"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Primero, se cargan los paquetes que se utilizarán en este anexo, se
+seleccionan las personas mayores de 15 años y se calculan las
+proporciones de personas desempleadas, inactivas y empleadas antes de
+generar los valores faltantes:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(survey)}
+\FunctionTok{library}\NormalTok{(srvyr)}
+\FunctionTok{library}\NormalTok{(TeachingSampling)}
+\FunctionTok{library}\NormalTok{(patchwork)}
+
+\NormalTok{survey\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(Age }\SpecialCharTok{\textgreater{}=} \DecValTok{15}\NormalTok{)}
+
+\NormalTok{employment\_proportion }\OtherTok{\textless{}{-}} \FunctionTok{prop.table}\NormalTok{(}\FunctionTok{table}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Employment))}
+\NormalTok{employment\_proportion}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Unemployed   Inactive   Employed 
+     0.041      0.374      0.585 
+\end{verbatim}
+
+También se calcula el promedio de ingresos en la muestra:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{income\_mean }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{income\_mean}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 604
+\end{verbatim}
+
+A continuación, se genera un 20 \% de valores faltantes siguiendo un
+mecanismo MCAR. La función \texttt{sample\_frac} del paquete
+\texttt{dplyr} permite seleccionar aleatoriamente una fracción de las
+filas de un conjunto de datos.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\NormalTok{mcar\_data }\OtherTok{\textless{}{-}} \FunctionTok{sample\_frac}\NormalTok{(survey\_data, }\FloatTok{0.8}\NormalTok{)}
+
+\NormalTok{mcar\_plot\_data }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{mcar\_data =}\NormalTok{ mcar\_data, }\AttributeTok{survey\_data =}\NormalTok{ survey\_data),}
+  \AttributeTok{.id =} \StringTok{"data\_source"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+La figura~\ref{fig-ap3-mcar-cajas} compara el ingreso por zona y sexo en
+la base completa (\texttt{survey\_data}) y en la muestra con pérdida
+MCAR (\texttt{mcar\_data}). Las medianas y la amplitud de las cajas son
+similares en ambas bases. La línea roja indica la media del ingreso en
+la base completa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zone\_income\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(mcar\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Zone, }\AttributeTok{y =}\NormalTok{ Income)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(. }\SpecialCharTok{\textasciitilde{}}\NormalTok{ data\_source) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{)}
+
+\NormalTok{sex\_income\_plot }\OtherTok{\textless{}{-}}\NormalTok{ zone\_income\_plot }\SpecialCharTok{+} \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Sex)}
+
+\NormalTok{zone\_income\_plot }\SpecialCharTok{|}\NormalTok{ sex\_income\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-mcar-cajas-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-mcar-cajas}Distribución del ingreso por zona y
+sexo con datos completos y bajo un patrón MCAR}
+
+\end{figure}%
+
+La figura~\ref{fig-ap3-mcar-ingreso} muestra las densidades del ingreso
+para la base completa (\texttt{survey\_data}) y la muestra con pérdida
+MCAR (\texttt{mcar\_data}), en el total y por sexo. Las curvas
+prácticamente se superponen, lo que indica pocos cambios en la
+distribución en esta simulación. La línea roja representa la media del
+ingreso en la base completa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{income\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(mcar\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Income, }\AttributeTok{fill =}\NormalTok{ data\_source)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{)}
+
+\NormalTok{sex\_income\_density\_plot }\OtherTok{\textless{}{-}}\NormalTok{ income\_density\_plot }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(. }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex) }\SpecialCharTok{+} \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+
+\NormalTok{income\_density\_plot }\SpecialCharTok{/}\NormalTok{ sex\_income\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-mcar-ingreso-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-mcar-ingreso}Distribución del ingreso, total y
+por sexo, bajo un patrón MCAR}
+
+\end{figure}%
+
+La figura~\ref{fig-ap3-mcar-gasto} compara las densidades del gasto en
+la base completa (\texttt{survey\_data}) y la muestra con pérdida MCAR
+(\texttt{mcar\_data}), en el total y por sexo. La superposición de las
+curvas muestra que se conserva la forma de la distribución. La línea
+roja indica la media del gasto en la base completa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{expenditure\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{  mcar\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{fill =}\NormalTok{ data\_source)}
+\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Expenditure), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{)}
+
+\NormalTok{sex\_expenditure\_density\_plot }\OtherTok{\textless{}{-}}\NormalTok{ expenditure\_density\_plot }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(. }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex) }\SpecialCharTok{+} \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+
+\NormalTok{expenditure\_density\_plot }\SpecialCharTok{/}\NormalTok{ sex\_expenditure\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-mcar-gasto-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-mcar-gasto}Distribución del gasto, total y por
+sexo, bajo un patrón MCAR}
+
+\end{figure}%
+
+A continuación, se simula una pérdida de información al azar (MAR) que
+depende de la zona y del sexo:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\NormalTok{stratum\_id }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Zone, survey\_data}\SpecialCharTok{$}\NormalTok{Sex)}
+\FunctionTok{table}\NormalTok{(stratum\_id)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+stratum_id
+RuralFemale   RuralMale UrbanFemale   UrbanMale 
+        481         428         531         439 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample\_indices }\OtherTok{\textless{}{-}} \FunctionTok{S.STSI}\NormalTok{(}
+  \AttributeTok{S =}\NormalTok{ stratum\_id,}
+  \AttributeTok{Nh =} \FunctionTok{c}\NormalTok{(}\DecValTok{481}\NormalTok{, }\DecValTok{428}\NormalTok{, }\DecValTok{531}\NormalTok{, }\DecValTok{439}\NormalTok{),}
+  \AttributeTok{nh =} \FunctionTok{c}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{380}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{280}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{mar\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data[}\SpecialCharTok{{-}}\NormalTok{sample\_indices, ]}
+
+\NormalTok{mar\_plot\_data }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{mar\_data =}\NormalTok{ mar\_data, }\AttributeTok{survey\_data =}\NormalTok{ survey\_data),}
+  \AttributeTok{.id =} \StringTok{"data\_source"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+El código anterior utiliza el paquete \texttt{TeachingSampling} para
+realizar un muestreo aleatorio en cada combinación de zona y sexo.
+Primero, se fija la semilla en \texttt{1234} para que los resultados
+sean reproducibles. Luego, se crea la variable \texttt{stratum\_id}, que
+combina \texttt{Zone} y \texttt{Sex} mediante la función \texttt{paste0}
+para definir los estratos. La función \texttt{table} muestra la
+frecuencia de cada estrato. El muestreo estratificado se realiza con
+\texttt{S.STSI}, cuyos argumentos son \texttt{S}, el vector de estratos;
+\texttt{Nh}, el número de unidades en cada estrato (469, 411, 510 y
+390); y \texttt{nh}, el tamaño de muestra deseado en cada estrato (20,
+380, 20 y 280).
+
+El muestreo estratificado devuelve un vector con los índices de las
+filas seleccionadas. Estas observaciones se excluyen de la base para
+crear \texttt{mar\_data}. Por último, la función \texttt{bind\_rows} del
+paquete \texttt{dplyr} reúne \texttt{survey\_data} y \texttt{mar\_data}
+en \texttt{mar\_plot\_data}. La nueva variable \texttt{data\_source}
+identifica la base de origen de cada observación.
+
+La figura~\ref{fig-ap3-mar-cajas} compara el gasto por zona y sexo entre
+la base completa (\texttt{survey\_data}) y la muestra con pérdida MAR
+(\texttt{mar\_data}). Las medianas permanecen próximas, aunque cambian
+la dispersión y algunos valores extremos, especialmente entre los
+hombres. La línea roja señala la media del gasto en la base completa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mar\_expenditure\_boxplot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(mar\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ data\_source, }\AttributeTok{y =}\NormalTok{ Expenditure)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Expenditure), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(Zone }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+
+\NormalTok{mar\_expenditure\_boxplot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-mar-cajas-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-mar-cajas}Distribución del gasto por zona y sexo
+bajo un patrón MAR}
+
+\end{figure}%
+
+La figura~\ref{fig-ap3-mar-ingreso} compara las densidades del ingreso
+de la base completa (\texttt{survey\_data}) y la muestra con pérdida MAR
+(\texttt{mar\_data}). Las diferencias son pequeñas en el total y más
+visibles entre los hombres, lo que muestra la utilidad de revisar las
+desagregaciones. La línea roja indica la media del ingreso en la base
+completa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{income\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(mar\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Income, }\AttributeTok{fill =}\NormalTok{ data\_source)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{)}
+
+\NormalTok{sex\_income\_density\_plot }\OtherTok{\textless{}{-}}\NormalTok{ income\_density\_plot }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(. }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex) }\SpecialCharTok{+} \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+
+\NormalTok{income\_density\_plot }\SpecialCharTok{/}\NormalTok{ sex\_income\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-mar-ingreso-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-mar-ingreso}Distribución del ingreso, total y
+por sexo, bajo un patrón MAR}
+
+\end{figure}%
+
+La figura~\ref{fig-ap3-mar-gasto} muestra las densidades del gasto en la
+base completa (\texttt{survey\_data}) y la muestra con pérdida MAR
+(\texttt{mar\_data}), en el total y por sexo. Las curvas son próximas
+entre las mujeres y presentan diferencias más visibles entre los
+hombres. La línea roja representa la media del gasto en la base
+completa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{expenditure\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{  mar\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{fill =}\NormalTok{ data\_source)}
+\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Expenditure), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{)}
+
+\NormalTok{sex\_expenditure\_density\_plot }\OtherTok{\textless{}{-}}\NormalTok{ expenditure\_density\_plot }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(. }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex) }\SpecialCharTok{+} \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+
+\NormalTok{expenditure\_density\_plot }\SpecialCharTok{/}\NormalTok{ sex\_expenditure\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-mar-gasto-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-mar-gasto}Distribución del gasto, total y por
+sexo, bajo un patrón MAR}
+
+\end{figure}%
+
+Por último, se simula una pérdida de información no al azar (MNAR). Como
+se explicó al inicio del anexo, en este mecanismo la probabilidad de que
+un dato falte está relacionada con su propio valor. Esta dependencia
+puede introducir un sesgo apreciable en la inferencia y el análisis
+estadístico de las encuestas de hogares, por lo que el tratamiento de
+los datos faltantes requiere especial atención.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mnar\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(Income) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{1300}\NormalTok{L)}
+
+\NormalTok{mnar\_plot\_data }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{mnar\_data =}\NormalTok{ mnar\_data, }\AttributeTok{survey\_data =}\NormalTok{ survey\_data),}
+  \AttributeTok{.id =} \StringTok{"data\_source"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+El código anterior conserva en \texttt{mnar\_data} las 1300
+observaciones con menores ingresos y las reúne con la base completa en
+\texttt{mnar\_plot\_data}. La figura~\ref{fig-ap3-mnar-ingreso} muestra
+cómo esta selección elimina la cola de ingresos altos y desplaza la
+distribución hacia valores menores. La media de los casos conservados,
+en azul, queda por debajo de la media de la base completa, en rojo.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mnar\_income\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(mnar\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Income, }\AttributeTok{fill =}\NormalTok{ data\_source)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(mnar\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{)}
+
+\NormalTok{mnar\_income\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-mnar-ingreso-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-mnar-ingreso}Distribución del ingreso bajo un
+patrón MNAR}
+
+\end{figure}%
+
+La figura~\ref{fig-ap3-mnar-gasto} compara la distribución del gasto en
+la base completa (\texttt{survey\_data}) y entre los casos conservados
+bajo MNAR (\texttt{mnar\_data}). La selección por ingreso también reduce
+la presencia de gastos altos. La línea azul señala la media del gasto de
+los casos conservados y la roja, la media de la base completa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mnar\_expenditure\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{  mnar\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Expenditure, }\AttributeTok{fill =}\NormalTok{ data\_source)}
+\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Expenditure), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(mnar\_data}\SpecialCharTok{$}\NormalTok{Expenditure), }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{)}
+
+\NormalTok{mnar\_expenditure\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-mnar-gasto-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-mnar-gasto}Distribución del gasto bajo un patrón
+MNAR}
+
+\end{figure}%
+
+La figura~\ref{fig-ap3-mnar-cajas} compara el ingreso por zona y sexo en
+la base completa (\texttt{survey\_data}) y entre los casos conservados
+bajo MNAR (\texttt{mnar\_data}). La eliminación de ingresos altos reduce
+las medianas y la dispersión, con cambios más marcados en la zona
+urbana. La línea roja indica la media del ingreso en la base completa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mnar\_income\_boxplot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(mnar\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ data\_source, }\AttributeTok{y =}\NormalTok{ Income)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(Zone }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+
+\NormalTok{mnar\_income\_boxplot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-mnar-cajas-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-mnar-cajas}Distribución del ingreso por zona y
+sexo bajo un patrón MNAR}
+
+\end{figure}%
+
+\section{Algunos métodos de
+imputación}\label{algunos-muxe9todos-de-imputaciuxf3n}
+
+La sección anterior mostró cómo los mecanismos MCAR, MAR y MNAR pueden
+afectar la distribución de los datos observados. A partir de ese
+diagnóstico, esta sección presenta distintos métodos para reemplazar los
+valores faltantes utilizando la información disponible. Mediante
+ejemplos en \texttt{R}, se comparan los ingresos originales con los
+obtenidos por imputación, prestando atención tanto a su media como a su
+dispersión y distribución. El recorrido comienza con métodos de
+imputación simple y concluye con la imputación múltiple.
+
+\subsection{Imputación por la media no
+condicional}\label{imputaciuxf3n-por-la-media-no-condicional}
+
+La imputación por la media no condicional consiste en reemplazar los
+valores faltantes con la media aritmética de los valores observados de
+la variable, sin considerar otras variables. La media se calcula a
+partir de todos los valores disponibles, independientemente de las
+características de las observaciones.
+
+Para ilustrar el tratamiento de los datos faltantes bajo un mecanismo
+MCAR, se construye la siguiente base de datos:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\OtherTok{\textless{}{-}} \FunctionTok{full\_join}\NormalTok{(}
+\NormalTok{  survey\_data,}
+\NormalTok{  mcar\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{transmute}\NormalTok{(}
+\NormalTok{    HHID, PersonID, }\AttributeTok{income\_missing =}\NormalTok{ Income, }\AttributeTok{employment\_missing =}\NormalTok{ Employment}
+\NormalTok{  ),}
+  \AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"HHID"}\NormalTok{, }\StringTok{"PersonID"}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+El código anterior utiliza la función \texttt{full\_join} del paquete
+\texttt{dplyr} para combinar las dos bases de datos. Esta unión conserva
+todas las filas de ambas bases, combina las que tienen claves
+coincidentes y asigna valores faltantes donde no hay correspondencia.
+Para conocer el porcentaje de valores faltantes, se ejecuta el siguiente
+código:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Zone) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{missing\_proportion =} \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(income\_missing) }\SpecialCharTok{/} \FunctionTok{n}\NormalTok{()))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 2 x 2
+  Zone  missing_proportion
+  <chr>              <dbl>
+1 Rural              0.208
+2 Urban              0.193
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Sex) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{missing\_proportion =} \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(income\_missing) }\SpecialCharTok{/} \FunctionTok{n}\NormalTok{()))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 2 x 2
+  Sex    missing_proportion
+  <chr>               <dbl>
+1 Female              0.184
+2 Male                0.219
+\end{verbatim}
+
+La imputación por la media no condicional es un método simple y rápido.
+Puede resultar útil cuando la distribución de la variable no es muy
+asimétrica o cuando hay pocos valores faltantes en relación con el
+tamaño de la muestra. Sin embargo, presenta limitaciones cuando existen
+sesgos o patrones en los datos faltantes, o cuando las variables están
+muy correlacionadas. Aunque conserva la media de los valores observados,
+modifica la variabilidad y los percentiles, y puede afectar el sesgo. El
+método se aplica de la siguiente manera:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{observed\_income\_mean }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_missing, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{survey\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{income\_imputed =} \FunctionTok{ifelse}\NormalTok{(}
+    \FunctionTok{is.na}\NormalTok{(income\_missing), observed\_income\_mean, income\_missing}
+\NormalTok{  ))}
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 0
+\end{verbatim}
+
+El código anterior calcula la media de los valores observados de
+\texttt{income\_missing} y la almacena en
+\texttt{observed\_income\_mean}. Luego, reemplaza los valores faltantes
+con esa media y guarda el resultado en \texttt{income\_imputed}. La
+última línea cuenta los valores faltantes de esta nueva columna de
+\texttt{survey\_data} y confirma que no quedan datos sin imputar.
+
+La figura~\ref{fig-ap3-media-no-condicional} compara el ingreso original
+(\texttt{Income}) con el completado mediante la media no condicional
+(\texttt{income\_imputed}). La imputación produce una concentración
+artificial alrededor de la media, visible como un pico pronunciado. Las
+líneas roja y azul representan las medias original e imputada,
+respectivamente; su cercanía no implica que las distribuciones sean
+iguales.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean\_plot\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Zone, Sex, Income, income\_imputed) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{gather}\NormalTok{(data\_source, income\_value, }\SpecialCharTok{{-}}\NormalTok{Zone, }\SpecialCharTok{{-}}\NormalTok{Sex)}
+
+\NormalTok{mean\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(mean\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ income\_value, }\AttributeTok{fill =}\NormalTok{ data\_source)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed), }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{)}
+
+\NormalTok{mean\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-media-no-condicional-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-media-no-condicional}Distribución del ingreso
+original e imputado por la media no condicional}
+
+\end{figure}%
+
+La figura~\ref{fig-ap3-media-no-condicional-grupos} compara el ingreso
+original (\texttt{Income}) y el completado por la media no condicional
+(\texttt{income\_imputed}) dentro de cada combinación de zona y sexo.
+Las cajas muestran cambios en la mediana y la dispersión al asignar un
+mismo valor a todos los datos faltantes. La línea roja señala la media
+del ingreso original.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean\_boxplot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(mean\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ data\_source, }\AttributeTok{y =}\NormalTok{ income\_value)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(Zone }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+
+\NormalTok{mean\_boxplot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-media-no-condicional-grupos-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-media-no-condicional-grupos}Ingreso original e
+imputado por la media no condicional, por zona y sexo}
+
+\end{figure}%
+
+\subsection{Imputación por la media
+condicional}\label{imputaciuxf3n-por-la-media-condicional}
+
+La imputación por la media condicional reemplaza los valores faltantes
+de una variable numérica con las medias calculadas en grupos de
+observaciones que comparten características. A diferencia de la media no
+condicional, este método considera otras variables, ya que la media de
+la variable de interés puede cambiar según sus valores. Puede ofrecer
+mayor precisión cuando las variables están correlacionadas o cuando
+existen patrones de ausencia de respuesta asociados con las variables de
+agrupación.
+
+En el siguiente ejemplo, se calculan las medias por estrato para imputar
+los ingresos faltantes, bajo el supuesto de que existe una relación
+entre el estrato y el ingreso de los hogares:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Stratum) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{income\_imputed =} \FunctionTok{ifelse}\NormalTok{(}
+    \FunctionTok{is.na}\NormalTok{(income\_missing), }\FunctionTok{mean}\NormalTok{(income\_missing, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), income\_missing}
+\NormalTok{  )) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{data.frame}\NormalTok{()}
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{income\_imputed =} \FunctionTok{ifelse}\NormalTok{(}
+    \FunctionTok{is.na}\NormalTok{(income\_imputed), observed\_income\_mean, income\_imputed}
+\NormalTok{  ))}
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 0
+\end{verbatim}
+
+El código anterior utiliza \texttt{group\_by} para agrupar las
+observaciones de \texttt{survey\_data} por \texttt{Stratum}. Los valores
+faltantes de \texttt{income\_missing} se reemplazan con la media de los
+ingresos observados en el estrato correspondiente, mientras que los
+valores observados se conservan. El resultado se almacena en
+\texttt{income\_imputed}. A continuación, se calculan las medias y las
+desviaciones estándar de los ingresos originales y de los completados
+por imputación para comparar el efecto del método:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{income\_mean =} \FunctionTok{mean}\NormalTok{(Income),}
+    \AttributeTok{income\_sd =} \FunctionTok{sd}\NormalTok{(Income),}
+    \AttributeTok{imputed\_income\_mean =} \FunctionTok{mean}\NormalTok{(income\_imputed),}
+    \AttributeTok{imputed\_income\_sd =} \FunctionTok{sd}\NormalTok{(income\_imputed)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+  income_mean income_sd imputed_income_mean imputed_income_sd
+1         604       513                 612               489
+\end{verbatim}
+
+En este ejemplo, el sesgo relativo de la media del ingreso es inferior
+al 1,5 \%, y el de la desviación estándar es cercano al 5 \%. Al
+desagregar los resultados de la imputación por zona, se obtiene lo
+siguiente:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Zone) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{income\_mean =} \FunctionTok{mean}\NormalTok{(Income),}
+    \AttributeTok{income\_sd =} \FunctionTok{sd}\NormalTok{(Income),}
+    \AttributeTok{imputed\_income\_mean =} \FunctionTok{mean}\NormalTok{(income\_imputed),}
+    \AttributeTok{imputed\_income\_sd =} \FunctionTok{sd}\NormalTok{(income\_imputed)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 2 x 5
+  Zone  income_mean income_sd imputed_income_mean imputed_income_sd
+  <chr>       <dbl>     <dbl>               <dbl>             <dbl>
+1 Rural        469.      337.                478.              306.
+2 Urban        731.      609.                737.              586.
+\end{verbatim}
+
+Los sesgos relativos de la media del ingreso son del 1,87 \% en la zona
+rural y del 0,8 \% en la urbana. En ambos casos, las medias obtenidas
+tras la imputación son próximas a las originales.
+
+La figura~\ref{fig-ap3-media-condicional} compara las densidades del
+ingreso original (\texttt{Income}) y del completado con medias por
+estrato (\texttt{income\_imputed}). La curva imputada se aproxima a la
+original, aunque conserva diferencias en el tramo central. Las líneas
+roja y azul señalan las medias original e imputada, respectivamente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{conditional\_mean\_plot\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Zone, Sex, Income, income\_imputed) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{gather}\NormalTok{(data\_source, income\_value, }\SpecialCharTok{{-}}\NormalTok{Zone, }\SpecialCharTok{{-}}\NormalTok{Sex)}
+
+\NormalTok{conditional\_mean\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{  conditional\_mean\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ income\_value, }\AttributeTok{fill =}\NormalTok{ data\_source)}
+\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed), }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{)}
+
+\NormalTok{conditional\_mean\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-media-condicional-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-media-condicional}Distribución del ingreso
+original e imputado por la media condicional}
+
+\end{figure}%
+
+La figura~\ref{fig-ap3-media-condicional-grupos} compara el ingreso
+original (\texttt{Income}) y el completado con medias por estrato
+(\texttt{income\_imputed}), desagregados por zona y sexo. Las medianas
+son próximas y persisten algunas diferencias en la amplitud de las
+cajas. La línea roja indica la media del ingreso original en toda la
+muestra.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{conditional\_mean\_boxplot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{  conditional\_mean\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ data\_source, }\AttributeTok{y =}\NormalTok{ income\_value)}
+\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(Zone }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+
+\NormalTok{conditional\_mean\_boxplot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-media-condicional-grupos-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-media-condicional-grupos}Ingreso original e
+imputado por la media condicional, por zona y sexo}
+
+\end{figure}%
+
+\subsection{\texorpdfstring{Imputación por
+\emph{hot-deck}}{Imputación por hot-deck}}\label{imputaciuxf3n-por-hot-deck}
+
+La imputación por \emph{hot-deck} reemplaza los valores faltantes de una
+unidad que no respondió (el receptor) con valores observados de otra
+unidad (el donante). El donante se selecciona por su similitud con el
+receptor en características observadas, como la edad, el género o la
+ubicación geográfica. El método se basa en la idea de que las unidades
+con características similares pueden tener valores similares en las
+variables de interés.
+
+El término \emph{hot-deck} hace referencia a las tarjetas perforadas
+utilizadas en los primeros sistemas informáticos para almacenar y
+recuperar datos. Esta técnica es relativamente simple y eficaz en
+conjuntos de datos pequeños o medianos, y se utiliza con frecuencia en
+encuestas y estudios de investigación social. Sin embargo, puede
+resultar menos eficaz en conjuntos grandes o complejos cuando es difícil
+encontrar observaciones similares o definir y medir las características
+relevantes de manera confiable.
+
+El siguiente código ilustra el método con los datos de la encuesta:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{donor\_indices }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_missing))}
+\NormalTok{recipient\_indices }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_missing))}
+\NormalTok{survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data}\SpecialCharTok{$}\NormalTok{income\_missing}
+
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in}\NormalTok{ recipient\_indices) \{}
+\NormalTok{  donor\_index }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\AttributeTok{x =}\NormalTok{ donor\_indices, }\AttributeTok{size =} \DecValTok{1}\NormalTok{)}
+\NormalTok{  survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed[i] }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data}\SpecialCharTok{$}\NormalTok{income\_missing[donor\_index]}
+\NormalTok{\}}
+
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 0
+\end{verbatim}
+
+El código anterior identifica las observaciones con y sin valores
+faltantes en \texttt{income\_missing} y crea \texttt{income\_imputed}
+para almacenar los resultados. Luego, un bucle \texttt{for} recorre las
+observaciones receptoras. En cada iteración, la función \texttt{sample}
+selecciona aleatoriamente un donante entre las observaciones con ingreso
+disponible.
+
+Una vez realizada la imputación, se calculan la media y la desviación
+estándar de los ingresos originales y de los completados por imputación:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{income\_mean =} \FunctionTok{mean}\NormalTok{(Income),}
+    \AttributeTok{income\_sd =} \FunctionTok{sd}\NormalTok{(Income),}
+    \AttributeTok{imputed\_income\_mean =} \FunctionTok{mean}\NormalTok{(income\_imputed),}
+    \AttributeTok{imputed\_income\_sd =} \FunctionTok{sd}\NormalTok{(income\_imputed)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+  income_mean income_sd imputed_income_mean imputed_income_sd
+1         604       513                 618               528
+\end{verbatim}
+
+El sesgo relativo de la media del ingreso es del 2,3 \%. Al desagregar
+los resultados por zona, se obtiene lo siguiente:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Zone) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{income\_mean =} \FunctionTok{mean}\NormalTok{(Income),}
+    \AttributeTok{income\_sd =} \FunctionTok{sd}\NormalTok{(Income),}
+    \AttributeTok{imputed\_income\_mean =} \FunctionTok{mean}\NormalTok{(income\_imputed),}
+    \AttributeTok{imputed\_income\_sd =} \FunctionTok{sd}\NormalTok{(income\_imputed)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 2 x 5
+  Zone  income_mean income_sd imputed_income_mean imputed_income_sd
+  <chr>       <dbl>     <dbl>               <dbl>             <dbl>
+1 Rural        469.      337.                504.              369.
+2 Urban        731.      609.                726.              624.
+\end{verbatim}
+
+El sesgo relativo de la media del ingreso es del 7,4 \% en la zona rural
+y del 0,7 \% en la urbana. El mismo ejercicio se realiza por sexo:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Sex) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{income\_mean =} \FunctionTok{mean}\NormalTok{(Income),}
+    \AttributeTok{income\_sd =} \FunctionTok{sd}\NormalTok{(Income),}
+    \AttributeTok{imputed\_income\_mean =} \FunctionTok{mean}\NormalTok{(income\_imputed),}
+    \AttributeTok{imputed\_income\_sd =} \FunctionTok{sd}\NormalTok{(income\_imputed)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 2 x 5
+  Sex    income_mean income_sd imputed_income_mean imputed_income_sd
+  <chr>        <dbl>     <dbl>               <dbl>             <dbl>
+1 Female        589.      504.                603.              503.
+2 Male          622.      523.                636.              556.
+\end{verbatim}
+
+La figura~\ref{fig-ap3-hot-deck} compara la densidad del ingreso
+original (\texttt{Income}) con la del ingreso completado mediante
+donantes aleatorios (\texttt{income\_imputed}). Las curvas prácticamente
+se superponen en esta simulación, conservando la asimetría y la cola de
+ingresos altos. Las líneas roja y azul representan las medias original e
+imputada, respectivamente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hot\_deck\_plot\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Zone, Sex, Income, income\_imputed) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{gather}\NormalTok{(data\_source, income\_value, }\SpecialCharTok{{-}}\NormalTok{Zone, }\SpecialCharTok{{-}}\NormalTok{Sex)}
+
+\NormalTok{hot\_deck\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{  hot\_deck\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ income\_value, }\AttributeTok{fill =}\NormalTok{ data\_source)}
+\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed), }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{)}
+
+\NormalTok{hot\_deck\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-hot-deck-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-hot-deck}Distribución del ingreso original e
+imputado mediante hot-deck}
+
+\end{figure}%
+
+\subsection{Imputación por
+regresión}\label{imputaciuxf3n-por-regresiuxf3n}
+
+La imputación por regresión utiliza las variables auxiliares disponibles
+para predecir los valores faltantes de la variable de interés. Primero,
+se identifican las variables predictoras relacionadas con ella. Luego,
+se ajusta un modelo con los valores observados y se utilizan sus
+coeficientes para predecir los valores faltantes.
+
+En este ejemplo, se imputa el ingreso mediante un modelo de regresión
+lineal múltiple que utiliza la zona, el sexo y el gasto como
+covariables:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data}\SpecialCharTok{$}\NormalTok{income\_missing}
+\NormalTok{observed\_data }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(survey\_data, }\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(income\_missing))}
+\NormalTok{missing\_data }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(survey\_data, }\FunctionTok{is.na}\NormalTok{(income\_missing))}
+
+\NormalTok{imputation\_model }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Income }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Zone }\SpecialCharTok{+}\NormalTok{ Sex }\SpecialCharTok{+}\NormalTok{ Expenditure, }\AttributeTok{data =}\NormalTok{ observed\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+Una vez ajustado el modelo, se predicen los valores faltantes:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{predicted\_income }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(imputation\_model, }\AttributeTok{newdata =}\NormalTok{ missing\_data)}
+\NormalTok{missing\_data}\SpecialCharTok{$}\NormalTok{income\_imputed }\OtherTok{\textless{}{-}}\NormalTok{ predicted\_income}
+\NormalTok{survey\_data }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(observed\_data, missing\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+A continuación, se calculan la media y la desviación estándar de los
+ingresos originales y de los completados por imputación:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{income\_mean =} \FunctionTok{mean}\NormalTok{(Income),}
+    \AttributeTok{income\_sd =} \FunctionTok{sd}\NormalTok{(Income),}
+    \AttributeTok{imputed\_income\_mean =} \FunctionTok{mean}\NormalTok{(income\_imputed),}
+    \AttributeTok{imputed\_income\_sd =} \FunctionTok{sd}\NormalTok{(income\_imputed)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+  income_mean income_sd imputed_income_mean imputed_income_sd
+1         604       513                 612               498
+\end{verbatim}
+
+El sesgo relativo de la media del ingreso es del 1,2 \%. El mismo
+ejercicio se realiza por zona:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Zone) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{income\_mean =} \FunctionTok{mean}\NormalTok{(Income),}
+    \AttributeTok{income\_sd =} \FunctionTok{sd}\NormalTok{(Income),}
+    \AttributeTok{imputed\_income\_mean =} \FunctionTok{mean}\NormalTok{(income\_imputed),}
+    \AttributeTok{imputed\_income\_sd =} \FunctionTok{sd}\NormalTok{(income\_imputed)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 2 x 5
+  Zone  income_mean income_sd imputed_income_mean imputed_income_sd
+  <chr>       <dbl>     <dbl>               <dbl>             <dbl>
+1 Rural        469.      337.                476.              317.
+2 Urban        731.      609.                739.              595.
+\end{verbatim}
+
+La figura~\ref{fig-ap3-regresion} compara las densidades del ingreso
+original (\texttt{Income}) y del completado con predicciones del modelo
+de regresión (\texttt{income\_imputed}). La forma general es similar,
+aunque aparecen diferencias alrededor del tramo central de la
+distribución. Las líneas roja y azul indican las medias original e
+imputada, respectivamente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{regression\_plot\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Zone, Sex, Income, income\_imputed) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{gather}\NormalTok{(data\_source, income\_value, }\SpecialCharTok{{-}}\NormalTok{Zone, }\SpecialCharTok{{-}}\NormalTok{Sex)}
+
+\NormalTok{regression\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{  regression\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ income\_value, }\AttributeTok{fill =}\NormalTok{ data\_source)}
+\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed), }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{)}
+
+\NormalTok{regression\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-regresion-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-regresion}Distribución del ingreso original e
+imputado por regresión}
+
+\end{figure}%
+
+\subsection{Imputación por el vecino más
+cercano}\label{imputaciuxf3n-por-el-vecino-muxe1s-cercano}
+
+La imputación por el vecino más cercano reemplaza los valores faltantes
+con información de observaciones similares. El método se basa en la idea
+de que los registros con características semejantes tienden a tener
+valores similares en la variable de interés. En su versión con varios
+vecinos, se identifican los \(k\) registros más próximos al receptor y
+se utilizan sus valores para estimar el dato faltante.
+
+Para calcular la similitud entre observaciones, se pueden utilizar
+diferentes medidas de distancia, como la distancia euclidiana o la
+distancia de Manhattan. La técnica también permite ajustar el valor de
+\(k\), que representa el número de vecinos más cercanos utilizados para
+estimar el valor faltante.
+
+Este método es relativamente simple y fácil de implementar. Sin embargo,
+su eficacia depende de la cantidad y la calidad de los datos
+disponibles, así como del número de vecinos y de la medida de distancia
+elegidos. Por ello, conviene evaluar tanto la calidad de los datos como
+los resultados de la imputación.
+
+La aplicación del método con un solo vecino comprende tres pasos:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Definir una medida de distancia, como la euclidiana, para comparar las
+  observaciones.
+\item
+  Identificar, para cada receptor, el donante más cercano según la
+  medida elegida.
+\item
+  Reemplazar el valor faltante con el valor observado del donante.
+\end{enumerate}
+
+En el siguiente ejemplo, se imputa el ingreso utilizando el gasto del
+individuo como variable auxiliar y la distancia euclidiana como medida
+de similitud.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data}\SpecialCharTok{$}\NormalTok{income\_missing}
+\NormalTok{observed\_data }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(survey\_data, }\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(income\_missing))}
+\NormalTok{missing\_data }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(survey\_data, }\FunctionTok{is.na}\NormalTok{(income\_missing))}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(missing\_data))) \{}
+\NormalTok{  recipient\_expenditure }\OtherTok{\textless{}{-}}\NormalTok{ missing\_data}\SpecialCharTok{$}\NormalTok{Expenditure[[i]]}
+\NormalTok{  donor\_index }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(}\FunctionTok{abs}\NormalTok{(recipient\_expenditure }\SpecialCharTok{{-}}\NormalTok{ observed\_data}\SpecialCharTok{$}\NormalTok{Expenditure))}
+\NormalTok{  missing\_data}\SpecialCharTok{$}\NormalTok{income\_imputed[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ observed\_data}\SpecialCharTok{$}\NormalTok{income\_missing[[donor\_index]]}
+\NormalTok{\}}
+
+\NormalTok{survey\_data }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(observed\_data, missing\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+Las medias y las desviaciones estándar de los ingresos originales y de
+los completados por imputación se calculan de la siguiente manera:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{income\_mean =} \FunctionTok{mean}\NormalTok{(Income),}
+    \AttributeTok{income\_sd =} \FunctionTok{sd}\NormalTok{(Income),}
+    \AttributeTok{imputed\_income\_mean =} \FunctionTok{mean}\NormalTok{(income\_imputed),}
+    \AttributeTok{imputed\_income\_sd =} \FunctionTok{sd}\NormalTok{(income\_imputed)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+  income_mean income_sd imputed_income_mean imputed_income_sd
+1         604       513                 611               514
+\end{verbatim}
+
+La diferencia entre la media del ingreso original y la obtenida tras la
+imputación es de 6 unidades monetarias. El mismo ejercicio se realiza
+por zona:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(Zone) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{income\_mean =} \FunctionTok{mean}\NormalTok{(Income),}
+    \AttributeTok{income\_sd =} \FunctionTok{sd}\NormalTok{(Income),}
+    \AttributeTok{imputed\_income\_mean =} \FunctionTok{mean}\NormalTok{(income\_imputed),}
+    \AttributeTok{imputed\_income\_sd =} \FunctionTok{sd}\NormalTok{(income\_imputed)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 2 x 5
+  Zone  income_mean income_sd imputed_income_mean imputed_income_sd
+  <chr>       <dbl>     <dbl>               <dbl>             <dbl>
+1 Rural        469.      337.                478.              344.
+2 Urban        731.      609.                735.              607.
+\end{verbatim}
+
+Las diferencias entre las medias son de 7 unidades monetarias en la zona
+rural y de 4 en la urbana.
+
+La figura~\ref{fig-ap3-vecino-cercano} compara la densidad del ingreso
+original (\texttt{Income}) y la del ingreso imputado con donantes de
+gasto similar (\texttt{income\_imputed}). Las curvas son muy próximas y
+conservan la cola de ingresos altos. Las líneas roja y azul muestran las
+medias original e imputada, respectivamente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nearest\_neighbor\_plot\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Zone, Sex, Income, income\_imputed) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{gather}\NormalTok{(data\_source, income\_value, }\SpecialCharTok{{-}}\NormalTok{Zone, }\SpecialCharTok{{-}}\NormalTok{Sex)}
+
+\NormalTok{nearest\_neighbor\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{  nearest\_neighbor\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ income\_value, }\AttributeTok{fill =}\NormalTok{ data\_source)}
+\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed), }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{)}
+
+\NormalTok{nearest\_neighbor\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-vecino-cercano-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-vecino-cercano}Distribución del ingreso original
+e imputado por el vecino más cercano}
+
+\end{figure}%
+
+\subsection{Imputación por el vecino más cercano con
+regresión}\label{imputaciuxf3n-por-el-vecino-muxe1s-cercano-con-regresiuxf3n}
+
+La imputación por el vecino más cercano con regresión comprende los
+siguientes pasos:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Ajustar un modelo de regresión entre la variable de interés y las
+  covariables auxiliares.
+\item
+  Predecir los valores de la variable de interés para las observaciones
+  con y sin datos faltantes.
+\item
+  Comparar las predicciones de los posibles donantes con las de los
+  receptores.
+\item
+  Identificar, para cada receptor, el donante cuya predicción sea más
+  cercana a la suya.
+\item
+  Reemplazar el valor faltante con la información observada proveniente
+  del donante.
+\end{enumerate}
+
+En el siguiente ejemplo, se imputan los ingresos mediante un modelo que
+utiliza el sexo, la zona y el gasto como covariables:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data}\SpecialCharTok{$}\NormalTok{income\_missing}
+\NormalTok{observed\_data }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(survey\_data, }\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(income\_missing))}
+\NormalTok{missing\_data }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(survey\_data, }\FunctionTok{is.na}\NormalTok{(income\_missing))}
+
+\NormalTok{imputation\_model }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Income }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Zone }\SpecialCharTok{+}\NormalTok{ Sex }\SpecialCharTok{+}\NormalTok{ Expenditure, }\AttributeTok{data =}\NormalTok{ observed\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+Con el modelo ajustado, se predicen los ingresos de las observaciones
+con y sin datos faltantes. Para cada receptor, se identifica el donante
+con la predicción más cercana y se utiliza su ingreso observado como
+valor imputado:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{observed\_predictions }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(imputation\_model, }\AttributeTok{newdata =}\NormalTok{ observed\_data)}
+\NormalTok{missing\_predictions }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(imputation\_model, }\AttributeTok{newdata =}\NormalTok{ missing\_data)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(missing\_data))) \{}
+\NormalTok{  donor\_index }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(}\FunctionTok{abs}\NormalTok{(missing\_predictions[i] }\SpecialCharTok{{-}}\NormalTok{ observed\_predictions))}
+\NormalTok{  missing\_data}\SpecialCharTok{$}\NormalTok{income\_imputed[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ observed\_data}\SpecialCharTok{$}\NormalTok{income\_missing[[donor\_index]]}
+\NormalTok{\}}
+
+\NormalTok{survey\_data }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(observed\_data, missing\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+Por último, se calculan la media y la desviación estándar de los
+ingresos originales y de los completados por imputación, como en los
+ejemplos anteriores:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{income\_mean =} \FunctionTok{mean}\NormalTok{(Income),}
+    \AttributeTok{income\_sd =} \FunctionTok{sd}\NormalTok{(Income),}
+    \AttributeTok{imputed\_income\_mean =} \FunctionTok{mean}\NormalTok{(income\_imputed),}
+    \AttributeTok{imputed\_income\_sd =} \FunctionTok{sd}\NormalTok{(income\_imputed)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+  income_mean income_sd imputed_income_mean imputed_income_sd
+1         604       513                 608               516
+\end{verbatim}
+
+La diferencia entre la media del ingreso original y la obtenida tras la
+imputación es cercana a 4 unidades monetarias.
+
+La figura~\ref{fig-ap3-vecino-cercano-regresion} compara el ingreso
+original (\texttt{Income}) con el completado mediante donantes cuyas
+predicciones son próximas a las del receptor (\texttt{income\_imputed}).
+Las densidades prácticamente se superponen en esta simulación. Las
+líneas roja y azul representan las medias original e imputada,
+respectivamente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{predictive\_matching\_plot\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Zone, Sex, Income, income\_imputed) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{gather}\NormalTok{(data\_source, income\_value, }\SpecialCharTok{{-}}\NormalTok{Zone, }\SpecialCharTok{{-}}\NormalTok{Sex)}
+
+\NormalTok{predictive\_matching\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{  predictive\_matching\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ income\_value, }\AttributeTok{fill =}\NormalTok{ data\_source)}
+\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{Income), }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{mean}\NormalTok{(survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed), }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{)}
+
+\NormalTok{predictive\_matching\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-vecino-cercano-regresion-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-vecino-cercano-regresion}Distribución del
+ingreso original e imputado por el vecino más cercano con regresión}
+
+\end{figure}%
+
+\subsection{Imputación múltiple}\label{imputaciuxf3n-muxfaltiple}
+
+La imputación múltiple crea varias copias del conjunto de datos y
+completa los valores faltantes de cada una mediante modelos estadísticos
+basados en las relaciones entre las variables. Cada copia se analiza por
+separado y los resultados se combinan para obtener una estimación final
+que refleje la incertidumbre asociada con la imputación.
+
+La imputación múltiple permite tratar los datos faltantes y puede
+ofrecer resultados más precisos y menos sesgados que la eliminación de
+las observaciones incompletas. Sin embargo, requiere recursos
+computacionales y conocimientos estadísticos para su aplicación
+adecuada. Esta técnica fue propuesta por Rubin
+(\citeproc{ref-rubin1987multiple}{1987}) y consiste en generar \(M > 1\)
+conjuntos de valores para los datos faltantes.
+
+Para ilustrar el método, se considera un conjunto de \(n\) observaciones
+de dos variables, \(X\) e \(Y\), relacionadas mediante el siguiente
+modelo de regresión lineal simple:
+
+\[y_i = \beta x_i + \varepsilon_i\]
+
+El modelo se aplica a cada individuo \(i = 1, \ldots, n\), con errores
+de distribución normal tales que \(E(\varepsilon) = 0\) y
+\(Var(\varepsilon) = \sigma ^2\). Se define \(Y_{Obs}\) como un vector
+que contiene los valores observados para un conjunto de individuos de
+tamaño \(n_1\), y \(Y_{NoObs}\) como el vector de los valores no
+observados de tamaño \(n_0\), es decir, \(n_1 + n_0 = n\). Además, se
+supone que fue posible observar los valores de la covariable \(X\) para
+todos los individuos en la muestra.
+
+Al final, el valor imputado corresponderá al promedio de esos \(M\)
+valores. Dado que el interés es la estimación de la pendiente de la
+regresión lineal simple \(\beta\), entonces la esperanza estimada al
+utilizar la metodología de imputación múltiple está dada por:
+
+\[E(\hat{\beta} | Y_{obs}) = E(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})\]
+
+Esta expresión se estima mediante el promedio de las \(M\) estimaciones
+puntuales de \(\hat{\beta}\) sobre las \(M\) imputaciones, dado por:
+
+\[\bar{\hat{\beta}} = \frac{1}{M} \sum_{m = 1} ^ M \hat{\beta}_m\]
+
+La varianza estimada al utilizar la metodología de imputación múltiple
+está dada por la siguiente expresión:
+
+\[
+V(\hat{\beta} | Y_{obs}) = E(V(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs}) +
+V(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})
+\]
+
+El primer término de la expresión anterior se estima como el promedio de
+las varianzas muestrales de \(\hat{\beta}\) sobre las \(M\)
+imputaciones, dado por:
+
+\[\bar{U} = \frac{1}{M} \sum_{m = 1} ^ M Var(\beta)\]
+
+El segundo término se estima como la varianza muestral de las \(M\)
+estimaciones puntuales de \(\hat{\beta}\) sobre las \(M\) imputaciones,
+dada por:
+
+\[B = \frac{1}{M-1} \sum_{m = 1} ^ M (\hat{\beta}_m - \bar{\hat{\beta}})\]
+
+Es necesario tener en cuenta un factor de corrección (puesto que \(M\)
+es finito). Por tanto, la estimación del segundo término viene dada por
+la siguiente expresión:
+
+\[
+(1 + \frac{1}{M}) B
+\]
+
+Por tanto, la varianza estimada es igual a:
+\[\hat{V}(\hat{\beta} | Y_{obs}) = \bar{U} + (1 + \frac{1}{M}) B\]
+
+El siguiente ejemplo aplica la imputación múltiple a los datos de la
+encuesta:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data}\SpecialCharTok{$}\NormalTok{income\_imputed }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data}\SpecialCharTok{$}\NormalTok{income\_missing}
+\NormalTok{survey\_data}\SpecialCharTok{$}\NormalTok{employment\_imputed }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data}\SpecialCharTok{$}\NormalTok{employment\_missing}
+\NormalTok{observed\_data }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(survey\_data, }\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(income\_missing))}
+\NormalTok{missing\_data }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(survey\_data, }\FunctionTok{is.na}\NormalTok{(income\_missing))}
+\NormalTok{n\_missing }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(missing\_data)}
+\NormalTok{n\_observed }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(observed\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+Primero, se separan las observaciones con y sin valores faltantes y se
+calcula el número de observaciones de cada grupo.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n\_imputations }\OtherTok{\textless{}{-}} \DecValTok{10}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_len}\NormalTok{(n\_imputations)) \{}
+\NormalTok{  imputation\_column }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"income\_draw\_"}\NormalTok{, i)}
+
+\NormalTok{  bootstrap\_data }\OtherTok{\textless{}{-}}\NormalTok{ observed\_data }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{sample\_n}\NormalTok{(}\AttributeTok{size =}\NormalTok{ n\_observed, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{)}
+
+\NormalTok{  imputation\_model }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Income }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Zone }\SpecialCharTok{+}\NormalTok{ Sex }\SpecialCharTok{+}\NormalTok{ Expenditure, }\AttributeTok{data =}\NormalTok{ bootstrap\_data)}
+
+\NormalTok{  missing\_data[[imputation\_column]] }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(imputation\_model, missing\_data)}
+\NormalTok{  observed\_data[[imputation\_column]] }\OtherTok{\textless{}{-}}\NormalTok{ observed\_data}\SpecialCharTok{$}\NormalTok{Income}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+El código anterior ajusta modelos de regresión lineal con
+\texttt{Income} como variable de respuesta y \texttt{Zone}, \texttt{Sex}
+y \texttt{Expenditure} como covariables. Estos modelos permiten predecir
+los ingresos faltantes en \texttt{missing\_data}. Una vez ejecutado el
+código, se muestran los ingresos originales y algunos de los valores
+imputados:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(missing\_data, Income, }\FunctionTok{matches}\NormalTok{(}\StringTok{"income\_draw\_"}\NormalTok{))[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+   Income income_draw_1 income_draw_2 income_draw_3
+1   409.9           550           566           568
+2   409.9           561           529           542
+3    90.9           211           226           164
+4    90.9           221           189           138
+5    90.9           211           226           164
+6   135.3           223           238           178
+7   135.3           223           238           178
+8  1539.8           785           801           847
+9   336.0           508           473           440
+10  685.5           593           558           541
+\end{verbatim}
+
+La figura~\ref{fig-ap3-imputacion-multiple} compara la densidad del
+ingreso original, representada por la línea negra, con las de los diez
+conjuntos completados, representadas por las líneas de colores
+(\texttt{income\_draw\_1} a \texttt{income\_draw\_10}). Las curvas
+mantienen una forma similar, con pequeñas diferencias en el tramo
+central que reflejan la variación entre las imputaciones.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_data }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(observed\_data, missing\_data)}
+
+\NormalTok{multiple\_imputation\_plot\_data }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Zone, Sex, }\FunctionTok{matches}\NormalTok{(}\StringTok{"income\_draw\_"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{gather}\NormalTok{(data\_source, income\_value, }\SpecialCharTok{{-}}\NormalTok{Zone, }\SpecialCharTok{{-}}\NormalTok{Sex)}
+
+\NormalTok{multiple\_imputation\_density\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{  multiple\_imputation\_plot\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ income\_value, }\AttributeTok{color =}\NormalTok{ data\_source)}
+\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"bottom"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}
+    \AttributeTok{data =}\NormalTok{ survey\_data,}
+    \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Income),}
+    \AttributeTok{color =} \StringTok{"black"}\NormalTok{,}
+    \AttributeTok{linewidth =} \FloatTok{1.2}
+\NormalTok{  )}
+
+\NormalTok{multiple\_imputation\_density\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{chapters/../figures/fig-ap3-imputacion-multiple-1.pdf}
+
+}
+
+\caption{\label{fig-ap3-imputacion-multiple}Distribución del ingreso
+original y de los valores obtenidos mediante imputación múltiple}
+
+\end{figure}%
+
+Con los conjuntos de datos completados, se define el diseño muestral
+para estimar los parámetros de interés:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey\_design }\OtherTok{\textless{}{-}}\NormalTok{ survey\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as\_survey\_design}\NormalTok{(}\AttributeTok{strata =}\NormalTok{ Stratum, }\AttributeTok{ids =}\NormalTok{ PSU, }\AttributeTok{weights =}\NormalTok{ wk, }\AttributeTok{nest =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Con este diseño, se estima la media del ingreso y su varianza para cada
+conjunto de datos completado:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean\_estimates }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{starts\_with}\NormalTok{(}\StringTok{"income\_draw\_"}\NormalTok{), }\SpecialCharTok{\textasciitilde{}} \FunctionTok{survey\_mean}\NormalTok{(.x, }\AttributeTok{vartype =} \StringTok{"var"}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{gather}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{separate}\NormalTok{(key, }\FunctionTok{c}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\StringTok{"imputation"}\NormalTok{, }\StringTok{"statistic"}\NormalTok{), }\AttributeTok{fill =} \StringTok{"right"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{imputation =} \FunctionTok{as.numeric}\NormalTok{(imputation),}
+    \AttributeTok{statistic =} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(statistic), }\StringTok{"mean"}\NormalTok{, }\StringTok{"var"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{spread}\NormalTok{(statistic, value)}
+
+\NormalTok{mean\_estimates}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 10 x 3
+   imputation  mean   var
+        <dbl> <dbl> <dbl>
+ 1          1  619.  846.
+ 2          2  618.  845.
+ 3          3  617.  868.
+ 4          4  618.  857.
+ 5          5  620.  858.
+ 6          6  617.  853.
+ 7          7  618.  861.
+ 8          8  619.  868.
+ 9          9  617.  850.
+10         10  616.  870.
+\end{verbatim}
+
+Para obtener la estimación combinada de la media y su varianza, se
+realizan los cálculos basados en las expresiones anteriores:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pooled\_mean }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(mean\_estimates}\SpecialCharTok{$}\NormalTok{mean)}
+\NormalTok{within\_variance }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(mean\_estimates}\SpecialCharTok{$}\NormalTok{var)}
+\NormalTok{between\_variance }\OtherTok{\textless{}{-}} \FunctionTok{var}\NormalTok{(mean\_estimates}\SpecialCharTok{$}\NormalTok{mean)}
+
+\NormalTok{within\_variance}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 857
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{between\_variance}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[1] 1.65
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pooled\_mean\_variance }\OtherTok{\textless{}{-}}\NormalTok{ within\_variance }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+} \DecValTok{1} \SpecialCharTok{/}\NormalTok{ n\_imputations)}
+\NormalTok{pooled\_results }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{pooled\_mean =}\NormalTok{ pooled\_mean,}
+  \AttributeTok{mean\_se =} \FunctionTok{sqrt}\NormalTok{(pooled\_mean\_variance)}
+\NormalTok{)}
+\NormalTok{pooled\_results}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+  pooled_mean mean_se
+1         618    29.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{variance\_estimates }\OtherTok{\textless{}{-}}\NormalTok{ survey\_design }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise\_at}\NormalTok{(}\FunctionTok{vars}\NormalTok{(}\FunctionTok{matches}\NormalTok{(}\StringTok{"income\_draw"}\NormalTok{)), survey\_var, }\AttributeTok{vartype =} \StringTok{"var"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Otro parámetro de interés es la varianza del ingreso, que mide su
+dispersión entre las personas de la muestra. Para estimarla, se aplica
+el mismo procedimiento utilizado para la media, cambiando el parámetro
+de interés:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{variance\_estimates }\OtherTok{\textless{}{-}}\NormalTok{ variance\_estimates }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  tidyr}\SpecialCharTok{::}\FunctionTok{gather}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{separate}\NormalTok{(key, }\FunctionTok{c}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\StringTok{"imputation"}\NormalTok{, }\StringTok{"statistic"}\NormalTok{), }\AttributeTok{fill =} \StringTok{"right"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{statistic =} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(statistic), }\StringTok{"mean"}\NormalTok{, }\StringTok{"var"}\NormalTok{),}
+    \AttributeTok{imputation =} \FunctionTok{as.numeric}\NormalTok{(imputation)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{spread}\NormalTok{(statistic, value)}
+
+\NormalTok{variance\_estimates}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 10 x 3
+   imputation    mean         var
+        <dbl>   <dbl>       <dbl>
+ 1          1 262690. 3074674460.
+ 2          2 263092. 3079895581.
+ 3          3 274370. 3237991671.
+ 4          4 269127. 3164842634.
+ 5          5 270450. 3165285304.
+ 6          6 264993. 3106582542.
+ 7          7 270916. 3175865575.
+ 8          8 276070. 3251836316.
+ 9          9 265061. 3111426636.
+10         10 275462. 3258214990.
+\end{verbatim}
+
+Por último, se combinan las estimaciones mediante las expresiones
+anteriores:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pooled\_variance }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(variance\_estimates}\SpecialCharTok{$}\NormalTok{mean)}
+\NormalTok{within\_variance }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(variance\_estimates}\SpecialCharTok{$}\NormalTok{var)}
+\NormalTok{between\_variance }\OtherTok{\textless{}{-}} \FunctionTok{var}\NormalTok{(variance\_estimates}\SpecialCharTok{$}\NormalTok{mean)}
+\NormalTok{pooled\_variance\_variance }\OtherTok{\textless{}{-}}\NormalTok{ within\_variance }\SpecialCharTok{+}
+\NormalTok{  (}\DecValTok{1} \SpecialCharTok{+} \DecValTok{1} \SpecialCharTok{/}\NormalTok{ n\_imputations) }\SpecialCharTok{*}\NormalTok{ between\_variance}
+
+\NormalTok{pooled\_results}\SpecialCharTok{$}\NormalTok{pooled\_variance }\OtherTok{\textless{}{-}}\NormalTok{ pooled\_variance}
+\NormalTok{pooled\_results}\SpecialCharTok{$}\NormalTok{variance\_se }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(pooled\_variance\_variance)}
+\FunctionTok{cbind}\NormalTok{(pooled\_variance, pooled\_variance\_variance)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+     pooled_variance pooled_variance_variance
+[1,]          269223               3191037330
+\end{verbatim}
+
 \bookmarksetup{startatroot}
 
 \chapter*{Referencias}\label{referencias}
@@ -12201,6 +13965,11 @@ Bates, Douglas, Martin Mächler, Ben Bolker, y Steve Walker. 2015.
 Statistical Software} 67 (1): 1-48.
 \url{https://doi.org/10.18637/jss.v067.i01}.
 
+\bibitem[\citeproctext]{ref-berglund2014multiple}
+Berglund, Patricia, y Steven Heeringa. 2014. \emph{Multiple Imputation
+of Missing Data Using {SAS}}. SAS Institute Inc.
+\url{https://support.sas.com/content/dam/SAS/support/en/books/multiple-imputation-of-missing-data-using-sas/65370_excerpt.pdf}.
+
 \bibitem[\citeproctext]{ref-binder1983variances}
 Binder, David A. 1983. {«On the variances of asymptotically normal
 estimators from complex surveys»}. \emph{International Statistical
@@ -12227,6 +13996,10 @@ Analysis} 1 (3): 473-514. \url{https://doi.org/10.1214/06-BA117}.
 Bruch, Christian, Ralf Münnich, y Stefan Zins. 2011. {«Variance
 estimation for complex surveys»}. \emph{Deliverable D3} 1.
 
+\bibitem[\citeproctext]{ref-vanbuuren2012flexible}
+Buuren, Stef van. 2012. \emph{Flexible Imputation of Missing Data}.
+Chapman \& Hall/CRC. \url{https://doi.org/10.1201/b11826}.
+
 \bibitem[\citeproctext]{ref-cai2013investigation}
 Cai, Tianji. 2013. {«Investigation of Ways to Handle Sampling Weights
 for Multilevel Model Analyses»}. \emph{Sociological Methodology} 43 (1):
@@ -12236,6 +14009,11 @@ for Multilevel Model Analyses»}. \emph{Sociological Methodology} 43 (1):
 Carle, Adam C. 2009. {«Fitting Multilevel Models in Complex Survey Data
 with Design Weights: Recommendations»}. \emph{BMC Medical Research
 Methodology} 9: 49. \url{https://doi.org/10.1186/1471-2288-9-49}.
+
+\bibitem[\citeproctext]{ref-carpenter2013multiple}
+Carpenter, James R., y Michael G. Kenward. 2013. \emph{Multiple
+Imputation and its Application}. John Wiley \& Sons.
+\url{https://doi.org/10.1002/9781119942283}.
 
 \bibitem[\citeproctext]{ref-CasellaBerger2002}
 Casella, George, y Roger L. Berger. 2002. \emph{Statistical Inference}.
@@ -12399,6 +14177,15 @@ Income Concentration Analysis with Complex Survey Samples}.
 \bibitem[\citeproctext]{ref-kalton2003weighting}
 Kalton, Graham, y Ismael Flores-Cervantes. 2003. {«Weighting methods»}.
 \emph{Journal of official statistics} 19 (2): 81.
+
+\bibitem[\citeproctext]{ref-kim2004fractional}
+Kim, Jae Kwang, y Wayne Fuller. 2004. {«Fractional Hot Deck
+Imputation»}. \emph{Biometrika} 91 (3): 559-78.
+\url{https://doi.org/10.1093/biomet/91.3.559}.
+
+\bibitem[\citeproctext]{ref-kim2014statistical}
+Kim, Jae Kwang, y Jun Shao. 2014. \emph{Statistical Methods for Handling
+Incomplete Data}. Chapman \& Hall/CRC.
 
 \bibitem[\citeproctext]{ref-kish1965survey}
 Kish, Leslie. 1965. \emph{Survey sampling.}
@@ -12586,6 +14373,11 @@ Series A} 169 (4): 805-27.
 Rabe-Hesketh, Sophia, y Anders Skrondal. 2012. \emph{Multilevel and
 Longitudinal Modeling Using Stata}. 3.ª ed. Stata Press.
 
+\bibitem[\citeproctext]{ref-raghunathan2016missing}
+Raghunathan, Trivellore. 2016. \emph{Missing Data Analysis in Practice}.
+Chapman \& Hall/CRC.
+\url{https://www.routledge.com/Missing-Data-Analysis-in-Practice/Raghunathan/p/book/9780429171673}.
+
 \bibitem[\citeproctext]{ref-RaoScott1981}
 Rao, J. N. K., y Alastair J. Scott. 1981. {«The Analysis of Categorical
 Data From Complex Sample Surveys: Chi-Squared Tests for Goodness of Fit
@@ -12607,6 +14399,11 @@ data»}. \emph{The Annals of Statistics} 12 (1): 46-60.
 Robinson, David, Alex Hayes, Simon Couch, y Emil Hvitfeldt. 2026.
 \emph{broom: Convert Statistical Objects into Tidy Tibbles}.
 \url{https://doi.org/10.32614/CRAN.package.broom}.
+
+\bibitem[\citeproctext]{ref-rubin1987multiple}
+Rubin, Donald B. 1987. \emph{Multiple Imputation for Nonresponse in
+Surveys}. Wiley Series en Probability y Statistics. John Wiley \& Sons.
+\url{https://doi.org/10.1002/9780470316696}.
 
 \bibitem[\citeproctext]{ref-RustRao1996}
 Rust, Keith F., y J. N. K. Rao. 1996. {«Variance Estimation for Complex

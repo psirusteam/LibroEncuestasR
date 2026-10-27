@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.36">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -52,17 +55,17 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/A2-MPVbinder.html" rel="prev">
+<link href="../chapters/A3-Imputacion.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-9e3e5b9121e68b3f077afb32f2c64d95.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-631496449bf32ff9b0bb69a6bfd9195d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -229,6 +232,12 @@ window.MathJax = {
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Inferencia en poblaciones finitas</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/A3-Imputacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Imputación usando R</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -286,6 +295,10 @@ Bates, Douglas, Martin Mächler, Ben Bolker, and Steve Walker. 2015.
 <span>“Fitting Linear Mixed-Effects Models Using Lme4.”</span>
 <em>Journal of Statistical Software</em> 67 (1): 1–48. <a href="https://doi.org/10.18637/jss.v067.i01">https://doi.org/10.18637/jss.v067.i01</a>.
 </div>
+<div id="ref-berglund2014multiple" class="csl-entry" role="listitem">
+Berglund, Patricia, and Steven Heeringa. 2014. <em>Multiple Imputation
+of Missing Data Using <span>SAS</span></em>. SAS Institute Inc. <a href="https://support.sas.com/content/dam/SAS/support/en/books/multiple-imputation-of-missing-data-using-sas/65370_excerpt.pdf">https://support.sas.com/content/dam/SAS/support/en/books/multiple-imputation-of-missing-data-using-sas/65370_excerpt.pdf</a>.
+</div>
 <div id="ref-binder1983variances" class="csl-entry" role="listitem">
 Binder, David A. 1983. <span>“On the Variances of Asymptotically Normal
 Estimators from Complex Surveys.”</span> <em>International Statistical
@@ -311,6 +324,10 @@ Models.”</span> <em>Bayesian Analysis</em> 1 (3): 473–514. <a href="https://
 Bruch, Christian, Ralf Münnich, and Stefan Zins. 2011. <span>“Variance
 Estimation for Complex Surveys.”</span> <em>Deliverable D3</em> 1.
 </div>
+<div id="ref-vanbuuren2012flexible" class="csl-entry" role="listitem">
+Buuren, Stef van. 2012. <em>Flexible Imputation of Missing Data</em>.
+Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/b11826">https://doi.org/10.1201/b11826</a>.
+</div>
 <div id="ref-cai2013investigation" class="csl-entry" role="listitem">
 Cai, Tianji. 2013. <span>“Investigation of Ways to Handle Sampling
 Weights for Multilevel Model Analyses.”</span> <em>Sociological
@@ -320,6 +337,10 @@ Methodology</em> 43 (1): 178–219. <a href="https://doi.org/10.1177/00811750134
 Carle, Adam C. 2009. <span>“Fitting Multilevel Models in Complex Survey
 Data with Design Weights: Recommendations.”</span> <em>BMC Medical
 Research Methodology</em> 9: 49. <a href="https://doi.org/10.1186/1471-2288-9-49">https://doi.org/10.1186/1471-2288-9-49</a>.
+</div>
+<div id="ref-carpenter2013multiple" class="csl-entry" role="listitem">
+Carpenter, James R., and Michael G. Kenward. 2013. <em>Multiple
+Imputation and Its Application</em>. John Wiley &amp; Sons. <a href="https://doi.org/10.1002/9781119942283">https://doi.org/10.1002/9781119942283</a>.
 </div>
 <div id="ref-CasellaBerger2002" class="csl-entry" role="listitem">
 Casella, George, and Roger L. Berger. 2002. <em>Statistical
@@ -472,6 +493,14 @@ Income Concentration Analysis with Complex Survey Samples</em>. <a href="https:/
 <div id="ref-kalton2003weighting" class="csl-entry" role="listitem">
 Kalton, Graham, and Ismael Flores-Cervantes. 2003. <span>“Weighting
 Methods.”</span> <em>Journal of Official Statistics</em> 19 (2): 81.
+</div>
+<div id="ref-kim2004fractional" class="csl-entry" role="listitem">
+Kim, Jae Kwang, and Wayne Fuller. 2004. <span>“Fractional Hot Deck
+Imputation.”</span> <em>Biometrika</em> 91 (3): 559–78. <a href="https://doi.org/10.1093/biomet/91.3.559">https://doi.org/10.1093/biomet/91.3.559</a>.
+</div>
+<div id="ref-kim2014statistical" class="csl-entry" role="listitem">
+Kim, Jae Kwang, and Jun Shao. 2014. <em>Statistical Methods for Handling
+Incomplete Data</em>. Chapman &amp; Hall/CRC.
 </div>
 <div id="ref-kish1965survey" class="csl-entry" role="listitem">
 Kish, Leslie. 1965. <em>Survey Sampling.</em>
@@ -649,6 +678,10 @@ Statistical Society: Series A</em> 169 (4): 805–27. <a href="https://doi.org/1
 Rabe-Hesketh, Sophia, and Anders Skrondal. 2012. <em>Multilevel and
 Longitudinal Modeling Using Stata</em>. 3rd ed. Stata Press.
 </div>
+<div id="ref-raghunathan2016missing" class="csl-entry" role="listitem">
+Raghunathan, Trivellore. 2016. <em>Missing Data Analysis in
+Practice</em>. Chapman &amp; Hall/CRC. <a href="https://www.routledge.com/Missing-Data-Analysis-in-Practice/Raghunathan/p/book/9780429171673">https://www.routledge.com/Missing-Data-Analysis-in-Practice/Raghunathan/p/book/9780429171673</a>.
+</div>
 <div id="ref-RaoScott1981" class="csl-entry" role="listitem">
 Rao, J. N. K., and Alastair J. Scott. 1981. <span>“The Analysis of
 Categorical Data from Complex Sample Surveys: Chi-Squared Tests for
@@ -668,6 +701,11 @@ Survey Data.”</span> <em>The Annals of Statistics</em> 12 (1): 46–60.
 <div id="ref-broom2026" class="csl-entry" role="listitem">
 Robinson, David, Alex Hayes, Simon Couch, and Emil Hvitfeldt. 2026.
 <em>Broom: Convert Statistical Objects into Tidy Tibbles</em>. <a href="https://doi.org/10.32614/CRAN.package.broom">https://doi.org/10.32614/CRAN.package.broom</a>.
+</div>
+<div id="ref-rubin1987multiple" class="csl-entry" role="listitem">
+Rubin, Donald B. 1987. <em>Multiple Imputation for Nonresponse in
+Surveys</em>. Wiley Series in Probability and Statistics. John Wiley
+&amp; Sons. <a href="https://doi.org/10.1002/9780470316696">https://doi.org/10.1002/9780470316696</a>.
 </div>
 <div id="ref-RustRao1996" class="csl-entry" role="listitem">
 Rust, Keith F., and J. N. K. Rao. 1996. <span>“Variance Estimation for
@@ -1451,8 +1489,8 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/A2-MPVbinder.html" class="pagination-link" aria-label="Inferencia en poblaciones finitas">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Inferencia en poblaciones finitas</span></span>
+      <a href="../chapters/A3-Imputacion.html" class="pagination-link" aria-label="Imputación usando R">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Imputación usando R</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
