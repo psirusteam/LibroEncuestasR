@@ -18,9 +18,9 @@ source("../_tabla_helper.R")
 
 @nelder1972generalized introdujeron los modelos lineales generalizados como un marco capaz de integrar diversos métodos estadísticos ampliamente utilizados, como la regresión logística, los modelos log-lineales para datos de conteo y otros modelos avanzados de regresión para variables continuas. Posteriormente, @McCullaghNelder1989 sistematizaron esta formulación, que permitió extender las herramientas de regresión más allá de los escenarios en los que la variable respuesta sigue una distribución normal. Cuando la variable de interés no es continua o los supuestos del modelo lineal clásico no se satisfacen, los modelos lineales generalizados constituyen una alternativa adecuada para modelar las relaciones de interés.
 
-La necesidad de esta generalización surge porque los modelos lineales clásicos asumen, entre otras cosas, normalidad y homogeneidad de varianza en la variable respuesta, condiciones que no se cumplen cuando se analizan variables categóricas, proporciones o conteos. En este tipo de situaciones, los modelos lineales generalizados ofrecen un marco flexible para modelar adecuadamente la relación entre las variables mediante la selección de una distribución de probabilidad apropiada para la respuesta y una función de enlace que conecte la media de dicha distribución con el predictor lineal.
+La necesidad de esta generalización surge porque los modelos lineales clásicos asumen, entre otras cosas, normalidad y homogeneidad de varianza en los errores, condiciones que no se cumplen cuando se analizan variables categóricas, proporciones o conteos. En este tipo de situaciones, los modelos lineales generalizados ofrecen un marco flexible para modelar adecuadamente la relación entre las variables mediante la selección de una distribución de probabilidad apropiada para la respuesta y una función de enlace que conecte la media de dicha distribución con el predictor lineal.
 
-Para ilustrar los modelos presentados en este capítulo se utilizan la base de datos `survey_data` y la población `BigCity`, siguiendo la misma estructura utilizada en capítulos anteriores. Después de cargar las librerías necesarias y definir apropiadamente el diseño de muestreo complejo, el siguiente bloque de código crea dos nuevas variables categóricas (`poor` y `unemployed`) a partir de las variables originales `Poverty` y `Employment`, respectivamente.
+Para ilustrar los modelos presentados en este capítulo se utilizan la base de datos `survey_data` y la población `BigCity`, siguiendo la misma estructura utilizada en capítulos anteriores. Después de cargar las librerías necesarias y definir apropiadamente el diseño de muestreo complejo, el siguiente bloque de código crea una nuevas variable categóricas (`poor`) a partir de `Poverty` y calcula el tamaño del hogar (`household_size`) contando a todos los integrantes de cada `HHID`, antes de seleccionar a los jefes de hogar para los ejemplos posteriores.
 
 ```{r preparar-diseno-glm, echo = TRUE, eval = TRUE}
 options(digits = 4)
@@ -30,8 +30,14 @@ library(srvyr)
 library(broom)
 library(jtools)
 
-survey_data <- readRDS("../Data/encuesta.rds")
-data("BigCity", package = "TeachingSampling")
+survey_data <- readRDS("../data/sample.rds") %>%
+  add_count(HHID, name = "household_size") %>%
+  mutate(
+    Stratum = factor(Stratum),
+    poor = factor(Poverty != "NotPoor",
+                  levels = c(FALSE, TRUE),
+                  labels = c("Not poor", "Poor"))
+  )
 
 survey_design <- survey_data %>%
   as_survey_design(
@@ -40,20 +46,8 @@ survey_design <- survey_data %>%
     weights = wk,
     nest = TRUE
   )
-
-survey_design <- survey_design %>%
-  mutate(
-    poor = factor(
-      ifelse(Poverty != "NotPoor", 1, 0),
-      levels = c(0, 1),
-      labels = c("Not poor", "Poor")
-    ),
-    unemployed = factor(ifelse(Employment == "Unemployed", 1, 0),
-      levels = c(0, 1),
-      labels = c("Not unemployed", "Unemployed")
-    )
-  )
 ```
+
 
 
 ## Modelo de regresión logística {#sec-logistica}
@@ -67,7 +61,7 @@ $$
 =
 \beta_0+\beta_1x_{k1}+\cdots+\beta_px_{kp}
 =\mathbf{x}_{k}\boldsymbol{\beta}
-$$
+$$ {#eq-modelo-logistico}
 
 En donde $\boldsymbol{\beta}$ es el vector de coeficientes de regresión asociado a las covariables. Esta transformación logit convierte el intervalo restringido de probabilidades $(0,1)$ en toda la recta real, permitiendo modelar la relación entre la respuesta y las variables auxiliares mediante un predictor lineal. De manera equivalente, la probabilidad de éxito puede expresarse mediante la siguiente relación:
 
@@ -78,7 +72,7 @@ Pr(Y_k = 1 \mid \mathbf{x}_k)
 =
 \frac{\exp(\mathbf{x}_k\boldsymbol{\beta})}
      {1+\exp(\mathbf{x}_k\boldsymbol{\beta})}
-$$
+$$ {#eq-probabilidad-logistica}
 
 De manera equivalente, la probabilidad de que la unidad no presente la característica de interés es $Pr(Y_k = 0 \mid \mathbf{x}_k) = 1-\theta_k$. Bajo esta parametrización, cada coeficiente de $\boldsymbol{\beta}$ representa el efecto de una covariable sobre el logaritmo de la razón de probabilidades de que ocurra el evento de interés, manteniendo constantes las demás variables del modelo.
 Según @HeeringaWestBerglund2017, la estimación de los parámetros puede realizarse mediante el enfoque de pseudo-máxima verosimilitud. Este método, abordado con detalle en el [segundo anexo](#ap2), incorpora los factores de expansión en la función de verosimilitud convencional con el fin de obtener estimadores consistentes respecto de la población objetivo. En este sentido, para este modelo, la función de pseudo-verosimilitud para el modelo logístico se define como
@@ -110,7 +104,7 @@ y_{k}\log(\theta_{k})
 (1-y_{k})
 \log(1-\theta_{k})
 \right]
-$$
+$$ {#eq-log-pseudoverosimilitud-logistica}
 
 Esta expresión constituye la función objetivo utilizada por los algoritmos de optimización numérica para obtener el estimador de los parámetros del modelo. Es importante señalar que la función anterior no corresponde a una verosimilitud en sentido estricto bajo el diseño complejo de la encuesta. Por esta razón, se utiliza el término *pseudo-verosimilitud* y los estimadores obtenidos mediante su maximización son conocidos como estimadores de pseudo-máxima verosimilitud (*Pseudo Maximum Likelihood Estimators*, PMLE).
 
@@ -118,38 +112,59 @@ De acuerdo con @molina1992pseudo y @ChambersSkinner2003, bajo condiciones de reg
 
 La matriz de varianzas y covarianzas de los parámetros estimados, denotada por $\text{Var}(\hat{\boldsymbol{\beta}})=\boldsymbol{\Sigma}$, se obtiene a partir de una aproximación lineal de las ecuaciones de estimación alrededor del verdadero valor de los parámetros. Esta matriz describe la precisión de los estimadores, ya que sus elementos diagonales corresponden a las varianzas de cada coeficiente, mientras que los elementos fuera de la diagonal representan las covarianzas entre pares de coeficientes. Su estimación constituye la base para el cálculo de errores estándar, la construcción de intervalos de confianza y la realización de pruebas de hipótesis sobre los parámetros del modelo.
 
-Siguiendo con la encuesta de ejemplo, y con el fin de analizar los factores asociados a la condición de pobreza, se ajusta un modelo de regresión logística utilizando como variables explicativas el gasto, la situación en el empleo y el sexo. Dado que los datos provienen de una encuesta con diseño muestral complejo, la estimación se realiza mediante la función `svyglm()` del paquete `survey`, especificando `family = binomial` para indicar que la variable respuesta es dicotómica y que se utilizará la función de enlace logit. 
+Siguiendo con la encuesta de ejemplo, y con el fin de analizar los factores asociados a la condición de pobreza, se ajusta un modelo de regresión logística utilizando como variables explicativas la edad, el sexo y la situación laboral del jefe, junto con el tamaño del hogar. Estas características demográficas y laborales son habituales en el análisis de los correlatos de la pobreza [@Anyanwu2014]. En este ejemplo, la pobreza se define a partir del ingreso: `poor` toma la categoría `Poor` para `Extreme` o `Relative`, y `Not poor` para `NotPoor`. Se trabaja con una observación por hogar, identificada mediante `PersonID == "idPer01"`, y se utiliza el factor de expansión `wk` del jefe, siguiendo la convención descrita en la sección 3.1. Dado que los datos provienen de una encuesta con diseño muestral complejo, la estimación se realiza mediante la función `svyglm()` del paquete `survey`, especificando `family = quasibinomial()` para indicar que la variable respuesta es dicotómica y que se utilizará la función de enlace logit. Esta elección conserva los coeficientes y las varianzas basadas en el diseño que se obtendrían con la familia binomial, y evita la advertencia sobre respuestas ponderadas no enteras. 
 
 ```{r mod-logistico-base, echo = TRUE, eval = TRUE}
+household_design <- survey_design %>%
+  filter(PersonID == "idPer01") %>%
+  mutate(
+    Sex = factor(Sex, levels = c("Male", "Female")),
+    Employment = relevel(Employment, ref = "Employed")
+  )
+
 logit_model <- svyglm(
-  formula = poor ~ Expenditure + Employment + Sex,
-  family = binomial,
-  design = survey_design
+  formula = poor ~ Age + Sex + Employment + household_size,
+  family = quasibinomial(),
+  design = household_design
 )
 ```
 
-En la especificación del modelo, el argumento `formula = poor ~ Expenditure + Employment + Sex` define la relación entre la variable respuesta `poor` y las covariables incluidas en el predictor lineal (`Expenditure`, `Employment` y `Sex`). Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento `design = survey_design` incorpora la información del diseño muestral. El objeto resultante, `logit_model`, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo.
+En la especificación del modelo, el argumento `formula = poor ~ Age + Sex + Employment + household_size` define la relación entre la variable respuesta `poor` y las covariables incluidas en el predictor lineal (`Age`, `Sex`, `Employment` y `household_size`). Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento `design = household_design` incorpora la información del diseño muestral para los hogares seleccionados. Las categorías de referencia son jefatura masculina y jefe ocupado. La muestra de análisis contiene `r nrow(household_design)` hogares, de los cuales `r sum(household_design$variables$poor == "Poor")` son pobres; estos conteos corresponden a observaciones muestrales, sin ponderar. El objeto resultante, `logit_model`, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo.
 
+
+EE indica el error estándar y DE la desviación estándar. LI y LS identifican, respectivamente, los límites inferior y superior del intervalo de confianza; el porcentaje que acompaña estas siglas indica su nivel de confianza.
 
 ```{r cod-resultados-logistica, echo = FALSE}
+#| results: hide
 logit_results <- tidy(logit_model, conf.int = TRUE, conf.level = 0.95)
+
+logit_results
 ```
 
+
+```{r cod-ic-logistica-objeto}
+#| results: hide
+logistic_intervals_table <- logit_results %>%
+  mutate(OR = exp(estimate)) %>%
+  select(term, estimate, std.error, p.value, conf.low, conf.high, OR)
+
+logistic_intervals_table
+```
 
 ```{r}
 #| label: tbl-ic-logistica
 #| tbl-cap: "Intervalos de confianza al 95% para los parámetros del modelo logístico"
 #| echo: false
-logit_results %>%
-  as.data.frame() %>%
-  tibble::rownames_to_column("Parameter") %>%
-  tabla_fmt()
+tabla_fmt(logistic_intervals_table, digits = 4,
+          col.names = c("Parámetro", "Estimación", "EE", "Valor p",
+                        "LI 95 %", "LS 95 %", "OR"))
 ```
 
-Los resultados de la @tbl-ic-logistica muestran las estimaciones de los coeficientes de regresión, junto con sus errores estándar, intervalos de confianza y valores-*p*. Del modelo se deduce que un mayor nivel de gasto se asocia con una menor probabilidad de encontrarse en condición de pobreza. Asimismo, en comparación con la categoría de referencia (desocupados), tanto las personas inactivas como las ocupadas presentan una menor propensión a ser pobres, siendo este efecto más marcado entre estas últimas. En contraste, el sexo tiene una influencia muy reducida sobre la probabilidad de pobreza una vez controlado el efecto de las demás covariables incluidas en el modelo.
+Los resultados de la @tbl-ic-logistica muestran las estimaciones de los coeficientes de regresión, sus exponenciales, errores estándar, intervalos de confianza y valores-*p*. Los errores estándar y los límites de confianza se mantienen en la escala de los coeficientes $\beta$. En la regresión logística, $\exp(\beta_j)$ representa el *odds ratio* asociado a una covariable, manteniendo constantes las demás variables. 
 
+Manteniendo constantes las demás variables, el *odds ratio* de pobreza asociado a cada integrante adicional del hogar es `r sprintf("%.2f", exp(coef(logit_model)["household_size"]))`, con un intervalo de confianza del 95 % entre `r sprintf("%.2f", exp(confint(logit_model)["household_size", 1]))` y `r sprintf("%.2f", exp(confint(logit_model)["household_size", 2]))`. Al ser mayor que uno, indica una asociación positiva entre el tamaño del hogar y la probabilidad de pobreza. Asimismo, el *odds ratio* de los hogares con jefe desocupado respecto de aquellos con jefe ocupado es `r sprintf("%.2f", exp(coef(logit_model)["EmploymentUnemployed"]))`, con un intervalo de confianza del 95 % entre `r sprintf("%.2f", exp(confint(logit_model)["EmploymentUnemployed", 1]))` y `r sprintf("%.2f", exp(confint(logit_model)["EmploymentUnemployed", 2]))`. Esta última estimación presenta una incertidumbre considerable, pues solo se observan `r sum(household_design$variables$Employment == "Unemployed")` jefes desocupados. Los odds ratios superiores a uno indican mayor probabilidad de pobreza respecto de la comparación correspondiente, pero no expresan cuántas veces mayor es esa probabilidad. Estas asociaciones no establecen efectos causales.
 
-La @fig-logistica-base presenta la distribución de los estimadores de los coeficientes de regresión. Se observa que, para todas las covariables excepto el sexo, los intervalos de confianza no incluyen el valor cero, lo que proporciona evidencia de una asociación estadísticamente significativa. En contraste, el intervalo de confianza asociado a la variable sexo contiene el valor cero, por lo que no se encuentra evidencia suficiente para concluir que esta variable tenga un efecto significativo una vez controladas las demás covariables incluidas en el modelo.
+La @fig-logistica-base presenta la distribución de los estimadores de los coeficientes de regresión. Se observa que los intervalos de confianza asociados a la desocupación del jefe y al tamaño del hogar no incluyen el valor cero, lo que proporciona evidencia de una asociación estadísticamente significativa. En contraste, la edad, la jefatura femenina y la inactividad del jefe presentan valores-*p* de `r sprintf("%.3f", summary(logit_model)$coefficients["Age", "Pr(>|t|)"])`, `r sprintf("%.3f", summary(logit_model)$coefficients["SexFemale", "Pr(>|t|)"])` y `r sprintf("%.3f", summary(logit_model)$coefficients["EmploymentInactive", "Pr(>|t|)"])`, respectivamente, por lo que no se encuentra evidencia suficiente de asociación al nivel del 5 % una vez controladas las demás covariables incluidas en el modelo.
 
 Para visualizar la distribución de los coeficientes se emplea `ggstance` para la geometría horizontal de los intervalos [@ggstance2024], junto con `plot_summs()` del paquete `jtools` [@jtools2026].
 
@@ -162,35 +177,50 @@ plot_summs(logit_model,
 ```
 
 
-El modelo puede ampliarse incorporando términos de interacción para evaluar si el efecto de una variable explicativa depende de los valores que toma otra. En este caso, se incluye una interacción entre el sexo y la situación laboral mediante el término `Sex:Employment`, con el objetivo de analizar si la relación entre el estado ocupacional y la probabilidad de pobreza es la misma para hombres y mujeres. Sin este término, el modelo asume que el efecto de la situación laboral sobre la pobreza es idéntico para ambos sexos. En cambio, al incorporar la interacción, se permite que dicho efecto varíe entre hombres y mujeres, capturando posibles diferencias en la forma en que la condición laboral se asocia con la pobreza en cada grupo. Los resultados del modelo ajustado se presentan en la @tbl-logistica-interaccion.
+El modelo puede ampliarse incorporando términos de interacción para evaluar si el efecto de una variable explicativa depende de los valores que toma otra. En este caso, se incluye una interacción entre el sexo del jefe y el tamaño del hogar mediante el término `Sex:household_size`, con el objetivo de analizar si la relación entre el número de integrantes y las *odds* de pobreza es la misma para hogares con jefatura masculina y femenina. Sin este término, el modelo asume que la pendiente del tamaño del hogar sobre el logit de pobreza es idéntica para ambos tipos de jefatura. En cambio, al incorporar la interacción, se permite que dicha pendiente varíe, capturando posibles diferencias en la forma en que el tamaño del hogar se asocia con la pobreza en cada grupo. Los resultados del modelo ajustado se presentan en la @tbl-logistica-interaccion.
 
 ```{r mod-logistico-interaccion, echo = TRUE, eval = TRUE}
 interaction_logit_model <- svyglm(
-  formula = poor ~ Expenditure + Employment + Sex + Sex:Employment,
-  family = binomial,
-  design = survey_design
+  formula = poor ~ Age + Sex + Employment + household_size + Sex:household_size,
+  family = quasibinomial(),
+  design = household_design
 )
 ```
 
 ```{r cod-resultados-logistica-interaccion, echo = FALSE}
+#| results: hide
 interaction_logit_results <- tidy(
   interaction_logit_model,
   conf.int = TRUE,
   conf.level = 0.95
 )
+
+interaction_logit_results
+```
+
+```{r cod-logistica-interaccion-objeto}
+#| results: hide
+interaction_logistic_coefficients_table <- interaction_logit_results %>%
+  mutate(OR = exp(estimate)) %>%
+  select(term, estimate, std.error, p.value, conf.low, conf.high, OR)
+
+interaction_logistic_coefficients_table
 ```
 
 ```{r}
 #| label: tbl-logistica-interaccion
 #| tbl-cap: "Coeficientes del modelo logístico con interacciones"
 #| echo: FALSE
-interaction_logit_results %>%
-  tabla_fmt()
+tabla_fmt(interaction_logistic_coefficients_table, digits = 4,
+          col.names = c("Parámetro", "Estimación", "EE", "Valor p",
+                        "LI 95 %", "LS 95 %", "OR"))
 ```
 
-Al incorporar la interacción entre sexo y situación laboral, el gasto continúa mostrando una asociación negativa y estadísticamente significativa con la probabilidad de pobreza, manteniéndose como la covariable con mayor evidencia explicativa dentro del modelo. En contraste, los efectos principales de la situación laboral pierden importancia estadística una vez que se incluyen los términos de interacción, lo que sugiere una mayor incertidumbre en la estimación de sus efectos. Por su parte, ni el efecto principal del sexo ni los coeficientes asociados a las interacciones entre sexo y situación laboral resultan estadísticamente significativos al nivel del 5%. Estos resultados individuales no bastan para afirmar que la interacción no aporta información; esa conclusión requiere una prueba conjunta de los términos de interacción ajustada al diseño.
+En ambas tablas, la exponencial del intercepto corresponde a las *odds* del perfil de referencia, no a un *odds ratio*; en la tabla con interacción, la exponencial de `SexFemale:household_size` representa la razón entre los *odds ratios* del tamaño del hogar de ambos tipos de jefatura.
 
-La @fig-comparacion-logistica presenta una comparación de las estimaciones de los coeficientes y sus respectivos intervalos de confianza para los modelos con y sin interacción. Se observa que la incorporación de los términos de interacción incrementa la incertidumbre asociada a varios de los parámetros, lo que se refleja en intervalos de confianza más amplios. Asimismo, los coeficientes de interacción presentan estimaciones cercanas a cero y amplios intervalos de confianza que incluyen dicho valor, lo que coincide con la falta de evidencia estadística para concluir que el efecto de la situación laboral sobre la probabilidad de pobreza difiere entre hombres y mujeres.
+Al incorporar la interacción entre sexo y tamaño del hogar, se permite estimar una pendiente del tamaño del hogar diferente para cada tipo de jefatura. Para los hogares con jefe hombre, el *odds ratio* asociado a un integrante adicional es `r sprintf("%.2f", exp(coef(interaction_logit_model)["household_size"]))`; para los hogares con jefa mujer, se obtiene combinando el coeficiente principal y el de interacción, y es igual a `r sprintf("%.2f", exp(coef(interaction_logit_model)["household_size"] + coef(interaction_logit_model)["SexFemale:household_size"]))`. El coeficiente de interacción tiene un valor-*p* de `r sprintf("%.3f", summary(interaction_logit_model)$coefficients["SexFemale:household_size", "Pr(>|t|)"])`. Estos resultados no aportan evidencia suficiente de diferencias entre las pendientes al nivel del 5 %; el efecto principal del sexo, por su parte, corresponde a un tamaño del hogar igual a cero, fuera del rango observado, por lo que no debe interpretarse como una diferencia general entre jefaturas.
+
+La @fig-comparacion-logistica presenta una comparación de las estimaciones de los coeficientes y sus respectivos intervalos de confianza para los modelos con y sin interacción. Al incorporar el término de interacción, cambia la interpretación de los efectos principales del sexo y del tamaño del hogar, que pasan a ser condicionales a los valores de referencia de la otra covariable. Los intervalos de confianza permiten valorar la incertidumbre asociada a estas estimaciones y al coeficiente de interacción.
 
 
 ```{r fig-comparacion-logistica, fig.cap="Comparación de los parámetros del modelo logístico con y sin interacciones", out.width="70%"}
@@ -199,6 +229,67 @@ plot_summs(interaction_logit_model, logit_model,
   plot.distributions = TRUE
 )
 ```
+
+
+Los *odds ratios* resumen cómo cambia la probabilidad relativa de ocurrencia de un evento ante variaciones en una covariable, pero no indican directamente la probabilidad de pobreza de un hogar. Para complementar su interpretación, se estiman probabilidades predichas para perfiles con características específicas. En el siguiente ejemplo se comparan hogares con jefatura masculina o femenina, manteniendo iguales la edad, la situación laboral y el tamaño del hogar.
+
+```{r predicciones-perfiles-logistica}
+perfiles <- data.frame(
+  Age = c(40, 40),
+  Sex = factor(
+    c("Male", "Female"),
+    levels = levels(household_design$variables$Sex)
+  ),
+  Employment = factor(
+    c("Employed", "Employed"),
+    levels = levels(household_design$variables$Employment)
+  ),
+  household_size = c(4, 4)
+)
+
+predicciones <- predict(
+  logit_model,
+  newdata = perfiles,
+  type = "response",
+  se.fit = TRUE
+)
+
+probabilidad <- as.numeric(predicciones)
+error_estandar <- as.numeric(SE(predicciones))
+
+tabla_predicciones <- perfiles %>%
+  mutate(
+    probabilidad = probabilidad,
+    error_estandar = error_estandar,
+    li_95 = pmax(0, probabilidad - 1.96 * error_estandar),
+    ls_95 = pmin(1, probabilidad + 1.96 * error_estandar)
+  ) %>%
+  select(
+    Sex, Age, Employment, household_size,
+    probabilidad, li_95, ls_95
+  )
+```
+
+Los perfiles se fijan en 40 años, cuatro integrantes y jefe ocupado; cuatro integrantes corresponde a la mediana del tamaño del hogar entre los jefes seleccionados. Los niveles de `Sex` y `Employment` se conservan tal como fueron definidos para el modelo, de modo que las categorías de los perfiles coincidan con las usadas durante la estimación. A partir de las probabilidades y sus errores estándar se calculan límites aproximados del 95 % en la escala de probabilidad, restringidos al intervalo de cero a uno.
+
+```{r}
+#| label: tbl-probabilidades-perfiles-logistica
+#| tbl-cap: "Probabilidades predichas de pobreza para perfiles seleccionados"
+#| echo: FALSE
+tabla_predicciones %>%
+  mutate(
+    across(c(probabilidad, li_95, ls_95), ~ 100 * .x)
+  ) %>%
+  tabla_fmt(
+    digits = 2,
+    col.names = c(
+      "Sexo de la jefatura", "Edad", "Situación laboral",
+      "Tamaño del hogar", "Probabilidad (%)", "LI 95 %", "LS 95 %"
+    )
+  )
+```
+
+La @tbl-probabilidades-perfiles-logistica presenta las probabilidades e intervalos como porcentajes. Para el perfil de jefatura masculina, la probabilidad predicha de pobreza es `r sprintf("%.1f", 100 * tabla_predicciones$probabilidad[1])` % (IC aproximado del 95 %: `r sprintf("%.1f", 100 * tabla_predicciones$li_95[1])`–`r sprintf("%.1f", 100 * tabla_predicciones$ls_95[1])` %); para el de jefatura femenina, es `r sprintf("%.1f", 100 * tabla_predicciones$probabilidad[2])` % (IC aproximado del 95 %: `r sprintf("%.1f", 100 * tabla_predicciones$li_95[2])`–`r sprintf("%.1f", 100 * tabla_predicciones$ls_95[2])` %). La diferencia descriptiva es de `r sprintf("%.1f", 100 * (tabla_predicciones$probabilidad[2] - tabla_predicciones$probabilidad[1]))` puntos porcentuales. Son predicciones condicionadas a los perfiles definidos, no proporciones generales de pobreza; esta diferencia por sí sola tampoco constituye una prueba de significación estadística.
 
 ## Modelo de regresión multinomial {#sec-multinomial}
 
@@ -215,7 +306,7 @@ Pr(Y_{k} = j \mid \mathbf{x}_{k})
 =
 \frac{\exp(\mathbf{x}_{k}\boldsymbol{\beta}_j)}
      {\sum_{l=1}^{J} \exp(\mathbf{x}_{k}\boldsymbol{\beta}_l)}
-$$
+$$ {#eq-probabilidad-multinomial}
 
 En donde $\boldsymbol{\beta}_j$ es el vector de coeficientes de regresión para la $j$-ésima categoría. Para que el modelo sea identificable, debe fijarse el vector de una categoría de referencia en cero; de ese modo, la expresión produce $J-1$ conjuntos de coeficientes estimables. Aunque existen parametrizaciones alternativas que facilitan la interpretación de los parámetros, esta formulación expresa directamente las probabilidades de pertenencia a cada categoría, y en la práctica resulta más conveniente reescribir el modelo utilizando una categoría de referencia, ya que cada conjunto de coeficientes describe el efecto de las covariables sobre el logaritmo de las razones de probabilidades (*log-odds*) de pertenecer a una determinada categoría en comparación con la categoría de referencia.
 
@@ -240,30 +331,33 @@ $$
 \sum_{j=1}^{J}
 y_{k(j)}
 \log(\theta_{k(j)})
-$$
+$$ {#eq-log-pseudoverosimilitud-multinomial}
 
 La inferencia estadística para los parámetros de interés se basa en estimaciones de varianza obtenidas mediante técnicas de linealización de Taylor que incorporan explícitamente las características del diseño muestral complejo, permitiendo calcular errores estándar, intervalos de confianza y pruebas de hipótesis apropiados para datos de encuestas. Bajo condiciones regulares, los estimadores obtenidos mediante este procedimiento son consistentes y asintóticamente normales [@molina1992pseudo; @binder1983variances].
 
 Como referencia inicial, se estiman las proporciones de personas por estado de empleo, restringiendo las unidades de interés a mayores de 15 años, como se presenta en la @tbl-prop-empleo-15.
 
-```{r cod-prop-empleo-15, eval = FALSE}
-survey_design %>%
+
+
+
+```{r cod-prop-empleo-15}
+#| results: hide
+employment_proportion <- survey_design %>%
   filter(Age >= 15) %>%
   group_by(Employment) %>%
   summarise(proportion = survey_mean(vartype = c("se", "ci")))
-```
 
+employment_proportions_table <- employment_proportion
+
+employment_proportions_table
+```
 
 ```{r}
 #| label: tbl-prop-empleo-15
 #| tbl-cap: "Proporción estimada de personas por estado de empleo (mayores de 15 años)"
 #| echo: FALSE
-employment_proportion <- survey_design %>%
-  filter(Age >= 15) %>%
-  group_by(Employment) %>%
-  summarise(proportion = survey_mean(vartype = c("se", "ci")))
-employment_proportion %>%
-  tabla_fmt()
+tabla_fmt(employment_proportions_table,
+          col.names = c("Condición de actividad", "Proporción", "EE", "LI 95 %", "LS 95 %"))
 ```
 
 De acuerdo con @svyVGAM2026, para modelar una variable de respuesta multinomial se emplea la función `svy_vglm()` del paquete `svyVGAM`, que permite ajustar modelos de regresión multinomial incorporando explícitamente las características del diseño complejo de la encuesta. En este ejemplo, se especifica un modelo donde la condición de actividad se explica en función de la edad, el sexo y la zona de residencia. A diferencia de los modelos multinomiales convencionales, `svy_vglm()` calcula las varianzas de los estimadores considerando la complejidad del diseño muestral. 
@@ -316,26 +410,46 @@ tidy.svyVGAM <- function(x,
     arrange(y.level) %>%
     relocate(y.level, .before = term)
 }
+
 ```
 
-La @tbl-multinomial-coef presenta los coeficientes estimados del modelo logístico multinomial, tomando la categoría `Unemployed` como referencia. Los resultados muestran que la edad tiene una asociación positiva y estadísticamente significativa con las probabilidades relativas de pertenecer a las categorías `Inactive` y `Employed` frente a `Unemployed`. Asimismo, la variable `SexMale` presenta coeficientes negativos y significativos, indicando que los hombres tienen menores probabilidades relativas que las mujeres de ubicarse en dichas categorías. Por el contrario, la variable de zona de residencia no muestra efectos estadísticamente significativos al nivel convencional del 5%.
+La @tbl-multinomial-coef presenta los coeficientes estimados del modelo logístico multinomial, tomando la categoría `Unemployed` como referencia. Los errores estándar y los intervalos de confianza del 95 % se expresan en la escala de los coeficientes $\beta$. Para el intercepto, la exponencial es la razón de probabilidades del perfil de referencia, no una comparación entre perfiles. Los resultados muestran que la edad tiene una asociación positiva y estadísticamente significativa con las probabilidades relativas de pertenecer a las categorías `Inactive` y `Employed` frente a `Unemployed`. Asimismo, la variable `SexMale` presenta coeficientes negativos y significativos, indicando que, manteniendo constantes la edad y la zona, los hombres tienen menores razones relativas de estar `Inactive` o `Employed` frente a estar `Unemployed` que las mujeres. Por el contrario, la variable de zona de residencia no muestra efectos estadísticamente significativos al nivel convencional del 5%.
+
 
 ```{r calcular-multinomial-coef, echo = FALSE}
 multinomial_results <- tidy.svyVGAM(
   multinomial_model,
   exponentiate = FALSE,
-  conf.int = FALSE
+  conf.int = TRUE
 )
 ```
 
+
+```{r cod-multinomial-coef-objeto}
+#| results: hide
+multinomial_coefficients_table <- multinomial_results %>%
+  mutate(
+    y.level = recode(y.level, `1` = "Inactive", `2` = "Employed"),
+    RRR = exp(estimate)
+  ) %>%
+  select(y.level, term, estimate, std.error,
+         p.value, conf.low, conf.high, RRR)
+
+multinomial_coefficients_table
+```
 
 ```{r}
 #| label: tbl-multinomial-coef
 #| tbl-cap: "Coeficientes estimados del modelo de regresión multinomial"
 #| echo: FALSE
-multinomial_results %>%
-  tabla_fmt()
+tabla_fmt(multinomial_coefficients_table, digits = 4,
+          col.names = c("Categoría", "Parámetro", "Estimación",
+                        "EE", "Valor p",
+                        "LI 95 %", "LS 95 %", "RRR"))
 ```
+
+La columna RRR (*relative risk ratio*), se calcula como $\exp(\beta)$ e indica el factor de cambio en la razón entre la probabilidad de la categoría indicada y la de referencia, manteniendo constantes las demás covariables. En la tabla, el RRR de `SexMale` para la categoría `Employed` es `r sprintf("%.2f", multinomial_coefficients_table %>% filter(y.level == "Employed", term == "SexMale") %>% pull(RRR))`. Manteniendo constantes la edad y la zona, la razón entre la probabilidad de estar empleado y la de estar desempleado para los hombres equivale a ese valor multiplicado por la razón correspondiente para las mujeres. Esto representa una razón relativa aproximadamente `r sprintf("%.1f", 100 * (1 - multinomial_coefficients_table %>% filter(y.level == "Employed", term == "SexMale") %>% pull(RRR)))` % menor.
+
 
 De acuerdo con @gtools2025 y @dotwhisker2025, la @fig-multinomial-ic muestra los intervalos de confianza de los coeficientes estimados para cada ecuación del modelo multinomial. Se usa `gtools::stars.pval()` para codificar la significación estadística, y la visualización se construye con `dotwhisker::dwplot()`, lo que permite comparar coeficientes e intervalos en una escala común. Las covariables cuyos intervalos no incluyen el valor cero presentan evidencia de asociación estadística significativa con la variable respuesta, mientras que aquellos cuyos intervalos contienen el cero no muestran efectos significativos al nivel de confianza considerado.
 
@@ -356,6 +470,7 @@ multinomial_results %>%
   guides(color = guide_legend(reverse = TRUE)) +
   theme_bw() +
   theme(legend.position = "top")
+
 ```
 
 ## Modelo de regresión Gamma {#sec-gamma}
@@ -368,7 +483,7 @@ $$
 \log(\mu_{k})
 =
 \mathbf{x}_{k}\boldsymbol{\beta}
-$$
+$$ {#eq-modelo-gamma-log}
 
 En donde $\mathbf{x}_{k}$ corresponde al vector de variables explicativas asociado a la unidad observada y $\boldsymbol{\beta}$ es el vector de parámetros desconocidos del modelo. De forma equivalente, se tiene que:
 
@@ -410,7 +525,7 @@ $$
 
 En donde $k$ representa las unidades de observación de la muestra y $w_k$ corresponde al factor de expansión asociado a cada una de ellas. Esta función define el criterio de optimización utilizado para estimar los parámetros del modelo bajo el enfoque de pseudo-máxima verosimilitud, descrito para encuestas complejas por @ChambersSkinner2003. 
 
-El siguiente código ajusta, mediante `svyglm()`, un modelo de regresión Gamma para la variable de ingresos del hogar (`Income`), incorporando el diseño complejo de la encuesta definido en el objeto `survey_design `. El modelo utiliza como variables explicativas el gasto del hogar (`Expenditure`), la edad (`Age`), el sexo (`Sex`) y la zona de residencia (`Zone`). Asimismo, se especifica una función de enlace logarítmica, garantizando predicciones positivas y permitiendo interpretar los efectos de las variables explicativas en términos multiplicativos sobre el ingreso esperado. Los coeficientes estimados se presentan en la @tbl-gamma-coeficientes:
+El siguiente código ajusta, mediante `svyglm()`, un modelo de regresión Gamma para el ingreso per cápita del hogar (`Income`), incorporando el diseño complejo de la encuesta definido en el objeto `survey_design `. La unidad de análisis es el hogar, con una observación por hogar. El modelo utiliza como variables explicativas el gasto per cápita del hogar (`Expenditure`), la edad del jefe de hogar (`Age`), su sexo (`Sex`) y la zona de residencia (`Zone`). Asimismo, se especifica una función de enlace logarítmica, garantizando predicciones positivas y permitiendo interpretar los efectos de las variables explicativas en términos multiplicativos sobre el ingreso per cápita esperado. Los coeficientes estimados se presentan en la @tbl-gamma-coeficientes:
 
 ```{r ajustar-modelo-gamma, echo = TRUE, eval = TRUE}
 gamma_model <- svyglm(
@@ -420,13 +535,23 @@ gamma_model <- svyglm(
 )
 ```
 
+```{r cod-gamma-coeficientes-objeto}
+#| results: hide
+gamma_results <- broom::tidy(gamma_model, conf.int = TRUE, conf.level = 0.95)
+gamma_coefficients_table <- gamma_results %>%
+  mutate(factor = exp(estimate)) %>%
+  select(term, estimate, std.error, p.value, conf.low, conf.high, factor)
+
+gamma_coefficients_table
+```
+
 ```{r}
 #| label: tbl-gamma-coeficientes
 #| tbl-cap: "Coeficientes del modelo Gamma para el ingreso de los hogares"
 #| echo: FALSE
-gamma_results <- broom::tidy(gamma_model)
-gamma_results %>%
-  tabla_fmt()
+tabla_fmt(gamma_coefficients_table, digits = 4,
+          col.names = c("Parámetro", "Estimación", "EE", "Valor p",
+                        "LI 95 %", "LS 95 %", "Factor multiplicativo"))
 ```
 
-Dado que el modelo utiliza un enlace logarítmico, los coeficientes pueden interpretarse como efectos multiplicativos sobre el ingreso esperado. El coeficiente asociado al gasto del hogar es positivo y estadísticamente significativo ($p<0.001$), indicando que, manteniendo constantes las demás variables del modelo, un incremento de una unidad en el gasto se asocia con un aumento aproximado del $0.2\%$ en el ingreso esperado, ya que $\exp(0.002)\approx 1.002$. La edad también presenta un efecto positivo y significativo ($p=0.017$). En promedio, cada año adicional de edad se asocia con un incremento cercano al $0.2\%$ en el ingreso esperado, manteniendo constantes las demás covariables. Por el contrario, las variables de sexo y zona de residencia no muestran evidencia estadística suficiente para concluir que influyen sobre el ingreso.
+Dado que el modelo utiliza un enlace logarítmico, la columna Factor multiplicativo muestra $\exp(\beta)$, es decir, el cambio multiplicativo en el ingreso esperado asociado a una unidad adicional de una covariable, manteniendo constantes las demás; para una variable categórica, la comparación se realiza respecto de su categoría de referencia. El cambio porcentual correspondiente es $100[\exp(\beta)-1]$. Para el intercepto, la exponencial representa la media esperada del perfil de referencia. Los errores estándar y los intervalos de confianza del 95 % permanecen en la escala de los coeficientes $\beta$. El coeficiente asociado al gasto del hogar es positivo y estadísticamente significativo ($p<0.001$), indicando que, manteniendo constantes las demás variables del modelo, un incremento de una unidad en el gasto se asocia con un aumento aproximado del $0.2\%$ en el ingreso esperado, ya que $\exp(0.002)\approx 1.002$. La edad también presenta una asociación positiva y estadísticamente significativa ($p=0.017$). En promedio, cada año adicional de edad se asocia con un incremento cercano al $0.2\%$ en el ingreso esperado, manteniendo constantes las demás covariables. Por el contrario, no se encuentra evidencia estadísticamente significativa de asociación entre el sexo o la zona de residencia y el ingreso per cápita esperado en este modelo.

@@ -11,6 +11,8 @@ knitr::opts_chunk$set(
   fig.path = "../figures/"
 )
 
+source("../_tabla_helper.R")
+
 options(scipen = 999, digits = 3)
 ```
 
@@ -31,28 +33,42 @@ Para describir la ausencia de respuesta, sea $\boldsymbol{X}_{n \times p} = x_{i
 
 La @tbl-ap3-patron-no-monotono ilustra datos faltantes en posiciones dispersas. Cada fila representa un caso y cada columna $X_j$ una variable. **O** indica un dato observado y **?** un dato faltante.
 
-| Caso | $X_1$ | $X_2$ | $X_3$ | $X_4$ | $X_5$ | $X_6$ | Tipo de caso |
-|:----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-------------|
-| 1 | O | O | O | O | O | O | Completo |
-| 2 | O | O | O | O | O | O | Completo |
-| 3 | O | O | O | O | O | O | Completo |
-| 4 | O | O | O | O | O | O | Completo |
-| 5 | O | O | O | O | ? | ? | Incompleto |
-| 6 | ? | O | O | O | O | O | Incompleto |
-| 7 | O | ? | O | O | O | ? | Incompleto |
-| 8 | ? | O | ? | O | ? | ? | Incompleto |
+```{r cod-patron-no-monotono}
+#| results: hide
+missing_pattern_table <- tibble::tribble(
+  ~case, ~x1, ~x2, ~x3, ~x4, ~x5, ~x6, ~type,
+  "1", "O", "O", "O", "O", "O", "O", "Completo",
+  "2", "O", "O", "O", "O", "O", "O", "Completo",
+  "3", "O", "O", "O", "O", "O", "O", "Completo",
+  "4", "O", "O", "O", "O", "O", "O", "Completo",
+  "5", "O", "O", "O", "O", "?", "?", "Incompleto",
+  "6", "?", "O", "O", "O", "O", "O", "Incompleto",
+  "7", "O", "?", "O", "O", "O", "?", "Incompleto",
+  "8", "?", "O", "?", "O", "?", "?", "Incompleto"
+)
 
-: Patrón no monótono de datos faltantes. Adaptación de *Applied Survey Data Analysis* [@HeeringaWestBerglund2017]. {#tbl-ap3-patron-no-monotono}
+missing_pattern_table
+```
+
+```{r}
+#| label: tbl-ap3-patron-no-monotono
+#| tbl-cap: "Patrón no monótono de datos faltantes. Adaptación de *Applied Survey Data Analysis* [@HeeringaWestBerglund2017]."
+#| echo: false
+tabla_fmt(missing_pattern_table, format = "pipe",
+          col.names = c("Caso", "$X_1$", "$X_2$", "$X_3$", "$X_4$", "$X_5$", "$X_6$", "Tipo de caso"))
+```
 
 
 Como en los capítulos anteriores, se carga la base de datos de la muestra seleccionada. Para ilustrar el tratamiento de los datos faltantes, se introducirán pérdidas de información de forma simulada. La base se carga de la siguiente manera:
 
 
 ```{r cargar-datos-imputacion}
-survey_data <- readRDS("../Data/encuesta.rds")
+survey_data <- readRDS("../data/sample.rds")
 ```
 
-Primero, se cargan los paquetes que se utilizarán en este anexo, se seleccionan las personas mayores de 15 años y se calculan las proporciones de personas desempleadas, inactivas y empleadas antes de generar los valores faltantes:
+La base `sample.rds` conserva los nombres de las variables y utiliza etiquetas y categorías en inglés. En `Region`, las categorías `North`, `South`, `Central`, `West` y `East` corresponden a Norte, Sur, Centro, Occidente y Oriente; `CatAge` contiene grupos decenales ordenados: `0-9`, `10-19`, `20-29`, y así sucesivamente hasta `90-99`.
+
+Primero, se cargan los paquetes y se estima la tasa de desocupación antes de generar los valores faltantes. El diseño se construye con la muestra completa y luego se crea `labor_force_subset`, que contiene a las personas de 15 años o más ocupadas o desocupadas. Posteriormente, los ejercicios de imputación utilizan la población de 15 años o más, incluidas las personas inactivas.
 
 ```{r preparar-datos-imputacion}
 library(tidyverse)
@@ -61,14 +77,27 @@ library(srvyr)
 library(TeachingSampling)
 library(patchwork)
 
+options(survey.lonely.psu = "adjust")
+survey_design <- survey_data %>%
+  as_survey_design(strata = Stratum, ids = PSU, weights = wk, nest = TRUE)
+
+labor_force_subset <- survey_design %>%
+  filter(Age >= 15, Employment %in% c("Employed", "Unemployed"))
+
+unemployment_rate <- labor_force_subset %>%
+  summarise(unemployment_rate = survey_mean(
+    Employment == "Unemployed", proportion = TRUE, prop_method = "logit",
+    vartype = c("se", "ci"), na.rm = TRUE
+  ))
+
+unemployment_rate
+
 survey_data <- survey_data %>%
   filter(Age >= 15)
 
-employment_proportion <- prop.table(table(survey_data$Employment))
-employment_proportion
 ```
 
-También se calcula el promedio de ingresos en la muestra:
+La tasa de desocupación estimada es de `r round(100 * unemployment_rate$unemployment_rate, 2)` %, con un error estándar de `r round(100 * unemployment_rate$unemployment_rate_se, 2)` %. También se calcula el promedio de ingresos en la muestra:
 
 ```{r media-inicial-imputacion}
 income_mean <- mean(survey_data$Income, na.rm = TRUE)
@@ -270,11 +299,13 @@ Para ilustrar el tratamiento de los datos faltantes bajo un mecanismo MCAR, se c
 ```{r preparar-valores-faltantes-imputacion}
 survey_data <- full_join(
   survey_data,
-  mcar_data %>% transmute(
+  mcar_data %>%
+    transmute(
     HHID, PersonID, income_missing = Income, employment_missing = Employment
   ),
   by = c("HHID", "PersonID")
 )
+
 ```
 
 El código anterior utiliza la función `full_join` del paquete `dplyr` para combinar las dos bases de datos. Esta unión conserva todas las filas de ambas bases, combina las que tienen claves coincidentes y asigna valores faltantes donde no hay correspondencia. Para conocer el porcentaje de valores faltantes, se ejecuta el siguiente código:
@@ -287,6 +318,7 @@ survey_data %>%
 survey_data %>%
   group_by(Sex) %>%
   summarise(missing_proportion = sum(is.na(income_missing) / n()))
+
 ```
 
 La imputación por la media no condicional es un método simple y rápido. Puede resultar útil cuando la distribución de la variable no es muy asimétrica o cuando hay pocos valores faltantes en relación con el tamaño de la muestra. Sin embargo, presenta limitaciones cuando existen sesgos o patrones en los datos faltantes, o cuando las variables están muy correlacionadas. Aunque conserva la media de los valores observados, modifica la variabilidad y los percentiles, y puede afectar el sesgo. El método se aplica de la siguiente manera:
@@ -298,6 +330,7 @@ survey_data <- survey_data %>%
   mutate(income_imputed = ifelse(
     is.na(income_missing), observed_income_mean, income_missing
   ))
+
 sum(is.na(survey_data$income_imputed))
 ```
 
@@ -345,12 +378,14 @@ survey_data <- survey_data %>%
     is.na(income_missing), mean(income_missing, na.rm = TRUE), income_missing
   )) %>%
   data.frame()
+
 sum(is.na(survey_data$income_imputed))
 
 survey_data <- survey_data %>%
   mutate(income_imputed = ifelse(
     is.na(income_imputed), observed_income_mean, income_imputed
   ))
+
 sum(is.na(survey_data$income_imputed))
 ```
 
@@ -364,6 +399,7 @@ survey_data %>%
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
   )
+
 ```
 
 En este ejemplo, el sesgo relativo de la media del ingreso es inferior al 1,5 %, y el de la desviación estándar es cercano al 5 %. Al desagregar los resultados de la imputación por zona, se obtiene lo siguiente:
@@ -377,6 +413,7 @@ survey_data %>%
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
   )
+
 ```
 
 Los sesgos relativos de la media del ingreso son del 1,87 % en la zona rural y del 0,8 % en la urbana. En ambos casos, las medias obtenidas tras la imputación son próximas a las originales.
@@ -448,6 +485,7 @@ survey_data %>%
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
   )
+
 ```
 
 El sesgo relativo de la media del ingreso es del 2,3 %. Al desagregar los resultados por zona, se obtiene lo siguiente:
@@ -461,6 +499,7 @@ survey_data %>%
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
   )
+
 ```
 
 El sesgo relativo de la media del ingreso es del 7,4 % en la zona rural y del 0,7 % en la urbana. El mismo ejercicio se realiza por sexo:
@@ -474,6 +513,7 @@ survey_data %>%
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
   )
+
 ```
 
 La @fig-ap3-hot-deck compara la densidad del ingreso original (`Income`) con la del ingreso completado mediante donantes aleatorios (`income_imputed`). Las curvas prácticamente se superponen en esta simulación, conservando la asimetría y la cola de ingresos altos. Las líneas roja y azul representan las medias original e imputada, respectivamente.
@@ -528,6 +568,7 @@ survey_data %>%
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
   )
+
 ```
 
 El sesgo relativo de la media del ingreso es del 1,2 %. El mismo ejercicio se realiza por zona:
@@ -541,6 +582,7 @@ survey_data %>%
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
   )
+
 ```
 
 La @fig-ap3-regresion compara las densidades del ingreso original (`Income`) y del completado con predicciones del modelo de regresión (`income_imputed`). La forma general es similar, aunque aparecen diferencias alrededor del tramo central de la distribución. Las líneas roja y azul indican las medias original e imputada, respectivamente.
@@ -602,6 +644,7 @@ survey_data %>%
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
   )
+
 ```
 
 La diferencia entre la media del ingreso original y la obtenida tras la imputación es de 6 unidades monetarias. El mismo ejercicio se realiza por zona:
@@ -615,6 +658,7 @@ survey_data %>%
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
   )
+
 ```
 
 Las diferencias entre las medias son de 7 unidades monetarias en la zona rural y de 4 en la urbana.
@@ -683,6 +727,7 @@ survey_data %>%
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
   )
+
 ```
 
 La diferencia entre la media del ingreso original y la obtenida tras la imputación es cercana a 4 unidades monetarias.
@@ -727,7 +772,7 @@ $$E(\hat{\beta} | Y_{obs}) = E(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})$$
 Esta expresión se estima mediante el promedio de las $M$ estimaciones puntuales de
 $\hat{\beta}$ sobre las $M$ imputaciones, dado por:
 
-$$\bar{\hat{\beta}} = \frac{1}{M} \sum_{m = 1} ^ M \hat{\beta}_m$$
+$$\bar{\hat{\beta}} = \frac{1}{M} \sum_{m = 1} ^ M \hat{\beta}_m$$ {#eq-estimador-imputacion-multiple}
 
 La varianza estimada al utilizar la metodología de imputación múltiple está dada
 por la siguiente expresión:
@@ -757,7 +802,7 @@ $$
 $$
 
 Por tanto, la varianza estimada es igual a:
-$$\hat{V}(\hat{\beta} | Y_{obs}) = \bar{U} + (1 + \frac{1}{M}) B$$
+$$\hat{V}(\hat{\beta} | Y_{obs}) = \bar{U} + (1 + \frac{1}{M}) B$$ {#eq-varianza-imputacion-multiple}
 
 El siguiente ejemplo aplica la imputación múltiple a los datos de la encuesta:
 
@@ -787,6 +832,7 @@ for (i in seq_len(n_imputations)) {
   missing_data[[imputation_column]] <- predict(imputation_model, missing_data)
   observed_data[[imputation_column]] <- observed_data$Income
 }
+
 ```
 
 El código anterior ajusta modelos de regresión lineal con `Income` como variable de respuesta y `Zone`, `Sex` y `Expenditure` como covariables. Estos modelos permiten predecir los ingresos faltantes en `missing_data`. Una vez ejecutado el código, se muestran los ingresos originales y algunos de los valores imputados:
@@ -825,6 +871,7 @@ Con los conjuntos de datos completados, se define el diseño muestral para estim
 ```{r definir-diseno-imputacion}
 survey_design <- survey_data %>%
   as_survey_design(strata = Stratum, ids = PSU, weights = wk, nest = TRUE)
+
 ```
 
 Con este diseño, se estima la media del ingreso y su varianza para cada conjunto de datos completado:
@@ -862,6 +909,7 @@ pooled_results
 
 variance_estimates <- survey_design %>%
   summarise_at(vars(matches("income_draw")), survey_var, vartype = "var")
+
 ```
 
 Otro parámetro de interés es la varianza del ingreso, que mide su dispersión entre las personas de la muestra. Para estimarla, se aplica el mismo procedimiento utilizado para la media, cambiando el parámetro de interés:

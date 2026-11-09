@@ -2,23 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>7&nbsp; Modelos multinivel – &lt;span style='font-weight: 700'&gt;Análisis de Encuestas de Hogares&lt;/span&gt;&lt;br/&gt;&lt;i style='color: #00b7ff'&gt;usando R&lt;/i&gt;</title>
 <style>
-/* Default styles provided by pandoc.
-** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-*/
+code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: 1.5em;}
-div.column{flex: auto;}
-@media screen {
-div.columns{gap: min(4vw, 1.5em);}
-div.column{overflow-x: auto;}
-}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -65,6 +59,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -98,10 +93,10 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-631496449bf32ff9b0bb69a6bfd9195d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -116,7 +111,7 @@ div.csl-indent {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "No se han encontrado resultados",
+    "search-no-results-text": "Sin resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
@@ -131,38 +126,23 @@ div.csl-indent {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <script>
-
 window.MathJax = {
-
   tex: {
-
     macros: {
-
       E: "\\mathbb{E}",
-
       Var: "\\operatorname{Var}",
-
       Cov: "\\operatorname{Cov}",
-
       Corr: "\\operatorname{Corr}",
-
       Pr: "\\operatorname{Pr}",
-
       deff: "\\operatorname{deff}",
-
       bold: ["\\boldsymbol{#1}", 1]
-
     }
-
   }
-
 };
-
 </script>
 
-
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -175,7 +155,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+      if (mathElements[i].tagName == "SPAN") {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -236,7 +216,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/01-Introduccion.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/01-Introduccion-alternativa.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
   </div>
 </li>
@@ -248,14 +228,14 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/03-Continuas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis de las variables continuas</span></span></a>
+  <a href="../chapters/03-Categoricas-alternativa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis de variables categóricas</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/04-Categoricas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de variables categóricas</span></span></a>
+  <a href="../chapters/04-Continuas-alternativa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de las variables continuas</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -369,15 +349,16 @@ window.Quarto = {
 <h2 data-number="7.1" class="anchored" data-anchor-id="sec-motivacionMult"><span class="header-section-number">7.1</span> Motivación</h2>
 <p>Para iniciar este capítulo, se cargan las librearía <code>tidyverse</code> para la manipulación de datos y la generación de gráficos, y <code>lme4</code> para la estimación de modelos multinivel <span class="citation" data-cites="BatesEtAl2015">(<a href="references.html#ref-BatesEtAl2015" role="doc-biblioref">Bates et&nbsp;al. 2015</a>)</span>. Asimismo, se importa la base de datos que será utilizada a lo largo de los ejemplos. Los títulos matemáticos de algunas figuras se formatean con <code>latex2exp</code>, llamado de forma explícita en el código.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../Data/encuesta.rds"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">poor =</span> <span class="fu">ifelse</span>(Poverty <span class="sc">!=</span> <span class="st">"NotPoor"</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/sample.rds"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">poor =</span> <span class="fu">ifelse</span>(Poverty <span class="sc">!=</span> <span class="st">"NotPoor"</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Con fines ilustrativos, los ejemplos de esta sección se desarrollan a partir de una submuestra de la encuesta. El siguiente bloque de código construye la base de datos utilizada en los ejemplos del capítulo. Para ello, identifica los tres estratos con menor número de hogares y conserva únicamente las variables requeridas para el análisis: ingreso, gasto, estrato, sexo, región, zona de residencia y condición de pobreza.</p>
+<p>La base <code>sample.rds</code> conserva los nombres de las variables y utiliza etiquetas y categorías en inglés. En <code>Region</code>, las categorías <code>North</code>, <code>South</code>, <code>Central</code>, <code>West</code> y <code>East</code> corresponden a Norte, Sur, Centro, Occidente y Oriente; <code>CatAge</code> contiene grupos decenales ordenados: <code>0-9</code>, <code>10-19</code>, <code>20-29</code>, y así sucesivamente hasta <code>90-99</code>.</p>
+<p>Con fines ilustrativos, los ejemplos de esta sección se desarrollan a partir de una submuestra de la encuesta. Se seleccionan deliberadamente los tres estratos con menor número de hogares para mostrar cómo un tamaño muestral reducido puede volver inestables los ajustes independientes por estrato y motivar el uso de modelos multinivel. Esta submuestra sirve para ilustrar el método y no representa por sí sola a la población. El siguiente bloque de código construye la base de datos utilizada en los ejemplos del capítulo y conserva únicamente las variables requeridas para el análisis: ingreso, gasto, estrato, sexo, región, zona de residencia y condición de pobreza.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(HHID, Stratum) <span class="sc">%&gt;%</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stratum) <span class="sc">%&gt;%</span></span>
@@ -386,17 +367,17 @@ window.Quarto = {
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n) <span class="sc">%&gt;%</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>L) <span class="sc">%&gt;%</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(survey_data, <span class="at">by =</span> <span class="st">"Stratum"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Income, Expenditure, Stratum, Sex, Region, Zone, poor)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Income, Expenditure, Stratum, Sex, Region, Zone, poor)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Como punto de partida, se ajusta un modelo de regresión lineal convencional que relaciona el ingreso de los hogares con su nivel de gasto, ignorando temporalmente la estructura jerárquica de los datos. Bajo esta especificación, se asume que todas las observaciones son independientes y que la relación entre ingreso y gasto es homogénea para todos los hogares, independientemente del estrato al que pertenezcan. La <a href="#fig-regresion-simple" class="quarto-xref">figura&nbsp;<span>7.1</span></a> presenta la recta de regresión estimada junto con los datos observados.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">formula =</span> y <span class="sc">~</span> x,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">method =</span> <span class="st">"lm"</span>,</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-regresion-simple" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -410,18 +391,18 @@ Figura&nbsp;7.1: Modelo de regresión lineal simple para el ingreso en función 
 </div>
 </div>
 </div>
-<p>Como explica <span class="citation" data-cites="finch2019multilevel">Finch et&nbsp;al. (<a href="references.html#ref-finch2019multilevel" role="doc-biblioref">2019</a>)</span>, si bien este modelo resulta útil como referencia inicial, sus supuestos suelen ser poco realistas en el contexto de encuestas de hogares. En particular, la independencia entre observaciones puede verse comprometida cuando los hogares pertenecen a estratos que comparten características socioeconómicas, demográficas o geográficas similares. Asimismo, es posible que los niveles promedio de ingreso difieran sistemáticamente entre estratos, aun cuando la relación entre ingreso y gasto sea semejante. Ignorar esta estructura jerárquica puede conducir a estimaciones incorrectas de los errores estándar y, en consecuencia, a inferencias estadísticas poco confiables.</p>
+<p>Como explica <span class="citation" data-cites="finch2019multilevel">Finch, Bolin, y Kelley (<a href="references.html#ref-finch2019multilevel" role="doc-biblioref">2019</a>)</span>, si bien este modelo resulta útil como referencia inicial, sus supuestos suelen ser poco realistas en el contexto de encuestas de hogares. En particular, la independencia entre observaciones puede verse comprometida cuando los hogares pertenecen a estratos que comparten características socioeconómicas, demográficas o geográficas similares. Asimismo, es posible que los niveles promedio de ingreso difieran sistemáticamente entre estratos, aun cuando la relación entre ingreso y gasto sea semejante. Ignorar esta estructura jerárquica puede conducir a estimaciones incorrectas de los errores estándar y, en consecuencia, a inferencias estadísticas poco confiables.</p>
 <p>Para incorporar gradualmente la estructura jerárquica de los datos al proceso de modelación, se ajusta inicialmente un modelo que permite que cada estrato tenga su propio intercepto, mientras mantiene una pendiente común para todas las observaciones. Esta especificación resulta útil para visualizar cómo los niveles promedio de ingreso pueden diferir entre estratos, aun cuando la relación entre ingreso y gasto se considere constante.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>beta_1 <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Income <span class="sc">~</span> Expenditure, <span class="at">data =</span> plot_data))[<span class="dv">2</span>]</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>beta_1 <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Income <span class="sc">~</span> Expenditure, <span class="at">data =</span> plot_data))[<span class="dv">2</span>]</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model_coef <span class="ot">&lt;-</span> plot_data <span class="sc">%&gt;%</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stratum) <span class="sc">%&gt;%</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">beta_0 =</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Income <span class="sc">~</span> Expenditure))[<span class="dv">1</span>]) <span class="sc">%&gt;%</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">beta_1 =</span> beta_1)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">beta_1 =</span> beta_1)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>De esta manera, el modelo introduce una primera fuente de heterogeneidad entre grupos y permite apreciar las limitaciones del modelo de regresión simple presentado anteriormente, el cual asumía una única recta de regresión para toda la población. La <a href="#fig-intercepto-por-estrato" class="quarto-xref">figura&nbsp;<span>7.2</span></a> presenta las rectas de regresión con interceptos diferenciados por estrato:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> model_coef,</span>
@@ -432,7 +413,7 @@ Figura&nbsp;7.1: Modelo de regresión lineal simple para el ingreso en función 
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-intercepto-por-estrato" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -448,15 +429,15 @@ Figura&nbsp;7.2: Modelo con intercepto específico por estrato y pendiente comú
 </div>
 <p>Como siguiente paso, se considera una especificación alternativa en la que todos los estratos comparten un mismo nivel promedio de ingreso, representado por un intercepto común, pero se permite que la relación entre ingreso y gasto varíe entre estratos mediante pendientes específicas para cada uno de ellos.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>beta_0 <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Income <span class="sc">~</span> Expenditure, <span class="at">data =</span> plot_data))[<span class="dv">1</span>]</span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>beta_0 <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Income <span class="sc">~</span> Expenditure, <span class="at">data =</span> plot_data))[<span class="dv">1</span>]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model_coef <span class="ot">&lt;-</span> plot_data <span class="sc">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stratum) <span class="sc">%&gt;%</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">beta_1 =</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Income <span class="sc">~</span> Expenditure))[<span class="dv">2</span>]) <span class="sc">%&gt;%</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">beta_0 =</span> beta_0)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">beta_0 =</span> beta_0)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Bajo esta especificación, las diferencias entre estratos se manifiestan en la intensidad de la asociación entre ingreso y gasto, más que en sus niveles promedio. La <a href="#fig-pendiente-por-estrato" class="quarto-xref">figura&nbsp;<span>7.3</span></a> permite visualizar estas diferencias en las trayectorias de regresión estimadas para cada estrato.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> model_coef,</span>
@@ -467,7 +448,7 @@ Figura&nbsp;7.2: Modelo con intercepto específico por estrato y pendiente comú
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-pendiente-por-estrato" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -483,16 +464,16 @@ Figura&nbsp;7.3: Modelo con pendiente específica por estrato e intercepto comú
 </div>
 <p>Finalmente, se considera la especificación más flexible de las presentadas hasta el momento, permitiendo que tanto el nivel promedio de ingreso como la relación entre ingreso y gasto varíen entre estratos. Bajo este enfoque, cada estrato posee su propia recta de regresión, con interceptos y pendientes estimados de manera independiente.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model_coef <span class="ot">&lt;-</span> plot_data <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model_coef <span class="ot">&lt;-</span> plot_data <span class="sc">%&gt;%</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stratum) <span class="sc">%&gt;%</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta_0 =</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Income <span class="sc">~</span> Expenditure))[<span class="dv">1</span>],</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta_1 =</span> <span class="fu">coef</span>(<span class="fu">lm</span>(Income <span class="sc">~</span> Expenditure))[<span class="dv">2</span>]</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Esta formulación permite capturar simultáneamente diferencias en los niveles de ingreso y en la intensidad de su asociación con el gasto. La <a href="#fig-intercepto-pendiente-libres" class="quarto-xref">figura&nbsp;<span>7.4</span></a> muestra las rectas ajustadas para cada estrato bajo esta especificación.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> model_coef,</span>
@@ -503,7 +484,7 @@ Figura&nbsp;7.3: Modelo con pendiente específica por estrato e intercepto comú
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-intercepto-pendiente-libres" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -540,21 +521,21 @@ w_k = f(\mathbf{x}_k, \boldsymbol{\beta}) + \varepsilon_k,
 \]</span></p>
 <p>Estos valores representan la componente de los factores de expansión explicada por las covariables incluidas en el modelo.</p></li>
 <li><p>Construir los pesos <em>q-weighted</em> dividiendo los factores de expansión originales por la estimación de su esperanza condicional en la muestra,</p>
-<p><span class="math display">\[
+<p><span id="eq-pesos-q"><span class="math display">\[
 q_k = \frac{w_k}{\widehat{E}_s(w_k\mid\mathbf{x}_k)}.
-\]</span></p>
+\tag{7.1}\]</span></span></p>
 <p>De esta forma, los nuevos pesos reflejan la variación residual de los factores de expansión una vez controlado el efecto de las covariables.</p></li>
-<li><p>Definir el nuevo diseño muestral utilizando los pesos ajustados <span class="math inline">\(q_k\)</span> en lugar de los pesos originales <span class="math inline">\(w_k\)</span>, y emplear este diseño para la estimación de los parámetros del modelo multinivel.</p></li>
+<li><p>Definir el diseño muestral utilizando los pesos ajustados <span class="math inline">\(q_k\)</span> en lugar de los pesos originales <span class="math inline">\(w_k\)</span>, y emplearlo para la estimación de los parámetros del modelo multinivel.</p></li>
 </ol>
 <p>El siguiente código implementa el procedimiento de construcción de pesos <em>q-weighted</em>. En primer lugar, ajusta un modelo de regresión lineal que explica los factores de expansión originales a partir de la variable explicativa gasto. De esta forma, los pesos resultantes conservan únicamente la componente de variación no explicada por las covariables incluidas en el modelo multinivel.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mod_qw <span class="ot">&lt;-</span> <span class="fu">lm</span>(wk <span class="sc">~</span> Expenditure, <span class="at">data =</span> survey_data)</span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mod_qw <span class="ot">&lt;-</span> <span class="fu">lm</span>(wk <span class="sc">~</span> Expenditure, <span class="at">data =</span> survey_data)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>predicted_weights <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod_qw)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(<span class="fu">is.finite</span>(predicted_weights)), </span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>          <span class="fu">all</span>(predicted_weights <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>qk <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>wk <span class="sc">/</span> predicted_weights</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>qk <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>wk <span class="sc">/</span> predicted_weights</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Esta implementación es ilustrativa. La comprobación con <code>stopifnot()</code> evita continuar si los valores predichos no son finitos o estrictamente positivos, pero todavía debe evaluarse que el modelo represente adecuadamente <span class="math inline">\(E_s(w_k\mid\mathbf{x}_k)\)</span>; una regresión lineal de los pesos puede producir predicciones no válidas. Además, el vector final <code>wk</code> no necesariamente permite reconstruir por sí solo los pesos condicionales de cada etapa requeridos por un modelo multinivel ponderado.</p>
+<p>El ajuste lineal de los factores de expansión según el gasto constituye una aproximación para construir los pesos <em>q-weighted</em>. La comprobación con <code>stopifnot()</code> evita continuar si los valores predichos no son finitos o estrictamente positivos; aun así, debe evaluarse si el modelo representa adecuadamente <span class="math inline">\(E_s(w_k\mid\mathbf{x}_k)\)</span>, pues una regresión lineal de los pesos puede producir predicciones no válidas. Además, el vector <code>qk</code> no necesariamente permite reconstruir por sí solo los pesos condicionales de cada etapa que requiere un modelo multinivel ponderado.</p>
 </section>
 <section id="modelo-lineal-multinivel" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="modelo-lineal-multinivel"><span class="header-section-number">7.3</span> Modelo lineal multinivel</h2>
@@ -563,9 +544,9 @@ q_k = \frac{w_k}{\widehat{E}_s(w_k\mid\mathbf{x}_k)}.
 <h3 data-number="7.3.1" class="anchored" data-anchor-id="sec-multinivel-muestras-complejas"><span class="header-section-number">7.3.1</span> Modelo nulo</h3>
 <p>En el análisis de regresión multinivel, se distinguen dos tipos de parámetros: los coeficientes de regresión, conocidos como parámetros fijos, y los componentes de varianza asociados a los efectos aleatorios <span class="citation" data-cites="goldstein2011multilevel rabehesketh2012multilevel">(<a href="references.html#ref-goldstein2011multilevel" role="doc-biblioref">Goldstein 2011</a>; <a href="references.html#ref-rabehesketh2012multilevel" role="doc-biblioref">Rabe-Hesketh y Skrondal 2012</a>, e)</span>. Una etapa inicial fundamental en este tipo de análisis consiste en descomponer la variabilidad total de la variable dependiente en los distintos niveles de la estructura jerárquica. En el contexto del ejemplo anterior, esta descomposición permite separar la variación del ingreso en una componente atribuible a diferencias dentro de los estratos y otra asociada a diferencias entre estratos.</p>
 <p>Según <span class="citation" data-cites="snijders2011">Snijders y Bosker (<a href="references.html#ref-snijders2011" role="doc-biblioref">2011</a>)</span>, el punto de partida para esta descomposición es el denominado modelo nulo, el cual no incorpora variables explicativas y se expresa como</p>
-<p><span class="math display">\[
+<p><span id="eq-modelo-multinivel-nulo"><span class="math display">\[
 y_{kj} = \beta_{0j} + \epsilon_{kj}
-\]</span></p>
+\tag{7.2}\]</span></span></p>
 <p>En donde <span class="math inline">\(y_{kj}\)</span> denota el valor observado del ingreso para la unidad <span class="math inline">\(k\)</span> en el estrato <span class="math inline">\(j\)</span>. El término <span class="math inline">\(\beta_{0j}\)</span> representa el intercepto específico de cada estrato, capturando las diferencias en los niveles promedio de la variable entre grupos. Finalmente, <span class="math inline">\(\epsilon_{kj}\)</span> corresponde al error a nivel de unidad, el cual recoge la variabilidad no explicada dentro de cada estrato y se asume con media cero y varianza constante condicional al grupo.</p>
 <p>A su vez, el intercepto por estrato puede descomponerse en una parte común a todos los estratos y una desviación específica de cada uno de ellos, de la siguiente forma:</p>
 <p><span class="math display">\[
@@ -580,25 +561,32 @@ y_{kj} = \beta_{0j} + \epsilon_{kj}
 \epsilon_{kj} \sim N\left(0, \sigma_{\epsilon}^{2}\right),
 \]</span></p>
 <p>Donde <span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> representa la variabilidad residual dentro de los estratos. A partir de este modelo se define el coeficiente de correlación intraclase (ICC, por sus siglas en inglés), que cuantifica la proporción de la varianza total explicada por las diferencias entre estratos. Su definición se presenta a continuación:</p>
-<p><span class="math display">\[
+<p><span id="eq-cci-lineal"><span class="math display">\[
 \rho = \frac{\sigma_{\tau}^{2}}{\sigma_{\tau}^{2} + \sigma_{\epsilon}^{2}}
-\]</span></p>
+\tag{7.3}\]</span></span></p>
 <p>De acuerdo con <span class="citation" data-cites="BatesEtAl2015">Bates et&nbsp;al. (<a href="references.html#ref-BatesEtAl2015" role="doc-biblioref">2015</a>)</span>, un valor elevado de ICC indica que una proporción importante de la variabilidad total de la variable de interés se debe a diferencias entre estratos, lo que sugiere la presencia de heterogeneidad relevante entre grupos y la necesidad de incorporar explícitamente dicha estructura en el modelo. En contraste, un ICC bajo implica que la variabilidad se concentra principalmente dentro de los estratos, los cuales presentan una mayor homogeneidad relativa entre sí.</p>
 <p>Siguiendo con el análisis de la encuesta de ejemplo, cuando la variable de interés es el ingreso, el modelo nulo constituye el punto de partida para cuantificar qué proporción de la variabilidad total se debe a diferencias entre estratos y qué proporción corresponde a diferencias entre hogares dentro de un mismo estrato.</p>
 <p>La estimación de modelos multinivel en <code>R</code> se realiza mediante el paquete <code>lme4</code>. En particular, la función <code>lmer()</code> permite especificar los efectos aleatorios mediante expresiones de la forma <code>(efecto | grupo)</code>. En este contexto, la expresión <code>(1 | Stratum)</code> indica que el modelo incluye un intercepto aleatorio para cada estrato. El valor <code>1</code> representa el intercepto del modelo, mientras que <code>Stratum</code> identifica la variable de agrupación.</p>
 <p>Como advierte <span class="citation" data-cites="Carle2009">Carle (<a href="references.html#ref-Carle2009" role="doc-biblioref">2009</a>)</span>, en <code>lme4</code>, el argumento <code>weights</code> representa pesos previos que modifican la contribución residual, pero no implementa por sí solo la pseudo-verosimilitud multinivel con pesos de diseño por etapa ni la estimación de varianza del diseño. Por tanto, los modelos ponderados con <code>qk</code> que siguen deben interpretarse como una ilustración modelada, no como una solución general para inferencia de encuestas complejas; para ese propósito se requieren pesos escalados y software que los incorpore expresamente en la estimación multinivel.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mod_null <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mod_null <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  Income <span class="sc">~</span> (<span class="dv">1</span> <span class="sc">|</span> Stratum),</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> qk</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La <a href="#tbl-interceptos-nulos" class="quarto-xref">tabla&nbsp;<span>7.1</span></a> presenta los interceptos estimados para cada estrato a partir del modelo nulo. Dado que este modelo no incorpora variables explicativas, cada intercepto puede interpretarse como el ingreso promedio esperado en el correspondiente estrato. Los resultados evidencian diferencias importantes entre grupos: mientras que el estrato <code>idStrt004</code> presenta el mayor ingreso promedio estimado (959.6), el estrato <code>idStrt009</code> registra el menor valor (207.6). Estas diferencias sugieren la existencia de una variabilidad sustancial entre estratos, justificando la incorporación de efectos aleatorios para modelar explícitamente la estructura jerárquica de los datos.</p>
+<p>EE indica el error estándar y DE la desviación estándar. LI y LS identifican, respectivamente, los límites inferior y superior del intervalo de confianza; el porcentaje que acompaña estas siglas indica su nivel de confianza.</p>
+<p>Las tablas de coeficientes por estrato presentan las estimaciones condicionales del modelo. Cada fila identifica el estrato y el parámetro correspondiente. Los estadísticos de prueba y los valores-<em>p</em> de los efectos fijos corresponden a otro nivel de inferencia.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>coef_mod_null <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod_null)<span class="sc">$</span>Stratum</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>coef_mod_null <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>coef_mod_null <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod_null)<span class="sc">$</span>Stratum</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>null_model_intercepts_table <span class="ot">&lt;-</span> coef_mod_null <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"stratum"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>stratum, <span class="at">names_to =</span> <span class="st">"parameter"</span>, <span class="at">values_to =</span> <span class="st">"estimate"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">parameter =</span> <span class="fu">recode</span>(parameter, <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Intercepto"</span>))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>null_model_intercepts_table</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-interceptos-nulos" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -608,52 +596,63 @@ Tabla&nbsp;7.1: Interceptos estimados por estrato bajo pesos q-weighted (modelo 
 </figcaption>
 <div aria-describedby="tbl-interceptos-nulos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: right;">(Intercept)</th>
+<th style="text-align: left;">Estrato</th>
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: right;">Estimación</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">idStrt001</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">635</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt002</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">507</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt003</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">486</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt004</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">960</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt005</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">518</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt006</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">439</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt007</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">477</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt008</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">377</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt009</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">218</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt010</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">594</td>
 </tr>
 </tbody>
@@ -665,8 +664,10 @@ Tabla&nbsp;7.1: Interceptos estimados por estrato bajo pesos q-weighted (modelo 
 </div>
 <p>De acuerdo con <span class="citation" data-cites="performance2026">Lüdecke et&nbsp;al. (<a href="references.html#ref-performance2026" role="doc-biblioref">2026</a>)</span>, a partir de los componentes de varianza estimados en el modelo nulo, la correlación intraclase se calcula mediante la función <code>icc()</code> del paquete <code>performance</code>. Este indicador cuantifica la proporción de la variabilidad total del ingreso que puede atribuirse a diferencias entre estratos, constituyendo una medida de la dependencia existente entre observaciones pertenecientes a un mismo grupo. Los resultados obtenidos se presentan en la <a href="#tbl-icc-nulo" class="quarto-xref">tabla&nbsp;<span>7.2</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(mod_null) <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>null_model_icc_table <span class="ot">&lt;-</span> performance<span class="sc">::</span><span class="fu">icc</span>(mod_null) <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>null_model_icc_table</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-icc-nulo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -676,12 +677,12 @@ Tabla&nbsp;7.2: Correlación intraclase del modelo nulo (ingreso por estrato)
 </figcaption>
 <div aria-describedby="tbl-icc-nulo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: right;">ICC_adjusted</th>
-<th style="text-align: right;">ICC_unadjusted</th>
-<th style="text-align: left;">optional</th>
+<th style="text-align: right;">CCI ajustado</th>
+<th style="text-align: right;">CCI sin ajustar</th>
+<th style="text-align: left;">Opcional</th>
 </tr>
 </thead>
 <tbody>
@@ -702,26 +703,31 @@ Tabla&nbsp;7.2: Correlación intraclase del modelo nulo (ingreso por estrato)
 <section id="sec-intercepto-aleatorio" class="level3" data-number="7.3.2">
 <h3 data-number="7.3.2" class="anchored" data-anchor-id="sec-intercepto-aleatorio"><span class="header-section-number">7.3.2</span> Modelo con intercepto aleatorio</h3>
 <p>De acuerdo con <span class="citation" data-cites="goldstein2011multilevel">Goldstein (<a href="references.html#ref-goldstein2011multilevel" role="doc-biblioref">2011</a>)</span> y <span class="citation" data-cites="rabehesketh2012multilevel">Rabe-Hesketh y Skrondal (<a href="references.html#ref-rabehesketh2012multilevel" role="doc-biblioref">2012</a>)</span>, el modelo multinivel más simple que incorpora covariables corresponde al modelo de intercepto aleatorio. En esta especificación, se asume que los efectos de las variables explicativas son comunes a todos los estratos, mientras que el nivel promedio de la variable respuesta puede variar entre ellos. El modelo se expresa como</p>
-<p><span class="math display">\[
+<p><span id="eq-modelo-intercepto-aleatorio"><span class="math display">\[
 y_{kj} = \beta_{0j} + \mathbf{x}_{kj}\boldsymbol{\beta} + \epsilon_{kj}
-\]</span></p>
+\tag{7.4}\]</span></span></p>
 <p>En donde <span class="math inline">\(y_{kj}\)</span> representa el valor observado de la variable respuesta para la unidad <span class="math inline">\(k\)</span> perteneciente al estrato <span class="math inline">\(j\)</span>, <span class="math inline">\(\mathbf{x}_{kj}\)</span> es el vector de covariables asociado a dicha unidad, <span class="math inline">\(\boldsymbol{\beta}\)</span> es el vector de coeficientes de regresión comunes a todos los estratos y <span class="math inline">\(\epsilon_{kj}\)</span> corresponde al error aleatorio a nivel de unidad.</p>
 <p>Al igual que en el modelo nulo, el intercepto se modela como <span class="math inline">\(\beta_{0j} = \gamma_{00} + \tau_{0j}\)</span>; en donde <span class="math inline">\(\gamma_{00}\)</span> representa el intercepto promedio global y <span class="math inline">\(\tau_{0j}\)</span> es el efecto aleatorio asociado al estrato <span class="math inline">\(j\)</span>, que mide la desviación de dicho estrato respecto al promedio general.</p>
 <p>Los componentes aleatorios del modelo se asumen independientes y normalmente distribuidos, de manera que <span class="math inline">\(\tau_{0j} \sim N(0,\sigma_{\tau}^{2})\)</span> y <span class="math inline">\(\epsilon_{kj} \sim N(0,\sigma_{\epsilon}^{2})\)</span>. Bajo estas condiciones, la variabilidad total de la variable respuesta puede descomponerse en una componente entre estratos, cuantificada por <span class="math inline">\(\sigma_{\tau}^{2}\)</span>, y una componente dentro de los estratos, representada por <span class="math inline">\(\sigma_{\epsilon}^{2}\)</span>.</p>
 <p>El siguiente código ajusta un modelo multinivel de intercepto aleatorio, en donde el ingreso (<code>Income</code>) se explica a partir del gasto del hogar (<code>Expenditure</code>), incorporando además un efecto aleatorio asociado al estrato (<code>Stratum</code>) y utilizando los pesos <em>q-weighted</em> almacenados en la variable <code>qk</code>. Una vez ajustado el modelo, se estima la correlación intraclase (ICC) a partir de los componentes de varianza estimados.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>random_intercept_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>random_intercept_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  Income <span class="sc">~</span> Expenditure <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Stratum),</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> qk</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(random_intercept_model)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(random_intercept_model)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La correlación intraclase ajustada es de 0.203, lo cual indica que, después de controlar por el gasto del hogar (<code>Expenditure</code>), aproximadamente el 20% de la variabilidad residual del ingreso sigue siendo atribuible a diferencias entre estratos. Aunque este valor evidencia agrupamiento residual, el ICC por sí solo no justifica una especificación multinivel concreta; también deben considerarse la definición sustantiva de los grupos, el ajuste y los diagnósticos del modelo. Los coeficientes estimados por estrato se presentan en la <a href="#tbl-coef-intercepto-aleatorio" class="quarto-xref">tabla&nbsp;<span>7.3</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(random_intercept_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>random_intercept_coefficients_table <span class="ot">&lt;-</span> <span class="fu">coef</span>(random_intercept_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"stratum"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>stratum, <span class="at">names_to =</span> <span class="st">"parameter"</span>, <span class="at">values_to =</span> <span class="st">"estimate"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">parameter =</span> <span class="fu">recode</span>(parameter, <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Intercepto"</span>, <span class="at">Expenditure =</span> <span class="st">"Gasto"</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>random_intercept_coefficients_table</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-coef-intercepto-aleatorio" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -731,63 +737,113 @@ Tabla&nbsp;7.3: Coeficientes del modelo con intercepto aleatorio por estrato (pr
 </figcaption>
 <div aria-describedby="tbl-coef-intercepto-aleatorio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: right;">(Intercept)</th>
-<th style="text-align: right;">Expenditure</th>
+<th style="text-align: left;">Estrato</th>
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: right;">Estimación</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">idStrt001</td>
-<td style="text-align: right;">250.4</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">250.44</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt001</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt002</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">156.81</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt002</td>
-<td style="text-align: right;">156.8</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.19</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt003</td>
-<td style="text-align: right;">142.9</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">142.89</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt003</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt004</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">296.81</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt004</td>
-<td style="text-align: right;">296.8</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.19</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt005</td>
-<td style="text-align: right;">-32.4</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">-32.43</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt005</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt006</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">53.78</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt006</td>
-<td style="text-align: right;">53.8</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.19</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt007</td>
-<td style="text-align: right;">12.5</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">12.46</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt007</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt008</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">107.14</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt008</td>
-<td style="text-align: right;">107.1</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.19</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt009</td>
-<td style="text-align: right;">-44.7</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">-44.67</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt009</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt010</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">252.31</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt010</td>
-<td style="text-align: right;">252.3</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.19</td>
 </tr>
 </tbody>
@@ -799,17 +855,17 @@ Tabla&nbsp;7.3: Coeficientes del modelo con intercepto aleatorio por estrato (pr
 </div>
 <p>Con el fin de facilitar la visualización de los resultados del modelo, se utiliza la submuestra reducida presentada anteriormente, la cual contiene únicamente tres estratos seleccionados.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>estimated_coef <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(</span>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>estimated_coef <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(random_intercept_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"Stratum"</span>),</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  plot_data <span class="sc">%&gt;%</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Stratum) <span class="sc">%&gt;%</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>()</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La <a href="#fig-intercepto-aleatorio" class="quarto-xref">figura&nbsp;<span>7.5</span></a> muestra las rectas de regresión estimadas para cada estrato bajo el modelo de intercepto aleatorio. Se observa que las rectas comparten una misma pendiente, reflejando el efecto común del gasto sobre el ingreso, pero difieren en su posición vertical debido a los interceptos específicos estimados para cada estrato.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> estimated_coef,</span>
@@ -820,7 +876,7 @@ Tabla&nbsp;7.3: Coeficientes del modelo con intercepto aleatorio por estrato (pr
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-intercepto-aleatorio" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -838,9 +894,9 @@ Figura&nbsp;7.5: Rectas de regresión estimadas por estrato: modelo con intercep
 <section id="sec-intercepto-pendiente-aleatorios" class="level3" data-number="7.3.3">
 <h3 data-number="7.3.3" class="anchored" data-anchor-id="sec-intercepto-pendiente-aleatorios"><span class="header-section-number">7.3.3</span> Modelo con intercepto y pendiente aleatoria</h3>
 <p>De acuerdo con <span class="citation" data-cites="goldstein2011multilevel">Goldstein (<a href="references.html#ref-goldstein2011multilevel" role="doc-biblioref">2011</a>)</span> y <span class="citation" data-cites="snijders2011">Snijders y Bosker (<a href="references.html#ref-snijders2011" role="doc-biblioref">2011</a>)</span>, una extensión natural del modelo anterior es el modelo de intercepto y pendiente aleatorios. En esta especificación, no sólo se permite que el nivel promedio de la variable respuesta varíe entre estratos, sino también que el efecto de una o más covariables difiera entre grupos. De esta manera, cada estrato puede tener su propia recta de regresión, tanto en términos de intercepto como de pendiente. El modelo puede expresarse como</p>
-<p><span class="math display">\[
+<p><span id="eq-modelo-pendiente-aleatoria"><span class="math display">\[
 y_{kj} = \beta_{0j} + x_{kj}\beta_{1j} + \mathbf{z}_{kj}\boldsymbol{\beta} + \epsilon_{kj},
-\]</span></p>
+\tag{7.5}\]</span></span></p>
 <p>donde <span class="math inline">\(y_{kj}\)</span> representa el valor observado de la variable respuesta para la unidad <span class="math inline">\(k\)</span> perteneciente al estrato <span class="math inline">\(j\)</span>, <span class="math inline">\(x_{kj}\)</span> corresponde a la covariable cuya pendiente se permite variar entre estratos, <span class="math inline">\(\mathbf{z}_{kj}\)</span> contiene las covariables con efectos fijos comunes a todos los grupos, y <span class="math inline">\(\epsilon_{kj}\)</span> es el término de error a nivel de unidad. En este modelo, tanto el intercepto como la pendiente asociada a <span class="math inline">\(x_{kj}\)</span> se consideran aleatorios y se descomponen de la siguiente forma:</p>
 <p><span class="math display">\[
 \beta_{0j} = \gamma_{00} + \tau_{0j}, \qquad
@@ -865,21 +921,26 @@ N\left(
 \right),
 \]</span></p>
 <p>mientras que el error a nivel de unidad satisface <span class="math inline">\(\epsilon_{kj} \sim N(0,\sigma_{\epsilon}^{2})\)</span>. En consecuencia, el modelo permite cuantificar no sólo la variabilidad entre estratos en los niveles promedio de la variable respuesta, sino también la heterogeneidad existente en el efecto de la covariable cuyo coeficiente se modela como aleatorio.</p>
-<p>A continuación se ajusta un modelo multinivel con intercepto y pendiente aleatorios en el que el ingreso (<code>Income</code>) se explica a partir del gasto del hogar (<code>Expenditure</code>); aunque la redacción anterior mencionaba <code>Zone</code>, esa variable no aparece en la fórmula estimada. En este caso, tanto el intercepto como el efecto del gasto pueden variar entre estratos mediante efectos aleatorios asociados a <code>Stratum</code>, empleando además los pesos <em>q-weighted</em> almacenados en la variable <code>qk</code>.</p>
+<p>A continuación se ajusta un modelo multinivel con intercepto y pendiente aleatorios. El ingreso (<code>Income</code>) se modela en función del gasto del hogar (<code>Expenditure</code>), y tanto el intercepto como la pendiente del gasto pueden variar entre estratos (<code>Stratum</code>). La estimación utiliza los pesos <em>q-weighted</em> almacenados en <code>qk</code>.</p>
 <p>Nótese que en la especificación del código se incluye simultáneamente efectos fijos y efectos aleatorios para el intercepto y la variable <code>Expenditure</code>. Los términos ubicados fuera del paréntesis, <code>1 + Expenditure</code>, corresponden a los efectos fijos del modelo y permiten estimar el intercepto promedio global y la pendiente promedio global asociada al gasto. Por su parte, la expresión <code>(1 + Expenditure | Stratum)</code> incorpora las desviaciones específicas de cada estrato respecto a dichos promedios. La inclusión explícita de los efectos fijos es fundamental, ya que los efectos aleatorios se interpretan como desviaciones alrededor de una media poblacional.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>random_slope_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>random_slope_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  Income <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> Expenditure <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> Expenditure <span class="sc">|</span> Stratum),</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> qk</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(random_slope_model)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(random_slope_model)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Para este modelo, el ICC ajustado se estimó en 0.690, lo que significa que, una vez considerados los efectos fijos del modelo, aproximadamente el 69% de la variabilidad residual se debe a diferencias entre los grupos. Como recomiendan <span class="citation" data-cites="BatesEtAl2015">Bates et&nbsp;al. (<a href="references.html#ref-BatesEtAl2015" role="doc-biblioref">2015</a>)</span>, los modelos con pendientes aleatorias requieren suficientes grupos y variación interna para estimar de manera estable la varianza y la covarianza de los efectos aleatorios; por ello, conviene revisar advertencias de convergencia y ajustes singulares antes de interpretar estos componentes. Los coeficientes del modelo por estrato se presentan en la <a href="#tbl-coef-pendiente-aleatoria" class="quarto-xref">tabla&nbsp;<span>7.4</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(random_slope_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>random_slope_coefficients_table <span class="ot">&lt;-</span> <span class="fu">coef</span>(random_slope_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"stratum"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L) <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>stratum, <span class="at">names_to =</span> <span class="st">"parameter"</span>, <span class="at">values_to =</span> <span class="st">"estimate"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">parameter =</span> <span class="fu">recode</span>(parameter, <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Intercepto"</span>, <span class="at">Expenditure =</span> <span class="st">"Gasto"</span>))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>random_slope_coefficients_table</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-coef-pendiente-aleatoria" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -889,63 +950,113 @@ Tabla&nbsp;7.4: Coeficientes del modelo con intercepto y pendiente aleatoria por
 </figcaption>
 <div aria-describedby="tbl-coef-pendiente-aleatoria-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: right;">(Intercept)</th>
-<th style="text-align: right;">Expenditure</th>
+<th style="text-align: left;">Estrato</th>
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: right;">Estimación</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">idStrt001</td>
-<td style="text-align: right;">-222.8</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">-222.761</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt001</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">2.730</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt002</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">35.507</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt002</td>
-<td style="text-align: right;">35.5</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.607</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt003</td>
-<td style="text-align: right;">151.9</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">151.858</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt003</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.164</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt004</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">224.197</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt004</td>
-<td style="text-align: right;">224.2</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.353</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt005</td>
-<td style="text-align: right;">-89.7</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">-89.691</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt005</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.286</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt006</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">28.591</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt006</td>
-<td style="text-align: right;">28.6</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.217</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt007</td>
-<td style="text-align: right;">41.0</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">40.976</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt007</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.079</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt008</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">163.811</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt008</td>
-<td style="text-align: right;">163.8</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">0.928</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt009</td>
-<td style="text-align: right;">16.5</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">16.551</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt009</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">0.838</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt010</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">89.904</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt010</td>
-<td style="text-align: right;">89.9</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">1.830</td>
 </tr>
 </tbody>
@@ -957,17 +1068,17 @@ Tabla&nbsp;7.4: Coeficientes del modelo con intercepto y pendiente aleatoria por
 </div>
 <p>Una vez más, con el propósito de facilitar la visualización de los resultados, se utiliza la submuestra reducida definida previamente, la cual considera únicamente tres estratos seleccionados.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>estimated_coef <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(</span>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>estimated_coef <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(random_slope_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"Stratum"</span>),</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  plot_data <span class="sc">%&gt;%</span></span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Stratum) <span class="sc">%&gt;%</span></span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>()</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La <a href="#fig-pendiente-aleatoria" class="quarto-xref">figura&nbsp;<span>7.6</span></a> presenta las rectas de regresión estimadas para cada estrato bajo el modelo de intercepto y pendiente aleatorios. A diferencia del modelo de intercepto aleatorio, en este caso las rectas difieren tanto en su posición vertical como en su inclinación, reflejando que los estratos no sólo presentan niveles promedio de ingreso distintos, sino también diferentes intensidades en la relación entre ingreso y gasto.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> estimated_coef,</span>
@@ -978,7 +1089,7 @@ Tabla&nbsp;7.4: Coeficientes del modelo con intercepto y pendiente aleatoria por
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-pendiente-aleatoria" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1009,7 +1120,7 @@ y_{kj} \mid \pi_{kj} \sim \text{Bernoulli}(\pi_{kj})
 \]</span></p>
 <p>En esta formulación, <span class="math inline">\(\eta_{kj}\)</span> cumple un papel análogo al valor esperado lineal de los modelos para variables continuas. La diferencia central es que los efectos fijos y aleatorios actúan sobre la escala logit y no directamente sobre la probabilidad. Por tanto, las diferencias entre estratos se interpretan como desplazamientos en los <em>log-odds</em> del evento, los cuales luego se transforman a probabilidades mediante la función logística. La <a href="#fig-logit-pobreza-gasto" class="quarto-xref">figura&nbsp;<span>7.7</span></a> presenta la relación entre gasto y probabilidad de pobreza, con una curva logística ajustada.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> survey_data, <span class="fu">aes</span>(<span class="at">y =</span> poor, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> survey_data, <span class="fu">aes</span>(<span class="at">y =</span> poor, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> y <span class="sc">~</span> x,</span>
@@ -1017,7 +1128,7 @@ y_{kj} \mid \pi_{kj} \sim \text{Bernoulli}(\pi_{kj})
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Poverty (1 = poor)"</span>, <span class="at">x =</span> <span class="st">"Expenditure"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Poverty (1 = poor)"</span>, <span class="at">x =</span> <span class="st">"Expenditure"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-logit-pobreza-gasto" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1040,9 +1151,9 @@ Figura&nbsp;7.7: Relación entre gasto y condición de pobreza con curva logíst
 y_{kj} \mid \pi_{kj} \sim \text{Bernoulli}(\pi_{kj})
 \]</span></p>
 <p>En donde la probabilidad de éxito para la unidad <span class="math inline">\(k\)</span> perteneciente al grupo <span class="math inline">\(j\)</span> se modela mediante</p>
-<p><span class="math display">\[
+<p><span id="eq-modelo-logistico-multinivel"><span class="math display">\[
 \text{logit}(\pi_{kj}) = \beta_{0j},
-\]</span></p>
+\tag{7.6}\]</span></span></p>
 <p>donde <span class="math inline">\(\beta_{0j}\)</span> representa el intercepto específico del estrato <span class="math inline">\(j\)</span> en escala logit. A su vez, dicho intercepto se descompone como</p>
 <p><span class="math display">\[
 \beta_{0j} = \gamma_{00} + \tau_{0j}
@@ -1052,27 +1163,32 @@ y_{kj} \mid \pi_{kj} \sim \text{Bernoulli}(\pi_{kj})
 \tau_{0j} \sim N(0,\sigma_{\tau}^{2})
 \]</span></p>
 <p>De acuerdo con <span class="citation" data-cites="merlo2006brief">Merlo et&nbsp;al. (<a href="references.html#ref-merlo2006brief" role="doc-biblioref">2006</a>)</span>, a diferencia del modelo lineal multinivel, aquí no se incorpora un término residual aditivo <span class="math inline">\(\epsilon_{kj}\)</span> en la ecuación del nivel individual. La variabilidad interna en el grupo está determinada por la distribución Bernoulli de la respuesta. Para cuantificar la dependencia entre unidades pertenecientes al mismo estrato, puede utilizarse el enfoque de variable latente, bajo el cual esta varianza residual se aproxima por la varianza de la distribución logística estándar, es decir, <span class="math inline">\(\pi^2/3\)</span>. Así, la correlación intraclase del modelo logístico se expresa como</p>
-<p><span class="math display">\[
+<p><span id="eq-cci-logistico"><span class="math display">\[
 \rho =
 \frac{\sigma_\tau^2}
 {\sigma_\tau^2 + \frac{\pi^2}{3}}
-\]</span></p>
+\tag{7.7}\]</span></span></p>
 <p>Un valor elevado de ICC indica que la probabilidad del evento presenta una estructura de agrupamiento importante, es decir, que dos unidades pertenecientes al mismo estrato tienden a parecerse más entre sí que dos unidades tomadas de estratos distintos. En contraste, un valor bajo sugiere que la mayor parte de la variación se concentra a nivel individual. Este ICC es una medida en escala latente y no equivale directamente a una correlación de respuestas binarias observadas. El ajuste en <code>R</code>, mediante <code>glmer()</code>, se realiza de la siguiente manera:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>logistic_null_model <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>logistic_null_model <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  poor <span class="sc">~</span> (<span class="dv">1</span> <span class="sc">|</span> Stratum),</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> qk,</span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>)</span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(logistic_null_model)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(logistic_null_model)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La correlación intraclase asciende a 0.315. Dado que el modelo no incluye covariables, estas diferencias reflejan exclusivamente la variación entre estratos en la prevalencia del evento.</p>
 <p>Los coeficientes del modelo nulo logístico por estrato se presentan en la <a href="#tbl-coef-logit-nulo" class="quarto-xref">tabla&nbsp;<span>7.5</span></a>. Los interceptos estimados en el modelo nulo muestran una heterogeneidad considerable entre estratos. En los primeros estratos reportados, algunos interceptos son fuertemente negativos, como <code>idStrt004</code> e <code>idStrt003</code>, lo que corresponde a probabilidades base muy bajas de pobreza. En contraste, estratos como <code>idStrt009</code> e <code>idStrt006</code> presentan interceptos positivos y elevados, asociados con probabilidades base mucho mayores.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(logistic_null_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>null_logistic_intercepts_table <span class="ot">&lt;-</span> <span class="fu">coef</span>(logistic_null_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"stratum"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>stratum, <span class="at">names_to =</span> <span class="st">"parameter"</span>, <span class="at">values_to =</span> <span class="st">"estimate"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">parameter =</span> <span class="fu">recode</span>(parameter, <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Intercepto"</span>))</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>null_logistic_intercepts_table</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-coef-logit-nulo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -1082,52 +1198,63 @@ Tabla&nbsp;7.5: Interceptos estimados por estrato en el modelo logístico nulo (
 </figcaption>
 <div aria-describedby="tbl-coef-logit-nulo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: right;">(Intercept)</th>
+<th style="text-align: left;">Estrato</th>
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: right;">Estimación</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">idStrt001</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">-0.852</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt002</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">-0.038</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt003</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">-2.378</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt004</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">-2.618</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt005</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">-1.037</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt006</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">0.902</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt007</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">-1.018</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt008</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">0.156</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt009</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">1.913</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt010</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">-0.609</td>
 </tr>
 </tbody>
@@ -1144,20 +1271,25 @@ Tabla&nbsp;7.5: Interceptos estimados por estrato en el modelo logístico nulo (
 <p>El modelo se expresa como <span class="math inline">\(y_{kj} \mid \pi_{kj} \sim \text{Bernoulli}(\pi_{kj})\)</span>. En donde <span class="math inline">\(\text{logit}(\pi_{kj}) = \beta_{0j} + \mathbf{x}_{kj}\boldsymbol{\beta}\)</span> y <span class="math inline">\(\beta_{0j} = \gamma_{00} + \tau_{0j}\)</span>. En este caso, <span class="math inline">\(\mathbf{x}_{kj}\)</span> representa el vector de covariables de la unidad <span class="math inline">\(k\)</span> en el estrato <span class="math inline">\(j\)</span>, <span class="math inline">\(\boldsymbol{\beta}\)</span> es el vector de efectos fijos comunes a todos los estratos y <span class="math inline">\(\tau_{0j}\)</span> captura la desviación específica del estrato respecto al intercepto promedio global. Como antes, se asume que <span class="math inline">\(\tau_{0j} \sim N(0,\sigma_{\tau}^{2})\)</span>.</p>
 <p>Bajo esta especificación, dos estratos con los mismos valores de las covariables pueden presentar probabilidades base distintas del evento debido a sus interceptos aleatorios. Sin embargo, el efecto de cada covariable sobre la escala logit se mantiene constante entre estratos. En el ejemplo, esto equivale a permitir que la probabilidad base de pobreza cambie entre estratos, mientras que la asociación entre gasto y pobreza se resume mediante una pendiente común.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>random_intercept_logit_model <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>random_intercept_logit_model <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  poor <span class="sc">~</span> Expenditure <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Stratum),</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>),</span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> qk</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(random_intercept_logit_model)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(random_intercept_logit_model)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Aun después de controlar por el gasto, la correlación intraclase ajustada permanece alta, alrededor de 0.298, lo que muestra que las diferencias entre estratos continúan siendo relevantes.</p>
 <p>Los coeficientes estimados por estrato se recogen en la <a href="#tbl-coef-logit-int-aleatorio" class="quarto-xref">tabla&nbsp;<span>7.6</span></a>. Al incorporar el gasto del hogar como covariable, el coeficiente fijo asociado a <code>Expenditure</code> es negativo, lo que indica que mayores niveles de gasto se asocian con menores log-odds de pobreza. Esto implica una reducción progresiva de la probabilidad estimada de pobreza a medida que aumenta el gasto, manteniendo constante el efecto del estrato. En este modelo, el efecto del gasto es común, pero cada estrato tiene un nivel base propio de pobreza. Así, los estratos con interceptos positivos elevados presentan una mayor probabilidad base de pobreza para un mismo nivel de gasto, mientras que los estratos con interceptos negativos muestran una probabilidad base menor.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(random_intercept_logit_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>random_logistic_intercept_coefficients_table <span class="ot">&lt;-</span> <span class="fu">coef</span>(random_intercept_logit_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"stratum"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>stratum, <span class="at">names_to =</span> <span class="st">"parameter"</span>, <span class="at">values_to =</span> <span class="st">"estimate"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">parameter =</span> <span class="fu">recode</span>(parameter, <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Intercepto"</span>, <span class="at">Expenditure =</span> <span class="st">"Gasto"</span>))</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>random_logistic_intercept_coefficients_table</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-coef-logit-int-aleatorio" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -1167,63 +1299,113 @@ Tabla&nbsp;7.6: Coeficientes del modelo logístico con intercepto aleatorio por 
 </figcaption>
 <div aria-describedby="tbl-coef-logit-int-aleatorio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: right;">(Intercept)</th>
-<th style="text-align: right;">Expenditure</th>
+<th style="text-align: left;">Estrato</th>
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: right;">Estimación</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">idStrt001</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">1.044</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt001</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt002</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">1.918</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt002</td>
-<td style="text-align: right;">1.918</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt003</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">-0.454</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt003</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt004</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">0.062</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt004</td>
-<td style="text-align: right;">0.062</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt005</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">1.760</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt005</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt006</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">3.194</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt006</td>
-<td style="text-align: right;">3.194</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt007</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">0.658</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt007</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt008</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">1.711</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt008</td>
-<td style="text-align: right;">1.711</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt009</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">3.721</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt009</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt010</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">1.175</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt010</td>
-<td style="text-align: right;">1.175</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
 </tr>
 </tbody>
@@ -1235,7 +1417,7 @@ Tabla&nbsp;7.6: Coeficientes del modelo logístico con intercepto aleatorio por 
 </div>
 <p>El siguiente código construye un conjunto de datos auxiliar para obtener las probabilidades predichas por el modelo logístico multinivel para distintos valores de gasto dentro de cada estrato. Se construye un conjunto de datos denominado <code>prediction_data</code> para representar la relación estimada entre el gasto y la probabilidad predicha por el modelo logístico multinivel. Primero, <code>group_by(Stratum)</code> separa los datos según cada estrato y, mediante <code>reframe()</code>, genera para cada uno una secuencia de 100 valores de <code>Expenditure</code>, comprendidos entre el gasto mínimo y máximo observado en ese estrato. Posteriormente, <code>mutate()</code> utiliza la función <code>predict()</code> para obtener, para cada combinación de estrato y nivel de gasto, la probabilidad estimada por el modelo <code>random_intercept_logit_model</code>; el argumento <code>type = "response"</code> indica que las predicciones se expresan directamente como probabilidades y no en la escala del logit.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>prediction_data <span class="ot">&lt;-</span> plot_data <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>prediction_data <span class="ot">&lt;-</span> plot_data <span class="sc">%&gt;%</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stratum) <span class="sc">%&gt;%</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(<span class="at">Expenditure =</span> <span class="fu">seq</span>(<span class="fu">min</span>(Expenditure),</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">max</span>(Expenditure),</span>
@@ -1244,17 +1426,17 @@ Tabla&nbsp;7.6: Coeficientes del modelo logístico con intercepto aleatorio por 
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    random_intercept_logit_model,</span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> .,</span>
 <span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"response"</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La <a href="#fig-logit-int-aleatorio" class="quarto-xref">figura&nbsp;<span>7.8</span></a> presenta las curvas de probabilidad predichas mediante un modelo logístico con intercepto aleatorio por estrato. Se observa una relación inversa entre el gasto y la probabilidad de pobreza, de modo que hogares con mayores niveles de gasto presentan una menor probabilidad de ser clasificados como pobres. Asimismo, las diferencias entre las curvas reflejan la heterogeneidad existente entre estratos, capturada mediante los interceptos aleatorios del modelo.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> prediction_data,</span>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> prediction_data,</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> probability, <span class="at">x =</span> Expenditure, <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> plot_data,</span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> poor, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Poverty probability"</span>, <span class="at">x =</span> <span class="st">"Expenditure"</span>) <span class="sc">+</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-logit-int-aleatorio" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1275,19 +1457,24 @@ Figura&nbsp;7.8: Curvas de probabilidad predichas por estrato: modelo logístico
 <p>Sea <span class="math inline">\(x_{kj}\)</span> la covariable cuyo efecto se permite variar entre estratos, y sea <span class="math inline">\(\mathbf{z}_{kj}\)</span> el conjunto de covariables con efectos fijos comunes. En este modelo, la probabilidad de éxito se asume de tal forma que <span class="math inline">\(\text{logit}(\pi_{kj}) = \beta_{0j} + x_{kj}\beta_{1j} + \mathbf{z}_{kj}\boldsymbol{\beta}\)</span>. En donde, <span class="math inline">\(\beta_{0j}\)</span> es el intercepto específico del estrato <span class="math inline">\(j\)</span> y <span class="math inline">\(\beta_{1j}\)</span> es la pendiente específica asociada a la covariable <span class="math inline">\(x_{kj}\)</span>.</p>
 <p>Ambos parámetros se descomponen en una parte promedio poblacional y una desviación específica del estrato, de tal manera que <span class="math inline">\(\beta_{0j} = \gamma_{00} + \tau_{0j}\)</span> y <span class="math inline">\(\beta_{1j} = \gamma_{10} + \tau_{1j}\)</span>. En donde los términos <span class="math inline">\(\gamma_{00}\)</span> y <span class="math inline">\(\gamma_{10}\)</span> representan, respectivamente, el intercepto promedio global y la pendiente promedio global en escala logit. Por su parte, <span class="math inline">\(\tau_{0j}\)</span> y <span class="math inline">\(\tau_{1j}\)</span> capturan cuánto se aparta el estrato <span class="math inline">\(j\)</span> de esos promedios. La implementación en <code>R</code> es la siguiente:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>random_slope_logit_model <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>random_slope_logit_model <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  poor <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> Expenditure <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> Expenditure <span class="sc">|</span> Stratum),</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> qk,</span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>)</span>
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(random_slope_logit_model)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">icc</span>(random_slope_logit_model)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>De acuerdo con <span class="citation" data-cites="BatesEtAl2015">Bates et&nbsp;al. (<a href="references.html#ref-BatesEtAl2015" role="doc-biblioref">2015</a>)</span>, la estimación del modelo con intercepto y pendiente aleatoria indica una heterogeneidad mucho más marcada entre estratos. En este caso, tanto los interceptos como las pendientes asociadas al gasto pueden cambiar entre grupos. Antes de interpretar una correlación intraclase muy alta en este modelo debe verificarse que el ajuste haya convergido y que la matriz de efectos aleatorios no sea singular; una estructura aleatoria demasiado compleja puede producir estimaciones de frontera. Los coeficientes del modelo por estrato se muestran en la <a href="#tbl-coef-logit-pendiente" class="quarto-xref">tabla&nbsp;<span>7.7</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(random_slope_logit_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>random_logistic_slope_coefficients_table <span class="ot">&lt;-</span> <span class="fu">coef</span>(random_slope_logit_model)<span class="sc">$</span>Stratum <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"stratum"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L) <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>stratum, <span class="at">names_to =</span> <span class="st">"parameter"</span>, <span class="at">values_to =</span> <span class="st">"estimate"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">parameter =</span> <span class="fu">recode</span>(parameter, <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Intercepto"</span>, <span class="at">Expenditure =</span> <span class="st">"Gasto"</span>))</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>random_logistic_slope_coefficients_table</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-coef-logit-pendiente" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -1297,63 +1484,113 @@ Tabla&nbsp;7.7: Coeficientes del modelo logístico con intercepto y pendiente al
 </figcaption>
 <div aria-describedby="tbl-coef-logit-pendiente-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: right;">(Intercept)</th>
-<th style="text-align: right;">Expenditure</th>
+<th style="text-align: left;">Estrato</th>
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: right;">Estimación</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">idStrt001</td>
-<td style="text-align: right;">4.864</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">4.865</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt001</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.025</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt002</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">9.862</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt002</td>
-<td style="text-align: right;">9.860</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.035</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt003</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">-1.133</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt003</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt004</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">1.899</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt004</td>
-<td style="text-align: right;">1.897</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.015</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt005</td>
-<td style="text-align: right;">8.029</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">8.030</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt005</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.026</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt006</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">-1.153</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt006</td>
-<td style="text-align: right;">-1.153</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">0.009</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt007</td>
-<td style="text-align: right;">0.973</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">0.974</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt007</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.012</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt008</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">1.488</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt008</td>
-<td style="text-align: right;">1.488</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.006</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">idStrt009</td>
+<td style="text-align: left;">Intercepto</td>
 <td style="text-align: right;">3.660</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">idStrt009</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.005</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">idStrt010</td>
+<td style="text-align: left;">Intercepto</td>
+<td style="text-align: right;">4.133</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">idStrt010</td>
-<td style="text-align: right;">4.132</td>
+<td style="text-align: left;">Gasto</td>
 <td style="text-align: right;">-0.020</td>
 </tr>
 </tbody>
@@ -1366,7 +1603,7 @@ Tabla&nbsp;7.7: Coeficientes del modelo logístico con intercepto y pendiente al
 <p>Los coeficientes por estrato evidencian que la relación entre gasto y pobreza no sólo cambia en el nivel base, sino también en la intensidad y dirección de la pendiente. En varios estratos la pendiente del gasto es negativa, lo que mantiene la interpretación esperada de que mayores niveles de gasto reducen la probabilidad de pobreza. Sin embargo, también aparecen pendientes cercanas a cero e incluso positivas en algunos estratos, lo que sugiere patrones locales distintos. Esta variabilidad es precisamente la que el modelo busca capturar mediante el efecto aleatorio de la pendiente.</p>
 <p>Para visualizar las probabilidades estimadas por el modelo con pendiente aleatoria, se construye una secuencia de valores de gasto dentro de cada estrato. A partir de estos valores, se obtienen las probabilidades predichas correspondientes mediante el modelo ajustado.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>prediction_data <span class="ot">&lt;-</span> plot_data <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>prediction_data <span class="ot">&lt;-</span> plot_data <span class="sc">%&gt;%</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stratum) <span class="sc">%&gt;%</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Expenditure =</span> <span class="fu">seq</span>(<span class="fu">min</span>(Expenditure),</span>
@@ -1379,11 +1616,11 @@ Tabla&nbsp;7.7: Coeficientes del modelo logístico con intercepto y pendiente al
 <span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">newdata =</span> .,</span>
 <span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"response"</span></span>
 <span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La <a href="#fig-logit-pendiente-aleatoria" class="quarto-xref">figura&nbsp;<span>7.9</span></a> muestra que las curvas predichas son más heterogéneas entre estratos que en el modelo anterior:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> prediction_data, </span>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> prediction_data, </span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> probability, </span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> Expenditure, </span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">colour =</span> Stratum)) <span class="sc">+</span></span>
@@ -1392,7 +1629,7 @@ Tabla&nbsp;7.7: Coeficientes del modelo logístico con intercepto y pendiente al
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">y =</span> poor, <span class="at">x =</span> Expenditure)) <span class="sc">+</span></span>
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Poverty probability"</span>, </span>
 <span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Expenditure"</span>) <span class="sc">+</span></span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-logit-pendiente-aleatoria" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1408,7 +1645,7 @@ Figura&nbsp;7.9: Curvas de probabilidad predichas por estrato: modelo logístico
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-asparouhov2006general" class="csl-entry" role="listitem">
 Asparouhov, Tihomir. 2006. <span>«General Multi-Level Modeling with Sampling Weights»</span>. <em>Communications in Statistics, Theory and Methods</em> 35 (3): 439-60. <a href="https://doi.org/10.1080/03610920500476598">https://doi.org/10.1080/03610920500476598</a>.
 </div>
@@ -1425,19 +1662,19 @@ Cai, Tianji. 2013. <span>«Investigation of Ways to Handle Sampling Weights for 
 Carle, Adam C. 2009. <span>«Fitting Multilevel Models in Complex Survey Data with Design Weights: Recommendations»</span>. <em>BMC Medical Research Methodology</em> 9: 49. <a href="https://doi.org/10.1186/1471-2288-9-49">https://doi.org/10.1186/1471-2288-9-49</a>.
 </div>
 <div id="ref-finch2019multilevel" class="csl-entry" role="listitem">
-Finch, W. Holmes, Jocelyn E. Bolin, y Ken Kelley. 2019. <em>Multilevel Modeling Using <span>R</span></em>. 2.ª ed. CRC Press.
+Finch, W. Holmes, Jocelyn E. Bolin, y Ken Kelley. 2019. <em>Multilevel Modeling Using <span>R</span></em>. 2.ª ed. Boca Raton, FL: CRC Press.
 </div>
 <div id="ref-gelman2006data" class="csl-entry" role="listitem">
-Gelman, Andrew, y Jennifer Hill. 2006. <em>Data Analysis Using Regression and Multilevel/Hierarchical Models</em>. Cambridge University Press.
+Gelman, Andrew, y Jennifer Hill. 2006. <em>Data Analysis Using Regression and Multilevel/Hierarchical Models</em>. New York: Cambridge University Press.
 </div>
 <div id="ref-goldstein2011multilevel" class="csl-entry" role="listitem">
-Goldstein, Harvey. 2011. <em>Multilevel Statistical Models</em>. 4.ª ed. John Wiley &amp; Sons.
+Goldstein, Harvey. 2011. <em>Multilevel Statistical Models</em>. 4.ª ed. Chichester: John Wiley &amp; Sons.
 </div>
 <div id="ref-performance2026" class="csl-entry" role="listitem">
 Lüdecke, Daniel, Mattan S. Ben-Shachar, Indrajeet Patil, Philip Waggoner, y Dominique Makowski. 2026. <em>performance: Assessment of Regression Models Performance</em>. <a href="https://doi.org/10.32614/CRAN.package.performance">https://doi.org/10.32614/CRAN.package.performance</a>.
 </div>
 <div id="ref-merlo2006brief" class="csl-entry" role="listitem">
-Merlo, Juan, Basile Chaix, Henrik Ohlsson, et&nbsp;al. 2006. <span>«A Brief Conceptual Tutorial of Multilevel Analysis in Social Epidemiology: Using Measures of Clustering in Multilevel Logistic Regression to Investigate Contextual Phenomena»</span>. <em>Journal of Epidemiology &amp; Community Health</em> 60 (4): 290-97. <a href="https://doi.org/10.1136/jech.2004.029454">https://doi.org/10.1136/jech.2004.029454</a>.
+Merlo, Juan, Basile Chaix, Henrik Ohlsson, Anders Beckman, Kristina Johnell, Per Hjerpe, Lennart Råstam, y Klaus Larsen. 2006. <span>«A Brief Conceptual Tutorial of Multilevel Analysis in Social Epidemiology: Using Measures of Clustering in Multilevel Logistic Regression to Investigate Contextual Phenomena»</span>. <em>Journal of Epidemiology &amp; Community Health</em> 60 (4): 290-97. <a href="https://doi.org/10.1136/jech.2004.029454">https://doi.org/10.1136/jech.2004.029454</a>.
 </div>
 <div id="ref-pfeffermann2011modelling" class="csl-entry" role="listitem">
 Pfeffermann, Danny. 2011. <span>«Modelling of complex survey data: <span>W</span>hy model? <span>W</span>hy is it a problem? <span>H</span>ow can we approach it?»</span> <em>Survey Methodology</em> 37 (2): 115-36.
@@ -1449,10 +1686,10 @@ Pfeffermann, Danny, Chris J. Skinner, David J. Holmes, Harvey Goldstein, y Jon R
 Rabe-Hesketh, Sophia, y Anders Skrondal. 2006. <span>«Multilevel Modelling of Complex Survey Data»</span>. <em>Journal of the Royal Statistical Society: Series A</em> 169 (4): 805-27. <a href="https://doi.org/10.1111/j.1467-985X.2006.00426.x">https://doi.org/10.1111/j.1467-985X.2006.00426.x</a>.
 </div>
 <div id="ref-rabehesketh2012multilevel" class="csl-entry" role="listitem">
-Rabe-Hesketh, Sophia, y Anders Skrondal. 2012. <em>Multilevel and Longitudinal Modeling Using Stata</em>. 3.ª ed. Stata Press.
+———. 2012. <em>Multilevel and Longitudinal Modeling Using Stata</em>. 3.ª ed. College Station, TX: Stata Press.
 </div>
 <div id="ref-snijders2011" class="csl-entry" role="listitem">
-Snijders, Tom AB, y Roel Bosker. 2011. <em>Multilevel analysis: An introduction to basic and advanced multilevel modeling</em>.
+Snijders, Tom AB, y Roel Bosker. 2011. <span>«Multilevel analysis: An introduction to basic and advanced multilevel modeling»</span>.
 </div>
 </div>
 </section>
@@ -1460,257 +1697,131 @@ Snijders, Tom AB, y Roel Bosker. 2011. <em>Multilevel analysis: An introduction 
 
 </main> <!-- /main -->
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
-
   const labels = {
-
     note: "Nota",
-
     tip: "Consejo",
-
     important: "Importante",
-
     warning: "Advertencia",
-
     caution: "Precaución"
-
   };
-
-
 
   Object.keys(labels).forEach(function (type) {
-
     document.querySelectorAll(".callout-" + type).forEach(function (callout, index) {
-
       const title = callout.querySelector(".callout-title-container");
-
       if (!title || title.dataset.numbered === "true") {
-
         return;
-
       }
-
-
 
       const text = title.textContent.trim();
-
       if (!text || text === labels[type]) {
-
         title.textContent = labels[type] + " " + (index + 1);
-
       } else if (!new RegExp("^" + labels[type] + "\\s+\\d+").test(text)) {
-
         title.textContent = labels[type] + " " + (index + 1) + ". " + text;
-
       }
-
       title.dataset.numbered = "true";
-
     });
-
   });
-
 });
-
 </script>
-
 <script>
-
 (() => {
-
   const initTocScrollspy = () => {
-
     const toc = document.querySelector("#TOC.toc-active");
 
-
-
     if (!toc || toc.dataset.aehrScrollspy === "true") {
-
       return;
-
     }
-
-
 
     const links = Array.from(
-
       toc.querySelectorAll("a[data-scroll-target]")
-
     );
 
-
-
     const entries = links
-
       .map((link) => {
-
         const target = link.getAttribute("data-scroll-target");
 
-
-
         if (!target || !target.startsWith("#")) {
-
           return null;
-
         }
-
-
 
         let id;
-
         try {
-
           id = decodeURIComponent(target.slice(1));
-
         } catch {
-
           id = target.slice(1);
-
         }
-
-
 
         const section = document.getElementById(id);
-
         return section ? { link, section } : null;
-
       })
-
       .filter(Boolean);
 
-
-
     if (entries.length === 0) {
-
       return;
-
     }
 
-
-
     const nestedLists = Array.from(toc.querySelectorAll("ul ul"));
-
     let scheduled = false;
 
-
-
     const updateNestedLists = (activeLink) => {
-
       nestedLists.forEach((list) => {
-
         const parentLink = Array.from(list.parentElement.children).find(
-
           (element) => element.matches("a[data-scroll-target]")
-
         );
-
         const shouldOpen =
-
           parentLink === activeLink || list.contains(activeLink);
 
-
-
         list.classList.toggle("collapse", !shouldOpen);
-
       });
-
     };
-
-
 
     const updateActiveLink = () => {
-
       scheduled = false;
 
-
-
       const position = window.scrollY + 200;
-
       let activeEntry = entries[0];
 
-
-
       entries.forEach((entry) => {
-
         if (entry.section.offsetTop <= position) {
-
           activeEntry = entry;
-
         }
-
       });
-
-
 
       const atPageEnd =
-
         window.innerHeight + window.scrollY >=
-
         document.documentElement.scrollHeight - 2;
 
-
-
       if (atPageEnd) {
-
         activeEntry = entries[entries.length - 1];
-
       }
-
-
 
       links.forEach((link) => {
-
         link.classList.toggle("active", link === activeEntry.link);
-
       });
-
       updateNestedLists(activeEntry.link);
-
     };
-
-
 
     const scheduleUpdate = () => {
-
       if (!scheduled) {
-
         scheduled = true;
-
         window.requestAnimationFrame(updateActiveLink);
-
       }
-
     };
 
-
-
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
-
     window.addEventListener("resize", scheduleUpdate, { passive: true });
-
     toc.dataset.aehrScrollspy = "true";
-
     updateActiveLink();
-
   };
 
-
-
   if (document.readyState === "loading") {
-
     document.addEventListener("DOMContentLoaded", initTocScrollspy);
-
   } else {
-
     initTocScrollspy();
-
   }
-
 })();
-
 </script>
-
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -1762,14 +1873,13 @@ document.addEventListener("DOMContentLoaded", function () {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

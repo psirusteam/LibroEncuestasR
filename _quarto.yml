@@ -20,10 +20,10 @@ book:
   date-format: long
   chapters:
     - index.qmd
-    - chapters/01-Introduccion.qmd
+    - chapters/01-Introduccion-alternativa.qmd
     - chapters/02-Conceptos.qmd
-    - chapters/03-Continuas.qmd
-    - chapters/04-Categoricas.qmd
+    - chapters/03-Categoricas-alternativa.qmd
+    - chapters/04-Continuas-alternativa.qmd
     - chapters/05-Regresion.qmd
     - chapters/06-GLM.qmd
     - chapters/07-Multinivel.qmd

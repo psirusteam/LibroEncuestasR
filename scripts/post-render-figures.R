@@ -117,7 +117,13 @@ pdf_cache <- file.path("_freeze", ".pdf-cache", "Libro.pdf")
 pdf_output <- file.path("docs", "Libro.pdf")
 
 if (file.exists(pdf_cache)) {
-  if (!file.copy(
+  # Con --no-clean el PDF puede seguir en docs y estar abierto en un visor.
+  # Si ya coincide con la copia guardada, no es necesario sobrescribirlo.
+  pdf_is_current <- file.exists(pdf_output) && identical(
+    unname(tools::md5sum(pdf_cache)),
+    unname(tools::md5sum(pdf_output))
+  )
+  if (!pdf_is_current && !file.copy(
     from = pdf_cache,
     to = pdf_output,
     overwrite = TRUE,

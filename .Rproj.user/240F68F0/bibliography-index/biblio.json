@@ -941,8 +941,8 @@
                 ]
             },
             "publisher": "Wiley",
-            "title": "Survey sampling.",
-            "type": "article-journal"
+            "title": "Survey sampling",
+            "type": "book"
         },
         {
             "DOI": "10.1080/01621459.1992.10475217",
@@ -3514,6 +3514,294 @@
             "publisher": "John Wiley & Sons",
             "publisher-place": "Hoboken, NJ",
             "title": "Survey methodology",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1201/b11826",
+            "ISBN": "9781439868249",
+            "author": [
+                {
+                    "dropping-particle": "van",
+                    "family": "Buuren",
+                    "given": "Stef"
+                }
+            ],
+            "id": "vanbuuren2012flexible",
+            "issued": {
+                "date-parts": [
+                    [
+                        2012
+                    ]
+                ]
+            },
+            "publisher": "Chapman & Hall/CRC",
+            "publisher-place": "Boca Raton, FL",
+            "title": "Flexible imputation of missing data",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1002/9781119942283",
+            "ISBN": "9780470740521",
+            "author": [
+                {
+                    "family": "Carpenter",
+                    "given": "James R."
+                },
+                {
+                    "family": "Kenward",
+                    "given": "Michael G."
+                }
+            ],
+            "id": "carpenter2013multiple",
+            "issued": {
+                "date-parts": [
+                    [
+                        2013
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "title": "Multiple imputation and its application",
+            "type": "book"
+        },
+        {
+            "URL": "https://support.sas.com/content/dam/SAS/support/en/books/multiple-imputation-of-missing-data-using-sas/65370_excerpt.pdf",
+            "author": [
+                {
+                    "family": "Berglund",
+                    "given": "Patricia"
+                },
+                {
+                    "family": "Heeringa",
+                    "given": "Steven"
+                }
+            ],
+            "id": "berglund2014multiple",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "publisher": "SAS Institute Inc.",
+            "publisher-place": "Cary, NC",
+            "title": "Multiple imputation of missing data using SAS",
+            "type": "book"
+        },
+        {
+            "URL": "https://www.routledge.com/Missing-Data-Analysis-in-Practice/Raghunathan/p/book/9780429171673",
+            "author": [
+                {
+                    "family": "Raghunathan",
+                    "given": "Trivellore"
+                }
+            ],
+            "id": "raghunathan2016missing",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016
+                    ]
+                ]
+            },
+            "publisher": "Chapman & Hall/CRC",
+            "title": "Missing data analysis in practice",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1093/biomet/91.3.559",
+            "author": [
+                {
+                    "family": "Kim",
+                    "given": "Jae Kwang"
+                },
+                {
+                    "family": "Fuller",
+                    "given": "Wayne"
+                }
+            ],
+            "container-title": "Biometrika",
+            "id": "kim2004fractional",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        2004
+                    ]
+                ]
+            },
+            "page": "559-578",
+            "title": "Fractional hot deck imputation",
+            "type": "article-journal",
+            "volume": "91"
+        },
+        {
+            "ISBN": "9781439849637",
+            "author": [
+                {
+                    "family": "Kim",
+                    "given": "Jae Kwang"
+                },
+                {
+                    "family": "Shao",
+                    "given": "Jun"
+                }
+            ],
+            "id": "kim2014statistical",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "publisher": "Chapman & Hall/CRC",
+            "title": "Statistical methods for handling incomplete data",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1002/9780470316696",
+            "ISBN": "9780471087052",
+            "author": [
+                {
+                    "family": "Rubin",
+                    "given": "Donald B."
+                }
+            ],
+            "collection-title": "Wiley series in probability and statistics",
+            "id": "rubin1987multiple",
+            "issued": {
+                "date-parts": [
+                    [
+                        1987
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "title": "Multiple imputation for nonresponse in surveys",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/CRAN.package.sampling",
+            "URL": "https://CRAN.R-project.org/package=sampling",
+            "author": [
+                {
+                    "family": "Tillé",
+                    "given": "Yves"
+                },
+                {
+                    "family": "Matei",
+                    "given": "Alina"
+                }
+            ],
+            "id": "TilleMatei2025",
+            "issued": {
+                "date-parts": [
+                    [
+                        2025
+                    ]
+                ]
+            },
+            "note": "R package version 2.11",
+            "title": "Sampling: Survey sampling",
+            "title-short": "Sampling",
+            "type": "book"
+        },
+        {
+            "URL": "https://www150.statcan.gc.ca/n1/pub/12-001-x/1987002/article/14606-eng.pdf",
+            "author": [
+                {
+                    "family": "Alexander",
+                    "given": "Charles H."
+                }
+            ],
+            "container-title": "Survey Methodology",
+            "id": "Alexander1987",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        1987
+                    ]
+                ]
+            },
+            "page": "183-198",
+            "title": "A class of methods for using person controls in household weighting",
+            "type": "article-journal",
+            "volume": "13"
+        },
+        {
+            "ISBN": "9781337558860",
+            "URL": "https://www.cengage.com/c/introductory-econometrics-a-modern-approach-7e-wooldridge/9781337558860",
+            "author": [
+                {
+                    "family": "Wooldridge",
+                    "given": "Jeffrey M."
+                }
+            ],
+            "edition": "7",
+            "id": "Wooldridge2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "publisher": "Cengage Learning",
+            "title": "Introductory econometrics: A modern approach",
+            "title-short": "Introductory econometrics",
+            "type": "book"
+        },
+        {
+            "DOI": "10.1111/1467-8268.12069",
+            "author": [
+                {
+                    "family": "Anyanwu",
+                    "given": "John C."
+                }
+            ],
+            "container-title": "African Development Review",
+            "id": "Anyanwu2014",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "page": "118-137",
+            "title": "Marital status, household size and poverty in Nigeria: Evidence from the 2009/2010 survey data",
+            "title-short": "Marital status, household size and poverty in Nigeria",
+            "type": "article-journal",
+            "volume": "26"
+        },
+        {
+            "DOI": "10.1002/9781118735855",
+            "ISBN": "9781118735787",
+            "author": [
+                {
+                    "family": "Rao",
+                    "given": "J. N. K."
+                },
+                {
+                    "family": "Molina",
+                    "given": "Isabel"
+                }
+            ],
+            "edition": "2",
+            "id": "RaoMolina2015",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015
+                    ]
+                ]
+            },
+            "publisher": "John Wiley & Sons",
+            "title": "Small area estimation",
             "type": "book"
         }
     ],

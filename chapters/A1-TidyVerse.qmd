@@ -30,10 +30,18 @@ Dado que `R` es un lenguaje de programación de carácter colaborativo, permite 
 
 Antes de poder utilizar las diferentes funciones que cada librería tiene, es necesario descargarlas de antemano de la web. El comando `install.packages` permite realizar esta tarea. Note que algunas librerías pueden depender de otras, así que para poder utilizarlas es necesario instalar también las dependencias adicionales.
 
+El siguiente código reúne los paquetes utilizados en los capítulos y apéndices del libro, incluidos los llamados mediante `paquete::función()`. La instalación se realiza una vez por equipo o biblioteca de `R`; `install.packages()` instala también las dependencias necesarias. El paquete `stats` forma parte de la instalación estándar de `R`, por lo que no se incluye en esta descarga.
+
 ```{r instalar-paquetes-tidyverse, eval = FALSE}
-install.packages("dplyr")
-install.packages("tidyverse")
-install.packages("TeachingSampling")
+install.packages(c(
+  "biscale", "broom", "convey", "cowplot",
+  "dotwhisker", "dplyr", "ggplot2", "ggstance",
+  "gtools", "jtools", "knitr", "lme4",
+  "patchwork", "performance", "reshape2", "sf",
+  "srvyr", "survey", "svydiags", "svyVGAM",
+  "TeachingSampling", "tibble", "tidyr", "tidyverse",
+  "tmap"
+))
 ```
 
 Según @PositProjects2026, una vez instalados los paquetes, se cargan con `library()`. El primer comando limpia los objetos existentes en la sesión de trabajo, lo que ayuda a que los resultados del capítulo dependan solo del código que se ejecuta aquí. Debe tenerse en cuenta que un paquete solo puede cargarse si previamente ha sido instalado en el sistema. La opción `rm(list = ls())` no sustituye el inicio de una sesión limpia: para favorecer la reproducibilidad, conviene iniciar los proyectos con un espacio de trabajo vacío y ejecutar un guion completo y autosuficiente.
@@ -41,10 +49,35 @@ Según @PositProjects2026, una vez instalados los paquetes, se cargan con `libra
 ```{r cargar-paquetes-tidyverse, warning = FALSE, echo = TRUE, message = FALSE}
 rm(list = ls())
 
-library(tidyverse)
+library(biscale)
+library(broom)
+library(convey)
+library(cowplot)
+library(dotwhisker)
 library(dplyr)
+library(ggplot2)
+library(ggstance)
+library(gtools)
+library(jtools)
+library(knitr)
+library(lme4)
+library(patchwork)
+library(performance)
+library(reshape2)
+library(sf)
+library(srvyr)
+library(stats)
+library(survey)
+library(svydiags)
+library(svyVGAM)
 library(TeachingSampling)
+library(tibble)
+library(tidyr)
+library(tidyverse)
+library(tmap)
 ```
+
+El bloque anterior carga los paquetes en la sesión actual; debe ejecutarse de nuevo al iniciar una sesión en la que se necesiten. En cada capítulo se cargan los paquetes correspondientes a sus ejemplos. Si dos paquetes ofrecen funciones con el mismo nombre, puede indicarse explícitamente cuál utilizar mediante `paquete::función()`, por ejemplo, `dplyr::select()`.
 
 Una vez se descargan e instalan las librerías o paquetes en `R`, el paso recomendado es que todos los procesamientos se realicen mediante la creación de proyectos. Un proyecto de RStudio asocia un archivo `.Rproj` con un directorio de trabajo y guarda opciones del proyecto; los archivos de origen, datos y resultados permanecen como archivos separados dentro de ese directorio. Adicionalmente, contiene información que permite la compilación de cada archivo de `R` que se va a utilizar, mantiene la información para integrarse con sistemas de control de código fuente y ayuda a organizar la aplicación de los procesamientos en componentes lógicos.
 
@@ -65,7 +98,7 @@ El objeto `bigcity_data` contiene una copia de `BigCity`. La función `head()` p
 head(bigcity_data)
 ```
 
-Una vez cargada la base de datos en `R`, se puede empezar a realizar los procesamientos según las necesidades de cada investigador. En este sentido, una de las primeras revisiones que se realizan al cargar una base de datos es verificar su dimensión; es decir, identificar la cantidad de filas y columnas que contiene. Lo anterior se puede hacer con la función `nrow`, que identifica el número de registros en la base de datos, y con la función `ncol`, que muestra el número de variables. Los códigos computacionales son los siguientes:
+Una vez cargada la base de datos en `R`, se puede empezar a realizar los procesamientos según las necesidades de cada lector. En este sentido, una de las primeras revisiones que se realizan al cargar una base de datos es verificar su dimensión; es decir, identificar la cantidad de filas y columnas que contiene. Lo anterior se puede hacer con la función `nrow`, que identifica el número de registros en la base de datos, y con la función `ncol`, que muestra el número de variables. Los códigos computacionales son los siguientes:
 
 ```{r contar-filas-bigcity}
 nrow(bigcity_data)
@@ -110,6 +143,7 @@ Según @pipe, una de las contribuciones más útiles de `R` es la incorporación
 ```{r contar-bigcity, eval = TRUE}
 bigcity_data %>%
   count()
+
 ```
 
 La línea de código anterior puede interpretarse de forma sencilla: se toma la base de datos como punto de partida y, sobre ella, se realiza un conteo de sus registros. Además de la función `count`, existe una amplia variedad de funciones que pueden combinarse con el operador `%>%` para realizar consultas, transformaciones y resúmenes sobre los datos. El paquete `dplyr` toma ventaja de este operador, permitiendo organizar las operaciones más comunes sobre una base rectangular. En las siguientes subsecciones se presentan algunas de ellas, siguiendo un orden típico de trabajo: reducir observaciones, conservar variables, ordenar la información, crear nuevas columnas y producir resultados agregados.
@@ -121,8 +155,10 @@ La línea de código anterior puede interpretarse de forma sencilla: se toma la 
 ```{r filtrar-sexo}
 male_data <- bigcity_data %>%
   filter(Sex == "Male")
+
 female_data <- bigcity_data %>%
   filter(Sex == "Female")
+
 ```
 
 También puede filtrarse por condición de pobreza. En este caso se conservan solo las personas clasificadas como no pobres. El objeto `nonpoor_data` contiene el subconjunto de registros cuya variable `Poverty` toma el valor `"NotPoor"`.
@@ -130,6 +166,7 @@ También puede filtrarse por condición de pobreza. En este caso se conservan so
 ```{r filtrar-no-pobres, eval = TRUE}
 nonpoor_data <- bigcity_data %>%
   filter(Poverty == "NotPoor")
+
 ```
 
 La función `filter()` también permite conservar registros cuyos valores pertenecen a un conjunto específico. En los siguientes ejemplos se filtra por valores particulares de ingreso. Note que `%in%` evalúa si `Income` pertenece al conjunto indicado. Así, `working_data` conserva ingresos iguales a 265 o 600, y `income_filter_data` conserva ingresos iguales a 1000 o 2000.
@@ -140,6 +177,7 @@ working_data <- bigcity_data %>%
 
 income_filter_data <- bigcity_data %>%
   filter(Income %in% c(1000, 2000))
+
 ```
 
 
@@ -150,7 +188,8 @@ La función `select()` conserva columnas específicas. Para continuar con los ej
 
 ```{r seleccionar-variables}
 working_data <- bigcity_data %>%
-  select(PersonID, HHID, PSU, Zone, Sex, Age, Income)
+  dplyr::select(PersonID, HHID, PSU, Zone, Sex, Age, Income)
+
 ```
 
 
@@ -158,13 +197,16 @@ Adicionalmente, `select()` también permite excluir variables. Para eliminar col
 
 ```{r excluir-identificadores, eval = TRUE}
 compact_data <- working_data %>%
-  select(-HHID, -PersonID)
+  dplyr::select(-HHID, -PersonID)
+
 ```
 
 
 ### `arrange`: ordenamiento de filas {#arrange-ordenamiento-de-filas}
 
 La función `arrange()` ordena las filas de una base según una o más variables. En el primer ejemplo, `working_data` se ordena de menor a mayor ingreso, mientras que `sorted_data` contiene las mismas columnas que `working_data`, pero sus filas quedan ordenadas por `Income`. La función `head()` muestra los primeros registros después del ordenamiento.
+
+La base `BigCity` contiene registros a nivel de persona, por lo que un mismo `HHID` puede aparecer en varias filas, una por cada persona del hogar. `PersonID` identifica a la persona dentro de su hogar y puede repetirse en hogares distintos; por ello, la combinación `HHID` y `PersonID` identifica a cada persona. Estas repeticiones de `HHID` son parte de la estructura de la base y no indican por sí solas que haya filas duplicadas.
 
 
 ```{r ordenar-ingreso}
@@ -173,6 +215,7 @@ sorted_data <- working_data %>%
 
 sorted_data %>%
   head()
+
 ```
 
 
@@ -182,6 +225,7 @@ El ordenamiento también puede realizarse considerando más de una variable. En 
 working_data %>%
   arrange(Sex, Age) %>%
   head()
+
 ```
 
 
@@ -192,6 +236,7 @@ Para ordenar los registros de mayor a menor, se utiliza la opción `desc()` dent
 working_data %>%
   arrange(desc(Age)) %>%
   head()
+
 ```
 
 
@@ -208,6 +253,7 @@ bigcity_data <- bigcity_data %>%
       labels = c("North", "South", "Center", "West", "East")
     )
   )
+
 ```
 
 
@@ -223,6 +269,7 @@ bigcity_data <- bigcity_data %>%
       labels = c("01", "02", "03", "04", "05")
     )
   )
+
 ```
 
 
@@ -239,8 +286,9 @@ log_income_data <- working_data %>%
   )
 
 log_income_data %>%
-  select(PersonID, Income, log_income) %>%
+  dplyr::select(PersonID, Income, log_income) %>%
   head()
+
 ```
 
 
@@ -254,35 +302,11 @@ income_transform_data <- log_income_data %>%
   )
 
 income_transform_data %>%
-  select(PersonID, income_2, income_4) %>%
+  dplyr::select(PersonID, income_2, income_4) %>%
   head()
+
 ```
 
-
-También se puede crear una variable categórica mediante condiciones. En este ejemplo, la función `case_when()` clasifica la edad en rangos y luego convierte el resultado en un factor ordenado. El resultado es `age_group`, una variable de grupos etarios ordenados. Esta transformación facilita la producción de tablas por tramos de edad.
-
-
-```{r crear-grupos-edad}
-bigcity_data <- bigcity_data %>%
-  mutate(
-    age_group = case_when(
-      Age <= 5 ~ "0-5",
-      Age <= 15 ~ "6-15",
-      Age <= 30 ~ "16-30",
-      Age <= 45 ~ "31-45",
-      Age <= 60 ~ "46-60",
-      TRUE ~ "Over 60"
-    ),
-    age_group = factor(
-      age_group,
-      levels = c(
-        "0-5", "6-15", "16-30",
-        "31-45", "46-60", "Over 60"
-      ),
-      ordered = TRUE
-    )
-  )
-```
 
 
 ### `summarise`: resúmenes descriptivos {#summarise-resumenes-descriptivos}
@@ -295,6 +319,7 @@ bigcity_data %>%
     total_income = sum(Income),
     mean_income = mean(Income)
   )
+
 ```
 
 
@@ -308,6 +333,7 @@ bigcity_data %>%
     decile_9 = quantile(Income, 0.9),
     decile_range = decile_9 - decile_1
   )
+
 ```
 
 
@@ -324,6 +350,7 @@ bigcity_data %>%
     range_income = max_income - min_income,
     iqr_income = IQR(Income)
   )
+
 ```
 
 
@@ -337,6 +364,7 @@ bigcity_data %>%
   group_by(Region) %>%
   summarise(n = n()) %>%
   arrange(desc(n))
+
 ```
 
 Para los conteos simples, `count()` ofrece una forma abreviada de escribir la combinación entre `group_by()` y `summarise(n = n())`. En la práctica, ambas alternativas producen el mismo resultado, pues agrupan la base de datos según una variable categórica y calculan cuántos registros pertenecen a cada grupo. Por ejemplo, el siguiente código reproduce los mismos resultados que el código anterior.
@@ -346,6 +374,7 @@ Para los conteos simples, `count()` ofrece una forma abreviada de escribir la co
 bigcity_data %>%
   count(Region) %>%
   arrange(desc(n))
+
 ```
 
 Para obtener el número de registros por sexo, se aplica la misma lógica de agrupación y conteo. En este caso, la base se agrupa según la variable `Sex` y luego se calcula el número de registros asociados con cada una de sus categorías. El resultado permite identificar cuántas observaciones corresponden a cada sexo dentro de la base de datos.
@@ -355,6 +384,7 @@ Para obtener el número de registros por sexo, se aplica la misma lógica de agr
 bigcity_data %>%
   count(Sex) %>%
   arrange(desc(n))
+
 ```
 
 
@@ -365,6 +395,7 @@ El conteo también puede realizarse según la zona geográfica. En este caso, la
 bigcity_data %>%
   count(Zone) %>%
   arrange(desc(n))
+
 ```
 
 
@@ -378,6 +409,7 @@ bigcity_data %>%
     n = n(),
     mean_income = mean(Income)
   )
+
 ```
 
 El mismo procedimiento puede aplicarse para calcular el ingreso medio por sexo. En este caso, la base se agrupa según la variable `Sex` y luego se obtiene el promedio de `Income` para cada categoría. La tabla resultante permite comparar el ingreso medio observado entre los distintos grupos definidos por el sexo.
@@ -390,6 +422,7 @@ bigcity_data %>%
     n = n(),
     mean_income = mean(Income)
   )
+
 ```
 
 
@@ -405,6 +438,7 @@ bigcity_data %>%
     sd_income = sd(Income),
     iqr_income = IQR(Income)
   )
+
 ```
 
 

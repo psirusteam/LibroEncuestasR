@@ -25,7 +25,9 @@ render_html <- function() {
   }, add = TRUE)
   Sys.unsetenv("QUARTO_PROFILE")
 
-  run_quarto(c("render", ".", "--to", "html"))
+  # Actualiza los archivos sin eliminar docs: Windows puede mantener la
+  # carpeta abierta mientras se consulta el libro o se sincroniza OneDrive.
+  run_quarto(c("render", ".", "--to", "html", "--no-clean"))
 
   message("HTML generado: docs/index.html")
 }

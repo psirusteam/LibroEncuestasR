@@ -22,11 +22,13 @@ En la práctica, las encuestas de hogares suelen utilizar diseños de muestreo c
 
 ## Población objetivo y unidades de muestreo {#poblacion-objetivo-y-unidades-de-muestreo}
 
-@gambino2009sampling menciona que, desde la popularización de las encuestas de hogares en la década de 1940, se ha evidenciado diversas tendencias asociadas a los avances tecnológicos tanto en las oficinas e institutos nacionales de estadística como en la sociedad en general, las cuales se aceleraron con la introducción de las herramientas computacionales. En este contexto, el muestreo surge como una respuesta a la necesidad de obtener información estadística precisa sobre una población objetivo sin recurrir a la realización de un censo completo. Como señala @Gutierrez2016, una encuesta por muestreo estudia una parte de la población con el propósito de realizar inferencias sobre su conjunto.
+@gambino2009sampling mencionan que, desde la popularización de las encuestas de hogares en la década de 1940, se han evidenciado diversas tendencias asociadas a los avances tecnológicos tanto en las oficinas e institutos nacionales de estadística como en la sociedad en general, las cuales se aceleraron con la introducción de las herramientas computacionales. En este contexto, el muestreo surge como una respuesta a la necesidad de obtener información estadística precisa sobre una población objetivo sin recurrir a la realización de un censo completo. Como señala @Gutierrez2016, una encuesta por muestreo estudia una parte de la población con el propósito de realizar inferencias sobre su conjunto.
 
 En las últimas décadas, la realización de encuestas se ha consolidado en distintos campos, especialmente en el sector gubernamental, mediante la producción de estadísticas oficiales que permiten el seguimiento de las políticas públicas. Asimismo, el uso del muestreo se ha extendido al ámbito académico, al sector privado y a los medios de comunicación, donde constituye una herramienta fundamental para la generación y el análisis de información [@Groves2009].
 
 Toda encuesta se encuentra asociada a una población finita compuesta por individuos o elementos sobre los cuales se desea obtener información. El conjunto de unidades sobre las que se producirán estimaciones y resultados recibe el nombre de población objetivo. Asimismo, las encuestas definen unidades de análisis, que corresponden a los distintos niveles de desagregación para los cuales se presentan estadísticas de interés, como personas, hogares o viviendas.
+
+Conviene distinguir estos conceptos. La unidad de análisis es aquella sobre la que se formulan e interpretan los resultados; la unidad de observación es cada registro de la base de datos; y la unidad representada por el factor de expansión es la población a la que corresponde el peso de ese registro. En la base de este libro cada registro corresponde a una persona, aunque algunas variables describen al hogar y se repiten entre sus integrantes. Cuando el objetivo es analizar hogares, se selecciona una persona principal por hogar y se usa su factor de expansión como aproximación al peso del hogar, según la convención explicada más adelante.
 
 ## Diseños de muestreo {#DisenosMuestreo}
 
@@ -117,13 +119,13 @@ Como señala @Gutierrez2016, para este diseño de muestreo particular, la expres
 
 $$\widehat{Var}_{MAS}(\hat{t}_{y}) = \frac{N^2}{n}\left(1-\frac{n}{N}\right)S_{y_s}^2$$
 
-donde $S_{y_s}^2$ corresponde a la varianza muestral de los valores observados. Sustituyendo\`los valores del ejemplo en la expresión anterior, se obtiene $\widehat{Var}_{MAS}(\hat{t}_{y})=96$. En contraste, si se ignoraran las características del diseño muestral y los datos se analizaran como si provinieran de una muestra aleatoria simple, la varianza se estimaría incorrectamente mediante la expresión $\frac{N^2}{n}S_{y_s}^2 = 192$. Este valor duplica la varianza estimada bajo el diseño de muestreo, y conduce, por tanto, a una sobreestimación de la incertidumbre asociada al estimador. En consecuencia, el intervalo de confianza resultante sería innecesariamente más amplio, lo que reduciría la precisión aparente de la estimación y podría conducir a conclusiones equivocadas sobre la incertidumbre de los resultados.
+donde $S_{y_s}^2$ corresponde a la varianza muestral de los valores observados. Sustituyendo los valores del ejemplo en la expresión anterior, se obtiene $\widehat{Var}_{MAS}(\hat{t}_{y})=96$. En contraste, si se ignoraran las características del diseño muestral y los datos se analizaran como si provinieran de una muestra aleatoria simple, la varianza se estimaría incorrectamente mediante la expresión $\frac{N^2}{n}S_{y_s}^2 = 192$. Este valor duplica la varianza estimada bajo el diseño de muestreo, y conduce, por tanto, a una sobreestimación de la incertidumbre asociada al estimador. En consecuencia, el intervalo de confianza resultante sería innecesariamente más amplio, lo que reduciría la precisión aparente de la estimación y podría conducir a conclusiones equivocadas sobre la incertidumbre de los resultados.
 
 ## El efecto de diseño (DEFF)
 
 De acuerdo con @kish1965survey [p. 258], el efecto del diseño (*design effect*, DEFF) se define como el cociente entre la varianza de un estimador $\hat{\theta}$ bajo un diseño de muestreo complejo y la varianza que tendría ese mismo estimador bajo un muestreo aleatorio simple (MAS) con igual tamaño de muestra. Su estimación se expresa como:
 
-$$\widehat{{DEFF}} = \frac{\widehat{Var}_{p}(\hat{\theta})}{\widehat{Var}_{MAS}(\hat{\theta})}$$
+$$\widehat{{DEFF}} = \frac{\widehat{Var}_{p}(\hat{\theta})}{\widehat{Var}_{MAS}(\hat{\theta})}$$ {#eq-deff}
 
 En donde, $\widehat{Var}_{p}(\hat{\theta})$ corresponde a la varianza estimada de $\hat{\theta}$ bajo el diseño complejo $p(\cdot)$, mientras que $\widehat{Var}_{MAS}(\hat{\theta})$ representa la varianza estimada del mismo estimador bajo un diseño MAS con igual tamaño muestral.
 
@@ -133,7 +135,7 @@ Este indicador permite cuantificar cuánto aumenta la varianza debido a la congl
 - Estratificación: cuando se aplica correctamente, puede disminuir la varianza, aunque en la práctica su efecto reductor suele ser moderado.
 - Muestreo en varias etapas: generalmente incrementa la varianza, ya que las unidades dentro de un mismo conglomerado tienden a ser más homogéneas entre sí que en comparación con las de otros conglomerados.
 
-En el análisis de encuestas, el DEFF constituye un indicador esencial para evaluar la precisión y eficiencia de las estimaciones, así como para orientar la planificación de futuros estudios. Un valor elevado evidencia que el diseño complejo introduce un incremento de la varianza, reduciendo la precisión de los resultados. Por el contrario, un valor cercano a uno indica que el diseño tiene un efecto mínimo sobre la varianza. Esta información permite a los investigadores identificar si es necesario ajustar la ponderación, optimizar la estratificación o modificar el tamaño de muestra para aumentar la eficiencia en levantamientos posteriores.
+En el análisis de encuestas, el DEFF constituye un indicador esencial para evaluar la precisión y eficiencia de las estimaciones, así como para orientar la planificación de futuros estudios. Un valor elevado evidencia que el diseño complejo introduce un incremento de la varianza, reduciendo la precisión de los resultados. Por el contrario, un valor cercano a uno indica que el diseño tiene un efecto mínimo sobre la varianza. Esta información permite a los lectores identificar si es necesario ajustar la ponderación, optimizar la estratificación o modificar el tamaño de muestra para aumentar la eficiencia en levantamientos posteriores.
 
 La interpretación de un DEFF elevado debe realizarse con cautela, pues no necesariamente indica que el diseño de muestreo sea inadecuado. Su magnitud debe evaluarse en función del contexto y de las condiciones operativas de la encuesta. Aunque @UnitedNations2005 afirma que un valor superior a 2.5 o 3 podría considerarse inicialmente preocupante, este puede responder a restricciones presupuestarias, dificultades logísticas o decisiones orientadas a facilitar la participación de los informantes.
 
@@ -147,7 +149,7 @@ En el análisis de encuestas de hogares, es habitual estimar estadísticas descr
 
 ### Estimación puntual {#estimacion-puntual}
 
-Una vez definidos la población objetivo, las variables de interés y el diseño muestral, se procede a estimar los parámetros poblacionales correspondientes. Para establecer la notación de libro, se utilizará la letra $h$ para identificar los estratos; la letra $i$ para representar las unidades primarias de muestreo (UPM) contenidas en cada estrato; y la letra $k$ para denotar las unidades finales observadas, como hogares o personas. Además, con el propósito de simplificar la escritura a lo largo de este documento, a menos que se indique lo contrario, $\sum_{h}$ denotará la suma sobre todos los estratos de la población; $\sum_{i}$ representará la suma sobre todas las UPM seleccionadas en la muestra dentro del estrato $h$; y $\sum_{k}$ corresponderá a la suma sobre todos los elementos observados en la muestra de la UPM $i$, perteneciente al estrato $h$ de la población de interés. Con esta notación, el estimador de un total poblacional puede expresarse como:
+Una vez definidos la población objetivo, las variables de interés y el diseño muestral, se procede a estimar los parámetros poblacionales correspondientes. Para establecer la notación del libro, se utilizará la letra $h$ para identificar los estratos; la letra $i$ para representar las unidades primarias de muestreo (UPM) contenidas en cada estrato; y la letra $k$ para denotar las unidades finales observadas, como hogares o personas. Además, con el propósito de simplificar la escritura a lo largo de este documento, a menos que se indique lo contrario, $\sum_{h}$ denotará la suma sobre todos los estratos de la población; $\sum_{i}$ representará la suma sobre todas las UPM seleccionadas en la muestra dentro del estrato $h$; y $\sum_{k}$ corresponderá a la suma sobre todos los elementos observados en la muestra de la UPM $i$, perteneciente al estrato $h$ de la población de interés. Con esta notación, el estimador de un total poblacional puede expresarse como:
 
 $$\hat{t}_y = \sum_{h} \sum_{i} \sum_{k} w_{hik} \, y_{hik}$$
 
@@ -161,16 +163,16 @@ $$f(\theta_1,\ldots,\theta_J)=\sum_{j=1}^J a_j\theta_j,$$
 
 donde $a_j$ son constantes conocidas y $\theta_j$ representa el $j$-ésimo parámetro poblacional. Si $\hat{\theta}_j$ es un estimador de $\theta_j$, entonces el estimador muestral de $f(\theta_1,\ldots,\theta_J)$ se define como:
 
-$$\hat{f} = \sum_{j=1}^J a_j \hat{\theta}_j$$
+$$\hat{f} = \sum_{j=1}^J a_j \hat{\theta}_j$$ {#eq-estimador-contraste-lineal}
 
 De esta manera, su varianza puede expresarse como:
 
 $$Var(\hat{f}) = \sum_{j=1}^J a_j^2 Var(\hat{\theta}_j)
 \;+\;
 2\sum_{j=1}^{J-1}\sum_{k>j}^J
-a_j a_k \, Cov(\hat{\theta}_j,\hat{\theta}_k).$$
+a_j a_k \, Cov(\hat{\theta}_j,\hat{\theta}_k).$$ {#eq-varianza-contraste-lineal}
 
-Este resultado es especialmente relevante, pues abarca numerosos casos de interés práctico que se desarrollarán a lo largo de este documento. No obstante, la estimación de la varianza bajo diseños de muestreo complejos puede resultar difícil, ya que depende de las características particulares de cada diseño. Para abordar esta dificultad, se han desarrollado diversos enfoques metodológicos que permiten cuantificar adecuadamente la incertidumbre y evaluar la precisión de las estimaciones. Con el apoyo de softwares estadísticos especializado, estos métodos pueden implementarse de manera eficiente y contribuir a la obtención de resultados rigurosos y confiables.
+Este resultado es especialmente relevante, pues abarca numerosos casos de interés práctico que se desarrollarán a lo largo de este documento. No obstante, la estimación de la varianza bajo diseños de muestreo complejos puede resultar difícil, ya que depende de las características particulares de cada diseño. Para abordar esta dificultad, se han desarrollado diversos enfoques metodológicos que permiten cuantificar adecuadamente la incertidumbre y evaluar la precisión de las estimaciones. Con el apoyo de software estadístico especializado, estos métodos pueden implementarse de manera eficiente y contribuir a la obtención de resultados rigurosos y confiables.
 
 #### Último conglomerado {#ultimo-conglomerado}
 
@@ -186,7 +188,7 @@ $$\hat{t}_{y}  = \sum_{h}\sum_{i} \hat{t}_{y_i}$$
 
 Según el método del último conglomerado, suponiendo que $\hat{\bar t}_{y_h}=(1/{n_h}) \sum_{i} \hat{t}_{y_i}$ es la media muestral de los totales estimados de las UPM en el estrato $h$, un estimador aproximado de la varianza de $\hat t_y$ se obtiene mediante al siguiente expresión:
 
-$$\widehat{Var}(\hat{t}_y) = \sum_{h} \frac{n_h}{n_h-1} \sum_{i} (\hat{t}_{y_i} - \hat{\bar t}_{y_h})^2$$
+$$\widehat{Var}(\hat{t}_y) = \sum_{h} \frac{n_h}{n_h-1} \sum_{i} (\hat{t}_{y_i} - \hat{\bar t}_{y_h})^2$$ {#eq-varianza-ultimo-conglomerado}
 
 Para más detalles, véase @hansen1953sample [p. 258] o @Wolter2007Variance. Aunque este método se propuso originalmente para calcular varianzas de estimadores de totales, el método puede combinarse con otras técnicas para derivar varianzas de otros parámetros poblacionales más complejos. Esta flexibilidad hace que el método sea aplicable a diversos contextos de análisis de encuestas de hogares.
 
@@ -209,11 +211,11 @@ La idea de definir parámetros poblacionales como soluciones de ecuaciones de es
 
 $$
 \sum_{k\in s}w_k z_k(\hat{\theta})=0.
-$$
+$$ {#eq-ecuacion-estimacion-ponderada}
 
 Bajo condiciones de regularidad, esta sustitución permite obtener estimadores consistentes de una amplia variedad de parámetros poblacionales [@binder1983variances]. 
 
-Asimismo, mediante la linealización de Taylor es posible aproximar un estimador no lineal por una expresión lineal cuya varianza puede calcularse con los métodos habituales para estimadores de totales. Este enfoque, introducido tempranamente para el análisis de estadísticas complejas [@Woodruff1952], constituye la base de numerosos procedimientos utilizados actualmente para estimar las varianzas de medias, razones, proporciones y otros estimadores no lineales. El procedimiento consiste en aplicar una expansión de Taylor de primer orden a la ecuación de estimación, de modo que el estimador original se sustituya por una aproximación lineal. Para un parámetro definido como la solución de una ecuación de estimación muestral, un estimador consistente de su varianza puede expresarse como:
+Asimismo, mediante la linealización de Taylor es posible aproximar un estimador no lineal por una expresión lineal cuya varianza puede calcularse con los métodos habituales para estimadores de totales. Este enfoque, introducido tempranamente para el análisis de estadísticas complejas [@Woodruff1952], constituye la base de numerosos procedimientos utilizados actualmente para estimar las varianzas de medias, razones, proporciones y otros estimadores no lineales. El procedimiento consiste en aplicar una expansión de Taylor de primer orden a la ecuación de estimación, de modo que el estimador original se sustituya por una aproximación lineal. Para un parámetro escalar definido como la solución de una ecuación de estimación muestral, un estimador consistente de su varianza puede expresarse como:
 
 $$
 \widehat{Var}_p(\hat{\theta}) \approx [\hat{J}(\hat{\theta})]^{-1} \, \widehat{Var}_p \Bigg[\sum_{k\in s} w_k\, z_k(\hat{\theta})\Bigg] \, [\hat{J}(\hat{\theta})]^{-1}
@@ -259,13 +261,13 @@ Como alternativa a los métodos analíticos, se desarrollaron los métodos de re
 
 Por ejemplo, el Bootstrap es una herramienta de replicación robusta y versátil. Originalmente introducido por @efron1979bootstrap para datos que no provenían de encuestas, su adaptación más usada para encuestas de hogares es el Bootstrap de Reescalamiento propuesto por @rao1992resampling. Este método se ajusta de manera óptima a diseños de muestreo estratificados y multietápicos, y es ampliamente empleado para la estimación de varianzas en encuestas complejas. El procedimiento consiste en generar muchas réplicas de la muestra original, simulando extracciones repetidas de la población. Cada réplica se construye mediante la creación de columnas adicionales de pesos de replicación en la base de datos, siguiendo este proceso:
 
-- Para cada estrato, se seleccionan aleatoriamente las UPM con reemplazo; algunas pueden repetirse y otras no aparecer. Cada UPM elegida se incorpora con todas sus observaciones. Si el tamaño de la muestra de primera etapa en el estrato $h$ es mayor que dos ($n_h > 2$), el número de UPM seleccionadas por réplica es $n_h - 1$.
+- Para cada estrato, se seleccionan aleatoriamente las UPM con reemplazo; algunas pueden repetirse y otras no aparecer. Cada UPM elegida se incorpora con todas sus observaciones. Si el tamaño de la muestra de primera etapa en el estrato $h$ es mayor^[En el caso en que $n_h = 2$, se selecciona una UPM y se duplican sus pesos, mientras que la otra UPM recibe peso cero.] que dos ($n_h > 2$), el número de UPM seleccionadas por réplica es $n_h - 1$.
 - Este proceso se repite muchas veces, habitualmente cientos, generando un gran número de réplicas. La cantidad de veces que una UPM $i$ del estrato $h$ aparece en la réplica $r$ se denota $n_{hi}^{(r)}$, variando entre 0 y $n_h - 1$.
 - A partir de cada réplica se calculan nuevos pesos bootstrap para todas las unidades, reflejando cuántas veces fue seleccionada su UPM. El peso de la unidad $k$ en la réplica $r$ se calcula como:
 $$w_{hik}^{(r)} = w_{hik} \times \frac{n_h}{n_h - 1} \times n_{hi}^{(r)}$$
 Si los pesos originales incluyen ajustes por no respuesta o calibración, estos deben aplicarse también a cada conjunto de pesos bootstrap.
 - Para cada réplica $r$, se calcula el parámetro de interés $\hat{\theta}^{(r)}$ usando los pesos bootstrap $w_{hik}^{(r)}$. Asumiendo que $\tilde{\theta} = \frac{1}{R} \sum_{r=1}^{R} \hat{\theta}^{(r)}$, entonces la varianza del estimador se aproxima mediante la variabilidad entre todas las réplicas:
-$$\widehat{Var}_B(\hat{\theta}) = \frac{1}{R} \sum_{r=1}^{R} \left(\hat{\theta}^{(r)} - \tilde{\theta}\right)^2$$
+$$\widehat{Var}_B(\hat{\theta}) = \frac{1}{R} \sum_{r=1}^{R} \left(\hat{\theta}^{(r)} - \tilde{\theta}\right)^2$$ {#eq-varianza-bootstrap}
 
 
 Este enfoque asegura que la dispersión entre réplicas capture fielmente la incertidumbre del parámetro. El Bootstrap ofrece múltiples ventajas, a pesar de requerir un mayor procesamiento computacional, es eficaz para diseños de encuesta complejos y permite estimar parámetros difíciles de calcular con métodos tradicionales, como medianas u otras estadísticas no lineales. La simplicidad del método facilita su aplicación incluso sin software estadístico especializado. No obstante, su uso no es recomendable en encuestas repetidas con muestras superpuestas ni en situaciones con fracciones de muestreo grandes y tamaños de muestra pequeños [@bruch2011variance].
@@ -274,7 +276,7 @@ Este enfoque asegura que la dispersión entre réplicas capture fielmente la inc
 
 Además de producir estimaciones puntuales, uno de los objetivos fundamentales de una encuesta es cuantificar la incertidumbre asociada a dichas estimaciones. En este contexto, los intervalos de confianza permiten construir un rango de valores plausibles para el parámetro poblacional de interés, incorporando explícitamente la variabilidad introducida por el diseño muestral. El intervalo de confianza de nivel $(1-\alpha)100\%$ para el total poblacional $Y$ se calcula como:
 
-$$\hat{\theta} \pm t_{1-\alpha/2, df} \times \sqrt{\widehat{Var}(\hat{\theta})}$$
+$$\hat{\theta} \pm t_{1-\alpha/2, df} \times \sqrt{\widehat{Var}(\hat{\theta})}$$ {#eq-intervalo-confianza-general}
 
 donde $\hat{\theta}$ corresponde al estimador por muestreo del parámetro poblacional $\theta$; $\widehat{Var}(\hat{\theta})$ representa el estimador de varianza bajo el diseño complejo de la encuesta; y $t_{1-\alpha/2, df}$ es el cuantil de la distribución $t$ de Student con $df$ grados de libertad [@Fuller2009]. En encuestas complejas, los grados de libertad suelen estar relacionados con la cantidad de unidades primarias de muestreo (UPM) y los estratos considerados en el diseño. Una aproximación común consiste en calcularlos como:
 

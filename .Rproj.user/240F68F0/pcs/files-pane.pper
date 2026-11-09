@@ -5,13 +5,13 @@
             "ascending": false
         },
         {
-            "columnIndex": 3,
+            "columnIndex": 2,
             "ascending": false
         },
         {
-            "columnIndex": 2,
+            "columnIndex": 3,
             "ascending": true
         }
     ],
-    "path": "~/Library/CloudStorage/OneDrive-UnitedNations/CEPAL/Vademecum/5. Handbooks/2026 Análisis de encuestas de hogares con R/QuartoESP"
+    "path": "~/Library/CloudStorage/OneDrive-UnitedNations/CEPAL/Vademecum/5. Handbooks/2026 Análisis de encuestas de hogares con R/LibroEncuestasR-main/chapters"
 }
