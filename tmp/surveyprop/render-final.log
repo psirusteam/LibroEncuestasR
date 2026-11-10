@@ -1,0 +1,1066 @@
+
+
+processing file: 04-Continuas-alternativa.qmd
+1/174                                      
+2/174 [setup-continuas]                    
+3/174                                      
+4/174 [cargar-datos-continuas]             
+5/174                                      
+6/174 [definir-diseno-continuas]           
+7/174                                      
+8/174 [cod-total-ingreso]                  
+9/174 [tbl-total-ingreso]                  
+10/174                                      
+11/174 [cod-total-gasto]                    
+12/174 [tbl-total-gasto]                    
+13/174                                      
+14/174 [cod-total-ingreso-sexo]             
+15/174 [tbl-total-ingreso-sexo]             
+16/174                                      
+17/174 [cod-media-ingreso]                  
+18/174 [tbl-media-ingreso]                  
+19/174                                      
+20/174 [cod-media-gasto]                    
+21/174                                      
+22/174 [tbl-media-gasto]                    
+23/174                                      
+24/174 [cod-media-gasto-zona]               
+25/174                                      
+26/174 [tbl-media-gasto-zona]               
+27/174                                      
+28/174 [cod-media-gasto-zona-region]        
+29/174                                      
+30/174 [tbl-media-gasto-zona-reg]           
+31/174                                      
+32/174 [cod-razon-sexo]                     
+33/174                                      
+34/174 [tbl-razon-sexo]                     
+35/174                                      
+36/174 [cod-razon-sexo-rural]               
+37/174                                      
+38/174 [tbl-razon-sexo-rural]               
+39/174                                      
+40/174 [cod-indice-envejecimiento]          
+41/174                                      
+42/174 [tbl-indice-envejecimiento]          
+43/174                                      
+44/174 [cod-indice-envejecimiento-zona]     
+45/174                                      
+46/174 [tbl-indice-envejecimiento-zona]     
+47/174                                      
+48/174 [cod-razon-dependencia]              
+49/174                                      
+50/174 [tbl-razon-dependencia]              
+51/174                                      
+52/174 [cod-razon-dependencia-zona]         
+53/174                                      
+54/174 [tbl-razon-dependencia-zona]         
+55/174                                      
+56/174 [cod-dependencia-economica]          
+57/174                                      
+58/174 [tbl-dependencia-economica]          
+59/174                                      
+60/174 [cod-dependencia-economica-zona]     
+61/174                                      
+62/174 [tbl-dependencia-economica-zona]     
+63/174                                      
+64/174 [cod-razon-gasto-ingreso]            
+65/174 [tbl-razon-gasto-ingreso]            
+66/174                                      
+67/174 [cod-razon-gasto-ingreso-reg]        
+68/174                                      
+69/174 [tbl-razon-gasto-ingreso-reg]        
+70/174                                      
+71/174 [cod-sd-ingreso-zona]                
+72/174 [tbl-sd-ingreso-zona]                
+73/174                                      
+74/174 [cod-mediana-gasto-zona]             
+75/174                                      
+76/174 [tbl-mediana-gasto-zona]             
+77/174                                      
+78/174 [cod-cuantil-gasto]                  
+79/174 [tbl-cuantil-gasto]                  
+80/174                                      
+81/174 [cod-gini]                           
+82/174                                      
+83/174 [tbl-gini]                           
+84/174                                      
+85/174 [fig-lorenz]                         
+86/174                                      
+87/174 [cod-covarianza]                     
+88/174                                      
+89/174 [cod-covarianza-objeto]              
+90/174                                      
+91/174 [tbl-covarianza]                     
+92/174                                      
+93/174 [cod-correlacion-manual]             
+94/174                                      
+95/174 [cod-correlacion-jtools]             
+96/174                                      
+97/174 [cod-ttest-sexo]                     
+98/174                                      
+99/174 [cod-ttest-sexo-objeto]              
+100/174                                      
+101/174 [tbl-ttest-sexo]                     
+102/174                                      
+103/174 [cod-prom-region]                    
+104/174                                      
+105/174 [cod-prom-region-objeto]             
+106/174                                      
+107/174 [tbl-prom-region]                    
+108/174                                      
+109/174 [cod-contraste-ns]                   
+110/174                                      
+111/174 [cod-contraste-ns-objeto]            
+112/174                                      
+113/174 [tbl-contraste-ns]                   
+114/174                                      
+115/174 [cod-diferencia-norte-sur]           
+116/174                                      
+117/174 [cod-vcov-region]                    
+118/174                                      
+119/174 [cod-vcov-region-objeto]             
+120/174                                      
+121/174 [tbl-vcov-region]                    
+122/174                                      
+123/174 [cod-se-contraste-ns]                
+124/174                                      
+125/174 [cod-contrastes-regiones]            
+126/174                                      
+127/174 [cod-contraste-regiones-objeto]      
+128/174                                      
+129/174 [tbl-contraste-regiones]             
+130/174                                      
+131/174 [cod-prom-sexo]                      
+132/174                                      
+133/174 [cod-prom-sexo-objeto]               
+134/174                                      
+135/174 [tbl-prom-sexo]                      
+136/174                                      
+137/174 [cod-contraste-sexo]                 
+138/174                                      
+139/174 [cod-contraste-sexo-objeto]          
+140/174                                      
+141/174 [tbl-contraste-sexo]                 
+142/174                                      
+143/174 [cod-razon-ingreso-gasto-sexo]       
+144/174                                      
+145/174 [cod-razon-ingreso-gasto-sexo-objeto]
+146/174                                      
+147/174 [tbl-razon-ingreso-gasto-sexo]       
+148/174                                      
+149/174 [cod-contraste-razon-sexo]           
+150/174                                      
+151/174 [cod-contraste-razon-sexo-objeto]    
+152/174                                      
+153/174 [tbl-contraste-razon-sexo]           
+154/174                                      
+155/174 [cod-contraste-dependencia]          
+156/174                                      
+157/174 [tbl-contraste-dependencia]          
+158/174                                      
+159/174 [setup-graficos-continuas]           
+160/174                                      
+161/174 [fig-hist-ingreso-ponde]             
+162/174                                      
+163/174 [fig-hist-zona]                      
+164/174                                      
+165/174 [fig-densidades]                     
+166/174                                      
+167/174 [fig-boxplot-zona-sexo]              
+168/174                                      
+169/174 [fig-svyhist-svybox]                 
+170/174                                      
+171/174 [fig-scatter-basico]                 
+172/174                                      
+173/174 [fig-scatter-zona]                   
+174/174                                      
+output file: 04-Continuas-alternativa.knit.md
+
+pandoc 
+  to: html
+  output-file: 04-Continuas-alternativa.html
+  standalone: true
+  toc: true
+  number-sections: true
+  title-prefix: >-
+    <span style='font-weight: 700'>Análisis de Encuestas de Hogares</span><br/><i
+    style='color: #00b7ff'>usando R</i>
+  section-divs: true
+  html-math-method: mathjax
+  wrap: none
+  default-image-extension: png
+  css:
+    - ../styles.css
+  toc-depth: 3
+  number-offset:
+    - 4
+  variables: {}
+  
+metadata
+  crossref:
+    chapters: true
+    eq-prefix: ecuación
+    fig-prefix: figura
+    tbl-prefix: tabla
+  document-css: false
+  link-citations: true
+  date-format: long
+  lang: es
+  bibliography:
+    - ../references.bib
+  theme: cosmo
+  toc-location: right
+  smooth-scroll: true
+  hide-description: true
+  title: "[[4]{.chapter-number}\_ [Análisis de las variables continuas]{.chapter-title}]{#sec-cap-continuas .quarto-section-identifier}"
+  
+[WARNING] Citeproc: citation pruebas-diferencias-proporciones not found
+
+Output created: ../docs/chapters/04-Continuas-alternativa.html
+
+[ 1/12] index.qmd
+[ 2/12] chapters/01-Introduccion-alternativa.qmd
+
+
+processing file: 01-Introduccion-alternativa.qmd
+1/2 [setup-introduccion]
+2/2                     
+output file: 01-Introduccion-alternativa.knit.md
+
+[ 3/12] chapters/02-Conceptos.qmd
+
+
+processing file: 02-Conceptos.qmd
+1/2 [setup-conceptos]
+2/2                  
+output file: 02-Conceptos.knit.md
+
+[ 4/12] chapters/03-Categoricas-alternativa.qmd
+
+
+processing file: 03-Categoricas-alternativa.qmd
+1/159                                        
+2/159 [setup-categoricas]                    
+3/159                                        
+4/159 [cargar-datos-categoricas]             
+5/159                                        
+6/159 [describir-datos-categoricas]          
+7/159                                        
+8/159 [definir-diseno-categoricas]           
+9/159                                        
+10/159 [crear-variables-categoricas]          
+11/159                                        
+12/159 [crear-subpoblaciones-categoricas]     
+13/159                                        
+14/159 [sintaxis-survey-total-categoricas]    
+15/159                                        
+16/159 [cod-tamano-zona]                      
+17/159                                        
+18/159 [tbl-tamano-zona]                      
+19/159                                        
+20/159 [cod-tamano-edad]                      
+21/159                                        
+22/159 [tbl-tamano-edad]                      
+23/159                                        
+24/159 [cod-tamano-pobreza]                   
+25/159                                        
+26/159 [tbl-tamano-pobreza]                   
+27/159                                        
+28/159 [cod-tamano-empleo]                    
+29/159 [tbl-tamano-empleo]                    
+30/159                                        
+31/159 [cod-tamano-edad-sexo]                 
+32/159                                        
+33/159 [tbl-tamano-edad-sexo]                 
+34/159                                        
+35/159 [cod-tamano-empleo-pobreza]            
+36/159 [tbl-tamano-empleo-pobreza]            
+37/159                                        
+38/159 [cod-prop-zona-media]                  
+39/159 [tbl-prop-zona]                        
+40/159                                        
+41/159 [cod-prop-sexo-urbano]                 
+42/159 [tbl-prop-sexo-urbano]                 
+43/159                                        
+44/159 [cod-prop-zona-hombre]                 
+45/159 [tbl-prop-zona-hombre]                 
+46/159                                        
+47/159 [cod-prop-zona-pobreza-hombre]         
+48/159 [tbl-prop-zona-pobreza-hombre]         
+49/159                                        
+50/159 [cod-tasa-desocupacion-edad-mujer]     
+51/159 [tbl-tasa-desocupacion-edad-mujer]     
+52/159                                        
+53/159 [cod-estructura-contingencia-objeto]   
+54/159                                        
+55/159 [tbl-estructura-contingencia]          
+56/159                                        
+57/159 [crear-diseno-pobreza-factor]          
+58/159                                        
+59/159 [cod-contingencia-pobreza-sexo]        
+60/159 [tbl-contingencia-pobreza-sexo]        
+61/159                                        
+62/159 [cod-tasa-desocupacion-sexo]           
+63/159                                        
+64/159 [tbl-tasa-desocupacion-sexo]           
+65/159                                        
+66/159 [cod-tasa-ocupacion-sexo]              
+67/159                                        
+68/159 [tbl-tasa-ocupacion-sexo]              
+69/159                                        
+70/159 [cod-svyby-region-pobreza]             
+71/159                                        
+72/159 [tbl-svyby-region-pobreza]             
+73/159                                        
+74/159 [cod-pobreza-edad]                     
+75/159                                        
+76/159 [tbl-pobreza-edad]                     
+77/159                                        
+78/159 [cod-interaccion-sexo-pobreza]         
+79/159                                        
+80/159 [cod-interaccion-sexo-pobreza-objeto]  
+81/159                                        
+82/159 [tbl-interaccion-sexo-pobreza]         
+83/159                                        
+84/159 [cod-razon-odds-pobreza-sexo]          
+85/159                                        
+86/159 [cod-tab-desocupacion-sexo]            
+87/159                                        
+88/159 [tbl-tasa-desocupacion-sexo-prueba]    
+89/159                                        
+90/159 [cod-ttest-desocupacion-sexo]          
+91/159                                        
+92/159 [cod-ttest-desocupacion-sexo-objeto]   
+93/159                                        
+94/159 [tbl-ttest-desocupacion-sexo]          
+95/159                                        
+96/159 [cod-chi-pobreza-sexo]                 
+97/159                                        
+98/159 [cod-chi-empleo-sexo]                  
+99/159                                        
+100/159 [cod-chi-pobreza-region]               
+101/159                                        
+102/159 [cod-prop-pobreza-sexo]                
+103/159                                        
+104/159 [tbl-svyby-pobreza-sexo2]              
+105/159                                        
+106/159 [cod-diferencia-pobreza-sexo]          
+107/159                                        
+108/159 [cod-vcov-pobreza-sexo]                
+109/159                                        
+110/159 [cod-vcov-sex-pobreza-objeto]          
+111/159                                        
+112/159 [tbl-vcov-sex-pobreza]                 
+113/159                                        
+114/159 [cod-se-diferencia-pobreza-sexo]       
+115/159                                        
+116/159 [cod-contraste-pobreza-sexo]           
+117/159                                        
+118/159 [cod-tasa-desocupacion-region]         
+119/159                                        
+120/159 [tbl-tasa-desocupacion-region]         
+121/159                                        
+122/159 [cod-vcov-desocupacion-region]         
+123/159                                        
+124/159 [cod-vcov-desocupacion-region-objeto]  
+125/159                                        
+126/159 [tbl-vcov-desocupacion-region]         
+127/159                                        
+128/159 [cod-se-contrastes-desocupacion-region]
+129/159                                        
+130/159 [cod-contrastes-desocupacion-region]   
+131/159                                        
+132/159 [setup-graficos-categoricas]           
+133/159                                        
+134/159 [fig-barras-zona]                      
+135/159                                        
+136/159 [fig-barras-pobreza]                   
+137/159                                        
+138/159 [fig-barras-empleo-pobreza]            
+139/159                                        
+140/159 [fig-barras-prop-zona-hombre]          
+141/159                                        
+142/159 [fig-barras-prop-region-hombre]        
+143/159                                        
+144/159 [fig-piramide-poblacional]             
+145/159                                        
+146/159 [mapas-setup]                          
+147/159                                        
+148/159 [fig-mapa-regiones]                    
+149/159                                        
+150/159 [mapas-pobreza-setup]                  
+151/159                                        
+152/159 [fig-mapa-pobreza-hombre]              
+153/159                                        
+154/159 [fig-mapa-cv-pobreza]                  
+155/159                                        
+156/159 [mapas-bivar-setup]                    
+157/159                                        
+158/159 [fig-mapa-bivariante]                  
+159/159                                        
+output file: 03-Categoricas-alternativa.knit.md
+
+Warning messages:
+1: In prettyNum(.Internal(format(x, trim, digits, nsmall, width, 3L,  :
+  'big.mark' and 'decimal.mark' are both '.', which could be confusing
+2: In prettyNum(.Internal(format(x, trim, digits, nsmall, width, 3L,  :
+  'big.mark' and 'decimal.mark' are both '.', which could be confusing
+3: In grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y,  :
+  for '≥ 0.20' in 'mbcsToSbcs': >= substituted for ≥ (U+2265)
+[ 5/12] chapters/04-Continuas-alternativa.qmd
+
+
+processing file: 04-Continuas-alternativa.qmd
+1/174                                      
+2/174 [setup-continuas]                    
+3/174                                      
+4/174 [cargar-datos-continuas]             
+5/174                                      
+6/174 [definir-diseno-continuas]           
+7/174                                      
+8/174 [cod-total-ingreso]                  
+9/174 [tbl-total-ingreso]                  
+10/174                                      
+11/174 [cod-total-gasto]                    
+12/174 [tbl-total-gasto]                    
+13/174                                      
+14/174 [cod-total-ingreso-sexo]             
+15/174 [tbl-total-ingreso-sexo]             
+16/174                                      
+17/174 [cod-media-ingreso]                  
+18/174 [tbl-media-ingreso]                  
+19/174                                      
+20/174 [cod-media-gasto]                    
+21/174                                      
+22/174 [tbl-media-gasto]                    
+23/174                                      
+24/174 [cod-media-gasto-zona]               
+25/174                                      
+26/174 [tbl-media-gasto-zona]               
+27/174                                      
+28/174 [cod-media-gasto-zona-region]        
+29/174                                      
+30/174 [tbl-media-gasto-zona-reg]           
+31/174                                      
+32/174 [cod-razon-sexo]                     
+33/174                                      
+34/174 [tbl-razon-sexo]                     
+35/174                                      
+36/174 [cod-razon-sexo-rural]               
+37/174                                      
+38/174 [tbl-razon-sexo-rural]               
+39/174                                      
+40/174 [cod-indice-envejecimiento]          
+41/174                                      
+42/174 [tbl-indice-envejecimiento]          
+43/174                                      
+44/174 [cod-indice-envejecimiento-zona]     
+45/174                                      
+46/174 [tbl-indice-envejecimiento-zona]     
+47/174                                      
+48/174 [cod-razon-dependencia]              
+49/174                                      
+50/174 [tbl-razon-dependencia]              
+51/174                                      
+52/174 [cod-razon-dependencia-zona]         
+53/174                                      
+54/174 [tbl-razon-dependencia-zona]         
+55/174                                      
+56/174 [cod-dependencia-economica]          
+57/174                                      
+58/174 [tbl-dependencia-economica]          
+59/174                                      
+60/174 [cod-dependencia-economica-zona]     
+61/174                                      
+62/174 [tbl-dependencia-economica-zona]     
+63/174                                      
+64/174 [cod-razon-gasto-ingreso]            
+65/174 [tbl-razon-gasto-ingreso]            
+66/174                                      
+67/174 [cod-razon-gasto-ingreso-reg]        
+68/174                                      
+69/174 [tbl-razon-gasto-ingreso-reg]        
+70/174                                      
+71/174 [cod-sd-ingreso-zona]                
+72/174 [tbl-sd-ingreso-zona]                
+73/174                                      
+74/174 [cod-mediana-gasto-zona]             
+75/174                                      
+76/174 [tbl-mediana-gasto-zona]             
+77/174                                      
+78/174 [cod-cuantil-gasto]                  
+79/174 [tbl-cuantil-gasto]                  
+80/174                                      
+81/174 [cod-gini]                           
+82/174                                      
+83/174 [tbl-gini]                           
+84/174                                      
+85/174 [fig-lorenz]                         
+86/174                                      
+87/174 [cod-covarianza]                     
+88/174                                      
+89/174 [cod-covarianza-objeto]              
+90/174                                      
+91/174 [tbl-covarianza]                     
+92/174                                      
+93/174 [cod-correlacion-manual]             
+94/174                                      
+95/174 [cod-correlacion-jtools]             
+96/174                                      
+97/174 [cod-ttest-sexo]                     
+98/174                                      
+99/174 [cod-ttest-sexo-objeto]              
+100/174                                      
+101/174 [tbl-ttest-sexo]                     
+102/174                                      
+103/174 [cod-prom-region]                    
+104/174                                      
+105/174 [cod-prom-region-objeto]             
+106/174                                      
+107/174 [tbl-prom-region]                    
+108/174                                      
+109/174 [cod-contraste-ns]                   
+110/174                                      
+111/174 [cod-contraste-ns-objeto]            
+112/174                                      
+113/174 [tbl-contraste-ns]                   
+114/174                                      
+115/174 [cod-diferencia-norte-sur]           
+116/174                                      
+117/174 [cod-vcov-region]                    
+118/174                                      
+119/174 [cod-vcov-region-objeto]             
+120/174                                      
+121/174 [tbl-vcov-region]                    
+122/174                                      
+123/174 [cod-se-contraste-ns]                
+124/174                                      
+125/174 [cod-contrastes-regiones]            
+126/174                                      
+127/174 [cod-contraste-regiones-objeto]      
+128/174                                      
+129/174 [tbl-contraste-regiones]             
+130/174                                      
+131/174 [cod-prom-sexo]                      
+132/174                                      
+133/174 [cod-prom-sexo-objeto]               
+134/174                                      
+135/174 [tbl-prom-sexo]                      
+136/174                                      
+137/174 [cod-contraste-sexo]                 
+138/174                                      
+139/174 [cod-contraste-sexo-objeto]          
+140/174                                      
+141/174 [tbl-contraste-sexo]                 
+142/174                                      
+143/174 [cod-razon-ingreso-gasto-sexo]       
+144/174                                      
+145/174 [cod-razon-ingreso-gasto-sexo-objeto]
+146/174                                      
+147/174 [tbl-razon-ingreso-gasto-sexo]       
+148/174                                      
+149/174 [cod-contraste-razon-sexo]           
+150/174                                      
+151/174 [cod-contraste-razon-sexo-objeto]    
+152/174                                      
+153/174 [tbl-contraste-razon-sexo]           
+154/174                                      
+155/174 [cod-contraste-dependencia]          
+156/174                                      
+157/174 [tbl-contraste-dependencia]          
+158/174                                      
+159/174 [setup-graficos-continuas]           
+160/174                                      
+161/174 [fig-hist-ingreso-ponde]             
+162/174                                      
+163/174 [fig-hist-zona]                      
+164/174                                      
+165/174 [fig-densidades]                     
+166/174                                      
+167/174 [fig-boxplot-zona-sexo]              
+168/174                                      
+169/174 [fig-svyhist-svybox]                 
+170/174                                      
+171/174 [fig-scatter-basico]                 
+172/174                                      
+173/174 [fig-scatter-zona]                   
+174/174                                      
+output file: 04-Continuas-alternativa.knit.md
+
+[ 6/12] chapters/05-Regresion.qmd
+
+
+processing file: 05-Regresion.qmd
+1/58 [setup-regresion]                   
+2/58                                     
+3/58 [opciones-regresion]                
+4/58                                     
+5/58 [preparar-diseno-regresion]         
+6/58                                     
+7/58 [fig-scatter-muestra-sinP]          
+8/58                                     
+9/58 [ajustar-modelo-svy]                
+10/58                                     
+11/58 [calcular-r2-componentes]           
+12/58                                     
+13/58 [cod-r2-ajustado]                   
+14/58                                     
+15/58 [calcular-residuales-estandarizados]
+16/58                                     
+17/58 [fig-hist-residuales]               
+18/58                                     
+19/58 [fig-residuales-covariables]        
+20/58                                     
+21/58 [fig-cook]                          
+22/58                                     
+23/58 [cod-dfbetas-primeros]              
+24/58                                     
+25/58 [tbl-dfbetas-primeros]              
+26/58                                     
+27/58 [cod-dfbetas-influyentes]           
+28/58                                     
+29/58 [tbl-dfbetas-influyentes]           
+30/58                                     
+31/58 [fig-dfbetas]                       
+32/58                                     
+33/58 [fig-dffits]                        
+34/58                                     
+35/58 [cod-tabla-inferencia-modelo]       
+36/58                                     
+37/58 [cod-inferencia-modelo-objeto]      
+38/58                                     
+39/58 [tbl-inferencia-modelo]             
+40/58                                     
+41/58 [cod-coeficientes-modelo-objeto]    
+42/58                                     
+43/58 [tbl-coeficientes-modelo]           
+44/58                                     
+45/58 [cod-prediccion-matricial]          
+46/58                                     
+47/58 [cod-vcov-modelo]                   
+48/58                                     
+49/58 [tbl-vcov-modelo]                   
+50/58                                     
+51/58 [cod-varianza-predicciones]         
+52/58                                     
+53/58 [predicciones-muestra]              
+54/58                                     
+55/58 [fig-pred-intervalos]               
+56/58                                     
+57/58 [cod-prediccion-nueva-observacion]  
+58/58                                     
+output file: 05-Regresion.knit.md
+
+[ 7/12] chapters/06-GLM.qmd
+
+
+processing file: 06-GLM.qmd
+1/46 [setup-glm]                           
+2/46                                       
+3/46 [preparar-diseno-glm]                 
+4/46                                       
+5/46 [mod-logistico-base]                  
+6/46                                       
+7/46 [cod-resultados-logistica]            
+8/46                                       
+9/46 [cod-ic-logistica-objeto]             
+10/46                                       
+11/46 [tbl-ic-logistica]                    
+12/46                                       
+13/46 [fig-logistica-base]                  
+14/46                                       
+15/46 [mod-logistico-interaccion]           
+16/46                                       
+17/46 [cod-resultados-logistica-interaccion]
+18/46                                       
+19/46 [cod-logistica-interaccion-objeto]    
+20/46                                       
+21/46 [tbl-logistica-interaccion]           
+22/46                                       
+23/46 [fig-comparacion-logistica]           
+24/46                                       
+25/46 [cod-prop-empleo-15]                  
+26/46                                       
+27/46 [tbl-prop-empleo-15]                  
+28/46                                       
+29/46 [mod-multinomial]                     
+30/46                                       
+31/46 [definir-tidy-svyvglm]                
+32/46                                       
+33/46 [calcular-multinomial-coef]           
+34/46                                       
+35/46 [cod-multinomial-coef-objeto]         
+36/46                                       
+37/46 [tbl-multinomial-coef]                
+38/46                                       
+39/46 [fig-multinomial-ic]                  
+40/46                                       
+41/46 [ajustar-modelo-gamma]                
+42/46                                       
+43/46 [cod-gamma-coeficientes-objeto]       
+44/46                                       
+45/46 [tbl-gamma-coeficientes]              
+46/46                                       
+output file: 06-GLM.knit.md
+
+[ 8/12] chapters/07-Multinivel.qmd
+
+
+processing file: 07-Multinivel.qmd
+1/80 [setup-multinivel]                   
+2/80                                      
+3/80 [multinivel-setup]                   
+4/80                                      
+5/80 [encuesta-plot-setup]                
+6/80                                      
+7/80 [fig-regresion-simple]               
+8/80                                      
+9/80 [coef-intercepto-setup]              
+10/80                                      
+11/80 [fig-intercepto-por-estrato]         
+12/80                                      
+13/80 [coef-pendiente-setup]               
+14/80                                      
+15/80 [fig-pendiente-por-estrato]          
+16/80                                      
+17/80 [coef-pendiente-2]                   
+18/80                                      
+19/80 [fig-intercepto-pendiente-libres]    
+20/80                                      
+21/80 [pesos-multinivel-setup]             
+22/80                                      
+23/80 [modelos-nulos-setup]                
+24/80                                      
+25/80 [cod-interceptos-nulos]              
+26/80                                      
+27/80 [tbl-interceptos-nulos]              
+28/80                                      
+29/80 [cod-icc-nulo]                       
+30/80                                      
+31/80 [tbl-icc-nulo]                       
+32/80                                      
+33/80 [mod-intercepto-aleatorio-setup]     
+34/80                                      
+35/80 [cod-coef-intercepto-aleatorio]      
+36/80                                      
+37/80 [tbl-coef-intercepto-aleatorio]      
+38/80                                      
+39/80 [preparar-coef-intercepto-aleatorio] 
+40/80                                      
+41/80 [fig-intercepto-aleatorio]           
+42/80                                      
+43/80 [mod-pendiente-aleatoria-setup]      
+44/80                                      
+45/80 [cod-coef-pendiente-aleatoria]       
+46/80                                      
+47/80 [tbl-coef-pendiente-aleatoria]       
+48/80                                      
+49/80 [preparar-coef-pendiente-aleatoria]  
+50/80                                      
+51/80 [fig-pendiente-aleatoria]            
+52/80                                      
+53/80 [fig-logit-pobreza-gasto]            
+54/80                                      
+55/80 [mod-logit-nulo-setup]               
+56/80                                      
+57/80 [cod-coef-logit-nulo]                
+58/80                                      
+59/80 [tbl-coef-logit-nulo]                
+60/80                                      
+61/80 [mod-logit-int-aleatorio-setup]      
+62/80                                      
+63/80 [cod-coef-logit-int-aleatorio]       
+64/80                                      
+65/80 [tbl-coef-logit-int-aleatorio]       
+66/80                                      
+67/80 [preparar-pred-logit-int-aleatorio]  
+68/80                                      
+69/80 [fig-logit-int-aleatorio]            
+70/80                                      
+71/80 [mod-logit-pendiente-aleatoria-setup]
+72/80                                      
+73/80 [cod-coef-logit-pendiente]           
+74/80                                      
+75/80 [tbl-coef-logit-pendiente]           
+76/80                                      
+77/80 [preparar-pred-logit-pendiente]      
+78/80                                      
+79/80 [fig-logit-pendiente-aleatoria]      
+80/80                                      
+output file: 07-Multinivel.knit.md
+
+[ 9/12] chapters/A1-TidyVerse.qmd
+
+
+processing file: A1-TidyVerse.qmd
+1/71                              
+2/71 [setup-tidyverse]            
+3/71                              
+4/71 [instalar-paquetes-tidyverse]
+5/71                              
+6/71 [cargar-paquetes-tidyverse]  
+7/71                              
+8/71 [cargar-bigcity]             
+9/71                              
+10/71 [vista-head-bigcity]         
+11/71                              
+12/71 [contar-filas-bigcity]       
+13/71                              
+14/71 [contar-columnas-bigcity]    
+15/71                              
+16/71 [dimension-bigcity]          
+17/71                              
+18/71 [abrir-bigcity]              
+19/71                              
+20/71 [nombres-bigcity]            
+21/71                              
+22/71 [estructura-bigcity]         
+23/71                              
+24/71 [contar-bigcity]             
+25/71                              
+26/71 [filtrar-sexo]               
+27/71                              
+28/71 [filtrar-no-pobres]          
+29/71                              
+30/71 [filtrar-ingresos]           
+31/71                              
+32/71 [seleccionar-variables]      
+33/71                              
+34/71 [excluir-identificadores]    
+35/71                              
+36/71 [ordenar-ingreso]            
+37/71                              
+38/71 [ordenar-sexo-edad]          
+39/71                              
+40/71 [ordenar-edad-desc]          
+41/71                              
+42/71 [crear-region]               
+43/71                              
+44/71 [crear-region-id]            
+45/71                              
+46/71 [crear-log-ingreso]          
+47/71                              
+48/71 [transformar-ingreso]        
+49/71                              
+50/71 [crear-grupos-edad]          
+51/71                              
+52/71 [resumir-ingreso]            
+53/71                              
+54/71 [resumir-percentiles]        
+55/71                              
+56/71 [resumir-dispersion]         
+57/71                              
+58/71 [contar-region]              
+59/71                              
+60/71 [contar-region-count]        
+61/71                              
+62/71 [contar-sexo]                
+63/71                              
+64/71 [contar-zona]                
+65/71                              
+66/71 [promedio-region]            
+67/71                              
+68/71 [promedio-sexo]              
+69/71                              
+70/71 [resumen-ingreso-empleo]     
+71/71                              
+output file: A1-TidyVerse.knit.md
+
+[10/12] chapters/A2-MPVbinder.qmd
+
+
+processing file: A2-MPVbinder.qmd
+1/9                
+2/9 [setup-mpv]    
+3/9                
+4/9 [sim-mv-modelo]
+5/9                
+6/9 [sim-muestreo] 
+7/9                
+8/9 [sim-doble]    
+9/9                
+output file: A2-MPVbinder.knit.md
+
+[11/12] chapters/A3-Imputacion.qmd
+
+
+processing file: A3-Imputacion.qmd
+1/111                                        
+2/111 [setup-imputacion]                     
+3/111                                        
+4/111 [cod-patron-no-monotono]               
+5/111                                        
+6/111 [tbl-ap3-patron-no-monotono]           
+7/111                                        
+8/111 [cargar-datos-imputacion]              
+9/111                                        
+10/111 [preparar-datos-imputacion]            
+11/111                                        
+12/111 [media-inicial-imputacion]             
+13/111                                        
+14/111 [simular-mcar-imputacion]              
+15/111                                        
+16/111 [fig-ap3-mcar-cajas]                   
+17/111                                        
+18/111 [fig-ap3-mcar-ingreso]                 
+19/111                                        
+20/111 [fig-ap3-mcar-gasto]                   
+21/111                                        
+22/111 [simular-mar-imputacion]               
+23/111                                        
+24/111 [fig-ap3-mar-cajas]                    
+25/111                                        
+26/111 [fig-ap3-mar-ingreso]                  
+27/111                                        
+28/111 [fig-ap3-mar-gasto]                    
+29/111                                        
+30/111 [simular-mnar-imputacion]              
+31/111                                        
+32/111 [fig-ap3-mnar-ingreso]                 
+33/111                                        
+34/111 [fig-ap3-mnar-gasto]                   
+35/111                                        
+36/111 [fig-ap3-mnar-cajas]                   
+37/111                                        
+38/111 [preparar-valores-faltantes-imputacion]
+39/111                                        
+40/111 [resumir-valores-faltantes-imputacion] 
+41/111                                        
+42/111 [imputar-media-no-condicional]         
+43/111                                        
+44/111 [fig-ap3-media-no-condicional]         
+45/111                                        
+46/111 [fig-ap3-media-no-condicional-grupos]  
+47/111                                        
+48/111 [imputar-media-condicional]            
+49/111                                        
+50/111 [resumir-media-condicional]            
+51/111                                        
+52/111 [resumir-media-condicional-zona]       
+53/111                                        
+54/111 [fig-ap3-media-condicional]            
+55/111                                        
+56/111 [fig-ap3-media-condicional-grupos]     
+57/111                                        
+58/111 [imputar-hot-deck]                     
+59/111                                        
+60/111 [resumir-hot-deck]                     
+61/111                                        
+62/111 [resumir-hot-deck-zona]                
+63/111                                        
+64/111 [resumir-hot-deck-sexo]                
+65/111                                        
+66/111 [fig-ap3-hot-deck]                     
+67/111                                        
+68/111 [ajustar-regresion-imputacion]         
+69/111                                        
+70/111 [imputar-regresion]                    
+71/111                                        
+72/111 [resumir-regresion-imputacion]         
+73/111                                        
+74/111 [resumir-regresion-imputacion-zona]    
+75/111                                        
+76/111 [fig-ap3-regresion]                    
+77/111                                        
+78/111 [imputar-vecino-cercano]               
+79/111                                        
+80/111 [resumir-vecino-cercano]               
+81/111                                        
+82/111 [resumir-vecino-cercano-zona]          
+83/111                                        
+84/111 [fig-ap3-vecino-cercano]               
+85/111                                        
+86/111 [ajustar-regresion-vecino-cercano]     
+87/111                                        
+88/111 [imputar-vecino-cercano-regresion]     
+89/111                                        
+90/111 [resumir-vecino-cercano-regresion]     
+91/111                                        
+92/111 [fig-ap3-vecino-cercano-regresion]     
+93/111                                        
+94/111 [preparar-imputacion-multiple]         
+95/111                                        
+96/111 [generar-imputaciones-multiples]       
+97/111                                        
+98/111 [mostrar-imputaciones-multiples]       
+99/111                                        
+100/111 [fig-ap3-imputacion-multiple]          
+101/111                                        
+102/111 [definir-diseno-imputacion]            
+103/111                                        
+104/111 [estimar-medias-imputacion]            
+105/111                                        
+106/111 [combinar-medias-imputacion]           
+107/111                                        
+108/111 [organizar-varianzas-imputacion]       
+109/111                                        
+110/111 [combinar-varianzas-imputacion]        
+111/111                                        
+output file: A3-Imputacion.knit.md
+
+[12/12] chapters/references.qmd
+
+pandoc 
+  to: latex
+  output-file: index.tex
+  standalone: true
+  toc: true
+  number-sections: true
+  top-level-division: chapter
+  pdf-engine: xelatex
+  variables:
+    graphics: true
+    tables: true
+  default-image-extension: pdf
+  toc-depth: 3
+  
+metadata
+  crossref:
+    chapters: true
+    eq-prefix: ecuación
+    fig-prefix: figura
+    tbl-prefix: tabla
+  documentclass: scrbook
+  papersize: letter
+  block-headings: true
+  bibliography:
+    - references.bib
+  lang: es
+  classoption:
+    - oneside
+    - open=any
+  fontsize: 11pt
+  lof: true
+  lot: true
+  colorlinks: true
+  link-citations: true
+  geometry:
+    - top=25mm
+    - bottom=25mm
+    - left=25mm
+    - right=25mm
+  title: Análisis de Encuestas de Hogares
+  subtitle: usando R
+  author: Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa y Cristian Téllez
+  date: '2026-11-06T00:00:00-03:00'
+  date-format: long
+  
+[WARNING] Citeproc: citation pruebas-diferencias-proporciones not found
+
+Rendering PDF
+running xelatex - 1
+  This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex)
+   restricted \write18 enabled.
+  entering extended mode
+  
+running xelatex - 2
+  This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex)
+   restricted \write18 enabled.
+  entering extended mode
+  
+
+scripts/post-render-figures.R
+PDF generado: /Users/psirusteam/Library/CloudStorage/OneDrive-UnitedNations/CEPAL/Vademecum/5. Handbooks/2026 Análisis de encuestas de hogares con R/LibroEncuestasR-main/docs/Libro.pdf
+
+PDF generado: /Users/psirusteam/Library/CloudStorage/OneDrive-UnitedNations/CEPAL/Vademecum/5. Handbooks/2026 Análisis de encuestas de hogares con R/LibroEncuestasR-main/docs/Libro.pdf

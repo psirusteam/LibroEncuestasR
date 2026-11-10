@@ -1,0 +1,39 @@
+3. Análisis de variables categóricas
+Tabla 3.2.: Tamaño muestral y tamaño poblacional estimado por grupo de edad
+Edad (años) Muestra Población EE LI 95% LS 95%
+0-9 468 27804 2396 23060.1 32548
+10-19 509 28554 1815 24960.4 32148
+20-29 478 27677 1966 23785.3 31569
+30-39 347 19860 1401 17084.7 22634
+40-49 300 17234 1198 14861.7 19606
+50-59 220 11876 1090 9719.1 14034
+60-69 162 9924 887 8166.4 11681
+70-79 81 4700 740 3235.6 6165
+80-89 34 2246 460 1336.4 3157
+90-99 6 391 166 61.8 720
+La tabla 3.2 distingue el tamaño muestral, que cuenta los registros observados, del tamaño po-
+blacional, que suma sus factores de expansión. El grupo de 10-19 años presenta el mayor tamaño
+poblacional estimado, con aproximadamente 28.554 personas. En conjunto, los 10 grupos reúnen
+2605 observaciones y representan una población estimada de 150.266 personas. Los errores estándar
+y los intervalos de confianza describen la incertidumbre muestral de cada estimación.
+Además de estas características demográficas, el análisis puede extenderse a las condiciones socioeco-
+nómicas de la población. A continuación, se aplica el mismo procedimiento para estimar el número
+de personas según los distintos niveles de pobreza.
+poverty_population_size <- survey_design %>%
+group_by(Poverty) %>%
+summarise(size = survey_total(vartype = c("se", "ci")))
+poverty_population_size
+Tabla 3.3.: Tamaño poblacional estimado por condición de pobreza
+Pobreza Población EE LI 95% LS 95%
+NotPoor 91398 4395 82696 100101
+Extreme 21519 4949 11719 31319
+Relative 37349 3695 30032 44666
+La tabla3.3 refleja una población en la que la mayoría de las personas no vive en pobreza, pero en la
+que esa aparente normalidad convive con una fractura difícil de considerar marginal: cerca de 58.868
+personas se encuentran en pobreza relativa o extrema. De ellas, 21.519 padecen las privaciones más
+severas y 37.349 permanecen por debajo de los niveles de vida socialmente aceptables.
+Otra variable categórica relevante en las encuestas de hogares es el estado de ocupación. En este
+caso, la información se agrupa según las categorías de la variable Employment, lo que permite
+obtener estimaciones separadas para cada condición de actividad laboral de la población. Mediante
+el uso de la funcióngroup_by() es posible desagregar las estimaciones en niveles más detallados,
+32

@@ -1,0 +1,32 @@
+Warning messages:
+1: There were 2 warnings in `dplyr::summarise()`.
+The first warning was:
+ℹ In argument: `aging = survey_ratio(...)`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning. 
+2: There were 4 warnings in `dplyr::summarise()`.
+The first warning was:
+ℹ In argument: `aging = survey_ratio(...)`.
+ℹ In group 1: `Zone = "Rural"`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 3 remaining warnings. 
+Warning message:
+In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+Warning messages:
+1: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+2: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+# A tibble: 1 × 4
+  aging aging_se aging_low aging_upp
+  <dbl>    <dbl>     <dbl>     <dbl>
+1  40.8     3.78      33.3      48.3
+# A tibble: 2 × 5
+  Zone  aging aging_se aging_low aging_upp
+  <chr> <dbl>    <dbl>     <dbl>     <dbl>
+1 Rural  30.7     4.19      22.4      39.0
+2 Urban  52.3     6.32      39.8      64.8
+Validación correcta: cortes de edad, dominio, cocientes ponderados y varianzas.

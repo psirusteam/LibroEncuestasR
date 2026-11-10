@@ -1,0 +1,360 @@
+
+
+processing file: 03-Categoricas-alternativa.qmd
+1/159                                        
+2/159 [setup-categoricas]                    
+3/159                                        
+4/159 [cargar-datos-categoricas]             
+5/159                                        
+6/159 [describir-datos-categoricas]          
+7/159                                        
+8/159 [definir-diseno-categoricas]           
+9/159                                        
+10/159 [crear-variables-categoricas]          
+11/159                                        
+12/159 [crear-subpoblaciones-categoricas]     
+13/159                                        
+14/159 [sintaxis-survey-total-categoricas]    
+15/159                                        
+16/159 [cod-tamano-zona]                      
+17/159                                        
+18/159 [tbl-tamano-zona]                      
+19/159                                        
+20/159 [cod-tamano-edad]                      
+21/159                                        
+22/159 [tbl-tamano-edad]                      
+23/159                                        
+24/159 [cod-tamano-pobreza]                   
+25/159                                        
+26/159 [tbl-tamano-pobreza]                   
+27/159                                        
+28/159 [cod-tamano-empleo]                    
+29/159 [tbl-tamano-empleo]                    
+30/159                                        
+31/159 [cod-tamano-edad-sexo]                 
+32/159                                        
+33/159 [tbl-tamano-edad-sexo]                 
+34/159                                        
+35/159 [cod-tamano-empleo-pobreza]            
+36/159 [tbl-tamano-empleo-pobreza]            
+37/159                                        
+38/159 [cod-prop-zona-media]                  
+39/159 [tbl-prop-zona]                        
+40/159                                        
+41/159 [cod-prop-sexo-urbano]                 
+42/159 [tbl-prop-sexo-urbano]                 
+43/159                                        
+44/159 [cod-prop-zona-hombre]                 
+45/159 [tbl-prop-zona-hombre]                 
+46/159                                        
+47/159 [cod-prop-zona-pobreza-hombre]         
+48/159 [tbl-prop-zona-pobreza-hombre]         
+49/159                                        
+50/159 [cod-tasa-desocupacion-edad-mujer]     
+51/159 [tbl-tasa-desocupacion-edad-mujer]     
+52/159                                        
+53/159 [cod-estructura-contingencia-objeto]   
+54/159                                        
+55/159 [tbl-estructura-contingencia]          
+56/159                                        
+57/159 [crear-diseno-pobreza-factor]          
+58/159                                        
+59/159 [cod-contingencia-pobreza-sexo]        
+60/159 [tbl-contingencia-pobreza-sexo]        
+61/159                                        
+62/159 [cod-tasa-desocupacion-sexo]           
+63/159                                        
+64/159 [tbl-tasa-desocupacion-sexo]           
+65/159                                        
+66/159 [cod-tasa-ocupacion-sexo]              
+67/159                                        
+68/159 [tbl-tasa-ocupacion-sexo]              
+69/159                                        
+70/159 [cod-svyby-region-pobreza]             
+71/159                                        
+72/159 [tbl-svyby-region-pobreza]             
+73/159                                        
+74/159 [cod-pobreza-edad]                     
+75/159                                        
+76/159 [tbl-pobreza-edad]                     
+77/159                                        
+78/159 [cod-interaccion-sexo-pobreza]         
+79/159                                        
+80/159 [cod-interaccion-sexo-pobreza-objeto]  
+81/159                                        
+82/159 [tbl-interaccion-sexo-pobreza]         
+83/159                                        
+84/159 [cod-razon-odds-pobreza-sexo]          
+85/159                                        
+86/159 [cod-tab-desocupacion-sexo]            
+87/159                                        
+88/159 [tbl-tasa-desocupacion-sexo-prueba]    
+89/159                                        
+90/159 [cod-ttest-desocupacion-sexo]          
+91/159                                        
+92/159 [cod-ttest-desocupacion-sexo-objeto]   
+93/159                                        
+94/159 [tbl-ttest-desocupacion-sexo]          
+95/159                                        
+96/159 [cod-chi-pobreza-sexo]                 
+97/159                                        
+98/159 [cod-chi-empleo-sexo]                  
+99/159                                        
+100/159 [cod-chi-pobreza-region]               
+101/159                                        
+102/159 [cod-prop-pobreza-sexo]                
+103/159                                        
+104/159 [tbl-svyby-pobreza-sexo2]              
+105/159                                        
+106/159 [cod-diferencia-pobreza-sexo]          
+107/159                                        
+108/159 [cod-vcov-pobreza-sexo]                
+109/159                                        
+110/159 [cod-vcov-sex-pobreza-objeto]          
+111/159                                        
+112/159 [tbl-vcov-sex-pobreza]                 
+113/159                                        
+114/159 [cod-se-diferencia-pobreza-sexo]       
+115/159                                        
+116/159 [cod-contraste-pobreza-sexo]           
+117/159                                        
+118/159 [cod-tasa-desocupacion-region]         
+119/159                                        
+120/159 [tbl-tasa-desocupacion-region]         
+121/159                                        
+122/159 [cod-vcov-desocupacion-region]         
+123/159                                        
+124/159 [cod-vcov-desocupacion-region-objeto]  
+125/159                                        
+126/159 [tbl-vcov-desocupacion-region]         
+127/159                                        
+128/159 [cod-se-contrastes-desocupacion-region]
+129/159                                        
+130/159 [cod-contrastes-desocupacion-region]   
+131/159                                        
+132/159 [setup-graficos-categoricas]           
+133/159                                        
+134/159 [fig-barras-zona]                      
+135/159                                        
+136/159 [fig-barras-pobreza]                   
+137/159                                        
+138/159 [fig-barras-empleo-pobreza]            
+139/159                                        
+140/159 [fig-barras-prop-zona-hombre]          
+141/159                                        
+142/159 [fig-barras-prop-region-hombre]        
+143/159                                        
+144/159 [fig-piramide-poblacional]             
+145/159                                        
+146/159 [mapas-setup]                          
+147/159                                        
+148/159 [fig-mapa-regiones]                    
+149/159                                        
+150/159 [mapas-pobreza-setup]                  
+151/159                                        
+152/159 [fig-mapa-pobreza-hombre]              
+153/159                                        
+154/159 [fig-mapa-cv-pobreza]                  
+155/159                                        
+156/159 [mapas-bivar-setup]                    
+157/159                                        
+158/159 [fig-mapa-bivariante]                  
+159/159                                        
+output file: 03-Categoricas-alternativa.knit.md
+
+Warning messages:
+1: In prettyNum(.Internal(format(x, trim, digits, nsmall, width, 3L,  :
+  'big.mark' and 'decimal.mark' are both '.', which could be confusing
+2: In prettyNum(.Internal(format(x, trim, digits, nsmall, width, 3L,  :
+  'big.mark' and 'decimal.mark' are both '.', which could be confusing
+pandoc 
+  to: html
+  output-file: 03-Categoricas-alternativa.html
+  standalone: true
+  toc: true
+  number-sections: true
+  title-prefix: >-
+    <span style='font-weight: 700'>Análisis de Encuestas de Hogares</span><br/><i
+    style='color: #00b7ff'>usando R</i>
+  section-divs: true
+  html-math-method: mathjax
+  wrap: none
+  default-image-extension: png
+  css:
+    - ../styles.css
+  toc-depth: 3
+  number-offset:
+    - 3
+  variables: {}
+  
+metadata
+  crossref:
+    chapters: true
+    eq-prefix: ecuación
+    fig-prefix: figura
+    tbl-prefix: tabla
+  document-css: false
+  link-citations: true
+  date-format: long
+  lang: es
+  bibliography:
+    - ../references.bib
+  theme: cosmo
+  toc-location: right
+  smooth-scroll: true
+  hide-description: true
+  title: "[[3]{.chapter-number}\_ [Análisis de variables categóricas ]{.chapter-title}]{#sec-cap-categoricas .quarto-section-identifier}"
+  
+
+Output created: ../docs/chapters/03-Categoricas-alternativa.html
+
+
+
+processing file: 04-Categoricas.qmd
+1/127                                        
+2/127 [setup-categoricas]                    
+3/127                                        
+4/127 [cargar-datos-categoricas]             
+5/127                                        
+6/127 [crear-variables-categoricas]          
+7/127                                        
+8/127 [crear-subpoblaciones-categoricas]     
+9/127                                        
+10/127 [cod-tamano-zona]                      
+11/127                                        
+12/127 [tbl-tamano-zona]                      
+13/127                                        
+14/127 [cod-tamano-pobreza]                   
+15/127                                        
+16/127 [tbl-tamano-pobreza]                   
+17/127                                        
+18/127 [cod-tamano-empleo]                    
+19/127 [tbl-tamano-empleo]                    
+20/127                                        
+21/127 [cod-tamano-empleo-pobreza]            
+22/127 [tbl-tamano-empleo-pobreza]            
+23/127                                        
+24/127 [cod-prop-zona-media]                  
+25/127 [tbl-prop-zona]                        
+26/127                                        
+27/127 [cod-prop-sexo-urbano]                 
+28/127 [tbl-prop-sexo-urbano]                 
+29/127                                        
+30/127 [cod-prop-zona-hombre]                 
+31/127 [tbl-prop-zona-hombre]                 
+32/127                                        
+33/127 [cod-prop-zona-pobreza-hombre]         
+34/127 [tbl-prop-zona-pobreza-hombre]         
+35/127                                        
+36/127 [cod-tasa-desocupacion-edad-mujer]     
+37/127 [tbl-tasa-desocupacion-edad-mujer]     
+38/127                                        
+39/127 [crear-diseno-pobreza-factor]          
+40/127                                        
+41/127 [cod-contingencia-pobreza-sexo]        
+42/127 [tbl-contingencia-pobreza-sexo]        
+43/127                                        
+44/127 [cod-tasa-desocupacion-sexo]           
+45/127                                        
+46/127 [tbl-tasa-desocupacion-sexo]           
+47/127                                        
+48/127 [cod-tasa-ocupacion-sexo]              
+49/127                                        
+50/127 [tbl-tasa-ocupacion-sexo]              
+51/127                                        
+52/127 [cod-svyby-region-pobreza]             
+53/127                                        
+54/127 [tbl-svyby-region-pobreza]             
+55/127                                        
+56/127 [cod-interaccion-sexo-pobreza]         
+57/127                                        
+58/127 [tbl-interaccion-sexo-pobreza]         
+59/127                                        
+60/127 [cod-razon-odds-pobreza-sexo]          
+61/127                                        
+62/127 [cod-tab-desocupacion-sexo]            
+63/127                                        
+64/127 [tbl-tasa-desocupacion-sexo-prueba]    
+65/127                                        
+66/127 [cod-ttest-desocupacion-sexo]          
+67/127                                        
+68/127 [tbl-ttest-desocupacion-sexo]          
+69/127                                        
+70/127 [cod-chi-pobreza-sexo]                 
+71/127                                        
+72/127 [cod-chi-empleo-sexo]                  
+73/127                                        
+74/127 [cod-chi-pobreza-region]               
+75/127                                        
+76/127 [cod-prop-pobreza-sexo]                
+77/127                                        
+78/127 [tbl-svyby-pobreza-sexo2]              
+79/127                                        
+80/127 [cod-diferencia-pobreza-sexo]          
+81/127                                        
+82/127 [cod-vcov-pobreza-sexo]                
+83/127                                        
+84/127 [tbl-vcov-sex-pobreza]                 
+85/127                                        
+86/127 [cod-se-diferencia-pobreza-sexo]       
+87/127                                        
+88/127 [cod-contraste-pobreza-sexo]           
+89/127                                        
+90/127 [cod-tasa-desocupacion-region]         
+91/127                                        
+92/127 [tbl-tasa-desocupacion-region]         
+93/127                                        
+94/127 [cod-vcov-desocupacion-region]         
+95/127                                        
+96/127 [tbl-vcov-desocupacion-region]         
+97/127                                        
+98/127 [cod-se-contrastes-desocupacion-region]
+99/127                                        
+100/127 [cod-contrastes-desocupacion-region]   
+101/127                                        
+102/127 [setup-graficos-categoricas]           
+103/127                                        
+104/127 [fig-barras-zona]                      
+105/127                                        
+106/127 [fig-barras-pobreza]                   
+107/127                                        
+108/127 [fig-barras-empleo-pobreza]            
+109/127                                        
+110/127 [fig-barras-prop-zona-hombre]          
+111/127                                        
+112/127 [fig-barras-prop-region-hombre]        
+113/127                                        
+114/127 [mapas-setup]                          
+115/127                                        
+116/127 [fig-mapa-regiones]                    
+117/127                                        
+118/127 [mapas-pobreza-setup]                  
+119/127                                        
+120/127 [fig-mapa-pobreza-hombre]              
+121/127                                        
+122/127 [fig-mapa-cv-ingreso]                  
+123/127                                        
+124/127 [mapas-bivar-setup]                    
+125/127                                        
+126/127 [fig-mapa-bivariante]                  
+127/127                                        
+output file: 04-Categoricas.knit.md
+
+pandoc 
+  to: html
+  output-file: 04-Categoricas.html
+  standalone: true
+  section-divs: true
+  html-math-method: mathjax
+  wrap: none
+  default-image-extension: png
+  variables: {}
+  
+metadata
+  document-css: false
+  link-citations: true
+  date-format: long
+  lang: en
+  
+Output created: 04-Categoricas.html
+

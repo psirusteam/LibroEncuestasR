@@ -1,0 +1,38 @@
+3. Análisis de variables categóricas
+La media de la indicadorapoor estima la proporción de personas pobres y conserva en el denomi-
+nador tanto a las personas pobres como a las no pobres de cada grupo, incluso si no se observa
+ningún caso pobre. La tabla3.17 presenta las estimaciones en una escala de cero a uno.
+Tabla 3.17.: Tasa de pobreza por grupo de edad
+Edad (años) Tasa de pobreza EE LI 95% LS 95%
+0-9 0.530 0.0490 0.4325 0.625
+10-19 0.447 0.0416 0.3667 0.531
+20-29 0.349 0.0405 0.2735 0.434
+30-39 0.370 0.0389 0.2958 0.450
+40-49 0.310 0.0516 0.2170 0.422
+50-59 0.248 0.0453 0.1673 0.351
+60-69 0.347 0.0626 0.2309 0.486
+70-79 0.356 0.0585 0.2319 0.502
+80-89 0.417 0.0890 0.0068 0.987
+90-99 0.000 0.0000 NA NA
+La mayor tasa estimada corresponde al grupo de 0-9 años, con 52.99%, y la menor al de 90-99 años,
+con 0.00%. Las edades avanzadas tienen pocas observaciones, por lo que estas diferencias deben
+interpretarse junto con su precisión. Los intervalos no calculables se presentan como NA. Una tasa
+observada de cero no implica ausencia de pobreza en la población. Para evaluar diferencias se
+requiere un contraste que considere el diseño muestral y la covarianza entre estimaciones.
+3.3.2. Razón de odds
+De acuerdo con Agresti (2019), la razón deoddses una medida ampliamente utilizada para estudiar
+la asociación entre dos variables categóricas, especialmente cuando el interés se centra en comparar
+la probabilidad de ocurrencia de un evento entre distintos grupos poblacionales. Su interpretación
+se basa en comparar las ventajas relativas (odds) de ocurrencia de un evento entre dos categorías
+de análisis (Díaz Monroy, Morales Rivera, y León Dávila 2018).
+En este sentido, este parámetro permite evaluar cómo cambia dicha ventaja entre diferentes grupos
+de interés y constituye una herramienta fundamental en estudios sociales, económicos y de salud;
+además, esta medida también puede utilizarse para cuantificar la relación entre los niveles de una
+variable y un factor categórico, comparando las ventajas relativas de ocurrencia del evento en cada
+grupo.
+Por ejemplo, suponga que se desea estudiar la asociación entre el sexo de las personas y la condición
+de pobreza. En particular, interesa evaluar si la ventaja relativa de pertenecer al grupo de personas
+no pobres frente al grupo de personas pobres es diferente entre mujeres y hombres. Para ello, puede
+expresarse la siguiente razón deodds:
+OR = 𝑃 (pobreza = 0 ∣ Sex = Female)/𝑃 (pobreza = 1 ∣ Sex = Female)𝑃 (pobreza = 0 ∣ Sex = Male)/𝑃 (pobreza = 1 ∣ Sex = Male) (3.8)
+46

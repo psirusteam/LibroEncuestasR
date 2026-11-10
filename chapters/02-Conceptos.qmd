@@ -139,7 +139,7 @@ En el análisis de encuestas, el DEFF constituye un indicador esencial para eval
 
 La interpretación de un DEFF elevado debe realizarse con cautela, pues no necesariamente indica que el diseño de muestreo sea inadecuado. Su magnitud debe evaluarse en función del contexto y de las condiciones operativas de la encuesta. Aunque @UnitedNations2005 afirma que un valor superior a 2.5 o 3 podría considerarse inicialmente preocupante, este puede responder a restricciones presupuestarias, dificultades logísticas o decisiones orientadas a facilitar la participación de los informantes.
 
-Por ejemplo, en algunas encuestas de hogares puede ser necesario seleccionar únicamente a una fracción de las personas elegibles dentro de cada vivienda. Asimismo, los problemas de cobertura y las tasas elevadas de no respuesta pueden incrementar la variabilidad de los pesos muestrales y, por esta vía, aumentar el DEFF. @GutierrezBabativa2023 presentan un análisis detallado de los efectos del diseño en las encuestas de hogares de América Latina a partir de la información disponible en BADEHOG.
+Por ejemplo, en algunas encuestas de hogares puede ser necesario seleccionar únicamente a una fracción de las personas elegibles dentro de cada vivienda. Asimismo, los problemas de cobertura y las tasas elevadas de no respuesta pueden incrementar la variabilidad de los pesos muestrales y, por esta vía, aumentar el DEFF. @GutierrezBabativa2023 presentan un análisis detallado de los efectos del diseño en las encuestas de hogares de América Latina a partir de la información disponible en el Banco de Datos de Encuestas de Hogares (BADEHOG) de la CEPAL.
 
 ## Inferencia en encuestas complejas {#inferencia-encuestas}
 

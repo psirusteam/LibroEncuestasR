@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>10&nbsp; Imputación usando R – &lt;span style='font-weight: 700'&gt;Análisis de Encuestas de Hogares&lt;/span&gt;&lt;br/&gt;&lt;i style='color: #00b7ff'&gt;usando R&lt;/i&gt;</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -59,7 +65,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -93,10 +98,10 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-631496449bf32ff9b0bb69a6bfd9195d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -111,7 +116,7 @@ div.csl-indent {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "Sin resultados",
+    "search-no-results-text": "No se han encontrado resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
@@ -126,23 +131,38 @@ div.csl-indent {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <script>
+
 window.MathJax = {
+
   tex: {
+
     macros: {
+
       E: "\\mathbb{E}",
+
       Var: "\\operatorname{Var}",
+
       Cov: "\\operatorname{Cov}",
+
       Corr: "\\operatorname{Corr}",
+
       Pr: "\\operatorname{Pr}",
+
       deff: "\\operatorname{deff}",
+
       bold: ["\\boldsymbol{#1}", 1]
+
     }
+
   }
+
 };
+
 </script>
 
+
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -155,7 +175,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -211,7 +231,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Prefacio</span></a>
+ <span class="menu-text">Página legal</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -349,7 +369,7 @@ window.Quarto = {
 </ul>
 <p>La <a href="#tbl-ap3-patron-no-monotono" class="quarto-xref">tabla&nbsp;<span>10.1</span></a> ilustra datos faltantes en posiciones dispersas. Cada fila representa un caso y cada columna <span class="math inline">\(X_j\)</span> una variable. <strong>O</strong> indica un dato observado y <strong>?</strong> un dato faltante.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>missing_pattern_table <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>missing_pattern_table <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>case, <span class="sc">~</span>x1, <span class="sc">~</span>x2, <span class="sc">~</span>x3, <span class="sc">~</span>x4, <span class="sc">~</span>x5, <span class="sc">~</span>x6, <span class="sc">~</span>type,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"1"</span>, <span class="st">"O"</span>, <span class="st">"O"</span>, <span class="st">"O"</span>, <span class="st">"O"</span>, <span class="st">"O"</span>, <span class="st">"O"</span>, <span class="st">"Completo"</span>,</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2"</span>, <span class="st">"O"</span>, <span class="st">"O"</span>, <span class="st">"O"</span>, <span class="st">"O"</span>, <span class="st">"O"</span>, <span class="st">"O"</span>, <span class="st">"Completo"</span>,</span>
@@ -361,17 +381,17 @@ window.Quarto = {
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"8"</span>, <span class="st">"?"</span>, <span class="st">"O"</span>, <span class="st">"?"</span>, <span class="st">"O"</span>, <span class="st">"?"</span>, <span class="st">"?"</span>, <span class="st">"Incompleto"</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>missing_pattern_table</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>missing_pattern_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-ap3-patron-no-monotono" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ap3-patron-no-monotono-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>Applied Survey Data Analysis</em> <span class="citation" data-cites="HeeringaWestBerglund2017">(<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">Heeringa, West, y Berglund 2017</a>)</span>.
+Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>Applied Survey Data Analysis</em> <span class="citation" data-cites="HeeringaWestBerglund2017">(<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">Heeringa et&nbsp;al. 2017</a>)</span>.
 </figcaption>
 <div aria-describedby="tbl-ap3-patron-no-monotono-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Caso</th>
@@ -474,12 +494,12 @@ Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>App
 </div>
 <p>Como en los capítulos anteriores, se carga la base de datos de la muestra seleccionada. Para ilustrar el tratamiento de los datos faltantes, se introducirán pérdidas de información de forma simulada. La base se carga de la siguiente manera:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/sample.rds"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/sample.rds"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La base <code>sample.rds</code> conserva los nombres de las variables y utiliza etiquetas y categorías en inglés. En <code>Region</code>, las categorías <code>North</code>, <code>South</code>, <code>Central</code>, <code>West</code> y <code>East</code> corresponden a Norte, Sur, Centro, Occidente y Oriente; <code>CatAge</code> contiene grupos decenales ordenados: <code>0-9</code>, <code>10-19</code>, <code>20-29</code>, y así sucesivamente hasta <code>90-99</code>.</p>
 <p>Primero, se cargan los paquetes y se estima la tasa de desocupación antes de generar los valores faltantes. El diseño se construye con la muestra completa y luego se crea <code>labor_force_subset</code>, que contiene a las personas de 15 años o más ocupadas o desocupadas. Posteriormente, los ejercicios de imputación utilizan la población de 15 años o más, incluidas las personas inactivas.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(srvyr)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TeachingSampling)</span>
@@ -498,7 +518,7 @@ Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>App
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  ))</span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>unemployment_rate</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>unemployment_rate</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
   unemployment_rate unemployment_rate_se unemployment_rate_low
@@ -506,30 +526,30 @@ Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>App
 1            0.0697               0.0110                0.0508
 # ℹ 1 more variable: unemployment_rate_upp &lt;dbl&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">15</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">15</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La tasa de desocupación estimada es de 6.97 %, con un error estándar de 1.1 %. También se calcula el promedio de ingresos en la muestra:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>income_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>income_mean</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>income_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>income_mean</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 604</code></pre>
 </div>
 </div>
 <p>A continuación, se genera un 20 % de valores faltantes siguiendo un mecanismo MCAR. La función <code>sample_frac</code> del paquete <code>dplyr</code> permite seleccionar aleatoriamente una fracción de las filas de un conjunto de datos.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mcar_data <span class="ot">&lt;-</span> <span class="fu">sample_frac</span>(survey_data, <span class="fl">0.8</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>mcar_plot_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">mcar_data =</span> mcar_data, <span class="at">survey_data =</span> survey_data),</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">.id =</span> <span class="st">"data_source"</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La <a href="#fig-ap3-mcar-cajas" class="quarto-xref">figura&nbsp;<span>10.1</span></a> compara el ingreso por zona y sexo en la base completa (<code>survey_data</code>) y en la muestra con pérdida MCAR (<code>mcar_data</code>). Las medianas y la amplitud de las cajas son similares en ambas bases. La línea roja indica la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>zone_income_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mcar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Zone, <span class="at">y =</span> Income)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>zone_income_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mcar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Zone, <span class="at">y =</span> Income)) <span class="sc">+</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> data_source) <span class="sc">+</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
@@ -537,7 +557,7 @@ Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>App
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>sex_income_plot <span class="ot">&lt;-</span> zone_income_plot <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x =</span> Sex)</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>zone_income_plot <span class="sc">|</span> sex_income_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>zone_income_plot <span class="sc">|</span> sex_income_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-mcar-cajas" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -553,7 +573,7 @@ Figura&nbsp;10.1: Distribución del ingreso por zona y sexo con datos completos 
 </div>
 <p>La <a href="#fig-ap3-mcar-ingreso" class="quarto-xref">figura&nbsp;<span>10.2</span></a> muestra las densidades del ingreso para la base completa (<code>survey_data</code>) y la muestra con pérdida MCAR (<code>mcar_data</code>), en el total y por sexo. Las curvas prácticamente se superponen, lo que indica pocos cambios en la distribución en esta simulación. La línea roja representa la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mcar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">fill =</span> data_source)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mcar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">fill =</span> data_source)) <span class="sc">+</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
@@ -562,7 +582,7 @@ Figura&nbsp;10.1: Distribución del ingreso por zona y sexo con datos completos 
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>sex_income_density_plot <span class="ot">&lt;-</span> income_density_plot <span class="sc">+</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> Sex) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="sc">/</span> sex_income_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="sc">/</span> sex_income_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-mcar-ingreso" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -578,7 +598,7 @@ Figura&nbsp;10.2: Distribución del ingreso, total y por sexo, bajo un patrón M
 </div>
 <p>La <a href="#fig-ap3-mcar-gasto" class="quarto-xref">figura&nbsp;<span>10.3</span></a> compara las densidades del gasto en la base completa (<code>survey_data</code>) y la muestra con pérdida MCAR (<code>mcar_data</code>), en el total y por sexo. La superposición de las curvas muestra que se conserva la forma de la distribución. La línea roja indica la media del gasto en la base completa.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  mcar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Expenditure, <span class="at">fill =</span> data_source)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
@@ -589,7 +609,7 @@ Figura&nbsp;10.2: Distribución del ingreso, total y por sexo, bajo un patrón M
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>sex_expenditure_density_plot <span class="ot">&lt;-</span> expenditure_density_plot <span class="sc">+</span></span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> Sex) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="sc">/</span> sex_expenditure_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="sc">/</span> sex_expenditure_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-mcar-gasto" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -605,15 +625,15 @@ Figura&nbsp;10.3: Distribución del gasto, total y por sexo, bajo un patrón MCA
 </div>
 <p>A continuación, se simula una pérdida de información al azar (MAR) que depende de la zona y del sexo:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>stratum_id <span class="ot">&lt;-</span> <span class="fu">paste0</span>(survey_data<span class="sc">$</span>Zone, survey_data<span class="sc">$</span>Sex)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(stratum_id)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(stratum_id)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>stratum_id
 RuralFemale   RuralMale UrbanFemale   UrbanMale 
         481         428         531         439 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sample_indices <span class="ot">&lt;-</span> <span class="fu">S.STSI</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sample_indices <span class="ot">&lt;-</span> <span class="fu">S.STSI</span>(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">S =</span> stratum_id,</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Nh =</span> <span class="fu">c</span>(<span class="dv">481</span>, <span class="dv">428</span>, <span class="dv">531</span>, <span class="dv">439</span>),</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">nh =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">380</span>, <span class="dv">20</span>, <span class="dv">280</span>)</span>
@@ -623,19 +643,19 @@ RuralFemale   RuralMale UrbanFemale   UrbanMale
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>mar_plot_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">mar_data =</span> mar_data, <span class="at">survey_data =</span> survey_data),</span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">.id =</span> <span class="st">"data_source"</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>El código anterior utiliza el paquete <code>TeachingSampling</code> para realizar un muestreo aleatorio en cada combinación de zona y sexo. Primero, se fija la semilla en <code>1234</code> para que los resultados sean reproducibles. Luego, se crea la variable <code>stratum_id</code>, que combina <code>Zone</code> y <code>Sex</code> mediante la función <code>paste0</code> para definir los estratos. La función <code>table</code> muestra la frecuencia de cada estrato. El muestreo estratificado se realiza con <code>S.STSI</code>, cuyos argumentos son <code>S</code>, el vector de estratos; <code>Nh</code>, el número de unidades en cada estrato (469, 411, 510 y 390); y <code>nh</code>, el tamaño de muestra deseado en cada estrato (20, 380, 20 y 280).</p>
 <p>El muestreo estratificado devuelve un vector con los índices de las filas seleccionadas. Estas observaciones se excluyen de la base para crear <code>mar_data</code>. Por último, la función <code>bind_rows</code> del paquete <code>dplyr</code> reúne <code>survey_data</code> y <code>mar_data</code> en <code>mar_plot_data</code>. La nueva variable <code>data_source</code> identifica la base de origen de cada observación.</p>
 <p>La <a href="#fig-ap3-mar-cajas" class="quarto-xref">figura&nbsp;<span>10.4</span></a> compara el gasto por zona y sexo entre la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>). Las medianas permanecen próximas, aunque cambian la dispersión y algunos valores extremos, especialmente entre los hombres. La línea roja señala la media del gasto en la base completa.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mar_expenditure_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> data_source, <span class="at">y =</span> Expenditure)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mar_expenditure_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> data_source, <span class="at">y =</span> Expenditure)) <span class="sc">+</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Expenditure), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(Zone <span class="sc">~</span> Sex) <span class="sc">+</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>mar_expenditure_boxplot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>mar_expenditure_boxplot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-mar-cajas" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -651,7 +671,7 @@ Figura&nbsp;10.4: Distribución del gasto por zona y sexo bajo un patrón MAR
 </div>
 <p>La <a href="#fig-ap3-mar-ingreso" class="quarto-xref">figura&nbsp;<span>10.5</span></a> compara las densidades del ingreso de la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>). Las diferencias son pequeñas en el total y más visibles entre los hombres, lo que muestra la utilidad de revisar las desagregaciones. La línea roja indica la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">fill =</span> data_source)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">fill =</span> data_source)) <span class="sc">+</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
@@ -660,7 +680,7 @@ Figura&nbsp;10.4: Distribución del gasto por zona y sexo bajo un patrón MAR
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>sex_income_density_plot <span class="ot">&lt;-</span> income_density_plot <span class="sc">+</span></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> Sex) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="sc">/</span> sex_income_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="sc">/</span> sex_income_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-mar-ingreso" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -676,7 +696,7 @@ Figura&nbsp;10.5: Distribución del ingreso, total y por sexo, bajo un patrón M
 </div>
 <p>La <a href="#fig-ap3-mar-gasto" class="quarto-xref">figura&nbsp;<span>10.6</span></a> muestra las densidades del gasto en la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>), en el total y por sexo. Las curvas son próximas entre las mujeres y presentan diferencias más visibles entre los hombres. La línea roja representa la media del gasto en la base completa.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  mar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Expenditure, <span class="at">fill =</span> data_source)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
@@ -687,7 +707,7 @@ Figura&nbsp;10.5: Distribución del ingreso, total y por sexo, bajo un patrón M
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>sex_expenditure_density_plot <span class="ot">&lt;-</span> expenditure_density_plot <span class="sc">+</span></span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> Sex) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="sc">/</span> sex_expenditure_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="sc">/</span> sex_expenditure_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-mar-gasto" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -703,25 +723,25 @@ Figura&nbsp;10.6: Distribución del gasto, total y por sexo, bajo un patrón MAR
 </div>
 <p>Por último, se simula una pérdida de información no al azar (MNAR). Como se explicó al inicio del anexo, en este mecanismo la probabilidad de que un dato falte está relacionada con su propio valor. Esta dependencia puede introducir un sesgo apreciable en la inferencia y el análisis estadístico de las encuestas de hogares, por lo que el tratamiento de los datos faltantes requiere especial atención.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mnar_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mnar_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Income) <span class="sc">%&gt;%</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">1300</span>L)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>mnar_plot_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">mnar_data =</span> mnar_data, <span class="at">survey_data =</span> survey_data),</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">.id =</span> <span class="st">"data_source"</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>El código anterior conserva en <code>mnar_data</code> las 1300 observaciones con menores ingresos y las reúne con la base completa en <code>mnar_plot_data</code>. La <a href="#fig-ap3-mnar-ingreso" class="quarto-xref">figura&nbsp;<span>10.7</span></a> muestra cómo esta selección elimina la cola de ingresos altos y desplaza la distribución hacia valores menores. La media de los casos conservados, en azul, queda por debajo de la media de la base completa, en rojo.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mnar_income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mnar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">fill =</span> data_source)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mnar_income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mnar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">fill =</span> data_source)) <span class="sc">+</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(mnar_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"blue"</span>)</span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>mnar_income_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>mnar_income_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-mnar-ingreso" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -737,7 +757,7 @@ Figura&nbsp;10.7: Distribución del ingreso bajo un patrón MNAR
 </div>
 <p>La <a href="#fig-ap3-mnar-gasto" class="quarto-xref">figura&nbsp;<span>10.8</span></a> compara la distribución del gasto en la base completa (<code>survey_data</code>) y entre los casos conservados bajo MNAR (<code>mnar_data</code>). La selección por ingreso también reduce la presencia de gastos altos. La línea azul señala la media del gasto de los casos conservados y la roja, la media de la base completa.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mnar_expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mnar_expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  mnar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> Expenditure, <span class="at">fill =</span> data_source)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
@@ -746,7 +766,7 @@ Figura&nbsp;10.7: Distribución del ingreso bajo un patrón MNAR
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Expenditure), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(mnar_data<span class="sc">$</span>Expenditure), <span class="at">color =</span> <span class="st">"blue"</span>)</span>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>mnar_expenditure_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>mnar_expenditure_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-mnar-gasto" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -762,13 +782,13 @@ Figura&nbsp;10.8: Distribución del gasto bajo un patrón MNAR
 </div>
 <p>La <a href="#fig-ap3-mnar-cajas" class="quarto-xref">figura&nbsp;<span>10.9</span></a> compara el ingreso por zona y sexo en la base completa (<code>survey_data</code>) y entre los casos conservados bajo MNAR (<code>mnar_data</code>). La eliminación de ingresos altos reduce las medianas y la dispersión, con cambios más marcados en la zona urbana. La línea roja indica la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mnar_income_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mnar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> data_source, <span class="at">y =</span> Income)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mnar_income_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mnar_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> data_source, <span class="at">y =</span> Income)) <span class="sc">+</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(Zone <span class="sc">~</span> Sex) <span class="sc">+</span></span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>mnar_income_boxplot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>mnar_income_boxplot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-mnar-cajas" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -791,20 +811,20 @@ Figura&nbsp;10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR
 <p>La imputación por la media no condicional consiste en reemplazar los valores faltantes con la media aritmética de los valores observados de la variable, sin considerar otras variables. La media se calcula a partir de todos los valores disponibles, independientemente de las características de las observaciones.</p>
 <p>Para ilustrar el tratamiento de los datos faltantes bajo un mecanismo MCAR, se construye la siguiente base de datos:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">full_join</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">full_join</span>(</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  survey_data,</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  mcar_data <span class="sc">%&gt;%</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    HHID, PersonID, <span class="at">income_missing =</span> Income, <span class="at">employment_missing =</span> Employment</span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"HHID"</span>, <span class="st">"PersonID"</span>)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>El código anterior utiliza la función <code>full_join</code> del paquete <code>dplyr</code> para combinar las dos bases de datos. Esta unión conserva todas las filas de ambas bases, combina las que tienen claves coincidentes y asigna valores faltantes donde no hay correspondencia. Para conocer el porcentaje de valores faltantes, se ejecuta el siguiente código:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">missing_proportion =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(income_missing) <span class="sc">/</span> <span class="fu">n</span>()))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">missing_proportion =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(income_missing) <span class="sc">/</span> <span class="fu">n</span>()))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 2
   Zone  missing_proportion
@@ -812,9 +832,9 @@ Figura&nbsp;10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR
 1 Rural              0.208
 2 Urban              0.193</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex) <span class="sc">%&gt;%</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">missing_proportion =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(income_missing) <span class="sc">/</span> <span class="fu">n</span>()))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">missing_proportion =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(income_missing) <span class="sc">/</span> <span class="fu">n</span>()))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 2
   Sex    missing_proportion
@@ -825,13 +845,13 @@ Figura&nbsp;10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR
 </div>
 <p>La imputación por la media no condicional es un método simple y rápido. Puede resultar útil cuando la distribución de la variable no es muy asimétrica o cuando hay pocos valores faltantes en relación con el tamaño de la muestra. Sin embargo, presenta limitaciones cuando existen sesgos o patrones en los datos faltantes, o cuando las variables están muy correlacionadas. Aunque conserva la media de los valores observados, modifica la variabilidad y los percentiles, y puede afectar el sesgo. El método se aplica de la siguiente manera:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>observed_income_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>income_missing, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>observed_income_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>income_missing, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">income_imputed =</span> <span class="fu">ifelse</span>(</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is.na</span>(income_missing), observed_income_mean, income_missing</span>
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  ))</span>
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_imputed))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_imputed))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
@@ -839,7 +859,7 @@ Figura&nbsp;10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR
 <p>El código anterior calcula la media de los valores observados de <code>income_missing</code> y la almacena en <code>observed_income_mean</code>. Luego, reemplaza los valores faltantes con esa media y guarda el resultado en <code>income_imputed</code>. La última línea cuenta los valores faltantes de esta nueva columna de <code>survey_data</code> y confirma que no quedan datos sin imputar.</p>
 <p>La <a href="#fig-ap3-media-no-condicional" class="quarto-xref">figura&nbsp;<span>10.10</span></a> compara el ingreso original (<code>Income</code>) con el completado mediante la media no condicional (<code>income_imputed</code>). La imputación produce una concentración artificial alrededor de la media, visible como un pico pronunciado. Las líneas roja y azul representan las medias original e imputada, respectivamente; su cercanía no implica que las distribuciones sean iguales.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mean_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mean_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>(data_source, income_value, <span class="sc">-</span>Zone, <span class="sc">-</span>Sex)</span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -850,7 +870,7 @@ Figura&nbsp;10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR
 <span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>income_imputed), <span class="at">color =</span> <span class="st">"blue"</span>)</span>
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>mean_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>mean_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-media-no-condicional" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -866,13 +886,13 @@ Figura&nbsp;10.10: Distribución del ingreso original e imputado por la media no
 </div>
 <p>La <a href="#fig-ap3-media-no-condicional-grupos" class="quarto-xref">figura&nbsp;<span>10.11</span></a> compara el ingreso original (<code>Income</code>) y el completado por la media no condicional (<code>income_imputed</code>) dentro de cada combinación de zona y sexo. Las cajas muestran cambios en la mediana y la dispersión al asignar un mismo valor a todos los datos faltantes. La línea roja señala la media del ingreso original.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mean_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mean_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> data_source, <span class="at">y =</span> income_value)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mean_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mean_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> data_source, <span class="at">y =</span> income_value)) <span class="sc">+</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(Zone <span class="sc">~</span> Sex) <span class="sc">+</span></span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>mean_boxplot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>mean_boxplot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-media-no-condicional-grupos" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -892,36 +912,36 @@ Figura&nbsp;10.11: Ingreso original e imputado por la media no condicional, por 
 <p>La imputación por la media condicional reemplaza los valores faltantes de una variable numérica con las medias calculadas en grupos de observaciones que comparten características. A diferencia de la media no condicional, este método considera otras variables, ya que la media de la variable de interés puede cambiar según sus valores. Puede ofrecer mayor precisión cuando las variables están correlacionadas o cuando existen patrones de ausencia de respuesta asociados con las variables de agrupación.</p>
 <p>En el siguiente ejemplo, se calculan las medias por estrato para imputar los ingresos faltantes, bajo el supuesto de que existe una relación entre el estrato y el ingreso de los hogares:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Stratum) <span class="sc">%&gt;%</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">income_imputed =</span> <span class="fu">ifelse</span>(</span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is.na</span>(income_missing), <span class="fu">mean</span>(income_missing, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), income_missing</span>
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span></span>
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>()</span>
 <span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_imputed))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_imputed))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">income_imputed =</span> <span class="fu">ifelse</span>(</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is.na</span>(income_imputed), observed_income_mean, income_imputed</span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  ))</span>
 <span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_imputed))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_imputed))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
 </div>
 <p>El código anterior utiliza <code>group_by</code> para agrupar las observaciones de <code>survey_data</code> por <code>Stratum</code>. Los valores faltantes de <code>income_missing</code> se reemplazan con la media de los ingresos observados en el estrato correspondiente, mientras que los valores observados se conservan. El resultado se almacena en <code>income_imputed</code>. A continuación, se calculan las medias y las desviaciones estándar de los ingresos originales y de los completados por imputación para comparar el efecto del método:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_mean =</span> <span class="fu">mean</span>(Income),</span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_sd =</span> <span class="fu">sd</span>(Income),</span>
 <span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_mean =</span> <span class="fu">mean</span>(income_imputed),</span>
 <span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_sd =</span> <span class="fu">sd</span>(income_imputed)</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  income_mean income_sd imputed_income_mean imputed_income_sd
 1         604       513                 612               489</code></pre>
@@ -929,14 +949,14 @@ Figura&nbsp;10.11: Ingreso original e imputado por la media no condicional, por 
 </div>
 <p>En este ejemplo, el sesgo relativo de la media del ingreso es inferior al 1,5 %, y el de la desviación estándar es cercano al 5 %. Al desagregar los resultados de la imputación por zona, se obtiene lo siguiente:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_mean =</span> <span class="fu">mean</span>(Income),</span>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_sd =</span> <span class="fu">sd</span>(Income),</span>
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_mean =</span> <span class="fu">mean</span>(income_imputed),</span>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_sd =</span> <span class="fu">sd</span>(income_imputed)</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   Zone  income_mean income_sd imputed_income_mean imputed_income_sd
@@ -948,7 +968,7 @@ Figura&nbsp;10.11: Ingreso original e imputado por la media no condicional, por 
 <p>Los sesgos relativos de la media del ingreso son del 1,87 % en la zona rural y del 0,8 % en la urbana. En ambos casos, las medias obtenidas tras la imputación son próximas a las originales.</p>
 <p>La <a href="#fig-ap3-media-condicional" class="quarto-xref">figura&nbsp;<span>10.12</span></a> compara las densidades del ingreso original (<code>Income</code>) y del completado con medias por estrato (<code>income_imputed</code>). La curva imputada se aproxima a la original, aunque conserva diferencias en el tramo central. Las líneas roja y azul señalan las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>conditional_mean_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>conditional_mean_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>(data_source, income_value, <span class="sc">-</span>Zone, <span class="sc">-</span>Sex)</span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -961,7 +981,7 @@ Figura&nbsp;10.11: Ingreso original e imputado por la media no condicional, por 
 <span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>income_imputed), <span class="at">color =</span> <span class="st">"blue"</span>)</span>
 <span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>conditional_mean_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>conditional_mean_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-media-condicional" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -977,7 +997,7 @@ Figura&nbsp;10.12: Distribución del ingreso original e imputado por la media co
 </div>
 <p>La <a href="#fig-ap3-media-condicional-grupos" class="quarto-xref">figura&nbsp;<span>10.13</span></a> compara el ingreso original (<code>Income</code>) y el completado con medias por estrato (<code>income_imputed</code>), desagregados por zona y sexo. Las medianas son próximas y persisten algunas diferencias en la amplitud de las cajas. La línea roja indica la media del ingreso original en toda la muestra.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>conditional_mean_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>conditional_mean_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  conditional_mean_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> data_source, <span class="at">y =</span> income_value)</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
@@ -985,7 +1005,7 @@ Figura&nbsp;10.12: Distribución del ingreso original e imputado por la media co
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(Zone <span class="sc">~</span> Sex) <span class="sc">+</span></span>
 <span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
 <span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>conditional_mean_boxplot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>conditional_mean_boxplot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-media-condicional-grupos" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1006,7 +1026,7 @@ Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zon
 <p>El término <em>hot-deck</em> hace referencia a las tarjetas perforadas utilizadas en los primeros sistemas informáticos para almacenar y recuperar datos. Esta técnica es relativamente simple y eficaz en conjuntos de datos pequeños o medianos, y se utiliza con frecuencia en encuestas y estudios de investigación social. Sin embargo, puede resultar menos eficaz en conjuntos grandes o complejos cuando es difícil encontrar observaciones similares o definir y medir las características relevantes de manera confiable.</p>
 <p>El siguiente código ilustra el método con los datos de la encuesta:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>donor_indices <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_missing))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>donor_indices <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_missing))</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>recipient_indices <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_missing))</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing</span>
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1016,7 +1036,7 @@ Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zon
 <span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  survey_data<span class="sc">$</span>income_imputed[i] <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing[donor_index]</span>
 <span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_imputed))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(survey_data<span class="sc">$</span>income_imputed))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
@@ -1024,13 +1044,13 @@ Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zon
 <p>El código anterior identifica las observaciones con y sin valores faltantes en <code>income_missing</code> y crea <code>income_imputed</code> para almacenar los resultados. Luego, un bucle <code>for</code> recorre las observaciones receptoras. En cada iteración, la función <code>sample</code> selecciona aleatoriamente un donante entre las observaciones con ingreso disponible.</p>
 <p>Una vez realizada la imputación, se calculan la media y la desviación estándar de los ingresos originales y de los completados por imputación:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_mean =</span> <span class="fu">mean</span>(Income),</span>
 <span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_sd =</span> <span class="fu">sd</span>(Income),</span>
 <span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_mean =</span> <span class="fu">mean</span>(income_imputed),</span>
 <span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_sd =</span> <span class="fu">sd</span>(income_imputed)</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  income_mean income_sd imputed_income_mean imputed_income_sd
 1         604       513                 618               528</code></pre>
@@ -1038,14 +1058,14 @@ Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zon
 </div>
 <p>El sesgo relativo de la media del ingreso es del 2,3 %. Al desagregar los resultados por zona, se obtiene lo siguiente:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_mean =</span> <span class="fu">mean</span>(Income),</span>
 <span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_sd =</span> <span class="fu">sd</span>(Income),</span>
 <span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_mean =</span> <span class="fu">mean</span>(income_imputed),</span>
 <span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_sd =</span> <span class="fu">sd</span>(income_imputed)</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   Zone  income_mean income_sd imputed_income_mean imputed_income_sd
@@ -1056,14 +1076,14 @@ Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zon
 </div>
 <p>El sesgo relativo de la media del ingreso es del 7,4 % en la zona rural y del 0,7 % en la urbana. El mismo ejercicio se realiza por sexo:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex) <span class="sc">%&gt;%</span></span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_mean =</span> <span class="fu">mean</span>(Income),</span>
 <span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_sd =</span> <span class="fu">sd</span>(Income),</span>
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_mean =</span> <span class="fu">mean</span>(income_imputed),</span>
 <span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_sd =</span> <span class="fu">sd</span>(income_imputed)</span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   Sex    income_mean income_sd imputed_income_mean imputed_income_sd
@@ -1074,7 +1094,7 @@ Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zon
 </div>
 <p>La <a href="#fig-ap3-hot-deck" class="quarto-xref">figura&nbsp;<span>10.14</span></a> compara la densidad del ingreso original (<code>Income</code>) con la del ingreso completado mediante donantes aleatorios (<code>income_imputed</code>). Las curvas prácticamente se superponen en esta simulación, conservando la asimetría y la cola de ingresos altos. Las líneas roja y azul representan las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>hot_deck_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>hot_deck_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>(data_source, income_value, <span class="sc">-</span>Zone, <span class="sc">-</span>Sex)</span>
 <span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1087,7 +1107,7 @@ Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zon
 <span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>income_imputed), <span class="at">color =</span> <span class="st">"blue"</span>)</span>
 <span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>hot_deck_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>hot_deck_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-hot-deck" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1107,27 +1127,27 @@ Figura&nbsp;10.14: Distribución del ingreso original e imputado mediante hot-de
 <p>La imputación por regresión utiliza las variables auxiliares disponibles para predecir los valores faltantes de la variable de interés. Primero, se identifican las variables predictoras relacionadas con ella. Luego, se ajusta un modelo con los valores observados y se utilizan sus coeficientes para predecir los valores faltantes.</p>
 <p>En este ejemplo, se imputa el ingreso mediante un modelo de regresión lineal múltiple que utiliza la zona, el sexo y el gasto como covariables:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>observed_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(survey_data, <span class="sc">!</span><span class="fu">is.na</span>(income_missing))</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>missing_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(survey_data, <span class="fu">is.na</span>(income_missing))</span>
 <span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>imputation_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Income <span class="sc">~</span> Zone <span class="sc">+</span> Sex <span class="sc">+</span> Expenditure, <span class="at">data =</span> observed_data)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>imputation_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Income <span class="sc">~</span> Zone <span class="sc">+</span> Sex <span class="sc">+</span> Expenditure, <span class="at">data =</span> observed_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Una vez ajustado el modelo, se predicen los valores faltantes:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>predicted_income <span class="ot">&lt;-</span> <span class="fu">predict</span>(imputation_model, <span class="at">newdata =</span> missing_data)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>predicted_income <span class="ot">&lt;-</span> <span class="fu">predict</span>(imputation_model, <span class="at">newdata =</span> missing_data)</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>missing_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> predicted_income</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>A continuación, se calculan la media y la desviación estándar de los ingresos originales y de los completados por imputación:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_mean =</span> <span class="fu">mean</span>(Income),</span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_sd =</span> <span class="fu">sd</span>(Income),</span>
 <span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_mean =</span> <span class="fu">mean</span>(income_imputed),</span>
 <span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_sd =</span> <span class="fu">sd</span>(income_imputed)</span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  income_mean income_sd imputed_income_mean imputed_income_sd
 1         604       513                 612               498</code></pre>
@@ -1135,14 +1155,14 @@ Figura&nbsp;10.14: Distribución del ingreso original e imputado mediante hot-de
 </div>
 <p>El sesgo relativo de la media del ingreso es del 1,2 %. El mismo ejercicio se realiza por zona:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_mean =</span> <span class="fu">mean</span>(Income),</span>
 <span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_sd =</span> <span class="fu">sd</span>(Income),</span>
 <span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_mean =</span> <span class="fu">mean</span>(income_imputed),</span>
 <span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_sd =</span> <span class="fu">sd</span>(income_imputed)</span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   Zone  income_mean income_sd imputed_income_mean imputed_income_sd
@@ -1153,7 +1173,7 @@ Figura&nbsp;10.14: Distribución del ingreso original e imputado mediante hot-de
 </div>
 <p>La <a href="#fig-ap3-regresion" class="quarto-xref">figura&nbsp;<span>10.15</span></a> compara las densidades del ingreso original (<code>Income</code>) y del completado con predicciones del modelo de regresión (<code>income_imputed</code>). La forma general es similar, aunque aparecen diferencias alrededor del tramo central de la distribución. Las líneas roja y azul indican las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>regression_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>regression_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>(data_source, income_value, <span class="sc">-</span>Zone, <span class="sc">-</span>Sex)</span>
 <span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1166,7 +1186,7 @@ Figura&nbsp;10.14: Distribución del ingreso original e imputado mediante hot-de
 <span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>income_imputed), <span class="at">color =</span> <span class="st">"blue"</span>)</span>
 <span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>regression_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>regression_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-regresion" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1194,7 +1214,7 @@ Figura&nbsp;10.15: Distribución del ingreso original e imputado por regresión
 </ol>
 <p>En el siguiente ejemplo, se imputa el ingreso utilizando el gasto del individuo como variable auxiliar y la distancia euclidiana como medida de similitud.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>observed_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(survey_data, <span class="sc">!</span><span class="fu">is.na</span>(income_missing))</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>missing_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(survey_data, <span class="fu">is.na</span>(income_missing))</span>
 <span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1204,17 +1224,17 @@ Figura&nbsp;10.15: Distribución del ingreso original e imputado por regresión
 <span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  missing_data<span class="sc">$</span>income_imputed[[i]] <span class="ot">&lt;-</span> observed_data<span class="sc">$</span>income_missing[[donor_index]]</span>
 <span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Las medias y las desviaciones estándar de los ingresos originales y de los completados por imputación se calculan de la siguiente manera:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_mean =</span> <span class="fu">mean</span>(Income),</span>
 <span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_sd =</span> <span class="fu">sd</span>(Income),</span>
 <span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_mean =</span> <span class="fu">mean</span>(income_imputed),</span>
 <span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_sd =</span> <span class="fu">sd</span>(income_imputed)</span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  income_mean income_sd imputed_income_mean imputed_income_sd
 1         604       513                 611               514</code></pre>
@@ -1222,14 +1242,14 @@ Figura&nbsp;10.15: Distribución del ingreso original e imputado por regresión
 </div>
 <p>La diferencia entre la media del ingreso original y la obtenida tras la imputación es de 6 unidades monetarias. El mismo ejercicio se realiza por zona:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_mean =</span> <span class="fu">mean</span>(Income),</span>
 <span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_sd =</span> <span class="fu">sd</span>(Income),</span>
 <span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_mean =</span> <span class="fu">mean</span>(income_imputed),</span>
 <span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_sd =</span> <span class="fu">sd</span>(income_imputed)</span>
-<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   Zone  income_mean income_sd imputed_income_mean imputed_income_sd
@@ -1241,7 +1261,7 @@ Figura&nbsp;10.15: Distribución del ingreso original e imputado por regresión
 <p>Las diferencias entre las medias son de 7 unidades monetarias en la zona rural y de 4 en la urbana.</p>
 <p>La <a href="#fig-ap3-vecino-cercano" class="quarto-xref">figura&nbsp;<span>10.16</span></a> compara la densidad del ingreso original (<code>Income</code>) y la del ingreso imputado con donantes de gasto similar (<code>income_imputed</code>). Las curvas son muy próximas y conservan la cola de ingresos altos. Las líneas roja y azul muestran las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>nearest_neighbor_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>nearest_neighbor_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>(data_source, income_value, <span class="sc">-</span>Zone, <span class="sc">-</span>Sex)</span>
 <span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1254,7 +1274,7 @@ Figura&nbsp;10.15: Distribución del ingreso original e imputado por regresión
 <span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>income_imputed), <span class="at">color =</span> <span class="st">"blue"</span>)</span>
 <span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>nearest_neighbor_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>nearest_neighbor_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-vecino-cercano" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1281,15 +1301,15 @@ Figura&nbsp;10.16: Distribución del ingreso original e imputado por el vecino m
 </ol>
 <p>En el siguiente ejemplo, se imputan los ingresos mediante un modelo que utiliza el sexo, la zona y el gasto como covariables:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>observed_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(survey_data, <span class="sc">!</span><span class="fu">is.na</span>(income_missing))</span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>missing_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(survey_data, <span class="fu">is.na</span>(income_missing))</span>
 <span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>imputation_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Income <span class="sc">~</span> Zone <span class="sc">+</span> Sex <span class="sc">+</span> Expenditure, <span class="at">data =</span> observed_data)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>imputation_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Income <span class="sc">~</span> Zone <span class="sc">+</span> Sex <span class="sc">+</span> Expenditure, <span class="at">data =</span> observed_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Con el modelo ajustado, se predicen los ingresos de las observaciones con y sin datos faltantes. Para cada receptor, se identifica el donante con la predicción más cercana y se utiliza su ingreso observado como valor imputado:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>observed_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(imputation_model, <span class="at">newdata =</span> observed_data)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>observed_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(imputation_model, <span class="at">newdata =</span> observed_data)</span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>missing_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(imputation_model, <span class="at">newdata =</span> missing_data)</span>
 <span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(missing_data))) {</span>
@@ -1297,17 +1317,17 @@ Figura&nbsp;10.16: Distribución del ingreso original e imputado por el vecino m
 <span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  missing_data<span class="sc">$</span>income_imputed[[i]] <span class="ot">&lt;-</span> observed_data<span class="sc">$</span>income_missing[[donor_index]]</span>
 <span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Por último, se calculan la media y la desviación estándar de los ingresos originales y de los completados por imputación, como en los ejemplos anteriores:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_mean =</span> <span class="fu">mean</span>(Income),</span>
 <span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_sd =</span> <span class="fu">sd</span>(Income),</span>
 <span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_mean =</span> <span class="fu">mean</span>(income_imputed),</span>
 <span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">imputed_income_sd =</span> <span class="fu">sd</span>(income_imputed)</span>
-<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  income_mean income_sd imputed_income_mean imputed_income_sd
 1         604       513                 608               516</code></pre>
@@ -1316,7 +1336,7 @@ Figura&nbsp;10.16: Distribución del ingreso original e imputado por el vecino m
 <p>La diferencia entre la media del ingreso original y la obtenida tras la imputación es cercana a 4 unidades monetarias.</p>
 <p>La <a href="#fig-ap3-vecino-cercano-regresion" class="quarto-xref">figura&nbsp;<span>10.17</span></a> compara el ingreso original (<code>Income</code>) con el completado mediante donantes cuyas predicciones son próximas a las del receptor (<code>income_imputed</code>). Las densidades prácticamente se superponen en esta simulación. Las líneas roja y azul representan las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>predictive_matching_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>predictive_matching_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
 <span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>(data_source, income_value, <span class="sc">-</span>Zone, <span class="sc">-</span>Sex)</span>
 <span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1329,7 +1349,7 @@ Figura&nbsp;10.16: Distribución del ingreso original e imputado por el vecino m
 <span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb67-12"><a href="#cb67-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>income_imputed), <span class="at">color =</span> <span class="st">"blue"</span>)</span>
 <span id="cb67-13"><a href="#cb67-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-14"><a href="#cb67-14" aria-hidden="true" tabindex="-1"></a>predictive_matching_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb67-14"><a href="#cb67-14" aria-hidden="true" tabindex="-1"></a>predictive_matching_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-vecino-cercano-regresion" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1371,16 +1391,16 @@ V(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})
 <p>Por tanto, la varianza estimada es igual a: <span id="eq-varianza-imputacion-multiple"><span class="math display">\[\hat{V}(\hat{\beta} | Y_{obs}) = \bar{U} + (1 + \frac{1}{M}) B \tag{10.2}\]</span></span></p>
 <p>El siguiente ejemplo aplica la imputación múltiple a los datos de la encuesta:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>employment_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>employment_missing</span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>observed_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(survey_data, <span class="sc">!</span><span class="fu">is.na</span>(income_missing))</span>
 <span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>missing_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(survey_data, <span class="fu">is.na</span>(income_missing))</span>
 <span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>n_missing <span class="ot">&lt;-</span> <span class="fu">nrow</span>(missing_data)</span>
-<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>n_observed <span class="ot">&lt;-</span> <span class="fu">nrow</span>(observed_data)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>n_observed <span class="ot">&lt;-</span> <span class="fu">nrow</span>(observed_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Primero, se separan las observaciones con y sin valores faltantes y se calcula el número de observaciones de cada grupo.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>n_imputations <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>n_imputations <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
 <span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(n_imputations)) {</span>
@@ -1393,11 +1413,11 @@ V(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})
 <span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a>  missing_data[[imputation_column]] <span class="ot">&lt;-</span> <span class="fu">predict</span>(imputation_model, missing_data)</span>
 <span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a>  observed_data[[imputation_column]] <span class="ot">&lt;-</span> observed_data<span class="sc">$</span>Income</span>
-<span id="cb69-14"><a href="#cb69-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb69-14"><a href="#cb69-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>El código anterior ajusta modelos de regresión lineal con <code>Income</code> como variable de respuesta y <code>Zone</code>, <code>Sex</code> y <code>Expenditure</code> como covariables. Estos modelos permiten predecir los ingresos faltantes en <code>missing_data</code>. Una vez ejecutado el código, se muestran los ingresos originales y algunos de los valores imputados:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">select</span>(missing_data, Income, <span class="fu">matches</span>(<span class="st">"income_draw_"</span>))[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">select</span>(missing_data, Income, <span class="fu">matches</span>(<span class="st">"income_draw_"</span>))[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Income income_draw_1 income_draw_2 income_draw_3
 1   409.9           550           566           568
@@ -1414,7 +1434,7 @@ V(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})
 </div>
 <p>La <a href="#fig-ap3-imputacion-multiple" class="quarto-xref">figura&nbsp;<span>10.18</span></a> compara la densidad del ingreso original, representada por la línea negra, con las de los diez conjuntos completados, representadas por las líneas de colores (<code>income_draw_1</code> a <code>income_draw_10</code>). Las curvas mantienen una forma similar, con pequeñas diferencias en el tramo central que reflejan la variación entre las imputaciones.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>multiple_imputation_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, <span class="fu">matches</span>(<span class="st">"income_draw_"</span>)) <span class="sc">%&gt;%</span></span>
@@ -1433,7 +1453,7 @@ V(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})
 <span id="cb72-17"><a href="#cb72-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">1.2</span></span>
 <span id="cb72-18"><a href="#cb72-18" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb72-19"><a href="#cb72-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-20"><a href="#cb72-20" aria-hidden="true" tabindex="-1"></a>multiple_imputation_density_plot</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb72-20"><a href="#cb72-20" aria-hidden="true" tabindex="-1"></a>multiple_imputation_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ap3-imputacion-multiple" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1449,12 +1469,12 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 </div>
 <p>Con los conjuntos de datos completados, se define el diseño muestral para estimar los parámetros de interés:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>survey_design <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(<span class="at">strata =</span> Stratum, <span class="at">ids =</span> PSU, <span class="at">weights =</span> wk, <span class="at">nest =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>survey_design <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(<span class="at">strata =</span> Stratum, <span class="at">ids =</span> PSU, <span class="at">weights =</span> wk, <span class="at">nest =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Con este diseño, se estima la media del ingreso y su varianza para cada conjunto de datos completado:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>mean_estimates <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>mean_estimates <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"income_draw_"</span>), <span class="sc">~</span> <span class="fu">survey_mean</span>(.x, <span class="at">vartype =</span> <span class="st">"var"</span>))) <span class="sc">%&gt;%</span></span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(key, <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"imputation"</span>, <span class="st">"statistic"</span>), <span class="at">fill =</span> <span class="st">"right"</span>) <span class="sc">%&gt;%</span></span>
@@ -1464,7 +1484,7 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 <span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(statistic, value)</span>
 <span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a>mean_estimates</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a>mean_estimates</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 3
    imputation  mean   var
@@ -1483,34 +1503,34 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 </div>
 <p>Para obtener la estimación combinada de la media y su varianza, se realizan los cálculos basados en las expresiones anteriores:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>pooled_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(mean_estimates<span class="sc">$</span>mean)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>pooled_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(mean_estimates<span class="sc">$</span>mean)</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>within_variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(mean_estimates<span class="sc">$</span>var)</span>
 <span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>between_variance <span class="ot">&lt;-</span> <span class="fu">var</span>(mean_estimates<span class="sc">$</span>mean)</span>
 <span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>within_variance</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>within_variance</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 857</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>between_variance</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>between_variance</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.65</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>pooled_mean_variance <span class="ot">&lt;-</span> within_variance <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> n_imputations)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>pooled_mean_variance <span class="ot">&lt;-</span> within_variance <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> n_imputations)</span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>pooled_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pooled_mean =</span> pooled_mean,</span>
 <span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_se =</span> <span class="fu">sqrt</span>(pooled_mean_variance)</span>
 <span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>pooled_results</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>pooled_results</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  pooled_mean mean_se
 1         618    29.3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>variance_estimates <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(<span class="fu">matches</span>(<span class="st">"income_draw"</span>)), survey_var, <span class="at">vartype =</span> <span class="st">"var"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>variance_estimates <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(<span class="fu">matches</span>(<span class="st">"income_draw"</span>)), survey_var, <span class="at">vartype =</span> <span class="st">"var"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Otro parámetro de interés es la varianza del ingreso, que mide su dispersión entre las personas de la muestra. Para estimarla, se aplica el mismo procedimiento utilizado para la media, cambiando el parámetro de interés:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>variance_estimates <span class="ot">&lt;-</span> variance_estimates <span class="sc">%&gt;%</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>variance_estimates <span class="ot">&lt;-</span> variance_estimates <span class="sc">%&gt;%</span></span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(key, <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"imputation"</span>, <span class="st">"statistic"</span>), <span class="at">fill =</span> <span class="st">"right"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -1519,7 +1539,7 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 <span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(statistic, value)</span>
 <span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a>variance_estimates</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a>variance_estimates</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 3
    imputation    mean         var
@@ -1538,7 +1558,7 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 </div>
 <p>Por último, se combinan las estimaciones mediante las expresiones anteriores:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>pooled_variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(variance_estimates<span class="sc">$</span>mean)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>pooled_variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(variance_estimates<span class="sc">$</span>mean)</span>
 <span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>within_variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(variance_estimates<span class="sc">$</span>var)</span>
 <span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>between_variance <span class="ot">&lt;-</span> <span class="fu">var</span>(variance_estimates<span class="sc">$</span>mean)</span>
 <span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>pooled_variance_variance <span class="ot">&lt;-</span> within_variance <span class="sc">+</span></span>
@@ -1546,7 +1566,7 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 <span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>pooled_results<span class="sc">$</span>pooled_variance <span class="ot">&lt;-</span> pooled_variance</span>
 <span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>pooled_results<span class="sc">$</span>variance_se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(pooled_variance_variance)</span>
-<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(pooled_variance, pooled_variance_variance)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(pooled_variance, pooled_variance_variance)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     pooled_variance pooled_variance_variance
 [1,]          269223               3191037330</code></pre>
@@ -1554,18 +1574,18 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-berglund2014multiple" class="csl-entry" role="listitem">
-Berglund, Patricia, y Steven Heeringa. 2014. <em>Multiple Imputation of Missing Data Using <span>SAS</span></em>. Cary, NC: SAS Institute Inc. <a href="https://support.sas.com/content/dam/SAS/support/en/books/multiple-imputation-of-missing-data-using-sas/65370_excerpt.pdf">https://support.sas.com/content/dam/SAS/support/en/books/multiple-imputation-of-missing-data-using-sas/65370_excerpt.pdf</a>.
+Berglund, Patricia, y Steven Heeringa. 2014. <em>Multiple Imputation of Missing Data Using <span>SAS</span></em>. SAS Institute Inc. <a href="https://support.sas.com/content/dam/SAS/support/en/books/multiple-imputation-of-missing-data-using-sas/65370_excerpt.pdf">https://support.sas.com/content/dam/SAS/support/en/books/multiple-imputation-of-missing-data-using-sas/65370_excerpt.pdf</a>.
 </div>
 <div id="ref-vanbuuren2012flexible" class="csl-entry" role="listitem">
-Buuren, Stef van. 2012. <em>Flexible Imputation of Missing Data</em>. Boca Raton, FL: Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/b11826">https://doi.org/10.1201/b11826</a>.
+Buuren, Stef van. 2012. <em>Flexible Imputation of Missing Data</em>. Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/b11826">https://doi.org/10.1201/b11826</a>.
 </div>
 <div id="ref-carpenter2013multiple" class="csl-entry" role="listitem">
 Carpenter, James R., y Michael G. Kenward. 2013. <em>Multiple Imputation and its Application</em>. John Wiley &amp; Sons. <a href="https://doi.org/10.1002/9781119942283">https://doi.org/10.1002/9781119942283</a>.
 </div>
 <div id="ref-HeeringaWestBerglund2017" class="csl-entry" role="listitem">
-Heeringa, Steven G., Brady T. West, y Patricia A. Berglund. 2017. <em>Applied Survey Data Analysis</em>. 2.ª ed. Boca Raton: Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/9781315153278">https://doi.org/10.1201/9781315153278</a>.
+Heeringa, Steven G., Brady T. West, y Patricia A. Berglund. 2017. <em>Applied Survey Data Analysis</em>. 2.ª ed. Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/9781315153278">https://doi.org/10.1201/9781315153278</a>.
 </div>
 <div id="ref-kim2004fractional" class="csl-entry" role="listitem">
 Kim, Jae Kwang, y Wayne Fuller. 2004. <span>«Fractional Hot Deck Imputation»</span>. <em>Biometrika</em> 91 (3): 559-78. <a href="https://doi.org/10.1093/biomet/91.3.559">https://doi.org/10.1093/biomet/91.3.559</a>.
@@ -1585,131 +1605,257 @@ Rubin, Donald B. 1987. <em>Multiple Imputation for Nonresponse in Surveys</em>. 
 
 </main> <!-- /main -->
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
+
   const labels = {
+
     note: "Nota",
+
     tip: "Consejo",
+
     important: "Importante",
+
     warning: "Advertencia",
+
     caution: "Precaución"
+
   };
+
+
 
   Object.keys(labels).forEach(function (type) {
+
     document.querySelectorAll(".callout-" + type).forEach(function (callout, index) {
+
       const title = callout.querySelector(".callout-title-container");
+
       if (!title || title.dataset.numbered === "true") {
+
         return;
+
       }
+
+
 
       const text = title.textContent.trim();
+
       if (!text || text === labels[type]) {
+
         title.textContent = labels[type] + " " + (index + 1);
+
       } else if (!new RegExp("^" + labels[type] + "\\s+\\d+").test(text)) {
+
         title.textContent = labels[type] + " " + (index + 1) + ". " + text;
+
       }
+
       title.dataset.numbered = "true";
+
     });
+
   });
+
 });
+
 </script>
+
 <script>
+
 (() => {
+
   const initTocScrollspy = () => {
+
     const toc = document.querySelector("#TOC.toc-active");
 
+
+
     if (!toc || toc.dataset.aehrScrollspy === "true") {
+
       return;
+
     }
+
+
 
     const links = Array.from(
+
       toc.querySelectorAll("a[data-scroll-target]")
+
     );
 
+
+
     const entries = links
+
       .map((link) => {
+
         const target = link.getAttribute("data-scroll-target");
 
+
+
         if (!target || !target.startsWith("#")) {
+
           return null;
+
         }
+
+
 
         let id;
+
         try {
+
           id = decodeURIComponent(target.slice(1));
+
         } catch {
+
           id = target.slice(1);
+
         }
+
+
 
         const section = document.getElementById(id);
+
         return section ? { link, section } : null;
+
       })
+
       .filter(Boolean);
 
+
+
     if (entries.length === 0) {
+
       return;
+
     }
 
+
+
     const nestedLists = Array.from(toc.querySelectorAll("ul ul"));
+
     let scheduled = false;
 
+
+
     const updateNestedLists = (activeLink) => {
+
       nestedLists.forEach((list) => {
+
         const parentLink = Array.from(list.parentElement.children).find(
+
           (element) => element.matches("a[data-scroll-target]")
+
         );
+
         const shouldOpen =
+
           parentLink === activeLink || list.contains(activeLink);
 
+
+
         list.classList.toggle("collapse", !shouldOpen);
+
       });
+
     };
+
+
 
     const updateActiveLink = () => {
+
       scheduled = false;
 
+
+
       const position = window.scrollY + 200;
+
       let activeEntry = entries[0];
 
+
+
       entries.forEach((entry) => {
+
         if (entry.section.offsetTop <= position) {
+
           activeEntry = entry;
+
         }
+
       });
+
+
 
       const atPageEnd =
+
         window.innerHeight + window.scrollY >=
+
         document.documentElement.scrollHeight - 2;
 
+
+
       if (atPageEnd) {
+
         activeEntry = entries[entries.length - 1];
+
       }
+
+
 
       links.forEach((link) => {
+
         link.classList.toggle("active", link === activeEntry.link);
+
       });
+
       updateNestedLists(activeEntry.link);
+
     };
+
+
 
     const scheduleUpdate = () => {
+
       if (!scheduled) {
+
         scheduled = true;
+
         window.requestAnimationFrame(updateActiveLink);
+
       }
+
     };
 
+
+
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
+
     window.addEventListener("resize", scheduleUpdate, { passive: true });
+
     toc.dataset.aehrScrollspy = "true";
+
     updateActiveLink();
+
   };
 
+
+
   if (document.readyState === "loading") {
+
     document.addEventListener("DOMContentLoaded", initTocScrollspy);
+
   } else {
+
     initTocScrollspy();
+
   }
+
 })();
+
 </script>
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -1761,13 +1907,14 @@ document.addEventListener("DOMContentLoaded", function () {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

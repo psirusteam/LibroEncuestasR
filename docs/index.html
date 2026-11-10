@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,10 +10,16 @@
 
 <title>Análisis de Encuestas de Hogares usando R</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -38,10 +44,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-631496449bf32ff9b0bb69a6bfd9195d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -56,7 +62,7 @@ ul.task-list li input[type="checkbox"] {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "Sin resultados",
+    "search-no-results-text": "No se han encontrado resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
@@ -71,20 +77,35 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <script>
+
 window.MathJax = {
+
   tex: {
+
     macros: {
+
       E: "\\mathbb{E}",
+
       Var: "\\operatorname{Var}",
+
       Cov: "\\operatorname{Cov}",
+
       Corr: "\\operatorname{Corr}",
+
       Pr: "\\operatorname{Pr}",
+
       deff: "\\operatorname{deff}",
+
       bold: ["\\boldsymbol{#1}", 1]
+
     }
+
   }
+
 };
+
 </script>
+
 
 
 <link rel="stylesheet" href="styles.css">
@@ -99,7 +120,7 @@ window.MathJax = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Prefacio</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Página legal</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -127,7 +148,7 @@ window.MathJax = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Prefacio</span></a>
+ <span class="menu-text">Página legal</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -217,7 +238,7 @@ window.MathJax = {
     <h2 id="toc-title">Tabla de contenidos</h2>
    
   <ul>
-  <li><a href="#prefacio" id="toc-prefacio" class="nav-link active" data-scroll-target="#prefacio">Prefacio</a></li>
+  <li><a href="#legal" id="toc-legal" class="nav-link active" data-scroll-target="#legal">Página legal</a></li>
   <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen">Resumen</a></li>
   </ul>
 </nav>
@@ -245,7 +266,7 @@ window.MathJax = {
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">9 de noviembre de 2026</p>
+      <p class="date">10 de noviembre de 2026</p>
     </div>
   </div>
   
@@ -257,148 +278,273 @@ window.MathJax = {
 </header>
 
 
-<section id="prefacio" class="level1 unnumbered">
-<h1 class="unnumbered">Prefacio</h1>
-<p>La versión online de este libro está licenciada bajo una <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licencia Internacional de Creative Commons para compartir con atribución no comercial 4.0</a>.</p>
-<p>También puede descargar la versión en PDF aquí: <a href="Libro.pdf" download="Libro.pdf" type="application/pdf">Descargar libro en PDF</a>.</p>
-<p>Este libro es el resultado de un compendio de las experiencias internacionales prácticas adquiridas por los autores en su asesoría a los países de América Latina y el Caribe desde la División de Estadísticas de la CEPAL. Se agradece la revisión detallada de Xavier MAncero, jefe de la Unidad de Estadísticas Sociales de la CEPAL, asi como de Gabriel Mendes Borgues, de la División de Población de la CEPAL, y de Álvaro Fuentes, de la División de EStadísticas de la CEPAL.</p>
+<section id="legal" class="level1 unnumbered">
+<h1 class="unnumbered">Página legal</h1>
+<p>Este documento fue elaborado por Andrés Gutiérrez, Experto Regional en Estadísticas Sociales de la División de Estadísticas de la Comisión Económica para América Latina y el Caribe (CEPAL), y por Stalyn Guerrero, Giovany Babativa y Cristian Téllez, consultores de la misma División, bajo la coordinación de Rolando Ocampo, Director, y Xavier Mancero, Jefe de la Unidad de Estadísticas Sociales, de dicha División.</p>
+<p>Este libro es el resultado de un compendio de las experiencias internacionales prácticas adquiridas por los autores en su asesoría a los países de América Latina y el Caribe desde la División de Estadísticas de la CEPAL. Se agradece a Álvaro Fuentes, Estadístico de la División de Estadísticas, y a Gabriel Mendes Borges, del Centro Latinoamericano y Caribeño de Demografía (CELADE)-División de Población de la CEPAL, por la lectura detallada de este documento y sus comentarios.</p>
+<p>La autorización para reproducir total o parcialmente esta obra debe solicitarse a la Comisión Económica para América Latina y el Caribe (CEPAL), División de Documentos y Publicaciones, publicaciones.cepal@un.org. Los Estados Miembros de las Naciones Unidas y sus instituciones gubernamentales pueden reproducir esta obra sin autorización previa. Solo se les solicita que mencionen la fuente e informen a la CEPAL de tal reproducción.</p>
 </section>
 <section id="resumen" class="level1 unnumbered">
 <h1 class="unnumbered">Resumen</h1>
-<p>Las encuestas de hogares constituyen una fuente fundamental de información para medir indicadores sociales y económicos (como la pobreza, la desigualdad, el empleo y la educación) y para monitorear el avance hacia los Objetivos de Desarrollo Sostenible. La Comisión Económica para América Latina y el Caribe (CEPAL) gestiona repositorios de microdatos de encuestas de hogares que reúnen, armonizan y documentan encuestas de más de 18 países de la región desde el año 2000, precisamente porque la información que producen estas fuentes es de vital importancia para la toma de decisiones basada en evidencia.</p>
-<p>Sin embargo, en el análisis de las encuestas de hogares existe una realidad técnica estructural que con frecuencia pasa inadvertida: la mayoría de estas encuestas no se basa en muestras simples. Por el contrario, están sustentadas en diseños de muestreo complejos que incorporan estratificación, múltiples etapas, probabilidades de selección desiguales y ajustes de ponderación derivados de la calibración. Cuando un analista aplica los métodos estadísticos tradicionales diseñados para muestras independientes e idénticamente distribuidas sobre datos que no poseen esas características, las consecuencias son estimaciones sesgadas, errores estándar subestimados, intervalos de confianza demasiado estrechos y pruebas de hipótesis con tasas de error infladas.</p>
-<p>Este documento busca proporcionar al lector los fundamentos teóricos y las herramientas computacionales necesarias para trabajar adecuadamente con encuestas provenientes de diseños complejos. A lo largo del texto se abordan de manera integrada aspectos prácticos que van desde la definición del diseño de muestreo hasta la estimación de indicadores (como totales, tamaños, medias y proporciones), la construcción de sus respectivos intervalos de confianza, la formulación de pruebas de hipótesis, la modelación mediante técnicas de regresión avanzadas y la correcta visualización de los datos.</p>
+<p>Las encuestas de hogares son una de las principales fuentes de información para caracterizar fenómenos sociales y económicos (como la pobreza, la desigualdad, el empleo y la educación) y para dar seguimiento al avance hacia los Objetivos de Desarrollo Sostenible. No obstante, el análisis de estas encuestas enfrenta un desafío técnico que a menudo pasa inadvertido: sus muestras no son aleatorias simples. Provienen de diseños complejos que combinan estratificación, selección en varias etapas, probabilidades de inclusión desiguales y factores de expansión ajustados mediante calibración. Si a estos datos se les aplican métodos estadísticos concebidos para observaciones independientes e idénticamente distribuidas, el resultado son estimaciones sesgadas, errores estándar subestimados, intervalos de confianza artificialmente estrechos y pruebas de hipótesis con tasas de error superiores a las nominales.</p>
+<p>Este documento ofrece a investigadores y analistas los fundamentos teóricos y las herramientas computacionales necesarios para trabajar correctamente con encuestas de diseño complejo. El texto recorre todo el proceso de forma integrada: la definición del diseño muestral; la estimación de totales, tamaños, medias y proporciones, junto con sus intervalos de confianza; la formulación de pruebas de hipótesis; la modelación mediante técnicas de regresión, y la visualización adecuada de los datos.</p>
 
 
 </section>
 
 </main> <!-- /main -->
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
+
   const labels = {
+
     note: "Nota",
+
     tip: "Consejo",
+
     important: "Importante",
+
     warning: "Advertencia",
+
     caution: "Precaución"
+
   };
+
+
 
   Object.keys(labels).forEach(function (type) {
+
     document.querySelectorAll(".callout-" + type).forEach(function (callout, index) {
+
       const title = callout.querySelector(".callout-title-container");
+
       if (!title || title.dataset.numbered === "true") {
+
         return;
+
       }
+
+
 
       const text = title.textContent.trim();
+
       if (!text || text === labels[type]) {
+
         title.textContent = labels[type] + " " + (index + 1);
+
       } else if (!new RegExp("^" + labels[type] + "\\s+\\d+").test(text)) {
+
         title.textContent = labels[type] + " " + (index + 1) + ". " + text;
+
       }
+
       title.dataset.numbered = "true";
+
     });
+
   });
+
 });
+
 </script>
+
 <script>
+
 (() => {
+
   const initTocScrollspy = () => {
+
     const toc = document.querySelector("#TOC.toc-active");
 
+
+
     if (!toc || toc.dataset.aehrScrollspy === "true") {
+
       return;
+
     }
+
+
 
     const links = Array.from(
+
       toc.querySelectorAll("a[data-scroll-target]")
+
     );
 
+
+
     const entries = links
+
       .map((link) => {
+
         const target = link.getAttribute("data-scroll-target");
 
+
+
         if (!target || !target.startsWith("#")) {
+
           return null;
+
         }
+
+
 
         let id;
+
         try {
+
           id = decodeURIComponent(target.slice(1));
+
         } catch {
+
           id = target.slice(1);
+
         }
+
+
 
         const section = document.getElementById(id);
+
         return section ? { link, section } : null;
+
       })
+
       .filter(Boolean);
 
+
+
     if (entries.length === 0) {
+
       return;
+
     }
 
+
+
     const nestedLists = Array.from(toc.querySelectorAll("ul ul"));
+
     let scheduled = false;
 
+
+
     const updateNestedLists = (activeLink) => {
+
       nestedLists.forEach((list) => {
+
         const parentLink = Array.from(list.parentElement.children).find(
+
           (element) => element.matches("a[data-scroll-target]")
+
         );
+
         const shouldOpen =
+
           parentLink === activeLink || list.contains(activeLink);
 
+
+
         list.classList.toggle("collapse", !shouldOpen);
+
       });
+
     };
+
+
 
     const updateActiveLink = () => {
+
       scheduled = false;
 
+
+
       const position = window.scrollY + 200;
+
       let activeEntry = entries[0];
 
+
+
       entries.forEach((entry) => {
+
         if (entry.section.offsetTop <= position) {
+
           activeEntry = entry;
+
         }
+
       });
+
+
 
       const atPageEnd =
+
         window.innerHeight + window.scrollY >=
+
         document.documentElement.scrollHeight - 2;
 
+
+
       if (atPageEnd) {
+
         activeEntry = entries[entries.length - 1];
+
       }
+
+
 
       links.forEach((link) => {
+
         link.classList.toggle("active", link === activeEntry.link);
+
       });
+
       updateNestedLists(activeEntry.link);
+
     };
+
+
 
     const scheduleUpdate = () => {
+
       if (!scheduled) {
+
         scheduled = true;
+
         window.requestAnimationFrame(updateActiveLink);
+
       }
+
     };
 
+
+
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
+
     window.addEventListener("resize", scheduleUpdate, { passive: true });
+
     toc.dataset.aehrScrollspy = "true";
+
     updateActiveLink();
+
   };
 
+
+
   if (document.readyState === "loading") {
+
     document.addEventListener("DOMContentLoaded", initTocScrollspy);
+
   } else {
+
     initTocScrollspy();
+
   }
+
 })();
+
 </script>
+
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -450,13 +596,14 @@ document.addEventListener("DOMContentLoaded", function () {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

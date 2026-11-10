@@ -1,0 +1,41 @@
+Warning messages:
+1: There were 2 warnings in `dplyr::summarise()`.
+The first warning was:
+ℹ In argument: `dependency = survey_ratio(...)`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning. 
+2: There were 4 warnings in `dplyr::summarise()`.
+The first warning was:
+ℹ In argument: `dependency = survey_ratio(...)`.
+ℹ In group 1: `Zone = "Rural"`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 3 remaining warnings. 
+3: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+4: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+5: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+6: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+7: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+Warning message:
+In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+# A tibble: 1 × 4
+  dependency dependency_se dependency_low dependency_upp
+       <dbl>         <dbl>          <dbl>          <dbl>
+1       57.2          4.16           49.0           65.5
+# A tibble: 2 × 5
+  Zone  dependency dependency_se dependency_low dependency_upp
+  <chr>      <dbl>         <dbl>          <dbl>          <dbl>
+1 Rural       61.5          8.37           45.0           78.1
+2 Urban       53.5          3.03           47.5           59.5
+# A tibble: 1 × 5
+  contrast      difference standard_error lower upper
+  <chr>              <dbl>          <dbl> <dbl> <dbl>
+1 Rural - Urban       8.05           8.90 -9.57  25.7
+Validación: edades completas; cocientes ponderados, varianzas y covarianzas correctos.

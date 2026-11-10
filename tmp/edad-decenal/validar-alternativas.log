@@ -1,0 +1,227 @@
+Loading required package: grid
+Loading required package: Matrix
+Loading required package: survival
+
+Attaching package: ‘survey’
+
+The following object is masked from ‘package:graphics’:
+
+    dotchart
+
+
+Attaching package: ‘srvyr’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning messages:
+1: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+2: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+3: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+4: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+5: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+6: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+Warning message:
+There were 9 warnings in `dplyr::summarise()`.
+The first warning was:
+ℹ In argument: `size = survey_total()`.
+ℹ In group 1: `Employment = Unemployed` `Poverty = NotPoor`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 8 remaining warnings. 
+Warning message:
+There was 1 warning in `dplyr::summarise()`.
+ℹ In argument: `size = survey_total()`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion 
+Warning message:
+There were 5 warnings in `dplyr::summarise()`.
+The first warning was:
+ℹ In argument: `proportion = survey_mean(poor, na.rm = TRUE, vartype = "cv")`.
+ℹ In group 1: `Region = North`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 4 remaining warnings. 
+Warning message:
+There were 5 warnings in `dplyr::summarise()`.
+The first warning was:
+ℹ In argument: `proportion = survey_mean(poor, na.rm = TRUE, vartype = "cv")`.
+ℹ In group 1: `Region = North`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 4 remaining warnings. 
+Warning messages:
+1: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+2: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+3: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+4: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+5: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+6: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+Warning messages:
+1: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+2: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+3: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+4: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+5: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+Warning message:
+In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+VALIDACIÓN DE EJEMPLOS ALTERNATIVOS
+Dimensiones, categorías, dominios, sumas, contrastes y mapas: OK
+Grados de libertad del diseño: 119 
+Tasas regionales de desocupación:
+         Region unemployed         se       ci_l       ci_u
+North     North 0.07795760 0.02881490 0.02148143 0.13443376
+South     South 0.09725360 0.03227652 0.03399279 0.16051442
+Central Central 0.06189475 0.01905602 0.02454563 0.09924386
+West       West 0.06812890 0.01950057 0.02990849 0.10634931
+East       East 0.05015796 0.02152146 0.00797668 0.09233924
+Contrastes regionales de desocupación:
+             contrast     SE
+north_center 0.016063 0.0345
+south_center 0.035359 0.0375
+west_east    0.017971 0.0290
+Tasa y prueba de desocupación por sexo:
+          Sex unemployed         se
+Female Female 0.04799119 0.01181253
+Male     Male 0.08390192 0.01488412
+Warning messages:
+1: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+2: In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+
+	Design-based t-test
+
+data:  unemployed ~ Sex
+t = 2.1822, df = 118, p-value = 0.03107
+alternative hypothesis: true difference in mean is not equal to 0
+95 percent confidence interval:
+ 0.003323322 0.068498134
+sample estimates:
+difference in mean 
+        0.03591073 
+
+Warning message:
+In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+Prueba por condición de actividad:
+
+	Pearson's X^2: Rao & Scott adjustment
+
+data:  NextMethod()
+F = 62.251, ndf = 1.6865, ddf = 200.6978, p-value < 2.2e-16
+
+Warning message:
+In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+Razón de odds:
+          nlcon     SE
+contrast 1.0226 0.0961
+Contrastes de ingreso por región:
+             contrast     SE
+north_center  -98.418 82.723
+south_center  -25.008 87.595
+west_east     -24.747 85.277
+Prueba de ingreso en jefaturas:
+
+	Design-based t-test
+
+data:  Income ~ Sex
+t = 2.7634, df = 118, p-value = 0.006638
+alternative hypothesis: true difference in mean is not equal to 0
+95 percent confidence interval:
+  34.65881 209.93200
+sample estimates:
+difference in mean 
+          122.2954 
+
+Warning message:
+In tapply(X = nPSU, INDEX = as.numeric(strata), FUN = head, 1) :
+  NAs introduced by coercion
+Contraste de razones Female - Male:
+               contrast    SE
+sex_difference  -0.1777 0.088
+CV de proporciones de pobreza:
+# A tibble: 5 × 3
+  Region  proportion proportion_cv
+  <fct>        <dbl>         <dbl>
+1 North        0.359         0.155
+2 South        0.344         0.126
+3 Central      0.365         0.215
+4 West         0.401         0.117
+5 East         0.452         0.196
+Pobreza femenina rural y CV:
+# A tibble: 5 × 3
+  Region  proportion proportion_cv
+  <fct>        <dbl>         <dbl>
+1 North        0.314         0.230
+2 South        0.303         0.142
+3 Central      0.424         0.463
+4 West         0.508         0.202
+5 East         0.548         0.230
+Mediana del gasto por zona:
+# A tibble: 2 × 5
+  Zone  median median_se median_low median_upp
+  <chr>  <dbl>     <dbl>      <dbl>      <dbl>
+1 Rural   241.      11.0       214.       258.
+2 Urban   381.      19.8       337.       416.
+Warning message:
+There were 2 warnings in `dplyr::summarise()`.
+The first warning was:
+ℹ In argument: `median = survey_median(...)`.
+ℹ In group 1: `Zone = "Rural"`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning. 
+Warning messages:
+1: There were 10 warnings in `dplyr::summarise()`.
+The first warning was:
+ℹ In argument: `q = survey_quantile(...)`.
+ℹ In group 1: `Zone = "Rural"`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 9 remaining warnings. 
+2: There were 10 warnings in `dplyr::summarise()`.
+The first warning was:
+ℹ In argument: `q = survey_quantile(...)`.
+ℹ In group 1: `Sex = "Female"`.
+Caused by warning in `tapply()`:
+! NAs introduced by coercion
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 9 remaining warnings. 
+Diagramas de caja: cuatro cajas visibles y cuantiles ordenados, OK.
+Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE
+ℹ tmap modes "plot" - "view"
+ℹ toggle with `tmap::ttm()`
+This message is displayed once per session.
+Correspondencia geográfica y unión sin regiones faltantes: OK.
+Todas las comprobaciones pasaron.

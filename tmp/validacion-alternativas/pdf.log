@@ -1,0 +1,757 @@
+
+[ 1/12] index.qmd
+
+[ 2/12] chapters\01-Introduccion-alternativa.qmd
+
+
+processing file: 01-Introduccion-alternativa.qmd
+1/2 [setup-introduccion]
+2/2                     
+output file: 01-Introduccion-alternativa.knit.md
+
+
+[ 3/12] chapters\02-Conceptos.qmd
+
+
+processing file: 02-Conceptos.qmd
+1/2 [setup-conceptos]
+2/2                  
+output file: 02-Conceptos.knit.md
+
+
+[ 4/12] chapters\03-Categoricas-alternativa.qmd
+
+
+processing file: 03-Categoricas-alternativa.qmd
+1/129                                     
+2/129 [setup-categoricas]                 
+3/129                                     
+4/129 [cargar-datos-categoricas]          
+5/129                                     
+6/129 [describir-datos-categoricas]       
+7/129                                     
+8/129 [definir-diseno-categoricas]        
+9/129                                     
+10/129 [crear-variables-categoricas]       
+11/129                                     
+12/129 [crear-subpoblaciones-categoricas]  
+13/129                                     
+14/129 [sintaxis-survey-total-categoricas] 
+15/129                                     
+16/129 [cod-tamano-zona]                   
+17/129                                     
+18/129 [tbl-tamano-zona]                   
+19/129                                     
+20/129 [cod-tamano-pobreza]                
+21/129                                     
+22/129 [tbl-tamano-pobreza]                
+23/129                                     
+24/129 [cod-tamano-empleo]                 
+25/129 [tbl-tamano-empleo]                 
+26/129                                     
+27/129 [cod-tamano-empleo-pobreza]         
+28/129 [tbl-tamano-empleo-pobreza]         
+29/129                                     
+30/129 [cod-prop-zona-media]               
+31/129 [tbl-prop-zona]                     
+32/129                                     
+33/129 [cod-prop-sexo-urbano]              
+34/129 [tbl-prop-sexo-urbano]              
+35/129                                     
+36/129 [cod-prop-zona-hombre]              
+37/129 [tbl-prop-zona-hombre]              
+38/129                                     
+39/129 [cod-prop-zona-pobreza-hombre]      
+40/129 [tbl-prop-zona-pobreza-hombre]      
+41/129                                     
+42/129 [cod-prop-edad-rango-empleo-mujer]  
+43/129 [tbl-prop-edad-rango-empleo-mujer]  
+44/129                                     
+45/129 [crear-diseno-pobreza-factor]       
+46/129                                     
+47/129 [cod-contingencia-pobreza-sexo]     
+48/129 [tbl-contingencia-pobreza-sexo]     
+49/129                                     
+50/129 [cod-svyby-empleo-sexo]             
+51/129                                     
+52/129 [tbl-svyby-empleo-sexo]             
+53/129                                     
+54/129 [cod-svyby-region-pobreza]          
+55/129                                     
+56/129 [tbl-svyby-region-pobreza]          
+57/129                                     
+58/129 [cod-interaccion-sexo-pobreza]      
+59/129                                     
+60/129 [tbl-interaccion-sexo-pobreza]      
+61/129                                     
+62/129 [cod-razon-odds-pobreza-sexo]       
+63/129                                     
+64/129 [cod-tab-desempleo-sexo]            
+65/129                                     
+66/129 [tbl-prop-desempleo-sexo]           
+67/129                                     
+68/129 [cod-ttest-desempleo-sexo]          
+69/129                                     
+70/129 [tbl-ttest-desempleo-sexo]          
+71/129                                     
+72/129 [cod-chi-pobreza-sexo]              
+73/129                                     
+74/129 [cod-chi-empleo-sexo]               
+75/129                                     
+76/129 [cod-chi-pobreza-region]            
+77/129                                     
+78/129 [cod-prop-pobreza-sexo]             
+79/129                                     
+80/129 [tbl-svyby-pobreza-sexo2]           
+81/129                                     
+82/129 [cod-diferencia-pobreza-sexo]       
+83/129                                     
+84/129 [cod-vcov-pobreza-sexo]             
+85/129                                     
+86/129 [tbl-vcov-sex-pobreza]              
+87/129                                     
+88/129 [cod-se-diferencia-pobreza-sexo]    
+89/129                                     
+90/129 [cod-contraste-pobreza-sexo]        
+91/129                                     
+92/129 [cod-prop-desempleo-region]         
+93/129                                     
+94/129 [tbl-svyby-desempleo-region]        
+95/129                                     
+96/129 [cod-vcov-desempleo-region]         
+97/129                                     
+98/129 [tbl-vcov-desempleo-region]         
+99/129                                     
+100/129 [cod-se-contrastes-desempleo-region]
+101/129                                     
+102/129 [cod-contrastes-desempleo-region]   
+103/129                                     
+104/129 [setup-graficos-categoricas]        
+105/129                                     
+106/129 [fig-barras-zona]                   
+107/129                                     
+108/129 [fig-barras-pobreza]                
+109/129                                     
+110/129 [fig-barras-empleo-pobreza]         
+111/129                                     
+112/129 [fig-barras-prop-zona-hombre]       
+113/129                                     
+114/129 [fig-barras-prop-region-hombre]     
+115/129                                     
+116/129 [mapas-setup]                       
+117/129                                     
+118/129 [fig-mapa-regiones]                 
+119/129                                     
+120/129 [mapas-pobreza-setup]               
+121/129                                     
+122/129 [fig-mapa-pobreza-hombre]           
+123/129                                     
+124/129 [fig-mapa-cv-pobreza]               
+125/129                                     
+126/129 [mapas-bivar-setup]                 
+127/129                                     
+128/129 [fig-mapa-bivariante]               
+129/129                                     
+output file: 03-Categoricas-alternativa.knit.md
+
+
+[ 5/12] chapters\04-Continuas-alternativa.qmd
+
+
+processing file: 04-Continuas-alternativa.qmd
+1/126                               
+2/126 [setup-continuas]             
+3/126                               
+4/126 [cargar-datos-continuas]      
+5/126                               
+6/126 [describir-datos-continuas]   
+7/126                               
+8/126 [definir-diseno-continuas]    
+9/126                               
+10/126 [cod-total-ingreso]           
+11/126 [tbl-total-ingreso]           
+12/126                               
+13/126 [cod-total-gasto]             
+14/126 [tbl-total-gasto]             
+15/126                               
+16/126 [cod-total-ingreso-sexo]      
+17/126 [tbl-total-ingreso-sexo]      
+18/126                               
+19/126 [cod-media-ingreso]           
+20/126 [tbl-media-ingreso]           
+21/126                               
+22/126 [cod-media-gasto]             
+23/126                               
+24/126 [tbl-media-gasto]             
+25/126                               
+26/126 [cod-media-gasto-zona]        
+27/126                               
+28/126 [tbl-media-gasto-zona]        
+29/126                               
+30/126 [cod-media-gasto-zona-region] 
+31/126                               
+32/126 [tbl-media-gasto-zona-reg]    
+33/126                               
+34/126 [cod-razon-sexo]              
+35/126 [tbl-razon-sexo]              
+36/126                               
+37/126 [cod-razon-sexo-rural]        
+38/126 [tbl-razon-sexo-rural]        
+39/126                               
+40/126 [cod-razon-gasto-ingreso]     
+41/126 [tbl-razon-gasto-ingreso]     
+42/126                               
+43/126 [cod-razon-gasto-ingreso-reg] 
+44/126                               
+45/126 [tbl-razon-gasto-ingreso-reg] 
+46/126                               
+47/126 [cod-sd-ingreso-zona]         
+48/126 [tbl-sd-ingreso-zona]         
+49/126                               
+50/126 [cod-mediana-gasto-zona]      
+51/126                               
+52/126 [tbl-mediana-gasto-zona]      
+53/126                               
+54/126 [cod-cuantil-gasto]           
+55/126 [tbl-cuantil-gasto]           
+56/126                               
+57/126 [cod-gini]                    
+58/126                               
+59/126 [tbl-gini]                    
+60/126                               
+61/126 [fig-lorenz]                  
+62/126                               
+63/126 [cod-covarianza]              
+64/126                               
+65/126 [tbl-covarianza]              
+66/126                               
+67/126 [cod-correlacion-manual]      
+68/126                               
+69/126 [cod-correlacion-jtools]      
+70/126                               
+71/126 [cod-ttest-sexo]              
+72/126                               
+73/126 [tbl-ttest-sexo]              
+74/126                               
+75/126 [cod-prom-region]             
+76/126                               
+77/126 [tbl-prom-region]             
+78/126                               
+79/126 [cod-contraste-ns]            
+80/126                               
+81/126 [tbl-contraste-ns]            
+82/126                               
+83/126 [cod-diferencia-norte-sur]    
+84/126                               
+85/126 [cod-vcov-region]             
+86/126                               
+87/126 [tbl-vcov-region]             
+88/126                               
+89/126 [cod-se-contraste-ns]         
+90/126                               
+91/126 [cod-contrastes-regiones]     
+92/126                               
+93/126 [tbl-contraste-regiones]      
+94/126                               
+95/126 [cod-prom-sexo]               
+96/126                               
+97/126 [tbl-prom-sexo]               
+98/126                               
+99/126 [cod-contraste-sexo]          
+100/126                               
+101/126 [tbl-contraste-sexo]          
+102/126                               
+103/126 [cod-razon-ingreso-gasto-sexo]
+104/126                               
+105/126 [tbl-razon-ingreso-gasto-sexo]
+106/126                               
+107/126 [cod-contraste-razon-sexo]    
+108/126                               
+109/126 [tbl-contraste-razon-sexo]    
+110/126                               
+111/126 [setup-graficos-continuas]    
+112/126                               
+113/126 [fig-hist-ingreso-ponde]      
+114/126                               
+115/126 [fig-hist-zona]               
+116/126                               
+117/126 [fig-densidades]              
+118/126                               
+119/126 [fig-boxplot-zona-sexo]       
+120/126                               
+121/126 [fig-svyhist-svybox]          
+122/126                               
+123/126 [fig-scatter-basico]          
+124/126                               
+125/126 [fig-scatter-zona]            
+126/126                               
+output file: 04-Continuas-alternativa.knit.md
+
+
+[ 6/12] chapters\05-Regresion.qmd
+
+
+processing file: 05-Regresion.qmd
+1/53 [setup-regresion]                   
+2/53                                     
+3/53 [opciones-regresion]                
+4/53                                     
+5/53 [preparar-diseno-regresion]         
+6/53                                     
+7/53 [fig-scatter-muestra-sinP]          
+8/53                                     
+9/53 [ajustar-modelo-svy]                
+10/53                                     
+11/53 [calcular-r2-componentes]           
+12/53                                     
+13/53 [cod-r2-ajustado]                   
+14/53                                     
+15/53 [calcular-residuales-estandarizados]
+16/53                                     
+17/53 [fig-hist-residuales]               
+18/53                                     
+19/53 [fig-residuales-covariables]        
+20/53                                     
+21/53 [fig-cook]                          
+22/53                                     
+23/53 [cod-dfbetas-primeros]              
+24/53                                     
+25/53 [tbl-dfbetas-primeros]              
+26/53                                     
+27/53 [cod-dfbetas-influyentes]           
+28/53 [tbl-dfbetas-influyentes]           
+29/53                                     
+30/53 [fig-dfbetas]                       
+31/53                                     
+32/53 [fig-dffits]                        
+33/53                                     
+34/53 [cod-tabla-inferencia-modelo]       
+35/53                                     
+36/53 [tbl-inferencia-modelo]             
+37/53                                     
+38/53 [tbl-coeficientes-modelo]           
+39/53                                     
+40/53 [cod-prediccion-matricial]          
+41/53                                     
+42/53 [cod-vcov-modelo]                   
+43/53                                     
+44/53 [tbl-vcov-modelo]                   
+45/53                                     
+46/53 [cod-varianza-predicciones]         
+47/53                                     
+48/53 [predicciones-muestra]              
+49/53                                     
+50/53 [fig-pred-intervalos]               
+51/53                                     
+52/53 [cod-prediccion-nueva-observacion]  
+53/53                                     
+output file: 05-Regresion.knit.md
+
+
+[ 7/12] chapters\06-GLM.qmd
+
+
+processing file: 06-GLM.qmd
+1/38 [setup-glm]                           
+2/38                                       
+3/38 [preparar-diseno-glm]                 
+4/38                                       
+5/38 [mod-logistico-base]                  
+6/38                                       
+7/38 [cod-resultados-logistica]            
+8/38                                       
+9/38 [tbl-ic-logistica]                    
+10/38                                       
+11/38 [fig-logistica-base]                  
+12/38                                       
+13/38 [mod-logistico-interaccion]           
+14/38                                       
+15/38 [cod-resultados-logistica-interaccion]
+16/38                                       
+17/38 [tbl-logistica-interaccion]           
+18/38                                       
+19/38 [fig-comparacion-logistica]           
+20/38                                       
+21/38 [cod-prop-empleo-15]                  
+22/38                                       
+23/38 [tbl-prop-empleo-15]                  
+24/38                                       
+25/38 [mod-multinomial]                     
+26/38                                       
+27/38 [definir-tidy-svyvglm]                
+28/38                                       
+29/38 [calcular-multinomial-coef]           
+30/38                                       
+31/38 [tbl-multinomial-coef]                
+32/38                                       
+33/38 [fig-multinomial-ic]                  
+34/38                                       
+35/38 [ajustar-modelo-gamma]                
+36/38                                       
+37/38 [tbl-gamma-coeficientes]              
+38/38                                       
+output file: 06-GLM.knit.md
+
+
+[ 8/12] chapters\07-Multinivel.qmd
+
+
+processing file: 07-Multinivel.qmd
+1/80 [setup-multinivel]                   
+2/80                                      
+3/80 [multinivel-setup]                   
+4/80                                      
+5/80 [encuesta-plot-setup]                
+6/80                                      
+7/80 [fig-regresion-simple]               
+8/80                                      
+9/80 [coef-intercepto-setup]              
+10/80                                      
+11/80 [fig-intercepto-por-estrato]         
+12/80                                      
+13/80 [coef-pendiente-setup]               
+14/80                                      
+15/80 [fig-pendiente-por-estrato]          
+16/80                                      
+17/80 [coef-pendiente-2]                   
+18/80                                      
+19/80 [fig-intercepto-pendiente-libres]    
+20/80                                      
+21/80 [pesos-multinivel-setup]             
+22/80                                      
+23/80 [modelos-nulos-setup]                
+24/80                                      
+25/80 [cod-interceptos-nulos]              
+26/80                                      
+27/80 [tbl-interceptos-nulos]              
+28/80                                      
+29/80 [cod-icc-nulo]                       
+30/80                                      
+31/80 [tbl-icc-nulo]                       
+32/80                                      
+33/80 [mod-intercepto-aleatorio-setup]     
+34/80                                      
+35/80 [cod-coef-intercepto-aleatorio]      
+36/80                                      
+37/80 [tbl-coef-intercepto-aleatorio]      
+38/80                                      
+39/80 [preparar-coef-intercepto-aleatorio] 
+40/80                                      
+41/80 [fig-intercepto-aleatorio]           
+42/80                                      
+43/80 [mod-pendiente-aleatoria-setup]      
+44/80                                      
+45/80 [cod-coef-pendiente-aleatoria]       
+46/80                                      
+47/80 [tbl-coef-pendiente-aleatoria]       
+48/80                                      
+49/80 [preparar-coef-pendiente-aleatoria]  
+50/80                                      
+51/80 [fig-pendiente-aleatoria]            
+52/80                                      
+53/80 [fig-logit-pobreza-gasto]            
+54/80                                      
+55/80 [mod-logit-nulo-setup]               
+56/80                                      
+57/80 [cod-coef-logit-nulo]                
+58/80                                      
+59/80 [tbl-coef-logit-nulo]                
+60/80                                      
+61/80 [mod-logit-int-aleatorio-setup]      
+62/80                                      
+63/80 [cod-coef-logit-int-aleatorio]       
+64/80                                      
+65/80 [tbl-coef-logit-int-aleatorio]       
+66/80                                      
+67/80 [preparar-pred-logit-int-aleatorio]  
+68/80                                      
+69/80 [fig-logit-int-aleatorio]            
+70/80                                      
+71/80 [mod-logit-pendiente-aleatoria-setup]
+72/80                                      
+73/80 [cod-coef-logit-pendiente]           
+74/80                                      
+75/80 [tbl-coef-logit-pendiente]           
+76/80                                      
+77/80 [preparar-pred-logit-pendiente]      
+78/80                                      
+79/80 [fig-logit-pendiente-aleatoria]      
+80/80                                      
+output file: 07-Multinivel.knit.md
+
+
+[ 9/12] chapters\A1-TidyVerse.qmd
+
+
+processing file: A1-TidyVerse.qmd
+1/71                              
+2/71 [setup-tidyverse]            
+3/71                              
+4/71 [instalar-paquetes-tidyverse]
+5/71                              
+6/71 [cargar-paquetes-tidyverse]  
+7/71                              
+8/71 [cargar-bigcity]             
+9/71                              
+10/71 [vista-head-bigcity]         
+11/71                              
+12/71 [contar-filas-bigcity]       
+13/71                              
+14/71 [contar-columnas-bigcity]    
+15/71                              
+16/71 [dimension-bigcity]          
+17/71                              
+18/71 [abrir-bigcity]              
+19/71                              
+20/71 [nombres-bigcity]            
+21/71                              
+22/71 [estructura-bigcity]         
+23/71                              
+24/71 [contar-bigcity]             
+25/71                              
+26/71 [filtrar-sexo]               
+27/71                              
+28/71 [filtrar-no-pobres]          
+29/71                              
+30/71 [filtrar-ingresos]           
+31/71                              
+32/71 [seleccionar-variables]      
+33/71                              
+34/71 [excluir-identificadores]    
+35/71                              
+36/71 [ordenar-ingreso]            
+37/71                              
+38/71 [ordenar-sexo-edad]          
+39/71                              
+40/71 [ordenar-edad-desc]          
+41/71                              
+42/71 [crear-region]               
+43/71                              
+44/71 [crear-region-id]            
+45/71                              
+46/71 [crear-log-ingreso]          
+47/71                              
+48/71 [transformar-ingreso]        
+49/71                              
+50/71 [crear-grupos-edad]          
+51/71                              
+52/71 [resumir-ingreso]            
+53/71                              
+54/71 [resumir-percentiles]        
+55/71                              
+56/71 [resumir-dispersion]         
+57/71                              
+58/71 [contar-region]              
+59/71                              
+60/71 [contar-region-count]        
+61/71                              
+62/71 [contar-sexo]                
+63/71                              
+64/71 [contar-zona]                
+65/71                              
+66/71 [promedio-region]            
+67/71                              
+68/71 [promedio-sexo]              
+69/71                              
+70/71 [resumen-ingreso-empleo]     
+71/71                              
+output file: A1-TidyVerse.knit.md
+
+
+[10/12] chapters\A2-MPVbinder.qmd
+
+
+processing file: A2-MPVbinder.qmd
+1/9                
+2/9 [setup-mpv]    
+3/9                
+4/9 [sim-mv-modelo]
+5/9                
+6/9 [sim-muestreo] 
+7/9                
+8/9 [sim-doble]    
+9/9                
+output file: A2-MPVbinder.knit.md
+
+
+[11/12] chapters\A3-Imputacion.qmd
+
+
+processing file: A3-Imputacion.qmd
+1/107                                        
+2/107 [setup-imputacion]                     
+3/107                                        
+4/107 [cargar-datos-imputacion]              
+5/107                                        
+6/107 [preparar-datos-imputacion]            
+7/107                                        
+8/107 [media-inicial-imputacion]             
+9/107                                        
+10/107 [simular-mcar-imputacion]              
+11/107                                        
+12/107 [fig-ap3-mcar-cajas]                   
+13/107                                        
+14/107 [fig-ap3-mcar-ingreso]                 
+15/107                                        
+16/107 [fig-ap3-mcar-gasto]                   
+17/107                                        
+18/107 [simular-mar-imputacion]               
+19/107                                        
+20/107 [fig-ap3-mar-cajas]                    
+21/107                                        
+22/107 [fig-ap3-mar-ingreso]                  
+23/107                                        
+24/107 [fig-ap3-mar-gasto]                    
+25/107                                        
+26/107 [simular-mnar-imputacion]              
+27/107                                        
+28/107 [fig-ap3-mnar-ingreso]                 
+29/107                                        
+30/107 [fig-ap3-mnar-gasto]                   
+31/107                                        
+32/107 [fig-ap3-mnar-cajas]                   
+33/107                                        
+34/107 [preparar-valores-faltantes-imputacion]
+35/107                                        
+36/107 [resumir-valores-faltantes-imputacion] 
+37/107                                        
+38/107 [imputar-media-no-condicional]         
+39/107                                        
+40/107 [fig-ap3-media-no-condicional]         
+41/107                                        
+42/107 [fig-ap3-media-no-condicional-grupos]  
+43/107                                        
+44/107 [imputar-media-condicional]            
+45/107                                        
+46/107 [resumir-media-condicional]            
+47/107                                        
+48/107 [resumir-media-condicional-zona]       
+49/107                                        
+50/107 [fig-ap3-media-condicional]            
+51/107                                        
+52/107 [fig-ap3-media-condicional-grupos]     
+53/107                                        
+54/107 [imputar-hot-deck]                     
+55/107                                        
+56/107 [resumir-hot-deck]                     
+57/107                                        
+58/107 [resumir-hot-deck-zona]                
+59/107                                        
+60/107 [resumir-hot-deck-sexo]                
+61/107                                        
+62/107 [fig-ap3-hot-deck]                     
+63/107                                        
+64/107 [ajustar-regresion-imputacion]         
+65/107                                        
+66/107 [imputar-regresion]                    
+67/107                                        
+68/107 [resumir-regresion-imputacion]         
+69/107                                        
+70/107 [resumir-regresion-imputacion-zona]    
+71/107                                        
+72/107 [fig-ap3-regresion]                    
+73/107                                        
+74/107 [imputar-vecino-cercano]               
+75/107                                        
+76/107 [resumir-vecino-cercano]               
+77/107                                        
+78/107 [resumir-vecino-cercano-zona]          
+79/107                                        
+80/107 [fig-ap3-vecino-cercano]               
+81/107                                        
+82/107 [ajustar-regresion-vecino-cercano]     
+83/107                                        
+84/107 [imputar-vecino-cercano-regresion]     
+85/107                                        
+86/107 [resumir-vecino-cercano-regresion]     
+87/107                                        
+88/107 [fig-ap3-vecino-cercano-regresion]     
+89/107                                        
+90/107 [preparar-imputacion-multiple]         
+91/107                                        
+92/107 [generar-imputaciones-multiples]       
+93/107                                        
+94/107 [mostrar-imputaciones-multiples]       
+95/107                                        
+96/107 [fig-ap3-imputacion-multiple]          
+97/107                                        
+98/107 [definir-diseno-imputacion]            
+99/107                                        
+100/107 [estimar-medias-imputacion]            
+101/107                                        
+102/107 [combinar-medias-imputacion]           
+103/107                                        
+104/107 [organizar-varianzas-imputacion]       
+105/107                                        
+106/107 [combinar-varianzas-imputacion]        
+107/107                                        
+output file: A3-Imputacion.knit.md
+
+
+[12/12] chapters\references.qmd
+
+pandoc 
+  to: latex
+  output-file: index.tex
+  standalone: true
+  toc: true
+  number-sections: true
+  top-level-division: chapter
+  pdf-engine: xelatex
+  variables:
+    graphics: true
+    tables: true
+  default-image-extension: pdf
+  toc-depth: 3
+  
+metadata
+  crossref:
+    chapters: true
+    eq-prefix: ecuación
+    fig-prefix: figura
+    tbl-prefix: tabla
+  documentclass: scrbook
+  papersize: letter
+  block-headings: true
+  bibliography:
+    - references.bib
+  lang: es
+  classoption:
+    - oneside
+    - open=any
+  fontsize: 11pt
+  lof: true
+  lot: true
+  colorlinks: true
+  link-citations: true
+  geometry:
+    - top=25mm
+    - bottom=25mm
+    - left=25mm
+    - right=25mm
+  title: Análisis de Encuestas de Hogares
+  subtitle: usando R
+  author: Andrés Gutiérrez, Stalyn Guerrero, Giovany Babativa y Cristian Téllez
+  date: '2026-10-30T00:00:00-03:00'
+  date-format: long
+  
+
+Rendering PDF
+running xelatex - 1
+  This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex)
+   restricted \write18 enabled.
+  entering extended mode
+  Fontconfig warning: ignoring English_United States.utf8: not a valid language tag
+  
+running xelatex - 2
+  This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex)
+   restricted \write18 enabled.
+  entering extended mode
+  Fontconfig warning: ignoring English_United States.utf8: not a valid language tag
+  
+
+Running script 'scripts/post-render-figures.R'
+PDF generado: C:/Users/agutierrez1/OneDrive - United Nations/CEPAL/Vademecum/5. Handbooks/2026 Análisis de encuestas de hogares con R/LibroEncuestasR-main/docs/Libro.pdf
+
+WARN: Error removing file C:\Users\agutierrez1\OneDrive - United Nations\CEPAL\Vademecum\5. Handbooks\2026 Análisis de encuestas de hogares con R\LibroEncuestasR-main\.quarto\quarto-session-temp622a44528f5b9851: Access is denied. (os error 5): remove 'C:\Users\agutierrez1\OneDrive - United Nations\CEPAL\Vademecum\5. Handbooks\2026 Análisis de encuestas de hogares con R\LibroEncuestasR-main\.quarto\quarto-session-temp622a44528f5b9851'
+PDF generado: C:/Users/agutierrez1/OneDrive - United Nations/CEPAL/Vademecum/5. Handbooks/2026 Análisis de encuestas de hogares con R/LibroEncuestasR-main/docs/Libro.pdf

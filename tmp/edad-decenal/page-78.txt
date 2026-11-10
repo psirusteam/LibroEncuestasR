@@ -1,0 +1,41 @@
+3. Análisis de variables categóricas
+no sustituye una prueba de contraste entre sexos que considere la covarianza de las estimaciones.
+Las categorías de CatAge tienen una amplitud uniforme de diez años, de 0-9 a 90-99, lo que
+facilita comparar los tamaños de los grupos en la pirámide. En la muestra hay observaciones de
+ambos sexos en los diez grupos decenales. Las edades más avanzadas tienen pocas observaciones y
+requieren especial atención a la incertidumbre de sus estimaciones. La forma del gráfico, por sí sola,
+no permite atribuir diferencias a la fecundidad, la mortalidad o la migración.
+Las estimaciones por edad y sexo también permiten construir indicadores de la estructura demo-
+gráfica de la población. Por ejemplo, la razón de dependencia demográfica relaciona el número de
+personas menores de 15 años y de 65 años o más con el número de personas de 15 a 64 años. Su
+estimación requiere considerar conjuntamente la incertidumbre de los tamaños poblacionales del
+numerador y del denominador, así como su covarianza. En lasección de estimación de razonesse
+desarrolla esta aplicación y se muestra cómo obtener sus medidas de precisión incorporando el diseño
+muestral.
+3.6.2. Mapas temáticos
+Como explica Tennekes (2018), los mapas temáticos constituyen una herramienta de visualización
+especialmente útil en el análisis de encuestas de hogares, ya que permiten representar la distribución
+territorial de indicadores sociales y demográficos. En este contexto, las estimaciones calculadas en
+secciones anteriores pueden proyectarse directamente sobre estas unidades geográficas, facilitando
+así la identificación de patrones espaciales y desigualdades regionales. De acuerdo con Pebesma
+et al. (2026), Tennekes (2026) y Pebesma (2018), para construir este tipo de mapas enR se requiere
+información geoespacial en formatoshapefile, la cual contiene los polígonos asociados a cada unidad
+geográfica de análisis. En este capítulo se utiliza el archivoshapeBigCity/BigCity.shp, cuyas
+regiones corresponden a las definidas en la base de datosBigCity.
+En R, las libreríassf y tmap permiten cargar, manipular y visualizar esta información geográfica de
+manera integrada con los resultados obtenidos a partir de la encuesta. La libreríasf permite leer y
+manipular objetos espaciales modernos, mientras quetmap proporciona herramientas para elaborar
+mapas temáticos. La instruccióntmap_mode("plot") establece el modo de visualización estática
+de los mapas, apropiado para documentos y reportes. Finalmente, la funciónread_sf() importa el
+archivo geográficoBigCity.shp, almacenándolo en el objetobigcity_shape, el cual contiene los
+polígonos correspondientes a las regiones de análisis.
+library(sf)
+library(tmap)
+tmap_mode("plot")
+bigcity_shape <- read_sf("../data/shapeBigCity/BigCity.shp") %>%
+mutate(Region = recode(Region,
+Norte = "North", Sur = "South", Centro = "Central",
+Occidente = "West", Oriente = "East"
+))
+stopifnot(setequal(bigcity_shape$Region, levels(survey_data$Region)))
+69

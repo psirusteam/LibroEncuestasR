@@ -1,0 +1,5 @@
+suppressPackageStartupMessages({library(survey);library(srvyr);library(dplyr)})
+options(survey.lonely.psu='adjust')
+d <- readRDS('data/sample.rds') %>% as_survey_design(strata=Stratum,ids=PSU,weights=wk,nest=TRUE)
+p <- d %>% filter(Age>=15,Sex=='Female',Employment %in% c('Employed','Unemployed')) %>% mutate(age_range=droplevels(CatAge), unemployed=factor(as.numeric(Employment=='Unemployed'),levels=c(0,1))) %>% group_by(age_range,unemployed,.drop=FALSE) %>% summarise(rate=survey_prop(vartype=c('se','ci'),proportion=TRUE,prop_method='xlogit'),.groups='drop') %>% filter(unemployed=='1')
+print(p,n=20)

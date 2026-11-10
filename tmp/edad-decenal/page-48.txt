@@ -1,0 +1,41 @@
+3. Análisis de variables categóricas
+Tabla 3.10.: Proporción de hombres por zona y condición de pobreza
+Zona Pobreza Proporción EE LI 95% LS 95%
+Rural NotPoor 0.549 0.063 0.424 0.668
+Rural Extreme 0.198 0.067 0.096 0.364
+Rural Relative 0.254 0.037 0.187 0.334
+Urban NotPoor 0.660 0.037 0.584 0.728
+Urban Extreme 0.113 0.025 0.073 0.171
+Urban Relative 0.227 0.026 0.180 0.283
+La tabla 3.10 revela una geografía social particular. Mientras en las zonas urbanas el 66,0% de
+los hombres se encuentra fuera de la pobreza, en las rurales esta proporción desciende al 54,9%;
+mientras que la pobreza extrema aumenta del 11,3% al 19,8% al pasar de las zonas urbanas a las
+rurales. La pobreza relativa, en cambio, permanece más cercana entre ambos territorios.
+Las variables cuantitativas también pueden agruparse en categorías. Se estima la tasa de desocu-
+pación femenina por los intervalos decenales deCatAge, dentro de la fuerza de trabajo de 15 años o
+más. Por ello, el grupo10-19 incluye únicamente mujeres de 15 a 19 años; los demás conservan sus
+límites decenales. El denominador incluye a las ocupadas y desocupadas de cada grupo y excluye a
+las inactivas.
+female_unemployment_rate <- labor_force_subset %>%
+filter(Sex == "Female", !is.na(unemployed), !is.na(CatAge)) %>%
+mutate(age_range = CatAge) %>%
+group_by(age_range) %>%
+summarise(
+unemployment_rate = survey_mean(
+unemployed, proportion = TRUE, prop_method = "xlogit",
+vartype = c("se", "ci"), df = degf(labor_force_subset)
+),
+.groups = "drop"
+) %>%
+mutate(
+unemployment_rate = if_else(abs(unemployment_rate) < 1e-9, 0, unemployment_rate),
+across(ends_with(c("_low", "_upp")), ~ if_else(is.finite(.x) & unemployment_rate > 0 & unemployment_rate < 1, .x, NA_real_))
+)
+female_unemployment_rate
+Tabla 3.11.: Tasa de desocupación de las mujeres por rango de edad
+Edad (años) Tasa EE LI 95% LS 95%
+10-19 0.2264 0.1059 0.0212 0.798
+20-29 0.0600 0.0240 0.0254 0.135
+30-39 0.0420 0.0212 0.0142 0.117
+40-49 0.0436 0.0223 0.0143 0.126
+39
