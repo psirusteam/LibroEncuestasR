@@ -33,12 +33,17 @@ survey_data <- readRDS("../data/sample.rds")
 ```{r definir-diseno-continuas}
 options(survey.lonely.psu = "adjust")
 survey_design <- survey_data %>%
-  as_survey_design(strata = Stratum, ids = PSU, weights = wk, nest = TRUE)
+  as_survey_design(
+    strata = Stratum,
+    ids = PSU,
+    weights = wk,
+    nest = TRUE
+  )
 ```
 
 ## Estimación de parámetros descriptivos {#estimacion-de-parametros-descriptivos}
 
-La cantidad poblacional estudiada anteriormente suma pesos y una proporción promedia una indicadora. Ahora se suman o promedian valores numéricos. En las encuestas de hogares es común estimar parámetros descriptivos asociados a variables numéricas, tales como totales, medias, razones y desviaciones estándar. Estas medidas permiten caracterizar distintos fenómenos sociales y económicos de la población. En esta sección se presenta la lógica detrás de la sintaxis utilizada para este tipo de estimación, junto con sus correspondientes medidas de precisión.
+En el capítulo anterior se estimaron tamaños poblacionales y proporciones para describir grupos definidos por variables categóricas. En este capítulo se analizan variables numéricas, como el ingreso y el gasto, mediante la estimación de totales, medias, razones y medidas de dispersión. Estas medidas permiten caracterizar distintos fenómenos sociales y económicos de la población. En esta sección se presenta la lógica detrás de la sintaxis utilizada para este tipo de estimación, junto con sus correspondientes medidas de precisión.
 
 ### Totales {#estimacion-del-total}
 
@@ -90,10 +95,13 @@ EE indica el error estándar y DE la desviación estándar. LI y LS identifican,
 ```{r cod-total-ingreso}
 #| results: hide
 income_total_table <- survey_design %>%
-  summarise(total = survey_total(Income, vartype = c(
-  "se",
-  "ci"
-), deff = TRUE))
+  summarise(
+    total = survey_total(
+      Income,
+      vartype = c("se", "ci"),
+      deff = TRUE
+    )
+  )
 
 income_total_table
 ```
@@ -105,17 +113,21 @@ tabla_fmt(income_total_table,
           col.names = c("Total", "EE", "LI 95 %", "LS 95 %", "Efecto de diseño"))
 ```
 
-De la tabla, se obtiene que la estimación corresponde a la suma ponderada del ingreso per cápita asociado a las personas representadas por la encuesta. No debe interpretarse como el ingreso total de los hogares. Este valor incorpora los factores de expansión y las características del diseño muestral. El error estándar asociado a esta estimación es de 4.778.674, lo que refleja la variabilidad muestral del estimador. A partir de este valor se construye un intervalo de confianza del 95%, cuyos límites inferior y superior son 76.331.414 y 95.255.920, respectivamente. El efecto de diseño (`deff`), en el sentido desarrollado por @kish1965survey, es cercano a 11: la varianza supera considerablemente la del diseño de referencia. Su magnitud refleja el efecto combinado del diseño y la ponderación y no debe interpretarse como una pérdida ligera de precisión.
+De la tabla, se obtiene que la estimación corresponde a la suma ponderada del ingreso per cápita asociado a las personas representadas por la encuesta. No debe interpretarse como el ingreso total de los hogares. Este valor incorpora los factores de expansión y las características del diseño muestral. El error estándar asociado a esta estimación es de `r formatC(income_total_table$total_se, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`, lo que refleja la variabilidad muestral del estimador. A partir de este valor se construye un intervalo de confianza del 95%, cuyos límites inferior y superior son `r formatC(income_total_table$total_low, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` y `r formatC(income_total_table$total_upp, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`, respectivamente. El efecto de diseño (`deff`), en el sentido desarrollado por @kish1965survey, es cercano a `r formatC(income_total_table$total_deff, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`: la varianza supera considerablemente la del diseño de referencia. Su magnitud refleja el efecto combinado del diseño y la ponderación y no debe interpretarse como una pérdida ligera de precisión.
 
 Para continuar ilustrando el uso de la función `survey_total()`, estimemos el total poblacional del gasto per cápita, pero ahora calculando el intervalo de confianza al 90%. El siguiente código realiza esta estimación, presentada en la @tbl-total-gasto:
 
 ```{r cod-total-gasto}
 #| results: hide
 expenditure_total_table <- survey_design %>%
-  summarise(total = survey_total(Expenditure,
-  vartype = "ci",
-  level = 0.9, deff = TRUE
-))
+  summarise(
+    total = survey_total(
+      Expenditure,
+      vartype = "ci",
+      level = 0.9,
+      deff = TRUE
+    )
+  )
 
 expenditure_total_table
 ```
@@ -162,9 +174,14 @@ Si el objetivo es estimar el total poblacional del ingreso per cápita, pero des
 #| results: hide
 income_total_by_sex_table <- survey_design %>%
   group_by(Sex) %>%
-  cascade(total = survey_total(Income,
-    vartype = c("se", "ci"), level = 0.95
-  ), .fill = "Total income")
+  cascade(
+    total = survey_total(
+      Income,
+      vartype = c("se", "ci"),
+      level = 0.95
+    ),
+    .fill = "Total income"
+  )
 
 income_total_by_sex_table
 ```
@@ -194,16 +211,20 @@ $$
 \widehat{Var}\left(\hat{\bar{y}}\right)  \approx  \frac{\widehat{Var}\left(\hat{t}_y\right)+\hat{\bar{y}}^{2}\ \widehat{Var}\left(\hat{N}\right)-2\ \hat{\bar{y}} \  \widehat{Cov}\left(\hat{t}_y,\hat{N}\right)}{\hat{N}^{2}}
 $$ {#eq-varianza-media}
 
-Como se puede observar, el cálculo de la varianza de la media poblacional implica componentes analíticos complejos, como la covarianza entre el total estimado y el tamaño poblacional estimado. Sin embargo, el paquete `srvyr` en `R` facilita estos cálculos al incorporar funciones que estiman directamente la media, su error estándar, el intervalo de confianza y el efecto del diseño. A continuación, se presenta la sintaxis para estimar la media de los ingresos de los hogares, junto con su intervalo de confianza al 95%, cuyos resultados se presentan en la @tbl-media-ingreso:
+Como se puede observar, el cálculo de la varianza de la media poblacional implica componentes analíticos complejos, como la covarianza entre el total estimado y el tamaño poblacional estimado. Sin embargo, el paquete `srvyr` en `R` facilita estos cálculos al incorporar funciones que estiman directamente la media, su error estándar, el intervalo de confianza y el efecto del diseño. A continuación, se presenta la sintaxis para estimar el ingreso per cápita medio de la población, junto con su intervalo de confianza del 95 %, cuyos resultados se presentan en la @tbl-media-ingreso:
 
 
 ```{r cod-media-ingreso}
 #| results: hide
 income_mean_table <- survey_design %>%
-  summarise(mean = survey_mean(Income, vartype = c(
-  "se",
-  "ci"
-), level = 0.95, deff = TRUE))
+  summarise(
+    mean = survey_mean(
+      Income,
+      vartype = c("se", "ci"),
+      level = 0.95,
+      deff = TRUE
+    )
+  )
 
 income_mean_table
 ```
@@ -215,17 +236,21 @@ tabla_fmt(income_mean_table,
           col.names = c("Media", "EE", "LI 95 %", "LS 95 %", "Efecto de diseño"))
 ```
 
-La función `survey_mean()` recibe una magnitud continua y no se solicita `proportion = TRUE`. Como se aprecia, los argumentos utilizados en la función `survey_mean()` son similares a los de `survey_total()`. En este caso, `vartype` permite obtener el error estándar (`"se"`) y el intervalo de confianza (`"ci"`), mientras que el argumento `deff = TRUE` solicita el cálculo del efecto del diseño. La estimación indica que el ingreso per cápita medio de la población en la población es de aproximadamente 571 dólares. El error estándar asociado es de 28,5, lo que refleja la incertidumbre muestral de la estimación. El intervalo de confianza, cuyos límites son 515 y 627, para un nivel de confianza del 95%. Además, el efecto de diseño estimado es de 8,82, lo que significa que la varianza de la media bajo el diseño muestral complejo es 8,82 veces mayor que la que se obtendría con un muestreo aleatorio simple de igual tamaño. Este valor evidencia una pérdida considerable de eficiencia, posiblemente asociada con la magnitud de la variabilidad del ingreso  entre las unidades primarias de muestreo.
+La función `survey_mean()` recibe una magnitud continua y no se solicita `proportion = TRUE`. Como se aprecia, los argumentos utilizados en la función `survey_mean()` son similares a los de `survey_total()`. En este caso, `vartype` permite obtener el error estándar (`"se"`) y el intervalo de confianza (`"ci"`), mientras que el argumento `deff = TRUE` solicita el cálculo del efecto del diseño. El ingreso per cápita medio estimado es de aproximadamente `r formatC(income_mean_table$mean, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares, con un error estándar de `r formatC(income_mean_table$mean_se, format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` dólares y un intervalo de confianza del 95 % entre `r formatC(income_mean_table$mean_low, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` y `r formatC(income_mean_table$mean_upp, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares. Además, el efecto de diseño estimado es de `r formatC(income_mean_table$mean_deff, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")`, lo que significa que la varianza de la media bajo el diseño muestral complejo es `r formatC(income_mean_table$mean_deff, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` veces mayor que la que se obtendría con un muestreo aleatorio simple de igual tamaño. Este valor evidencia una pérdida considerable de eficiencia, posiblemente asociada con la magnitud de la variabilidad del ingreso  entre las unidades primarias de muestreo.
 
 De forma análoga, es posible estimar la media de los gastos per cápita, empleando la misma estructura de código, presentada en la @tbl-media-gasto:
 
 ```{r cod-media-gasto}
 #| results: hide
 expenditure_mean_table <- survey_design %>%
-  summarise(mean = survey_mean(Expenditure, vartype = c(
-  "se",
-  "ci"
-), level = 0.95, deff = TRUE))
+  summarise(
+    mean = survey_mean(
+      Expenditure,
+      vartype = c("se", "ci"),
+      level = 0.95,
+      deff = TRUE
+    )
+  )
 
 expenditure_mean_table
 ```
@@ -238,7 +263,7 @@ tabla_fmt(expenditure_mean_table,
           col.names = c("Media", "EE", "LI 95 %", "LS 95 %", "Efecto de diseño"))
 ```
 
-La media estimada del gasto es de 371 dólares, con un error estándar de 13,3. El intervalo de confianza se extiende entre 344 y 397, mientras que el efecto de diseño de 6,02 resume la relación de varianzas respecto del diseño de referencia; no identifica por sí solo qué componente del diseño explica esa diferencia. 
+La media estimada del gasto es de `r formatC(expenditure_mean_table$mean, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares, con un error estándar de `r formatC(expenditure_mean_table$mean_se, format = "f", digits = 1, big.mark = ".", decimal.mark = ",")`. El intervalo de confianza se extiende entre `r formatC(expenditure_mean_table$mean_low, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` y `r formatC(expenditure_mean_table$mean_upp, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`, mientras que el efecto de diseño de `r formatC(expenditure_mean_table$mean_deff, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` resume la relación de varianzas respecto del diseño de referencia; no identifica por sí solo qué componente del diseño explica esa diferencia. 
 
 Para un dominio $d$ con tamaño estimado $\hat{N}_d>0$, la media se estima como el cociente entre su total $\hat{t}_d$ y su tamaño $\hat{N}_d=\sum_h\sum_i\sum_k w_{hik}I(k\in d)$. El estimador de la media del dominio es:
 
@@ -268,9 +293,14 @@ También se pueden realizar estimaciones de la media por subgrupos siguiendo el 
 #| results: hide
 expenditure_mean_by_zone_table <- survey_design %>%
   group_by(Zone) %>%
-  cascade(mean = survey_mean(Expenditure,
-    level = 0.95, vartype = c("se", "ci")
-  ), .fill = "Mean expenditure")
+  cascade(
+    mean = survey_mean(
+      Expenditure,
+      level = 0.95,
+      vartype = c("se", "ci")
+    ),
+    .fill = "Mean expenditure"
+  )
 
 expenditure_mean_by_zone_table
 ```
@@ -283,16 +313,21 @@ tabla_fmt(expenditure_mean_by_zone_table,
           col.names = c("Zona", "Media", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-Al desagregar por zona, se observa que los hogares urbanos registran un gasto medio de 460, frente a 274 en los hogares rurales. Aunque los intervalos de confianza muestran mayor incertidumbre en la zona urbana, no se superponen, lo que sugiere una diferencia importante entre ambas zonas. Asimismo, es posible realizar una estimación combinada por zona y región, presentada en la @tbl-media-gasto-zona-reg:
+Al desagregar por zona, el gasto per cápita medio estimado es de `r formatC(expenditure_mean_by_zone_table$mean[expenditure_mean_by_zone_table$Zone == "Urban"], format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares entre la población urbana y de `r formatC(expenditure_mean_by_zone_table$mean[expenditure_mean_by_zone_table$Zone == "Rural"], format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares entre la población rural. Aunque los intervalos de confianza muestran mayor incertidumbre en la zona urbana, no se superponen, lo que sugiere una diferencia importante entre ambas zonas. Asimismo, es posible realizar una estimación combinada por zona y región, presentada en la @tbl-media-gasto-zona-reg:
 
 
 ```{r cod-media-gasto-zona-region}
 #| results: hide
 expenditure_mean_by_zone_region_table <- survey_design %>%
   group_by(Zone, Region) %>%
-  cascade(mean = survey_mean(Expenditure,
-    level = 0.95, vartype = c("se", "ci")
-  ), .fill = "Mean expenditure")
+  cascade(
+    mean = survey_mean(
+      Expenditure,
+      level = 0.95,
+      vartype = c("se", "ci")
+    ),
+    .fill = "Mean expenditure"
+  )
 
 expenditure_mean_by_zone_region_table
 ```
@@ -352,8 +387,10 @@ sex_ratio_table <- survey_design %>%
     ratio = survey_ratio(
       numerator = 100 * (Sex == "Male"),
       denominator = (Sex == "Female"),
-      level = 0.95, vartype = c("se", "ci")
+      level = 0.95,
+      vartype = c("se", "ci"
     )
+  )
   )
 
 sex_ratio_table
@@ -381,8 +418,10 @@ rural_sex_ratio_table <- rural_subset %>%
     ratio = survey_ratio(
       numerator = 100 * (Sex == "Male"),
       denominator = (Sex == "Female"),
-      level = 0.95, vartype = c("se", "ci")
+      level = 0.95,
+      vartype = c("se", "ci"
     )
+  )
   )
 
 rural_sex_ratio_table
@@ -429,7 +468,8 @@ aging_index <- aging_design %>%
     aging = survey_ratio(
       numerator = aging_units,
       denominator = young_person,
-      vartype = c("se", "ci"), level = 0.95
+      vartype = c("se", "ci"),
+      level = 0.95
     )
   )
 
@@ -448,7 +488,7 @@ tabla_fmt(
 
 La @tbl-indice-envejecimiento estima `r round(aging_index$aging, 2)` personas de 60 años o más por cada 100 menores de 15 años. Su error estándar es `r round(aging_index$aging_se, 2)` y el intervalo de confianza del 95 % va de `r round(aging_index$aging_low, 2)` a `r round(aging_index$aging_upp, 2)`. `survey_ratio()` estima la varianza mediante linealización e incorpora la covarianza entre los totales de ambos grupos de edad. El índice describe su tamaño relativo y no representa un porcentaje de la población total; por ello, puede superar 100.
 
-Para un dominio $d$, se utiliza la notación $\hat R_{\mathrm{AI},d}$; análogamente, $\hat R_{\mathrm{TDR},d}$ y $\hat R_{\mathrm{EDR},15+,d}$ denotan las otras dos razones en ese dominio. La estimación puede desagregarse por zona de residencia mediante `group_by(Zone)`. Cada zona constituye un dominio del diseño completo y el denominador corresponde al total estimado de menores de 15 años de esa misma zona.
+Para representar el índice de envejecimiento en un dominio $d$, se utiliza la notación $\hat R_{\mathrm{AI},d}$. La estimación puede desagregarse por zona de residencia mediante `group_by(Zone)`. Cada zona constituye un dominio del diseño completo y el denominador corresponde al total estimado de menores de 15 años de esa misma zona.
 
 ```{r cod-indice-envejecimiento-zona}
 #| results: hide
@@ -458,7 +498,8 @@ zone_aging_index <- aging_design %>%
     aging = survey_ratio(
       numerator = aging_units,
       denominator = young_person,
-      vartype = c("se", "ci"), level = 0.95
+      vartype = c("se", "ci"),
+      level = 0.95
     ),
     .groups = "drop"
   )
@@ -501,7 +542,8 @@ dependency_ratio <- dependency_design %>%
     dependency = survey_ratio(
       numerator = dependency_units,
       denominator = reference_age,
-      vartype = c("se", "ci"), level = 0.95
+      vartype = c("se", "ci"),
+      level = 0.95
     )
   )
 
@@ -530,7 +572,8 @@ zone_dependency_ratio <- dependency_design %>%
     dependency = survey_ratio(
       numerator = dependency_units,
       denominator = reference_age,
-      vartype = c("se", "ci"), level = 0.95
+      vartype = c("se", "ci"),
+      level = 0.95
     ),
     .groups = "drop"
   )
@@ -580,7 +623,8 @@ economic_dependency_ratio <- economic_dependency_design %>%
     dependency = survey_ratio(
       numerator = economic_dependency_units,
       denominator = employed,
-      vartype = c("se", "ci"), level = 0.95
+      vartype = c("se", "ci"),
+      level = 0.95
     )
   )
 
@@ -609,7 +653,8 @@ zone_economic_dependency_ratio <- economic_dependency_design %>%
     dependency = survey_ratio(
       numerator = economic_dependency_units,
       denominator = employed,
-      vartype = c("se", "ci"), level = 0.95
+      vartype = c("se", "ci"),
+      level = 0.95
     ),
     .groups = "drop"
   )
@@ -635,10 +680,14 @@ Otro ejemplo frecuente de estimación de razones en las encuestas de hogares es 
 ```{r cod-razon-gasto-ingreso}
 #| results: hide
 expenditure_income_ratio_table <- survey_design %>%
-  summarise(ratio = survey_ratio(
-  numerator = Expenditure,
-  denominator = Income, level = 0.95, vartype = c("se", "ci")
-))
+  summarise(
+    ratio = survey_ratio(
+      numerator = Expenditure,
+      denominator = Income,
+      level = 0.95,
+      vartype = c("se", "ci")
+    )
+  )
 
 expenditure_income_ratio_table
 ```
@@ -650,7 +699,7 @@ tabla_fmt(expenditure_income_ratio_table,
           col.names = c("Razón", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-En este caso, se especificaron la variable de gasto como numerador (`numerator`), la variable de ingreso como denominador (`denominator`), el nivel de confianza (`level`) utilizado para la construcción de los intervalos de confianza y las medidas de precisión requeridas mediante el argumento (`vartype`). Como se puede observar, la razón entre el gasto y el ingreso es cercana a 0.65. Esto indica que el gasto agregado estimado equivale aproximadamente a 65 por cada 100 unidades del ingreso agregado estimado; el intervalo de confianza al 95% va de 0.60 a 0.69.
+En este caso, se especificaron la variable de gasto como numerador (`numerator`), la variable de ingreso como denominador (`denominator`), el nivel de confianza (`level`) utilizado para la construcción de los intervalos de confianza y las medidas de precisión requeridas mediante el argumento (`vartype`). Como se puede observar, la razón entre el gasto y el ingreso es cercana a `r formatC(expenditure_income_ratio_table$ratio, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")`. Esto indica que el gasto agregado estimado equivale aproximadamente a `r formatC(100 * expenditure_income_ratio_table$ratio, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` por cada 100 unidades del ingreso agregado estimado; el intervalo de confianza al 95% va de `r formatC(expenditure_income_ratio_table$ratio_low, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` a `r formatC(expenditure_income_ratio_table$ratio_upp, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")`.
 
 Ahora bien, otro análisis de interés es estimar la razón de gastos en cada una de las regiones. A continuación, se presentan los códigos computacionales, los cuales dan origen a las estimaciones presentadas en la @tbl-razon-gasto-ingreso-reg.
 
@@ -658,10 +707,14 @@ Ahora bien, otro análisis de interés es estimar la razón de gastos en cada un
 #| results: hide
 regional_expenditure_income_ratio_table <- survey_design %>%
   group_by(Region) %>%
-  summarise(ratio = survey_ratio(
-    numerator = Expenditure,
-    denominator = Income, level = 0.95, vartype = c("se", "ci")
-  ))
+  summarise(
+    ratio = survey_ratio(
+      numerator = Expenditure,
+      denominator = Income,
+      level = 0.95,
+      vartype = c("se", "ci")
+    )
+  )
 
 regional_expenditure_income_ratio_table
 ```
@@ -674,12 +727,12 @@ tabla_fmt(regional_expenditure_income_ratio_table,
           col.names = c("Región", "Razón", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-La razón entre el gasto y el ingreso presenta diferencias entre las regiones. No obstante, los intervalos de confianza se superponen ampliamente, por lo que las diferencias observadas entre las regiones no necesariamente representan diferencias estadísticamente significativas. En conjunto, los resultados indican que las razones entre gasto e ingreso agregados se sitúan aproximadamente entre 0,60 y 0,75, con una mayor proporción en la región Centro.
+La razón entre el gasto y el ingreso presenta diferencias entre las regiones. No obstante, los intervalos de confianza se superponen ampliamente, por lo que las diferencias observadas entre las regiones no necesariamente representan diferencias estadísticamente significativas. En conjunto, los resultados indican que las razones entre gasto e ingreso agregados se sitúan aproximadamente entre `r formatC(min(regional_expenditure_income_ratio_table$ratio), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` y `r formatC(max(regional_expenditure_income_ratio_table$ratio), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")`, con una mayor proporción en la región Centro.
 
 
 ## Estimación de parámetros de distribución y desigualdad {#estimacion-de-parametros-de-distribucion-y-desigualdad}
 
-El análisis de encuestas de hogares no se limita a la estimación de medidas descriptivas, pues también resulta fundamental describir la dispersión, la posición relativa de las observaciones y el grado de desigualdad de la distribución de las variables. Debido a su naturaleza no lineal, la forma funcional de los estimadores y la cuantificación de su incertidumbre deben tratarse usando procedimientos de linealización de Taylor o los métodos de replicación.
+Los totales, las medias y las razones estudiados hasta aquí pueden complementarse con medidas que describan la dispersión, la posición relativa de las observaciones y la desigualdad de la distribución. Debido a su naturaleza no lineal, la forma funcional de los estimadores y la cuantificación de su incertidumbre deben tratarse usando procedimientos de linealización de Taylor o los métodos de replicación.
 
 
 ### Varianza y desviación estándar {#estimacion-de-la-dispersion}
@@ -701,12 +754,18 @@ El error estándar de la desviación estándar puede aproximarse mediante el mé
 #| results: hide
 income_dispersion_by_zone_table <- survey_design %>%
   group_by(Zone) %>%
-  summarise(Var = survey_var(Income,
-    level = 0.95, vartype = c("se", "ci"), na.rm = TRUE
-  )) %>%
+  summarise(
+    Var = survey_var(
+      Income,
+      level = 0.95,
+      vartype = c("se", "ci"),
+      na.rm = TRUE
+    )
+  ) %>%
   mutate(
     Sd = sqrt(Var),
-    Sd_low = sqrt(pmax(Var_low, 0)), Sd_upp = sqrt(Var_upp)
+    Sd_low = sqrt(pmax(Var_low, 0)),
+    Sd_upp = sqrt(Var_upp)
   )
 
 income_dispersion_by_zone_table
@@ -721,7 +780,7 @@ tabla_fmt(income_dispersion_by_zone_table,
 
 `Var_se` es el error estándar de la varianza y no el de la desviación estándar. Los límites de esta última se obtienen transformando los de la varianza; el inferior se restringe a cero antes de aplicar la raíz si la aproximación produce un límite negativo.
 
-Los argumentos de la función `survey_var()` son equivalentes a los utilizados previamente para la estimación de medias y totales. Los resultados de la @tbl-sd-ingreso-zona muestran que los ingresos presentan una dispersión considerablemente mayor en la zona urbana que en la rural. En la zona rural, la desviación estándar alcanza 310 dólares, mientras que en la zona urbana se eleva a 582 dólares. Los intervalos describen la incertidumbre de cada medida de dispersión. Para realizar una prueba formal de su diferencia se necesitaría estimar el contraste correspondiente. 
+Los argumentos de la función `survey_var()` son equivalentes a los utilizados previamente para la estimación de medias y totales. Los resultados de la @tbl-sd-ingreso-zona muestran que los ingresos presentan una dispersión considerablemente mayor en la zona urbana que en la rural. En la zona rural, la desviación estándar alcanza `r formatC(income_dispersion_by_zone_table$Sd[income_dispersion_by_zone_table$Zone == "Rural"], format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares, mientras que en la zona urbana se eleva a `r formatC(income_dispersion_by_zone_table$Sd[income_dispersion_by_zone_table$Zone == "Urban"], format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares. Los intervalos describen la incertidumbre de cada medida de dispersión. Para realizar una prueba formal de su diferencia se necesitaría estimar el contraste correspondiente. 
 
 ### Percentiles y medianas {#sec-estimacion-de-percentiles}
 
@@ -749,9 +808,14 @@ Tanto los estimadores de cuantiles como los métodos para estimar sus varianzas 
 #| results: hide
 expenditure_median_by_zone_table <- survey_design %>%
   group_by(Zone) %>%
-  summarise(median = survey_median(Expenditure,
-    qrule = "math", level = 0.95, vartype = c("se", "ci")
-  ))
+  summarise(
+    median = survey_median(
+      Expenditure,
+      qrule = "math",
+      level = 0.95,
+      vartype = c("se", "ci")
+    )
+  )
 
 expenditure_median_by_zone_table
 ```
@@ -764,7 +828,7 @@ tabla_fmt(expenditure_median_by_zone_table,
           col.names = c("Zona", "Mediana", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-A partir de la @tbl-mediana-gasto-zona se concluye que el gasto mediano presenta una diferencia importante entre zonas. En el área rural, la mediana estimada es de 241 dólares, lo que indica que la mitad de la población rural tiene gastos inferiores a este valor y la otra mitad registra gastos superiores. En la zona urbana, la mediana asciende a 381 dólares, es decir, aproximadamente un 58 % más que en la zona rural. Los intervalos de confianza no se superponen, lo que sugiere una diferencia clara en los niveles centrales de gasto entre ambas zonas. Aunque la estimación urbana presenta un error estándar mayor, los resultados muestran consistentemente que el gasto mediano es más elevado en las áreas urbanas.
+A partir de la @tbl-mediana-gasto-zona se concluye que el gasto mediano presenta una diferencia importante entre zonas. En el área rural, la mediana estimada es de `r formatC(expenditure_median_by_zone_table$median[expenditure_median_by_zone_table$Zone == "Rural"], format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares, lo que indica que la mitad de la población rural tiene gastos inferiores a este valor y la otra mitad registra gastos superiores. En la zona urbana, la mediana asciende a `r formatC(expenditure_median_by_zone_table$median[expenditure_median_by_zone_table$Zone == "Urban"], format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares, es decir, aproximadamente un `r formatC(100 * (expenditure_median_by_zone_table$median[expenditure_median_by_zone_table$Zone == "Urban"] / expenditure_median_by_zone_table$median[expenditure_median_by_zone_table$Zone == "Rural"] - 1), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` % más que en la zona rural. Los intervalos de confianza no se superponen, lo que sugiere una diferencia clara en los niveles centrales de gasto entre ambas zonas. Aunque la estimación urbana presenta un error estándar mayor, los resultados muestran consistentemente que el gasto mediano es más elevado en las áreas urbanas.
 
 Cuando el objetivo es estimar un percentil distinto de la mediana, puede utilizarse la función `survey_quantile()`. De acuerdo con @DorfmanValliant1993, algunos procedimientos para construir intervalos de confianza de cuantiles pueden presentar un desempeño menos satisfactorio que otras alternativas disponibles. En particular, el argumento `interval_type = "score"` emplea un método de inversión para determinar los límites del intervalo, en lugar de calcularlos directamente a partir de la función de influencia del percentil. 
 
@@ -774,9 +838,16 @@ A modo de ejemplo, a continuación se presenta la sintaxis para estimar el perce
 ```{r cod-cuantil-gasto}
 #| results: hide
 expenditure_first_quartile_table <- survey_design %>%
-  summarise(quantile = survey_quantile(Expenditure,
-  quantiles = 0.25, qrule = "math", level = 0.95, vartype = c("se", "ci"), interval_type = "score"
-))
+  summarise(
+    quantile = survey_quantile(
+      Expenditure,
+      quantiles = 0.25,
+      qrule = "math",
+      level = 0.95,
+      vartype = c("se", "ci"),
+      interval_type = "score"
+    )
+  )
 
 expenditure_first_quartile_table
 ```
@@ -788,7 +859,7 @@ tabla_fmt(expenditure_first_quartile_table,
           col.names = c("Cuartil 1", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-De los resultados anteriores, el percentil 25 del gasto se estima en 200 dólares, lo que indica que aproximadamente una cuarta parte de la población presenta niveles de gasto iguales o inferiores a este valor, mientras que el 75 % restante registra gastos superiores. El error estándar de 13,8 dólares refleja la incertidumbre asociada a la estimación.
+De los resultados anteriores, el percentil 25 del gasto se estima en `r formatC(expenditure_first_quartile_table$quantile_q25, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares, lo que indica que aproximadamente una cuarta parte de la población presenta niveles de gasto iguales o inferiores a este valor, mientras que el 75 % restante registra gastos superiores. El error estándar de `r formatC(expenditure_first_quartile_table$quantile_q25_se, format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` dólares refleja la incertidumbre asociada a la estimación.
 
 ### El coeficiente de Gini y la curva de Lorenz {#estimacion-del-coeficiente-de-gini}
 
@@ -816,7 +887,9 @@ library(convey)
 gini_design <- convey_prep(survey_design)
 gini <- svygini(~Income, design = gini_design)
 income_gini_table <- data.frame(
-  Gini = coef(gini), standard_error = SE(gini), ci_lower = confint(gini)[1],
+  Gini = coef(gini),
+  standard_error = SE(gini),
+  ci_lower = confint(gini)[1],
   ci_upper = confint(gini)[2]
 )
 
@@ -851,7 +924,7 @@ clorenz <- svylorenz(
 
 El argumento `formula = ~Income` especifica la variable de ingreso sobre la cual se calculará la distribución acumulada. El argumento `design = gini_design` indica el objeto de diseño muestral previamente definido, el cual contiene la información relacionada con pesos, estratos y conglomerados de la encuesta. Por su parte, `quantiles = seq(0, 1, .05)` define los puntos de la distribución en los cuales se evaluará la curva de Lorenz, generando proporciones acumuladas desde 0 hasta 1 en incrementos de 0.05. Finalmente, el argumento `alpha = .05` establece un nivel de significación del 5%, lo que equivale a construir intervalos de confianza del 95% para las estimaciones asociadas a la curva.
 
-A partir de la @fig-lorenz, se observa un grado considerable de desigualdad en la distribución del ingreso per cápita, dado que la curva de Lorenz se sitúa claramente por debajo de la línea de igualdad perfecta. Su marcada curvatura muestra que los grupos ubicados en la parte inferior de la distribución concentran una proporción reducida del ingreso total, mientras que una participación considerable se acumula entre las personas de mayores ingresos. La separación entre ambas líneas se amplía progresivamente hacia los tramos superiores, lo que refleja una mayor concentración del ingreso en estos grupos. Por su parte, la banda sombreada representa la incertidumbre asociada a la estimación de la curva.
+A partir de la @fig-lorenz, se observa un grado considerable de desigualdad en la distribución del ingreso per cápita, dado que la curva de Lorenz se sitúa claramente por debajo de la línea de igualdad perfecta. Su marcada curvatura muestra que los grupos ubicados en la parte inferior de la distribución concentran una proporción reducida del ingreso total, mientras que una participación considerable se acumula entre las personas de mayores ingresos. La curva se separa de la línea de igualdad en los tramos intermedios y vuelve a encontrarse con ella al acumular el total de la población y del ingreso. La reducida participación acumulada del ingreso en los primeros tramos muestra su concentración entre las personas de mayores ingresos. Por su parte, la banda sombreada representa la incertidumbre asociada a la estimación de la curva.
 
 ### Correlaciones {#estimacion-de-la-correlacion}
 
@@ -875,7 +948,10 @@ cov_matrix <- svyvar(~Income + Expenditure, design = survey_design)
 
 ```{r cod-covarianza-objeto}
 #| results: hide
-income_expenditure_covariance_table <- data.frame(Variable = rownames(cov_matrix), as.matrix(cov_matrix)) %>%
+income_expenditure_covariance_table <- data.frame(
+  Variable = rownames(cov_matrix),
+  as.matrix(cov_matrix)
+) %>%
   slice(1:2)
 
 income_expenditure_covariance_table
@@ -906,10 +982,14 @@ Si además se desea realizar inferencia estadística sobre la correlación, por 
 ```{r cod-correlacion-jtools}
 library(jtools)
 
-svycor(~Income + Expenditure, design = survey_design, sig.stats = FALSE)
+svycor(
+  ~Income + Expenditure,
+  design = survey_design,
+  sig.stats = FALSE
+)
 ```
 
-La llamada anterior presenta la correlación sin solicitar pruebas ni intervalos. La correlación entre el ingreso y el gasto es relativamente alta, con un coeficiente de Pearson estimado de 0,71. Esto indica que, en términos generales, los hogares con mayores ingresos tienden a registrar también niveles de gasto más elevados. Los valores iguales a 1 en la diagonal corresponden a la correlación de cada variable consigo misma. Finalmente, este resultado refleja una asociación lineal y no debe interpretarse como evidencia de una relación causal.
+La llamada anterior presenta la correlación sin solicitar pruebas ni intervalos. La correlación entre el ingreso y el gasto es relativamente alta, con un coeficiente de Pearson estimado de `r formatC(as.numeric(weighted_cor), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")`. Esto indica que, en términos generales, los hogares con mayores ingresos tienden a registrar también niveles de gasto más elevados. Los valores iguales a 1 en la diagonal corresponden a la correlación de cada variable consigo misma. Finalmente, este resultado refleja una asociación lineal y no debe interpretarse como evidencia de una relación causal.
 
 
 ## Pruebas de hipótesis {#pruebas-de-hipotesis}
@@ -943,7 +1023,7 @@ $$
 
 La presencia del término de covarianza, ya estudiado al comparar proporciones, es importante porque las estimaciones de ambos dominios suelen provenir de la misma muestra y, por tanto, no necesariamente son independientes. Una vez calculado el estimador y su error estándar, se aplica el procedimiento descrito en la @sec-pruebas-de-hipotesis-sobre-proporciones, sustituyendo $\hat{\Delta}_p$ por $\hat{\Delta}$. El estadístico de prueba, su distribución de referencia y el intervalo de confianza se construyen de la misma manera, utilizando los grados de libertad devueltos por `svyttest()`.
 
-El siguiente código crea primero el objeto `survey_design_heads`, que conserva únicamente las observaciones correspondientes a las personas jefas de hogar, identificadas mediante `PersonID == "idPer01"`, sin perder las características del diseño muestral. Posteriormente, la función `svyttest()` compara el ingreso medio entre las categorías de la variable `Sex`. Se fija `Female` como referencia: el resultado representa hombres menos mujeres. La prueba devuelve un intervalo del 95 %. La selección de jefaturas define un dominio de personas; con `wk` se estima el ingreso per cápita asociado a esas personas, sin convertir automáticamente los pesos en factores de expansión de hogares.
+El siguiente código crea primero el objeto `survey_design_heads`, que conserva únicamente las observaciones correspondientes a las personas jefas de hogar, identificadas mediante `PersonID == "idPer01"`, sin perder las características del diseño muestral. Posteriormente, la función `svyttest()` compara el ingreso medio entre las categorías de la variable `Sex`. Se fija `Female` como referencia: el resultado representa hombres menos mujeres. La prueba devuelve un intervalo del 95 %. Para este ejemplo se aplica la convención del capítulo 3: se conserva el registro de la persona principal de cada hogar y se utiliza su factor de expansión como aproximación al peso del hogar. Así se compara el ingreso per cápita entre hogares con jefatura masculina y femenina, con las limitaciones señaladas para esta aproximación.
 
 ```{r cod-ttest-sexo, eval=TRUE}
 survey_design_heads <- survey_design %>%
@@ -977,14 +1057,14 @@ tabla_fmt(income_sex_test_table,
 ```
 
 
-A partir de los resultados presentados en la @tbl-ttest-sexo, se estima que el ingreso per cápita de los hogares asociado a los hombres jefes de hogar es aproximadamente 122 dólares mayor al asociado a las mujeres jefas de hogar. Dado que el valor $p$ obtenido es 0,007, inferior al nivel de significación establecido de $\alpha = 0,05$, se rechaza la hipótesis nula de igualdad de medias y se concluye que la diferencia observada es estadísticamente significativa. Esta conclusión es consistente con el intervalo de confianza del 95 %, que no incluye el valor cero. En conjunto, los resultados aportan evidencia de que, en la población representada por la encuesta, el ingreso per cápita asociado a las mujeres jefas de hogar es significativamente menor que el asociado a los hombres jefes de hogar, bajo el diseño y el dominio considerados.
+A partir de los resultados presentados en la @tbl-ttest-sexo, se estima que el ingreso per cápita de los hogares asociado a los hombres jefes de hogar es aproximadamente `r formatC(unname(ttest_sex$estimate), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares mayor al asociado a las mujeres jefas de hogar. Dado que el valor $p$ obtenido es `r format.pval(ttest_sex$p.value, digits = 3, eps = 0.001)`, inferior al nivel de significación establecido de $\alpha = 0,05$, se rechaza la hipótesis nula de igualdad de medias y se concluye que la diferencia observada es estadísticamente significativa. Esta conclusión es consistente con el intervalo de confianza del 95 %, que no incluye el valor cero. En conjunto, los resultados aportan evidencia de que, en la población representada por la encuesta, el ingreso per cápita asociado a las mujeres jefas de hogar es significativamente menor que el asociado a los hombres jefes de hogar, bajo el diseño y el dominio considerados.
 
 El principio de combinar una estimación con su varianza no se limita a las medias, sino que también puede aplicarse a proporciones, totales, razones o cualquier función diferenciable de totales. Esto no significa que `svyttest()` implemente directamente todos esos casos. En cada aplicación, el contraste se fundamenta en la estimación puntual, su varianza (incluyendo covarianzas cuando corresponde) y la comparación con la distribución $t$ ajustada al diseño muestral.
 
 
 ## Estimación de contrastes {#estimacion-de-contrastes}
 
-En el análisis de encuestas de hogares es frecuente que el interés no se limite a comparar únicamente dos subpoblaciones, sino varias de manera simultánea. Por ejemplo, puede ser necesario comparar los ingresos medios de los hogares entre distintas regiones, áreas geográficas o grupos poblacionales, con el propósito de identificar diferencias y establecer patrones de desigualdad entre ellos. En este tipo de situaciones, las pruebas de diferencia de medias presentadas anteriormente resultan limitadas, ya que están diseñadas para comparar únicamente pares de poblaciones.
+La comparación de medias presentada en la sección anterior puede extenderse a otras diferencias de interés entre grupos poblacionales. Por ejemplo, se pueden comparar los ingresos medios entre regiones o las razones de gasto e ingreso entre hogares con jefatura masculina y femenina. Estas diferencias se expresan mediante contrastes que combinan las estimaciones de cada grupo y utilizan sus varianzas y covarianzas para cuantificar la incertidumbre. En esta sección se muestra cómo construirlos y cómo estimar varias comparaciones por pares, cada una con su respectivo intervalo de confianza.
 
 La definición general de contraste, sus coeficientes y las funciones `svyby()`, `vcov()` y `svycontrast()` se presentaron en la @sec-contrastes-y-diferencias-de-proporciones. Aquí se sustituyen las proporciones por medias y, después, por razones. Se conserva la matriz de covarianzas mediante `covmat = TRUE`.
 
@@ -1047,7 +1127,9 @@ Para los contrastes lineales de esta sección, el error estándar se calcula a p
 ```{r cod-contraste-ns}
 contrast_region_ns <- svycontrast(
   stat = region_mean_contrast,
-  contrasts = list(north_south_difference = c(North = 1, South = -1))
+  contrasts = list(
+    north_south_difference = c(North = 1, South = -1)
+  )
 )
 ```
 
@@ -1073,7 +1155,7 @@ tabla_fmt(north_south_income_contrast_table,
           col.names = c("Contraste", "Estimación", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-La estimación de la diferencia de medias indica que el ingreso promedio en la región Norte es aproximadamente 73,4 dólares inferior al observado en la región Sur. Sin embargo, el error estándar de 83,4 es mayor que la diferencia estimada, lo que refleja una incertidumbre considerable. Por tanto, no hay evidencia suficiente para concluir que exista una diferencia estadísticamente significativa entre ambas regiones. Nótese que estos mismos resultados podrían obtenerse realizando explícitamente el proceso de construcción del estimador del contraste y de su varianza estimada. Si se consideran únicamente los ingresos medios estimados de las regiones Norte y Sur, su diferencia es:
+La estimación de la diferencia de medias indica que el ingreso promedio en la región Norte es aproximadamente `r formatC(-as.numeric(coef(contrast_region_ns)), format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` dólares inferior al observado en la región Sur. Sin embargo, el error estándar de `r formatC(as.numeric(SE(contrast_region_ns)), format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` es mayor que la diferencia estimada, lo que refleja una incertidumbre considerable. Por tanto, no hay evidencia suficiente para concluir que exista una diferencia estadísticamente significativa entre ambas regiones. Nótese que estos mismos resultados podrían obtenerse realizando explícitamente el proceso de construcción del estimador del contraste y de su varianza estimada. Si se consideran únicamente los ingresos medios estimados de las regiones Norte y Sur, su diferencia es:
 
 
 ```{r cod-diferencia-norte-sur, eval=TRUE}
@@ -1125,9 +1207,11 @@ $$
 Para evitar inconsistencias con valores redondeados, el cálculo se realiza directamente a partir de la matriz estimada:
 
 ```{r cod-se-contraste-ns}
-sqrt(region_vcov["North", "North"] +
-       region_vcov["South", "South"] -
-       2 * region_vcov["North", "South"])
+sqrt(
+  region_vcov["North", "North"] +
+    region_vcov["South", "South"] -
+    2 * region_vcov["North", "South"]
+)
 ```
 
 Este resultado corresponde al mismo obtenido anteriormente con la función `svycontrast()`. 
@@ -1209,12 +1293,16 @@ tabla_fmt(income_means_by_sex_table,
           col.names = c("Sexo", "Ingreso", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-En este caso, el contraste de interés está dado por $\bar{y}_{F} - \bar{y}_{M}$, el cual permite cuantificar la diferencia entre el ingreso medio de las mujeres y el correspondiente a los hombres. A continuación, utilizando la función `svycontrast()`, se obtiene la estimación del contraste, cuyos resultados se presentan en la @tbl-contraste-sexo. A partir de estos resultados, se concluye que, el ingreso per cápita asociado a hombres jefes de hogar supera aproximadamente en 122 dólares al asociado a mujeres jefas de hogar, con un error estándar estimado de 44,3 dólares.
+
+
+En este caso, el contraste de interés está dado por $\bar{y}_{F} - \bar{y}_{M}$, el cual permite cuantificar la diferencia entre el ingreso medio de las mujeres y el correspondiente a los hombres. A continuación, utilizando la función `svycontrast()`, se obtiene la estimación del contraste, cuyos resultados se presentan en la @tbl-contraste-sexo.
 
 ```{r cod-contraste-sexo}
 contrast_sex <- svycontrast(
   stat = sex_mean_contrast,
-  contrasts = list(sex_difference = c(Female = 1, Male = -1))
+  contrasts = list(
+    sex_difference = c(Female = 1, Male = -1)
+  )
 )
 ```
 
@@ -1240,6 +1328,8 @@ income_sex_contrast_table
 tabla_fmt(income_sex_contrast_table,
           col.names = c("Contraste", "Estimación", "EE", "LI 95 %", "LS 95 %"))
 ```
+
+A partir de estos resultados, se concluye que, el ingreso per cápita asociado a hombres jefes de hogar supera aproximadamente en `r formatC(-as.numeric(coef(contrast_sex)), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares al asociado a mujeres jefas de hogar, con un error estándar estimado de `r formatC(as.numeric(SE(contrast_sex)), format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` dólares.
 
 
 Un contraste lineal también puede combinar razones estimadas, aunque cada razón sea una función no lineal de totales. En este ejemplo se utiliza ingreso/gasto, la orientación inversa de gasto/ingreso empleada anteriormente. Un ejemplo de ello consiste en comparar la relación entre ingresos y gastos según el sexo del jefe de hogar. En este caso, primero se estima la razón ingreso-gasto para cada grupo y posteriormente se construye el contraste entre dichas razones. A continuación, se presentan los códigos computacionales utilizados para realizar este análisis, cuyos resultados se muestran en la @tbl-razon-ingreso-gasto-sexo:
@@ -1273,12 +1363,16 @@ tabla_fmt(income_expenditure_ratio_by_sex_table,
           col.names = c("Sexo", "Razón", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-La función `svycontrast()` permite construir el contraste entre estas razones estimadas a partir de diseños de muestreo complejos. A continuación, se presentan los códigos computacionales utilizados para realizar este análisis, cuyos resultados se muestran en la @tbl-contraste-razon-sexo. A partir de dichos resultados, puede concluirse que el contraste mujeres menos hombres es aproximadamente −0,178; la razón ingreso/gasto es mayor para los hombres en este dominio.
+
+
+La función `svycontrast()` permite construir el contraste entre estas razones estimadas a partir de diseños de muestreo complejos. A continuación, se presentan los códigos computacionales utilizados para realizar este análisis, cuyos resultados se muestran en la @tbl-contraste-razon-sexo.
 
 ```{r cod-contraste-razon-sexo}
 contrast_sex_ratio <- svycontrast(
   stat = sex_ratio_contrast,
-  contrasts = list(sex_difference = c(Female = 1, Male = -1))
+  contrasts = list(
+    sex_difference = c(Female = 1, Male = -1)
+  )
 )
 ```
 
@@ -1305,7 +1399,9 @@ tabla_fmt(sex_ratio_contrast_table,
           col.names = c("Contraste", "Estimación", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-Finalmente, la comparación demográfica de la [sección de estimación de razones](04-Continuas-alternativa.qmd#estimacion-de-razones) puede formalizarse mediante la diferencia entre la zona rural y la urbana, cuyo estimador està dado por 
+A partir de dichos resultados, puede concluirse que el contraste mujeres menos hombres es aproximadamente `r formatC(as.numeric(coef(contrast_sex_ratio)), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`; la razón ingreso/gasto es mayor para los hombres en este dominio.
+
+Finalmente, la comparación demográfica de la [sección de estimación de razones](04-Continuas-alternativa.qmd#estimacion-de-razones) puede formalizarse mediante la diferencia entre la zona rural y la urbana, cuyo estimador está dado por 
 
 $$
 \hat\Delta_{\mathrm{TDR}}=\hat R_{\mathrm{TDR},\mathrm{rural}}-\hat R_{\mathrm{TDR},\mathrm{urbana}}
@@ -1325,10 +1421,12 @@ La covarianza se obtiene estimando conjuntamente las razones con `svyby()`, `svy
 ```{r cod-contraste-dependencia}
 #| results: hide
 zone_dependency_joint <- svyby(
-  ~dependency_units, ~Zone,
+  ~dependency_units,
+  ~Zone,
   design = dependency_design,
   denominator = ~reference_age,
-  FUN = svyratio, covmat = TRUE
+  FUN = svyratio,
+  covmat = TRUE
 )
 dependency_covariance <- vcov(zone_dependency_joint)
 dependency_coefficients <- setNames(
@@ -1383,8 +1481,12 @@ A continuación, se presenta el histograma ponderado de la variable `Income`, co
 ```{r fig-hist-ingreso-ponde, fig.cap="Histograma ponderado del ingreso per cápita", fig.align='center', out.width='65%', echo=TRUE}
 weighted_income_hist <- ggplot(
   data = survey_data,
-  aes(x = Income, weight = wk)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 30) +
+  aes(x = Income, weight = wk)
+) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30
+  ) +
   labs(x = "Ingreso mensual per cápita", y = "Densidad") +
   ggtitle("Histograma ponderado")
 
@@ -1398,9 +1500,13 @@ Para comparar la distribución del ingreso entre zonas urbanas y rurales, se pre
 ```{r fig-hist-zona, fig.cap="Histograma ponderado del ingreso por zona geográfica", fig.align='center', out.width='65%', echo=TRUE}
 zone_colors <- c(Urban = "#48C9B0", Rural = "#117864")
 
-weighted_zone_hist <- ggplot(survey_data, aes(x = Income, weight = wk)) +
+weighted_zone_hist <- ggplot(
+  survey_data,
+  aes(x = Income, weight = wk)
+) +
   geom_histogram(
-    aes(y = after_stat(density)), bins = 30,
+    aes(y = after_stat(density)),
+    bins = 30,
     fill = "#48C9B0"
   ) +
   facet_wrap(
@@ -1422,9 +1528,14 @@ Cada panel muestra la distribución ponderada del ingreso per cápita para una z
 Además, es posible superponer curvas de densidad suavizadas mediante la función `geom_density()`, lo que permite representar de manera continua la forma de la distribución de la variable analizada. Este tipo de gráfico facilita la identificación de características como la asimetría, la concentración de los valores y la posible presencia de múltiples modas. En la @fig-densidades se presentan los histogramas del ingreso y el gasto junto con sus respectivas curvas de densidad estimadas. Para disponer ambos gráficos uno al lado del otro, se utiliza el operador `|` del paquete `patchwork`, que permite combinar distintas visualizaciones en una misma composición gráfica.
 
 ```{r fig-densidades, fig.cap="Histogramas ponderados y densidades del ingreso y gasto per cápita", fig.align='center', out.width='90%'}
-weighted_expenditure_hist <- ggplot(survey_data,
-                                    aes(x = Expenditure, weight = wk)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 30) +
+weighted_expenditure_hist <- ggplot(
+  survey_data,
+  aes(x = Expenditure, weight = wk)
+) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 30
+  ) +
   labs(x = "Gasto mensual per cápita", y = "Densidad")
 
 (weighted_income_hist + geom_density(fill = "blue", alpha = 0.3)) |
@@ -1442,46 +1553,80 @@ Las columnas `q_q25`, `q_q50` y `q_q75` contienen los cuartiles y la mediana. Lo
 ```{r fig-boxplot-zona-sexo, fig.cap="Cuartiles ponderados del ingreso per cápita por zona y sexo de las personas", fig.align='center', out.width='90%', fig.width=8, fig.height=4, echo=TRUE}
 zone_box <- survey_design %>%
   group_by(Zone) %>%
-  summarise(q = survey_quantile(
-    Income, quantiles = c(0, .25, .5, .75, 1),
-    vartype = NULL, qrule = "math"
-  )) %>%
+  summarise(
+    q = survey_quantile(
+      Income,
+      quantiles = c(0, .25, .5, .75, 1),
+      vartype = NULL,
+      qrule = "math"
+    )
+  ) %>%
   mutate(
     whisker_low = pmax(q_q00, q_q25 - 1.5 * (q_q75 - q_q25)),
     whisker_high = pmin(q_q100, q_q75 + 1.5 * (q_q75 - q_q25))
   )
 
-weighted_zone_boxplot <- ggplot(zone_box, aes(
-  x = Zone, fill = Zone, ymin = whisker_low, lower = q_q25,
-  middle = q_q50, upper = q_q75, ymax = whisker_high
-)) +
+weighted_zone_boxplot <- ggplot(
+  zone_box,
+  aes(
+    x = Zone,
+    fill = Zone,
+    ymin = whisker_low,
+    lower = q_q25,
+    middle = q_q50,
+    upper = q_q75,
+    ymax = whisker_high
+  )
+) +
   geom_boxplot(stat = "identity") +
   coord_flip() +
   scale_fill_manual(values = zone_colors) +
-  labs(x = "Zona", y = "Ingreso mensual per cápita", fill = "Zona") +
-  theme_bw() + theme(legend.position = "none")
+  labs(
+    x = "Zona",
+    y = "Ingreso mensual per cápita",
+    fill = "Zona"
+  ) +
+  theme_bw() +
+  theme(legend.position = "none")
 
 sex_box <- survey_design %>%
   group_by(Sex) %>%
-  summarise(q = survey_quantile(
-    Income, quantiles = c(0, .25, .5, .75, 1),
-    vartype = NULL, qrule = "math"
-  )) %>%
+  summarise(
+    q = survey_quantile(
+      Income,
+      quantiles = c(0, .25, .5, .75, 1),
+      vartype = NULL,
+      qrule = "math"
+    )
+  ) %>%
   mutate(
     whisker_low = pmax(q_q00, q_q25 - 1.5 * (q_q75 - q_q25)),
     whisker_high = pmin(q_q100, q_q75 + 1.5 * (q_q75 - q_q25))
   )
 
 sex_colors <- c(Male = "#5DADE2", Female = "#2874A6")
-weighted_sex_boxplot <- ggplot(sex_box, aes(
-  x = Sex, fill = Sex, ymin = whisker_low, lower = q_q25,
-  middle = q_q50, upper = q_q75, ymax = whisker_high
-)) +
+weighted_sex_boxplot <- ggplot(
+  sex_box,
+  aes(
+    x = Sex,
+    fill = Sex,
+    ymin = whisker_low,
+    lower = q_q25,
+    middle = q_q50,
+    upper = q_q75,
+    ymax = whisker_high
+  )
+) +
   geom_boxplot(stat = "identity") +
   coord_flip() +
   scale_fill_manual(values = sex_colors) +
-  labs(x = "Sexo", y = "Ingreso mensual per cápita", fill = "Sexo") +
-  theme_bw() + theme(legend.position = "none")
+  labs(
+    x = "Sexo",
+    y = "Ingreso mensual per cápita",
+    fill = "Sexo"
+  ) +
+  theme_bw() +
+  theme(legend.position = "none")
 
 weighted_zone_boxplot | weighted_sex_boxplot
 ```
@@ -1521,7 +1666,8 @@ Cuando se trabaja con conjuntos de datos de gran tamaño, representar todos los 
 ```{r fig-scatter-basico, fig.cap="Diagrama de dispersión entre ingreso y gasto per cápita", fig.align='center', out.width='65%', echo=TRUE}
 weighted_basic_scatter <- ggplot(
   data = survey_data,
-  aes(y = Income, x = Expenditure)) +
+  aes(y = Income, x = Expenditure)
+) +
   geom_point(aes(size = wk), alpha = 0.3) +
   scale_x_log10() +
   scale_y_log10() +
@@ -1533,14 +1679,15 @@ weighted_basic_scatter <- ggplot(
 weighted_basic_scatter
 ```
 
-El gráfico conserva el peso muestral en el tamaño y la transparencia de los puntos para facilitar la lectura de las zonas con mayor concentración. `scale_x_log10()` y `scale_y_log10()` aplican la misma transformación logarítmica a los ejes del gasto y del ingreso; las etiquetas indican que las escalas son logarítmicas.
+El tamaño de los puntos representa el peso muestral. La transparencia, fijada en 0,3 para todas las observaciones, facilita la lectura de las zonas con mayor concentración. `scale_x_log10()` y `scale_y_log10()` aplican la misma transformación logarítmica a los ejes del gasto y del ingreso; las etiquetas indican que las escalas son logarítmicas.
 
 Adicionalmente, es posible incorporar variables de agrupamiento en los diagramas de dispersión mediante los argumentos `shape` y `color`, los cuales permiten diferenciar visualmente las observaciones según categorías específicas de la población. Esto facilita la identificación de patrones diferenciados entre grupos y mejora la interpretación de la relación entre las variables analizadas. Un ejemplo de este tipo de representación se presenta en la @fig-scatter-zona.
 
 ```{r fig-scatter-zona, fig.cap="Diagrama de dispersión entre ingreso y gasto por zona geográfica", fig.align='center', out.width='65%', echo=TRUE}
 weighted_zone_scatter <- ggplot(
   data = survey_data,
-  aes(y = Income, x = Expenditure, shape = Zone)) +
+  aes(y = Income, x = Expenditure, shape = Zone)
+) +
   geom_point(aes(size = wk, color = Zone), alpha = 0.3) +
   labs(
     size = "Peso",

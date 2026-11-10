@@ -386,11 +386,12 @@ window.MathJax = {
 <section id="carga-e-inspeccion-inicial-de-la-base" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="carga-e-inspeccion-inicial-de-la-base"><span class="header-section-number">8.2</span> Carga e inspección inicial de la base</h2>
 <p>De acuerdo con <span class="citation" data-cites="WickhamEtAl2023">Wickham et&nbsp;al. (<a href="references.html#ref-WickhamEtAl2023" role="doc-biblioref">2023</a>)</span>, es muy usual que al trabajar proyectos en <code>R</code> sea necesario importar bases de datos con información relevante para un estudio en particular. Los formatos que pueden importarse mediante <code>R</code> y sus paquetes son diversos; entre ellos se encuentran <code>.xlsx</code>, <code>.csv</code>, <code>.txt</code> y <code>.dta</code>, que es el formato utilizado por <code>Stata</code>. Una vez leída la base de datos en el formato pertinente es recomendable transformarla al formato nativo de <code>R</code>, es decir <code>.RDS</code>. Este es un formato más eficiente y propio de <code>R</code>, y su uso facilita la importación, la transformación y el almacenamiento dentro de un flujo reproducible de análisis.</p>
-<p>Una vez se carga la base de datos se procede a utilizar las funciones en <code>R</code> para poder obtener resultados de los procesamientos agregados y gráficos de interés. Para ejemplificar el uso de funciones que permitan obtener resultados agregados, utilizaremos la base de datos <code>BigCity</code> del paquete <code>TeachingSampling</code>. Esta base corresponde a un conjunto de variables socioeconómicas de 150266 personas en un año en particular.</p>
+<p>Una vez se carga la base de datos se procede a utilizar las funciones en <code>R</code> para poder obtener resultados de los procesamientos agregados y gráficos de interés. Para ejemplificar el uso de funciones que permitan obtener resultados agregados, utilizaremos la base de datos <code>BigCity</code> del paquete <code>TeachingSampling</code>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(BigCity)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bigcity_data <span class="ot">&lt;-</span> BigCity</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Esta base corresponde a un conjunto de variables socioeconómicas de 150.266 personas en un año en particular.</p>
 <p>El objeto <code>bigcity_data</code> contiene una copia de <code>BigCity</code>. La función <code>head()</code> permite observar las primeras filas y obtener una impresión rápida de la estructura de la base.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bigcity_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
@@ -504,7 +505,7 @@ window.MathJax = {
 </section>
 <section id="select-seleccionar-variables" class="level3" data-number="8.3.2">
 <h3 data-number="8.3.2" class="anchored" data-anchor-id="select-seleccionar-variables"><span class="header-section-number">8.3.2</span> <code>select</code>: seleccionar variables</h3>
-<p>La función <code>select()</code> conserva columnas específicas. Para continuar con los ejemplos, se seleccionan variables de identificación de la persona y el hogar y otras como zona, sexo, edad e ingreso. El resultado es una base más reducida en columnas. Se mantiene <code>Age</code> porque será utilizada posteriormente para ordenar registros por edad.</p>
+<p>La función <code>select()</code> conserva columnas específicas. Para ilustrar la selección de columnas, se retoma la base completa <code>bigcity_data</code> y se redefine <code>working_data</code>. Por tanto, este objeto ya no conserva el filtro de ingresos del ejemplo anterior. Se seleccionan variables de identificación de la persona y el hogar y otras como zona, sexo, edad e ingreso. El resultado es una base más reducida en columnas. Se mantiene <code>Age</code> porque será utilizada posteriormente para ordenar registros por edad.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>working_data <span class="ot">&lt;-</span> bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(PersonID, HHID, PSU, Zone, Sex, Age, Income)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
@@ -572,12 +573,8 @@ window.MathJax = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>bigcity_data <span class="ot">&lt;-</span> bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Region =</span> <span class="fu">cut</span>(</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">D"</span>, <span class="st">""</span>, Stratum)),</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="dv">5</span>,</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"Center"</span>, <span class="st">"West"</span>, <span class="st">"East"</span>)</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Region =</span> <span class="fu">cut</span>( <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">D"</span>, <span class="st">""</span>, Stratum)), <span class="at">breaks =</span> <span class="dv">5</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"Center"</span>, <span class="st">"West"</span>, <span class="st">"East"</span>) )</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>En el análisis de bases de datos también es frecuente recodificar variables categóricas. El siguiente código crea <code>region_id</code>, una versión codificada de <code>Region</code> que conserva el orden de las regiones y asigna códigos de dos dígitos. Esta forma de recodificación facilita la presentación o el cruce con otras fuentes de información.</p>
 <div class="cell" data-layout-align="center">
@@ -594,16 +591,12 @@ window.MathJax = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>log_income_data <span class="ot">&lt;-</span> working_data <span class="sc">%&gt;%</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_income =</span> <span class="fu">if_else</span>(</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>      Income <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">log</span>(Income),</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NA_real_</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>log_income_data <span class="sc">%&gt;%</span></span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(PersonID, Income, log_income) <span class="sc">%&gt;%</span></span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_income =</span> <span class="fu">if_else</span>( Income <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="fu">log</span>(Income), <span class="cn">NA_real_</span> )</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>log_income_data <span class="sc">%&gt;%</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(PersonID, Income, log_income) <span class="sc">%&gt;%</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  PersonID Income log_income
 1  idPer01    555       6.32
@@ -664,7 +657,7 @@ window.MathJax = {
 1           449      165     1126          961</code></pre>
 </div>
 </div>
-<p>Con <code>summarise()</code> también es posible calcular medidas de dispersión, tales como la varianza, la desviación estándar, el valor mínimo, el valor máximo, el rango y el rango intercuartílico. Estas estadísticas permiten describir el grado de variabilidad de los ingresos observados en la muestra. En particular, el rango se obtiene como la diferencia entre el valor máximo y el valor mínimo, mientras que el rango intercuartílico resume la dispersión del 50% central de la distribución.</p>
+<p>Con <code>summarise()</code> también es posible calcular medidas de dispersión, tales como la varianza, la desviación estándar, el valor mínimo, el valor máximo, el rango y el rango intercuartílico. Estas estadísticas permiten describir el grado de variabilidad del ingreso per cápita entre los registros de <code>BigCity</code>. En particular, el rango se obtiene como la diferencia entre el valor máximo y el valor mínimo, mientras que el rango intercuartílico resume la dispersión del 50% central de la distribución.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>

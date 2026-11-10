@@ -62,7 +62,7 @@ $$
 E(y \mid \mathbf{x}) = {\beta}_{0} + {\beta}_{1}x_{1} + \cdots + {\beta}_{p}x_{p}
 $$
 
-La validez de los modelos de regresión lineal depende del cumplimiento de los supuestos anteriormente mencionados, los cuales han sido ampliamente discutidos en la literatura especializada. En conjunto, estos supuestos permiten que los estimadores obtenidos mediante el modelo posean propiedades estadísticas deseables, tales como insesgamiento, eficiencia y consistencia [@ChambersSkinner2003].
+Los supuestos anteriores corresponden al modelo lineal clásico con errores normales, independientes y de varianza constante. En el análisis de encuestas complejas, la estimación de la incertidumbre incorpora las características del diseño muestral, como se desarrolla a continuación. Por ello, conviene distinguir los supuestos sobre la relación media entre las variables de los utilizados para calcular los errores estándar [@ChambersSkinner2003].
 
 ## Uso de los pesos de muestreo {#uso-de-los-pesos-de-muestreo}
 
@@ -80,7 +80,7 @@ En términos aplicados, esta decisión suele depender del propósito analítico 
 
 En resumen, cuando se opta por ponderar, las ponderaciones corrigen posibles sesgos de sobre o subrepresentación de determinados grupos y contribuyen a obtener estimaciones de varianza más exactas. Dentro del enfoque basado en el diseño, esto permite que los resultados se aproximen a valores insesgados comparables a los que se obtendrían en un censo completo, incluso cuando el modelo no esté formulado de manera óptima. Sin embargo, cuando los pesos presentan gran dispersión, pueden aumentar la varianza de los parámetros estimados y volver inestables las estimaciones, razón por la que en contextos explicativos o analíticos los modelos sin ponderar pueden, en ocasiones, arrojar resultados más consistentes y eficientes.
 
-En cualquier caso, si el modelo se encuentra mal especificado, ignorar las ponderaciones muestrales puede conducir a estimaciones sesgadas, poco informativas o incluso carentes de validez inferencial. Por esta razón, la selección adecuada de las variables incluidas en el modelo constituye un aspecto fundamental del análisis. Con el fin de abordar estas problemáticas, se han propuesto diversas estrategias de ajuste orientadas a lograr un equilibrio entre ambos objetivos. Entre los procedimientos más utilizados se destacan los siguientes:
+La selección adecuada de las variables explicativas y la consideración del mecanismo de selección de la muestra son fundamentales para el análisis. Además de estas decisiones, algunas implementaciones utilizan versiones reescaladas de los pesos originales. A continuación, se presentan dos formas habituales de reescalamiento, que modifican la suma de los pesos, pero no corrigen una especificación incorrecta del modelo ni reducen la dispersión relativa de las ponderaciones:
 
 1. Pesos tipo Senado: este procedimiento ajusta los pesos de manera que su suma coincida con el tamaño de la muestra, en lugar del tamaño de la población. Esta transformación multiplica todos los pesos por una constante y conserva su dispersión relativa; por tanto, no constituye un recorte de pesos extremos. Las nuevas ponderaciones son $w_k^{Senate} = w_k \times \frac{n}{\sum w_k}$.
 
@@ -171,7 +171,7 @@ survey_data <- survey_design$variables
 
 La base `sample.rds` conserva los nombres de las variables y utiliza etiquetas y categorías en inglés. En `Region`, las categorías `North`, `South`, `Central`, `West` y `East` corresponden a Norte, Sur, Centro, Occidente y Oriente; `CatAge` contiene grupos decenales ordenados: `0-9`, `10-19`, `20-29`, y así sucesivamente hasta `90-99`.
 
-En este capítulo se trabaja con una observación por hogar, identificada mediante `PersonID == "idPer01"`, y se utiliza el factor de expansión `wk` del jefe, siguiendo la convención descrita en la sección 3.1. La muestra de análisis contiene 696 hogares con ingreso y gasto positivos, condición necesaria para calcular sus logaritmos naturales. La edad y el sexo corresponden al jefe del hogar; las categorías de referencia son hombre, zona rural y región Norte.
+En este capítulo se trabaja con una observación por hogar, identificada mediante `PersonID == "idPer01"`, y se utiliza el factor de expansión `wk` del jefe, siguiendo la convención descrita en la sección 3.1. La muestra de análisis contiene `r formatC(nrow(survey_data), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` hogares con ingreso y gasto positivos, condición necesaria para calcular sus logaritmos naturales. La edad y el sexo corresponden al jefe del hogar; las categorías de referencia son hombre, zona rural y región Norte.
 
 Con el objetivo de ajustar un modelo de regresión entre los logaritmos del ingreso y del gasto per cápita, resulta conveniente explorar previamente la relación existente entre ambas variables. Para ello, se construye un diagrama de dispersión mediante `ggplot2`, el cual permite evaluar visualmente la forma y la intensidad de la asociación. El resultado se presenta en la @fig-scatter-muestra-sinP.
 
@@ -257,7 +257,7 @@ r2
 r2_adj
 ```
 
-Los resultados muestran un $R^2$ de 0.5645 y un $R^2$ ajustado de 0.5594. Estos coeficientes resumen la proporción de variabilidad del logaritmo del gasto per cápita explicada por el conjunto de covariables; no corresponden a la variabilidad del gasto en su escala original.
+Los resultados muestran un $R^2$ de `r formatC(r2, format = "f", digits = 4, big.mark = ".", decimal.mark = ",")` y un $R^2$ ajustado de `r formatC(r2_adj, format = "f", digits = 4, big.mark = ".", decimal.mark = ",")`. Estos coeficientes resumen la proporción de variabilidad del logaritmo del gasto per cápita explicada por el conjunto de covariables; no corresponden a la variabilidad del gasto en su escala original.
 
 ### Residuales {#residuales}
 
@@ -301,7 +301,11 @@ ggplot(
     alpha = 0.3
   ) +
   geom_density(size = 1, colour = "blue") +
-  geom_function(fun = dnorm, colour = "red", size = 1) +
+  geom_function(
+    fun = dnorm,
+    colour = "red",
+    size = 1
+  ) +
   labs(y = "")
 ```
 
@@ -365,12 +369,14 @@ $$
 
 Donde $p$ denota los parámetros del modelo y $df$ representa los grados de libertad asociados al diseño muestral. En la práctica, una observación puede considerarse influyente si su distancia de Cook supera valores de referencia aproximados entre 2 y 3.
 
-En `R`, se evalúa la presencia de observaciones influyentes mediante la distancia de Cook, estimada con la función `svyCooksD` del paquete `svydiags`. Los resultados obtenidos se presentan en la @fig-cook, en donde se observa que 177 de los 696 hogares superan el umbral de referencia de 3 y la distancia máxima es 16.27. Bajo este criterio diagnóstico, estas observaciones requieren una revisión más detallada de su influencia sobre el ajuste, sin que ello implique eliminarlas automáticamente.
+
 
 
 ```{r fig-cook, fig.cap="Distancia de Cook para cada observación de la muestra", fig.align='center', out.width='65%', echo = TRUE, eval = TRUE}
 cook_values <- svyCooksD(fit_svy, doplot = TRUE)
 ```
+
+En `R`, se evalúa la presencia de observaciones influyentes mediante la distancia de Cook, estimada con la función `svyCooksD` del paquete `svydiags`. Los resultados obtenidos se presentan en la @fig-cook, en donde se observa que `r sum(cook_values > 3)` de los `r length(cook_values)` hogares superan el umbral de referencia de 3 y la distancia máxima es `r formatC(max(cook_values), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")`. Bajo este criterio diagnóstico, estas observaciones requieren una revisión más detallada de su influencia sobre el ajuste, sin que ello implique eliminarlas automáticamente.
 
 Otro estadístico que mide el grado de influencia de una observación es el DFBETAS, denotado como $D_f\text{Beta}_{(k)j}$, que mide el cambio que experimenta el coeficiente de regresión $\hat{\beta}_{j}$ cuando la observación $k$ es eliminada del proceso de estimación. En consecuencia, esta medida evalúa la influencia individual de cada observación sobre los parámetros del modelo, identificando aquellas unidades cuya presencia altera de manera importante las estimaciones obtenidas. Valores elevados de $D_f\text{Beta}_{(k)j}$ indican que la observación ejerce una influencia considerable sobre el coeficiente correspondiente, lo que puede afectar la estabilidad e interpretación del modelo.
 
@@ -386,7 +392,7 @@ Donde $z$ toma comúnmente valores de 2 o 3, $n_I$ representa el número de UPMs
 
 
 
-EE indica el error estándar y DE la desviación estándar. LI y LS identifican, respectivamente, los límites inferior y superior del intervalo de confianza; el porcentaje que acompaña estas siglas indica su nivel de confianza.
+
 
 ```{r cod-dfbetas-primeros}
 #| results: hide
@@ -415,9 +421,9 @@ d_dfbetas$id <- 1:nrow(d_dfbetas)
 d_dfbetas <- reshape2::melt(d_dfbetas, id.vars = "id")
 cutoff <- svydfbetas(fit_svy)$cutoff
 d_dfbetas <- d_dfbetas %>%
-  mutate(criterion = ifelse(abs(value) > cutoff, "Yes",
-  "No"
-))
+  mutate(
+    criterion = ifelse(abs(value) > cutoff, "Yes", "No" )
+  )
 
 label_text <- d_dfbetas %>%
   filter(criterion == "Yes") %>%
@@ -437,7 +443,7 @@ tabla_fmt(influential_dfbetas_table,
           col.names = c("ID", "Parámetro", "Valor", "Criterio"))
 ```
 
-Los resultados muestran que 106 combinaciones de observación y coeficiente superan el umbral establecido por el criterio DFBETAS, lo que indica que dichas unidades ejercen una influencia importante sobre la estimación de algunos coeficientes del modelo, sugiriendo la presencia de unidades con alto impacto sobre la estabilidad del ajuste. La @fig-dfbetas muestra la representación gráfica de los valores de $D_f\text{Beta}$ junto con el umbral de referencia utilizado para identificar observaciones influyentes. En la figura, los puntos resaltados en rojo corresponden a las observaciones que exceden dicho umbral y que, por tanto, requieren una revisión más detallada dentro del proceso de diagnóstico del modelo.
+Los resultados muestran que `r sum(d_dfbetas$criterion == "Yes")` combinaciones de observación y coeficiente superan el umbral establecido por el criterio DFBETAS, lo que indica que dichas unidades ejercen una influencia importante sobre la estimación de algunos coeficientes del modelo, sugiriendo la presencia de unidades con alto impacto sobre la estabilidad del ajuste. La @fig-dfbetas muestra la representación gráfica de los valores de $D_f\text{Beta}$ junto con el umbral de referencia utilizado para identificar observaciones influyentes. En la figura, los puntos resaltados en rojo corresponden a las observaciones que exceden dicho umbral y que, por tanto, requieren una revisión más detallada dentro del proceso de diagnóstico del modelo.
 
 ```{r fig-dfbetas, fig.height=7, fig.cap="Valores DfBetas por parámetro: observaciones influyentes señaladas en rojo", fig.align='center', out.width='80%', echo = TRUE, eval = TRUE}
 ggplot(d_dfbetas, aes(y = abs(value), x = id)) +
@@ -461,7 +467,9 @@ Por último, el estadístico DFFITS, denotado por $D_f\text{Fits}_{(k)}$, mide l
 $$
 |D_f\text{Fits}_{(k)}| \geq z\sqrt{\frac{p}{n\times DEFF}}
 $$
-Donde $z$ toma comúnmente valores de 2 o 3, mientras que $n$ representa el tamaño muestral total de elementos incluidos en la encuesta y $DEFF$ es el efecto de diseño asociado a la variable respuesta. En `R`, el cálculo de este estadístico puede realizarse mediante la función `svydffits` del paquete `svydiags`, la cual obtiene las medidas de influencia considerando explícitamente la estructura del diseño muestral. Los resultados gráficos correspondientes se presentan en la @fig-dffits, en donde se identifican ocho observaciones que superan el umbral de influencia (señaladas en rojo).
+
+
+Donde $z$ toma comúnmente valores de 2 o 3, mientras que $n$ representa el tamaño muestral total de elementos incluidos en la encuesta y $DEFF$ es el efecto de diseño asociado a la variable respuesta. En `R`, el cálculo de este estadístico puede realizarse mediante la función `svydffits` del paquete `svydiags`, la cual obtiene las medidas de influencia considerando explícitamente la estructura del diseño muestral.
 
 ```{r fig-dffits, fig.cap="Valores DfFits: observaciones influyentes sobre el ajuste global señaladas en rojo", fig.align='center', out.width='65%', echo = TRUE, eval = TRUE}
 d_dffits <- data.frame(
@@ -470,7 +478,9 @@ d_dffits <- data.frame(
 )
 cutoff <- svydffits(fit_svy)$cutoff
 d_dffits <- d_dffits %>%
-  mutate(cutoff_criterion = ifelse(abs(dffits) > cutoff, "Yes", "No"))
+  mutate(
+    cutoff_criterion = ifelse(abs(dffits) > cutoff, "Yes", "No")
+  )
 
 ggplot(d_dffits, aes(y = abs(dffits), x = id)) +
   geom_point(aes(col = cutoff_criterion)) +
@@ -479,6 +489,8 @@ ggplot(d_dffits, aes(y = abs(dffits), x = id)) +
     values = c("Yes" = "red", "No" = "black")
   )
 ```
+
+Los resultados gráficos correspondientes se presentan en la @fig-dffits, en donde se identifican `r sum(d_dffits$cutoff_criterion == "Yes")` observaciones que superan el umbral de influencia (señaladas en rojo).
 
 ## Inferencia sobre los parámetros del modelo {#inferencia-sobre-los-parametros-del-modelo}
 
@@ -547,6 +559,8 @@ regression_inference_table <- summary_table
 regression_inference_table
 ```
 
+En la tabla, EE corresponde al error estándar de cada coeficiente estimado; LI 95 % y LS 95 % indican los límites inferior y superior de su intervalo de confianza del 95 %.
+
 ```{r}
 #| label: tbl-inferencia-modelo
 #| tbl-cap: "Pruebas t e intervalos de confianza al 95% para los parámetros del modelo"
@@ -555,7 +569,7 @@ tabla_fmt(regression_inference_table,
           col.names = c("Parámetro", "Estimación", "EE", "Estadístico", "Valor p", "LI 95 %", "LS 95 %"))
 ```
 
-Los resultados del modelo indican que el logaritmo de `Income` presenta una asociación estadísticamente significativa con la variable de interés, el logaritmo de `Expenditure`. Esta asociación resulta altamente significativa desde el punto de vista estadístico ($p < 0.001$), lo que proporciona evidencia de una relación positiva entre ambas variables. La elasticidad estimada es 0.537, con un intervalo de confianza del 95 % entre 0.472 y 0.602. Por su parte, `ZoneUrban` y `RegionCentral` también presentan asociaciones estadísticamente significativas ($p < 0.001$). La edad presenta un valor-*p* de 0.074 y `SexFemale`, de 0.950; para las regiones Sur, Occidente y Oriente los valores-*p* son 0.334, 0.888 y 0.930, respectivamente, por lo que la evidencia no resulta concluyente al nivel convencional del 5 %.
+Los resultados del modelo indican que el logaritmo de `Income` presenta una asociación estadísticamente significativa con la variable de interés, el logaritmo de `Expenditure`. Esta asociación resulta altamente significativa desde el punto de vista estadístico (valor-*p*: `r format.pval(summary(fit_svy)$coefficients["log(Income)", "Pr(>|t|)"], digits = 3, eps = 0.001)`), lo que proporciona evidencia de una relación positiva entre ambas variables. La elasticidad estimada es `r formatC(coef(fit_svy)["log(Income)"], format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`, con un intervalo de confianza del 95 % entre `r formatC(confint(fit_svy)["log(Income)", 1], format = "f", digits = 3, big.mark = ".", decimal.mark = ",")` y `r formatC(confint(fit_svy)["log(Income)", 2], format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`. Por su parte, `ZoneUrban` y `RegionCentral` también presentan asociaciones estadísticamente significativas (valores-*p*: `r format.pval(summary(fit_svy)$coefficients["ZoneUrban", "Pr(>|t|)"], digits = 3, eps = 0.001)` y `r format.pval(summary(fit_svy)$coefficients["RegionCentral", "Pr(>|t|)"], digits = 3, eps = 0.001)`, respectivamente). La edad presenta un valor-*p* de `r format.pval(summary(fit_svy)$coefficients["Age", "Pr(>|t|)"], digits = 3, eps = 0.001)` y `SexFemale`, de `r format.pval(summary(fit_svy)$coefficients["SexFemale", "Pr(>|t|)"], digits = 3, eps = 0.001)`; para las regiones Sur, Occidente y Oriente los valores-*p* son `r format.pval(summary(fit_svy)$coefficients["RegionSouth", "Pr(>|t|)"], digits = 3, eps = 0.001)`, `r format.pval(summary(fit_svy)$coefficients["RegionWest", "Pr(>|t|)"], digits = 3, eps = 0.001)` y `r format.pval(summary(fit_svy)$coefficients["RegionEast", "Pr(>|t|)"], digits = 3, eps = 0.001)`, respectivamente, por lo que la evidencia no resulta concluyente al nivel convencional del 5 %.
 
 ## Estimación y predicción {#estimacion-y-prediccion}
 
@@ -631,7 +645,9 @@ Para calcular la varianza de las estimaciones se requiere la matriz de varianzas
 regression_covariance_table <- vcov(fit_svy) %>%
   as.data.frame() %>%
   tibble::rownames_to_column("Parameter") %>%
-  mutate(Parameter = paste("Beta", 0:(length(coef(fit_svy)) - 1)))
+  mutate(
+    Parameter = paste("Beta", 0:(length(coef(fit_svy)) - 1))
+  )
 
 regression_covariance_table
 ```
@@ -680,8 +696,7 @@ pred <- cbind(hat_mu, mu_ci)
 pred$log_income <- log(survey_data$Income)
 pd <- position_dodge(width = 0.2)
 ggplot(
-  pred %>%
-    slice(1:100L),
+  pred %>% slice(1:100L),
   aes(x = log_income, y = link)
 ) +
   geom_errorbar(
@@ -767,7 +782,7 @@ t_{\left(1-\frac{\alpha}{2},df\right)}
 }
 $$ {#eq-intervalo-prediccion}
 
-Supóngase, por ejemplo, que se desea obtener la predicción del modelo para una nueva observación correspondiente a un hogar cuyo jefe tiene 45 años (`Age`), es de sexo masculino (`Male`), reside en zona urbana (`Urban`) de la región Norte (`North`) y tiene un ingreso per cápita (`Income`) igual a 1600. Este perfil puede definirse en `R` mediante el siguiente conjunto de datos:
+En el siguiente ejemplo se estima la media condicional del logaritmo del gasto per cápita para un nuevo perfil de hogar y su intervalo de confianza. El perfil corresponde a un hogar cuyo jefe tiene 45 años (`Age`), es de sexo masculino (`Male`), reside en zona urbana (`Urban`) de la región Norte (`North`) y tiene un ingreso per cápita (`Income`) igual a 1600. Este perfil puede definirse en `R` mediante el siguiente conjunto de datos:
 
 ```{r cod-prediccion-nueva-observacion}
 new_data <- data.frame(
@@ -778,8 +793,10 @@ new_data <- data.frame(
   Region = "North"
 )
 
-predict(fit_svy, newdata = new_data, type = "link")
-confint(predict(fit_svy, newdata = new_data))
+new_prediction <- predict(fit_svy, newdata = new_data, type = "link")
+new_prediction
+new_prediction_interval <- confint(new_prediction)
+new_prediction_interval
 ```
 
-Para este perfil, la predicción del logaritmo del gasto per cápita es 6.406, con un intervalo de confianza del 95 % entre 6.305 y 6.507. En primer lugar, el objeto `new_data` especifica los valores de las covariables incluidas en el modelo. Posteriormente, la función `predict()` calcula la predicción puntual asociada a dicha observación. El argumento `newdata = new_data` indica que la predicción debe realizarse utilizando la nueva información suministrada, mientras que `type = "link"` solicita el resultado en la escala del predictor lineal. Finalmente, `confint()` aplicado al resultado de `predict.svyglm()` produce un intervalo de confianza para el valor medio estimado; no incorpora automáticamente el término residual requerido para un intervalo de predicción individual.
+Para este perfil, la predicción del logaritmo del gasto per cápita es `r formatC(as.numeric(coef(new_prediction)), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`, con un intervalo de confianza del 95 % entre `r formatC(new_prediction_interval[1], format = "f", digits = 3, big.mark = ".", decimal.mark = ",")` y `r formatC(new_prediction_interval[2], format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`. En primer lugar, el objeto `new_data` especifica los valores de las covariables incluidas en el modelo. Posteriormente, la función `predict()` calcula la predicción puntual asociada a dicha observación. El argumento `newdata = new_data` indica que la predicción debe realizarse utilizando la nueva información suministrada, mientras que `type = "link"` solicita el resultado en la escala del predictor lineal. Finalmente, `confint()` aplicado al resultado de `predict.svyglm()` produce un intervalo de confianza para el valor medio estimado; no incorpora automáticamente el término residual requerido para un intervalo de predicción individual.

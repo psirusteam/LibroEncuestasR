@@ -85,12 +85,16 @@ Una vez se descargan e instalan las librerías o paquetes en `R`, el paso recome
 
 De acuerdo con @WickhamEtAl2023, es muy usual que al trabajar proyectos en `R` sea necesario importar bases de datos con información relevante para un estudio en particular. Los formatos que pueden importarse mediante `R` y sus paquetes son diversos; entre ellos se encuentran `.xlsx`, `.csv`, `.txt` y `.dta`, que es el formato utilizado por `Stata`. Una vez leída la base de datos en el formato pertinente es recomendable transformarla al formato nativo de `R`, es decir `.RDS`. Este es un formato más eficiente y propio de `R`, y su uso facilita la importación, la transformación y el almacenamiento dentro de un flujo reproducible de análisis.
 
-Una vez se carga la base de datos se procede a utilizar las funciones en `R` para poder obtener resultados de los procesamientos agregados y gráficos de interés. Para ejemplificar el uso de funciones que permitan obtener resultados agregados, utilizaremos la base de datos `BigCity` del paquete `TeachingSampling`. Esta base corresponde a un conjunto de variables socioeconómicas de 150266 personas en un año en particular.
+
+
+Una vez se carga la base de datos se procede a utilizar las funciones en `R` para poder obtener resultados de los procesamientos agregados y gráficos de interés. Para ejemplificar el uso de funciones que permitan obtener resultados agregados, utilizaremos la base de datos `BigCity` del paquete `TeachingSampling`.
 
 ```{r cargar-bigcity, warning = FALSE, echo = TRUE, message = FALSE, eval = TRUE}
 data(BigCity)
 bigcity_data <- BigCity
 ```
+
+Esta base corresponde a un conjunto de variables socioeconómicas de `r formatC(nrow(bigcity_data), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` personas en un año en particular.
 
 El objeto `bigcity_data` contiene una copia de `BigCity`. La función `head()` permite observar las primeras filas y obtener una impresión rápida de la estructura de la base.
 
@@ -126,7 +130,7 @@ Otra verificación importante al cargar una base de datos en `R` consiste en ide
 names(bigcity_data)
 ```
 
-La salida anterior muestra los nombres de las variables contenidas en la base de datos. En este caso, la base cuenta con 12 variables. Las primeras variables corresponden a identificadores y elementos del diseño muestral, como `HHID`, `PersonID`, `Stratum`, `PSU` y `Zone`. Luego aparecen variables sociodemográficas, como `Sex`, `Age` y `MaritalST`. Finalmente, se incluyen variables económicas y de condición laboral o social, como `Income`, `Expenditure`, `Employment` y `Poverty`.
+La salida anterior muestra los nombres de las variables contenidas en la base de datos. En este caso, la base cuenta con `r ncol(bigcity_data)` variables. Las primeras variables corresponden a identificadores y elementos del diseño muestral, como `HHID`, `PersonID`, `Stratum`, `PSU` y `Zone`. Luego aparecen variables sociodemográficas, como `Sex`, `Age` y `MaritalST`. Finalmente, se incluyen variables económicas y de condición laboral o social, como `Income`, `Expenditure`, `Employment` y `Poverty`.
 
 Si se desea profundizar en el tipo de información que almacena cada variable, puede utilizarse la función `str`, la cual muestra de manera compacta la estructura de un objeto y sus componentes. Para nuestra base de datos, esta función se utilizaría de la siguiente manera:
 
@@ -183,7 +187,7 @@ income_filter_data <- bigcity_data %>%
 
 ### `select`: seleccionar variables {#select-seleccionar-variables}
 
-La función `select()` conserva columnas específicas. Para continuar con los ejemplos, se seleccionan variables de identificación de la persona y el hogar y otras como zona, sexo, edad e ingreso. El resultado es una base más reducida en columnas. Se mantiene `Age` porque será utilizada posteriormente para ordenar registros por edad.
+La función `select()` conserva columnas específicas. Para ilustrar la selección de columnas, se retoma la base completa `bigcity_data` y se redefine `working_data`. Por tanto, este objeto ya no conserva el filtro de ingresos del ejemplo anterior. Se seleccionan variables de identificación de la persona y el hogar y otras como zona, sexo, edad e ingreso. El resultado es una base más reducida en columnas. Se mantiene `Age` porque será utilizada posteriormente para ordenar registros por edad.
 
 
 ```{r seleccionar-variables}
@@ -247,11 +251,7 @@ La función `mutate()` crea nuevas variables o modifica variables existentes. Da
 ```{r crear-region}
 bigcity_data <- bigcity_data %>%
   mutate(
-    Region = cut(
-      as.numeric(gsub("\\D", "", Stratum)),
-      breaks = 5,
-      labels = c("North", "South", "Center", "West", "East")
-    )
+    Region = cut( as.numeric(gsub("\\D", "", Stratum)), breaks = 5, labels = c("North", "South", "Center", "West", "East") )
   )
 
 ```
@@ -278,11 +278,7 @@ El siguiente ejemplo crea `log_income`, que corresponde al logaritmo natural del
 ```{r crear-log-ingreso, eval = TRUE}
 log_income_data <- working_data %>%
   mutate(
-    log_income = if_else(
-      Income > 0,
-      log(Income),
-      NA_real_
-    )
+    log_income = if_else( Income > 0, log(Income), NA_real_ )
   )
 
 log_income_data %>%
@@ -337,7 +333,7 @@ bigcity_data %>%
 ```
 
 
-Con `summarise()` también es posible calcular medidas de dispersión, tales como la varianza, la desviación estándar, el valor mínimo, el valor máximo, el rango y el rango intercuartílico. Estas estadísticas permiten describir el grado de variabilidad de los ingresos observados en la muestra. En particular, el rango se obtiene como la diferencia entre el valor máximo y el valor mínimo, mientras que el rango intercuartílico resume la dispersión del 50% central de la distribución.
+Con `summarise()` también es posible calcular medidas de dispersión, tales como la varianza, la desviación estándar, el valor mínimo, el valor máximo, el rango y el rango intercuartílico. Estas estadísticas permiten describir el grado de variabilidad del ingreso per cápita entre los registros de `BigCity`. En particular, el rango se obtiene como la diferencia entre el valor máximo y el valor mínimo, mientras que el rango intercuartílico resume la dispersión del 50% central de la distribución.
 
 
 ```{r resumir-dispersion}

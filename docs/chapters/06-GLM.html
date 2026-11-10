@@ -351,7 +351,7 @@ window.Quarto = {
 
 <p><span class="citation" data-cites="nelder1972generalized">Nelder y Wedderburn (<a href="references.html#ref-nelder1972generalized" role="doc-biblioref">1972</a>)</span> introdujeron los modelos lineales generalizados como un marco capaz de integrar diversos métodos estadísticos ampliamente utilizados, como la regresión logística, los modelos log-lineales para datos de conteo y otros modelos avanzados de regresión para variables continuas. Posteriormente, <span class="citation" data-cites="McCullaghNelder1989">McCullagh y Nelder (<a href="references.html#ref-McCullaghNelder1989" role="doc-biblioref">1989</a>)</span> sistematizaron esta formulación, que permitió extender las herramientas de regresión más allá de los escenarios en los que la variable respuesta sigue una distribución normal. Cuando la variable de interés no es continua o los supuestos del modelo lineal clásico no se satisfacen, los modelos lineales generalizados constituyen una alternativa adecuada para modelar las relaciones de interés.</p>
 <p>La necesidad de esta generalización surge porque los modelos lineales clásicos asumen, entre otras cosas, normalidad y homogeneidad de varianza en los errores, condiciones que no se cumplen cuando se analizan variables categóricas, proporciones o conteos. En este tipo de situaciones, los modelos lineales generalizados ofrecen un marco flexible para modelar adecuadamente la relación entre las variables mediante la selección de una distribución de probabilidad apropiada para la respuesta y una función de enlace que conecte la media de dicha distribución con el predictor lineal.</p>
-<p>Para ilustrar los modelos presentados en este capítulo se utilizan la base de datos <code>survey_data</code> y la población <code>BigCity</code>, siguiendo la misma estructura utilizada en capítulos anteriores. Después de cargar las librerías necesarias y definir apropiadamente el diseño de muestreo complejo, el siguiente bloque de código crea una nuevas variable categóricas (<code>poor</code>) a partir de <code>Poverty</code> y calcula el tamaño del hogar (<code>household_size</code>) contando a todos los integrantes de cada <code>HHID</code>, antes de seleccionar a los jefes de hogar para los ejemplos posteriores.</p>
+<p>Para ilustrar los modelos de este capítulo se utiliza la muestra almacenada en <code>sample.rds</code>. El siguiente bloque carga las librerías, define la condición de pobreza (<code>poor</code>), calcula el tamaño del hogar (<code>household_size</code>) contando los integrantes de cada <code>HHID</code> y construye el diseño muestral. A partir de este diseño se seleccionan las unidades de análisis correspondientes a cada ejemplo.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -364,18 +364,20 @@ window.Quarto = {
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>(HHID, <span class="at">name =</span> <span class="st">"household_size"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Stratum =</span> <span class="fu">factor</span>(Stratum),</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">poor =</span> <span class="fu">factor</span>(Poverty <span class="sc">!=</span> <span class="st">"NotPoor"</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>),</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Not poor"</span>, <span class="st">"Poor"</span>))</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>survey_design <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">strata =</span> Stratum,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">ids =</span> PSU,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> wk,</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">nest =</span> <span class="cn">TRUE</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">poor =</span> <span class="fu">factor</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      Poverty <span class="sc">!=</span> <span class="st">"NotPoor"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Not poor"</span>, <span class="st">"Poor"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>survey_design <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">strata =</span> Stratum,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">ids =</span> PSU,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> wk,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">nest =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="sec-logistica" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="sec-logistica"><span class="header-section-number">6.1</span> Modelo de regresión logística</h2>
@@ -445,9 +447,17 @@ y_{k}\log(\theta_{k})
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>logistic_intervals_table <span class="ot">&lt;-</span> logit_results <span class="sc">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">OR =</span> <span class="fu">exp</span>(estimate)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, std.error, p.value, conf.low, conf.high, OR)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>logistic_intervals_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    term,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    estimate,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    std.error,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    p.value,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    conf.low,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    conf.high,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    OR</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>logistic_intervals_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-ic-logistica" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -541,15 +551,16 @@ Tabla&nbsp;6.1: Intervalos de confianza al 95% para los parámetros del modelo l
 </div>
 </div>
 <p>Los resultados de la <a href="#tbl-ic-logistica" class="quarto-xref">tabla&nbsp;<span>6.1</span></a> muestran las estimaciones de los coeficientes de regresión, sus exponenciales, errores estándar, intervalos de confianza y valores-<em>p</em>. Los errores estándar y los límites de confianza se mantienen en la escala de los coeficientes <span class="math inline">\(\beta\)</span>. En la regresión logística, <span class="math inline">\(\exp(\beta_j)\)</span> representa el <em>odds ratio</em> asociado a una covariable, manteniendo constantes las demás variables.</p>
-<p>Manteniendo constantes las demás variables, el <em>odds ratio</em> de pobreza asociado a cada integrante adicional del hogar es 1.35, con un intervalo de confianza del 95 % entre 1.18 y 1.54. Al ser mayor que uno, indica una asociación positiva entre el tamaño del hogar y la probabilidad de pobreza. Asimismo, el <em>odds ratio</em> de los hogares con jefe desocupado respecto de aquellos con jefe ocupado es 11.45, con un intervalo de confianza del 95 % entre 2.86 y 45.89. Esta última estimación presenta una incertidumbre considerable, pues solo se observan 16 jefes desocupados. Los odds ratios superiores a uno indican mayor probabilidad de pobreza respecto de la comparación correspondiente, pero no expresan cuántas veces mayor es esa probabilidad. Estas asociaciones no establecen efectos causales.</p>
+<p>Manteniendo constantes las demás variables, el <em>odds ratio</em> de pobreza asociado a cada integrante adicional del hogar es 1.35, con un intervalo de confianza del 95 % entre 1.18 y 1.54. Al ser mayor que uno, indica mayores <em>odds</em> de pobreza asociadas con un mayor tamaño del hogar. Asimismo, el <em>odds ratio</em> de los hogares con jefe desocupado respecto de aquellos con jefe ocupado es 11.45, con un intervalo de confianza del 95 % entre 2.86 y 45.89. Esta última estimación presenta una incertidumbre considerable, pues solo se observan 16 jefes desocupados. Los odds ratios superiores a uno indican mayores odds de pobreza respecto de la comparación correspondiente, pero no expresan cuántas veces mayor es esa probabilidad. Estas asociaciones no establecen efectos causales.</p>
 <p>La <a href="#fig-logistica-base" class="quarto-xref">figura&nbsp;<span>6.1</span></a> presenta la distribución de los estimadores de los coeficientes de regresión. Se observa que los intervalos de confianza asociados a la desocupación del jefe y al tamaño del hogar no incluyen el valor cero, lo que proporciona evidencia de una asociación estadísticamente significativa. En contraste, la edad, la jefatura femenina y la inactividad del jefe presentan valores-<em>p</em> de 0.360, 0.070 y 0.606, respectivamente, por lo que no se encuentra evidencia suficiente de asociación al nivel del 5 % una vez controladas las demás covariables incluidas en el modelo.</p>
 <p>Para visualizar la distribución de los coeficientes se emplea <code>ggstance</code> para la geometría horizontal de los intervalos <span class="citation" data-cites="ggstance2024">(<a href="references.html#ref-ggstance2024" role="doc-biblioref">Henry et&nbsp;al. 2024</a>)</span>, junto con <code>plot_summs()</code> del paquete <code>jtools</code> <span class="citation" data-cites="jtools2026">(<a href="references.html#ref-jtools2026" role="doc-biblioref">Long 2026</a>)</span>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstance)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_summs</span>(logit_model,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.distributions =</span> <span class="cn">TRUE</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_summs</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  logit_model,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.distributions =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-logistica-base" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -566,17 +577,26 @@ Figura&nbsp;6.1: Distribución de los parámetros del modelo logístico base
 <p>El modelo puede ampliarse incorporando términos de interacción para evaluar si el efecto de una variable explicativa depende de los valores que toma otra. En este caso, se incluye una interacción entre el sexo del jefe y el tamaño del hogar mediante el término <code>Sex:household_size</code>, con el objetivo de analizar si la relación entre el número de integrantes y las <em>odds</em> de pobreza es la misma para hogares con jefatura masculina y femenina. Sin este término, el modelo asume que la pendiente del tamaño del hogar sobre el logit de pobreza es idéntica para ambos tipos de jefatura. En cambio, al incorporar la interacción, se permite que dicha pendiente varíe, capturando posibles diferencias en la forma en que el tamaño del hogar se asocia con la pobreza en cada grupo. Los resultados del modelo ajustado se presentan en la <a href="#tbl-logistica-interaccion" class="quarto-xref">tabla&nbsp;<span>6.2</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>interaction_logit_model <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> poor <span class="sc">~</span> Age <span class="sc">+</span> Sex <span class="sc">+</span> Employment <span class="sc">+</span> household_size <span class="sc">+</span> Sex<span class="sc">:</span>household_size,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">quasibinomial</span>(),</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> household_design</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> poor <span class="sc">~</span> Age <span class="sc">+</span> Sex <span class="sc">+</span> Employment <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    household_size <span class="sc">+</span> Sex<span class="sc">:</span>household_size,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">quasibinomial</span>(),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> household_design</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>interaction_logistic_coefficients_table <span class="ot">&lt;-</span> interaction_logit_results <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">OR =</span> <span class="fu">exp</span>(estimate)) <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, std.error, p.value, conf.low, conf.high, OR)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>interaction_logistic_coefficients_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    term,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    estimate,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    std.error,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    p.value,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    conf.low,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    conf.high,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    OR</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>interaction_logistic_coefficients_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-logistica-interaccion" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -682,10 +702,12 @@ Tabla&nbsp;6.2: Coeficientes del modelo logístico con interacciones
 <p>Al incorporar la interacción entre sexo y tamaño del hogar, se permite estimar una pendiente del tamaño del hogar diferente para cada tipo de jefatura. Para los hogares con jefe hombre, el <em>odds ratio</em> asociado a un integrante adicional es 1.39; para los hogares con jefa mujer, se obtiene combinando el coeficiente principal y el de interacción, y es igual a 1.27. El coeficiente de interacción tiene un valor-<em>p</em> de 0.474. Estos resultados no aportan evidencia suficiente de diferencias entre las pendientes al nivel del 5 %; el efecto principal del sexo, por su parte, corresponde a un tamaño del hogar igual a cero, fuera del rango observado, por lo que no debe interpretarse como una diferencia general entre jefaturas.</p>
 <p>La <a href="#fig-comparacion-logistica" class="quarto-xref">figura&nbsp;<span>6.2</span></a> presenta una comparación de las estimaciones de los coeficientes y sus respectivos intervalos de confianza para los modelos con y sin interacción. Al incorporar el término de interacción, cambia la interpretación de los efectos principales del sexo y del tamaño del hogar, que pasan a ser condicionales a los valores de referencia de la otra covariable. Los intervalos de confianza permiten valorar la incertidumbre asociada a estas estimaciones y al coeficiente de interacción.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_summs</span>(interaction_logit_model, logit_model,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.distributions =</span> <span class="cn">TRUE</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_summs</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  interaction_logit_model,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  logit_model,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.distributions =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-comparacion-logistica" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -699,7 +721,7 @@ Figura&nbsp;6.2: Comparación de los parámetros del modelo logístico con y sin
 </div>
 </div>
 </div>
-<p>Los <em>odds ratios</em> resumen cómo cambia la probabilidad relativa de ocurrencia de un evento ante variaciones en una covariable, pero no indican directamente la probabilidad de pobreza de un hogar. Para complementar su interpretación, se estiman probabilidades predichas para perfiles con características específicas. En el siguiente ejemplo se comparan hogares con jefatura masculina o femenina, manteniendo iguales la edad, la situación laboral y el tamaño del hogar.</p>
+<p>Los coeficientes del modelo permiten identificar la dirección de las asociaciones entre las covariables y la condición de pobreza, pero no indican directamente la probabilidad de pobreza de un hogar. Para facilitar la interpretación, se estiman probabilidades predichas para perfiles específicos. En el siguiente ejemplo se comparan hogares con jefatura masculina o femenina, manteniendo iguales la edad del jefe, su situación laboral y el tamaño del hogar.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>perfiles <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Age =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">40</span>),</span>
@@ -732,9 +754,14 @@ Figura&nbsp;6.2: Comparación de los parámetros del modelo logístico con y sin
 <span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">ls_95 =</span> <span class="fu">pmin</span>(<span class="dv">1</span>, probabilidad <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> error_estandar)</span>
 <span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    Sex, Age, Employment, household_size,</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    probabilidad, li_95, ls_95</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    Sex,</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    Age,</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    Employment,</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    household_size,</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    probabilidad,</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    li_95,</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    ls_95</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Los perfiles se fijan en 40 años, cuatro integrantes y jefe ocupado; cuatro integrantes corresponde a la mediana del tamaño del hogar entre los jefes seleccionados. Los niveles de <code>Sex</code> y <code>Employment</code> se conservan tal como fueron definidos para el modelo, de modo que las categorías de los perfiles coincidan con las usadas durante la estimación. A partir de las probabilidades y sus errores estándar se calculan límites aproximados del 95 % en la escala de probabilidad, restringidos al intervalo de cero a uno.</p>
 <div class="cell" data-layout-align="center">
@@ -807,7 +834,7 @@ Pr(Y_{k} = j \mid \mathbf{x}_{k})
 \frac{\exp(\mathbf{x}_{k}\boldsymbol{\beta}_j)}
      {\sum_{l=1}^{J} \exp(\mathbf{x}_{k}\boldsymbol{\beta}_l)}
 \tag{6.4}\]</span></span></p>
-<p>En donde <span class="math inline">\(\boldsymbol{\beta}_j\)</span> es el vector de coeficientes de regresión para la <span class="math inline">\(j\)</span>-ésima categoría. Para que el modelo sea identificable, debe fijarse el vector de una categoría de referencia en cero; de ese modo, la expresión produce <span class="math inline">\(J-1\)</span> conjuntos de coeficientes estimables. Aunque existen parametrizaciones alternativas que facilitan la interpretación de los parámetros, esta formulación expresa directamente las probabilidades de pertenencia a cada categoría, y en la práctica resulta más conveniente reescribir el modelo utilizando una categoría de referencia, ya que cada conjunto de coeficientes describe el efecto de las covariables sobre el logaritmo de las razones de probabilidades (<em>log-odds</em>) de pertenecer a una determinada categoría en comparación con la categoría de referencia.</p>
+<p>En donde <span class="math inline">\(\boldsymbol{\beta}_j\)</span> es el vector de coeficientes de regresión para la <span class="math inline">\(j\)</span>-ésima categoría. Para que el modelo sea identificable, debe fijarse el vector de una categoría de referencia en cero; de ese modo, la expresión produce <span class="math inline">\(J-1\)</span> conjuntos de coeficientes estimables. Aunque existen parametrizaciones alternativas que facilitan la interpretación de los parámetros, esta formulación expresa directamente las probabilidades de pertenencia a cada categoría. Con una categoría de referencia, cada conjunto de coeficientes describe cómo cambian, en escala logarítmica, las razones entre la probabilidad de pertenecer a una categoría y la probabilidad de pertenecer a la categoría de referencia (<em>log-odds</em> relativos a la referencia).</p>
 <p>Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, la estimación de los parámetros del modelo se realiza mediante el enfoque de pseudo-máxima verosimilitud, definida de la siguiente manera:</p>
 <p><span class="math display">\[
 PL(\boldsymbol{\beta} \mid \mathbf{X}) =
@@ -827,22 +854,24 @@ y_{k(j)}
 \log(\theta_{k(j)})
 \tag{6.5}\]</span></span></p>
 <p>La inferencia estadística para los parámetros de interés se basa en estimaciones de varianza obtenidas mediante técnicas de linealización de Taylor que incorporan explícitamente las características del diseño muestral complejo, permitiendo calcular errores estándar, intervalos de confianza y pruebas de hipótesis apropiados para datos de encuestas. Bajo condiciones regulares, los estimadores obtenidos mediante este procedimiento son consistentes y asintóticamente normales <span class="citation" data-cites="molina1992pseudo binder1983variances">(<a href="references.html#ref-molina1992pseudo" role="doc-biblioref">Molina y Skinner 1992</a>; <a href="references.html#ref-binder1983variances" role="doc-biblioref">Binder 1983</a>)</span>.</p>
-<p>Como referencia inicial, se estiman las proporciones de personas por estado de empleo, restringiendo las unidades de interés a mayores de 15 años, como se presenta en la <a href="#tbl-prop-empleo-15" class="quarto-xref">tabla&nbsp;<span>6.4</span></a>.</p>
+<p>Como referencia inicial, se estiman las proporciones de personas por estado de empleo, restringiendo las unidades de interés a las personas de 15 años o más, como se presenta en la <a href="#tbl-prop-empleo-15" class="quarto-xref">tabla&nbsp;<span>6.4</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>employment_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">15</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Employment) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">proportion =</span> <span class="fu">survey_mean</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)))</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>employment_proportions_table <span class="ot">&lt;-</span> employment_proportion</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">proportion =</span> <span class="fu">survey_mean</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>employment_proportions_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>employment_proportions_table <span class="ot">&lt;-</span> employment_proportion</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>employment_proportions_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-prop-empleo-15" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-prop-empleo-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;6.4: Proporción estimada de personas por estado de empleo (mayores de 15 años)
+Tabla&nbsp;6.4: Proporción estimada de personas por estado de empleo (de 15 años o más)
 </figcaption>
 <div aria-describedby="tbl-prop-empleo-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -886,7 +915,7 @@ Tabla&nbsp;6.4: Proporción estimada de personas por estado de empleo (mayores d
 </div>
 </div>
 <p>De acuerdo con <span class="citation" data-cites="svyVGAM2026">Lumley (<a href="references.html#ref-svyVGAM2026" role="doc-biblioref">2026</a>)</span>, para modelar una variable de respuesta multinomial se emplea la función <code>svy_vglm()</code> del paquete <code>svyVGAM</code>, que permite ajustar modelos de regresión multinomial incorporando explícitamente las características del diseño complejo de la encuesta. En este ejemplo, se especifica un modelo donde la condición de actividad se explica en función de la edad, el sexo y la zona de residencia. A diferencia de los modelos multinomiales convencionales, <code>svy_vglm()</code> calcula las varianzas de los estimadores considerando la complejidad del diseño muestral.</p>
-<p>Las siguientes líneas de código ajustan un modelo de regresión multinomial sobre las personas mayores de 15 años, susceptibles de ser clasificadas en una de las tres categorías de <code>Employment</code>. Note que el argumento <code>family = multinomial(refLevel = "Unemployed")</code> define un modelo logístico multinomial tomando la categoría <code>Unemployed</code> como referencia. Bajo esta especificación, se estiman de manera simultánea los logaritmos de las razones de probabilidades (<em>log-odds</em>) entre cada una de las categorías de <code>Employment</code> y la categoría de referencia. Los parámetros se obtienen mediante pseudo-máxima verosimilitud, incorporando los factores de expansión de la encuesta en la función objetivo.</p>
+<p>Las siguientes líneas de código ajustan un modelo de regresión multinomial sobre las personas de 15 años o más, susceptibles de ser clasificadas en una de las tres categorías de <code>Employment</code>. Note que el argumento <code>family = multinomial(refLevel = "Unemployed")</code> define un modelo logístico multinomial tomando la categoría <code>Unemployed</code> como referencia. Bajo esta especificación, se estiman de manera simultánea los logaritmos de las razones de probabilidades (<em>log-odds</em>) entre cada una de las categorías de <code>Employment</code> y la categoría de referencia. Los parámetros se obtienen mediante pseudo-máxima verosimilitud, incorporando los factores de expansión de la encuesta en la función objetivo.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(svyVGAM)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -907,10 +936,18 @@ Tabla&nbsp;6.4: Proporción estimada de personas por estado de empleo (mayores d
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">y.level =</span> <span class="fu">recode</span>(y.level, <span class="st">`</span><span class="at">1</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Inactive"</span>, <span class="st">`</span><span class="at">2</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Employed"</span>),</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">RRR =</span> <span class="fu">exp</span>(estimate)</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(y.level, term, estimate, std.error,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>         p.value, conf.low, conf.high, RRR)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>multinomial_coefficients_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    y.level,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    term,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    estimate,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    std.error,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    p.value,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    conf.low,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    conf.high,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    RRR</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>multinomial_coefficients_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-multinomial-coef" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -1106,27 +1143,39 @@ f(y_{k}\mid\mu_{k},\phi)
 \right]
 \]</span></p>
 <p>En donde <span class="math inline">\(k\)</span> representa las unidades de observación de la muestra y <span class="math inline">\(w_k\)</span> corresponde al factor de expansión asociado a cada una de ellas. Esta función define el criterio de optimización utilizado para estimar los parámetros del modelo bajo el enfoque de pseudo-máxima verosimilitud, descrito para encuestas complejas por <span class="citation" data-cites="ChambersSkinner2003">Chambers y Skinner (<a href="references.html#ref-ChambersSkinner2003" role="doc-biblioref">2003</a>)</span>.</p>
-<p>El siguiente código ajusta, mediante <code>svyglm()</code>, un modelo de regresión Gamma para el ingreso per cápita del hogar (<code>Income</code>), incorporando el diseño complejo de la encuesta definido en el objeto <code>survey_design</code>. La unidad de análisis es el hogar, con una observación por hogar. El modelo utiliza como variables explicativas el gasto per cápita del hogar (<code>Expenditure</code>), la edad del jefe de hogar (<code>Age</code>), su sexo (<code>Sex</code>) y la zona de residencia (<code>Zone</code>). Asimismo, se especifica una función de enlace logarítmica, garantizando predicciones positivas y permitiendo interpretar los efectos de las variables explicativas en términos multiplicativos sobre el ingreso per cápita esperado. Los coeficientes estimados se presentan en la <a href="#tbl-gamma-coeficientes" class="quarto-xref">tabla&nbsp;<span>6.6</span></a>:</p>
+<p>El siguiente código ajusta, mediante <code>svyglm()</code>, un modelo de regresión Gamma para el ingreso per cápita del hogar (<code>Income</code>), incorporando el diseño complejo de la encuesta conservado en el objeto <code>household_design</code>. La unidad de análisis es el hogar, con una observación por hogar identificada mediante <code>PersonID == "idPer01"</code>, siguiendo la convención utilizada en el modelo logístico. La muestra de análisis contiene 696 hogares; las categorías de referencia son jefatura masculina y zona rural. El modelo utiliza como variables explicativas el gasto per cápita del hogar (<code>Expenditure</code>), la edad del jefe de hogar (<code>Age</code>), su sexo (<code>Sex</code>) y la zona de residencia (<code>Zone</code>). Asimismo, se especifica una función de enlace logarítmica, garantizando predicciones positivas y permitiendo interpretar los efectos de las variables explicativas en términos multiplicativos sobre el ingreso per cápita esperado. Los coeficientes estimados se presentan en la <a href="#tbl-gamma-coeficientes" class="quarto-xref">tabla&nbsp;<span>6.6</span></a>:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>gamma_model <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> Income <span class="sc">~</span> Expenditure <span class="sc">+</span> Age <span class="sc">+</span> Sex <span class="sc">+</span> Zone,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design ,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> household_design,</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">Gamma</span>(<span class="at">link =</span> <span class="st">"log"</span>)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>gamma_results <span class="ot">&lt;-</span> broom<span class="sc">::</span><span class="fu">tidy</span>(gamma_model, <span class="at">conf.int =</span> <span class="cn">TRUE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>gamma_coefficients_table <span class="ot">&lt;-</span> gamma_results <span class="sc">%&gt;%</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">factor =</span> <span class="fu">exp</span>(estimate)) <span class="sc">%&gt;%</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate, std.error, p.value, conf.low, conf.high, factor)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>gamma_coefficients_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>gamma_results <span class="ot">&lt;-</span> broom<span class="sc">::</span><span class="fu">tidy</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  gamma_model,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.int =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.level =</span> <span class="fl">0.95</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>gamma_coefficients_table <span class="ot">&lt;-</span> gamma_results <span class="sc">%&gt;%</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">factor =</span> <span class="fu">exp</span>(estimate)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    term,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    estimate,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    std.error,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    p.value,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    conf.low,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    conf.high,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    factor</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>gamma_coefficients_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-gamma-coeficientes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-gamma-coeficientes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;6.6: Coeficientes del modelo Gamma para el ingreso de los hogares
+Tabla&nbsp;6.6: Coeficientes del modelo Gamma para el ingreso per cápita de los hogares
 </figcaption>
 <div aria-describedby="tbl-gamma-coeficientes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1154,48 +1203,48 @@ Tabla&nbsp;6.6: Coeficientes del modelo Gamma para el ingreso de los hogares
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">5.4094</td>
-<td style="text-align: right;">0.0980</td>
+<td style="text-align: right;">5.4392</td>
+<td style="text-align: right;">0.1257</td>
 <td style="text-align: right;">0.0000</td>
-<td style="text-align: right;">5.2152</td>
-<td style="text-align: right;">5.6036</td>
-<td style="text-align: right;">223.497</td>
+<td style="text-align: right;">5.1902</td>
+<td style="text-align: right;">5.6882</td>
+<td style="text-align: right;">230.2624</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Expenditure</td>
-<td style="text-align: right;">0.0018</td>
+<td style="text-align: right;">0.0019</td>
 <td style="text-align: right;">0.0001</td>
 <td style="text-align: right;">0.0000</td>
-<td style="text-align: right;">0.0016</td>
-<td style="text-align: right;">0.0020</td>
-<td style="text-align: right;">1.002</td>
+<td style="text-align: right;">0.0017</td>
+<td style="text-align: right;">0.0021</td>
+<td style="text-align: right;">1.0019</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Age</td>
-<td style="text-align: right;">0.0015</td>
-<td style="text-align: right;">0.0006</td>
-<td style="text-align: right;">0.0166</td>
-<td style="text-align: right;">0.0003</td>
-<td style="text-align: right;">0.0028</td>
-<td style="text-align: right;">1.002</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.0014</td>
+<td style="text-align: right;">0.8634</td>
+<td style="text-align: right;">-0.0026</td>
+<td style="text-align: right;">0.0030</td>
+<td style="text-align: right;">1.0002</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">SexMale</td>
-<td style="text-align: right;">0.0484</td>
-<td style="text-align: right;">0.0384</td>
-<td style="text-align: right;">0.2104</td>
-<td style="text-align: right;">-0.0277</td>
-<td style="text-align: right;">0.1245</td>
-<td style="text-align: right;">1.050</td>
+<td style="text-align: left;">SexFemale</td>
+<td style="text-align: right;">-0.1521</td>
+<td style="text-align: right;">0.0785</td>
+<td style="text-align: right;">0.0551</td>
+<td style="text-align: right;">-0.3077</td>
+<td style="text-align: right;">0.0034</td>
+<td style="text-align: right;">0.8589</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">ZoneUrban</td>
-<td style="text-align: right;">0.1514</td>
-<td style="text-align: right;">0.0890</td>
-<td style="text-align: right;">0.0916</td>
-<td style="text-align: right;">-0.0249</td>
-<td style="text-align: right;">0.3277</td>
-<td style="text-align: right;">1.163</td>
+<td style="text-align: right;">0.1606</td>
+<td style="text-align: right;">0.0747</td>
+<td style="text-align: right;">0.0336</td>
+<td style="text-align: right;">0.0127</td>
+<td style="text-align: right;">0.3085</td>
+<td style="text-align: right;">1.1742</td>
 </tr>
 </tbody>
 </table>
@@ -1204,7 +1253,7 @@ Tabla&nbsp;6.6: Coeficientes del modelo Gamma para el ingreso de los hogares
 </figure>
 </div>
 </div>
-<p>Dado que el modelo utiliza un enlace logarítmico, la columna Factor multiplicativo muestra <span class="math inline">\(\exp(\beta)\)</span>, es decir, el cambio multiplicativo en el ingreso esperado asociado a una unidad adicional de una covariable, manteniendo constantes las demás; para una variable categórica, la comparación se realiza respecto de su categoría de referencia. El cambio porcentual correspondiente es <span class="math inline">\(100[\exp(\beta)-1]\)</span>. Para el intercepto, la exponencial representa la media esperada del perfil de referencia. Los errores estándar y los intervalos de confianza del 95 % permanecen en la escala de los coeficientes <span class="math inline">\(\beta\)</span>. El coeficiente asociado al gasto del hogar es positivo y estadísticamente significativo (<span class="math inline">\(p&lt;0.001\)</span>), indicando que, manteniendo constantes las demás variables del modelo, un incremento de una unidad en el gasto se asocia con un aumento aproximado del <span class="math inline">\(0.2\%\)</span> en el ingreso esperado, ya que <span class="math inline">\(\exp(0.002)\approx 1.002\)</span>. La edad también presenta una asociación positiva y estadísticamente significativa (<span class="math inline">\(p=0.017\)</span>). En promedio, cada año adicional de edad se asocia con un incremento cercano al <span class="math inline">\(0.2\%\)</span> en el ingreso esperado, manteniendo constantes las demás covariables. Por el contrario, no se encuentra evidencia estadísticamente significativa de asociación entre el sexo o la zona de residencia y el ingreso per cápita esperado en este modelo.</p>
+<p>Dado que el modelo utiliza un enlace logarítmico, la columna Factor multiplicativo muestra <span class="math inline">\(\exp(\beta)\)</span>, es decir, el cambio multiplicativo en el ingreso esperado asociado a una unidad adicional de una covariable, manteniendo constantes las demás; para una variable categórica, la comparación se realiza respecto de su categoría de referencia. El cambio porcentual correspondiente es <span class="math inline">\(100[\exp(\beta)-1]\)</span>. Para el intercepto, la exponencial representa la media esperada del perfil de referencia. Los errores estándar y los intervalos de confianza del 95 % permanecen en la escala de los coeficientes <span class="math inline">\(\beta\)</span>. El coeficiente asociado al gasto per cápita es positivo y estadísticamente significativo (valor-<em>p</em>: &lt;0.001): manteniendo constantes las demás covariables, un dólar adicional de gasto per cápita se asocia con un aumento aproximado del 0,187 % en el ingreso per cápita esperado. La residencia en zona urbana también presenta una asociación positiva y estadísticamente significativa (valor-<em>p</em>: 0.0336), con un ingreso per cápita esperado aproximadamente 17,4 % mayor que en la zona rural, manteniendo constantes el gasto per cápita, la edad y el sexo del jefe. En cambio, no se encuentra evidencia suficiente de asociación para la edad del jefe (valor-<em>p</em>: 0.863) ni para la jefatura femenina respecto de la masculina (valor-<em>p</em>: 0.0551) al nivel del 5 %. Estas asociaciones no establecen efectos causales.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">

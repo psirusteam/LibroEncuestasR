@@ -46,26 +46,41 @@ Los ajustes de los pesos no solo corrigen las imperfecciones derivadas de la no 
 
 @Valliant_Dever_2017 presentan un marco sistemático para construir, ajustar y evaluar los pesos de una encuesta compleja, que abarca desde el cálculo de los pesos iniciales hasta los ajustes por falta de respuesta, la calibración con información auxiliar y su consideración en la estimación de varianzas. En consonancia con este enfoque, el paquete `weightflow` permite implementar estas etapas mediante un flujo de trabajo reproducible [@Ferreira2026weightflow].
 
+```{r calcular-ejemplo-ponderacion, include=FALSE}
+region_population <- c(A = 100, B = 900)
+region_income <- c(A = 10000, B = 2000)
+region_sample_size <- c(A = 50, B = 50)
+region_relative_weights <- region_population / min(region_population)
+population_income_mean <- weighted.mean(region_income, region_population)
+unweighted_income_mean <- weighted.mean(region_income, region_sample_size)
+weighted_income_mean <- weighted.mean(
+  region_income, region_sample_size * region_relative_weights
+)
+cluster_count <- 100
+households_per_cluster <- 10
+cluster_sample_size <- cluster_count * households_per_cluster
+```
+
 Como muestran @korn1995analysis, las estimaciones ponderadas y no ponderadas pueden diferir sustancialmente, lo que evidencia la importancia de utilizar métodos de análisis coherentes con el diseño de la encuesta. @UNhandbook [capítulo 9] presenta el siguiente ejemplo. Supóngase un país conformado por dos regiones: la Región A, con 100 habitantes y un ingreso promedio de \$10.000, y la Región B, con 900 habitantes y un ingreso promedio de \$2.000. El ingreso promedio verdadero de la población es:
 
 $$\theta =
 \frac{(100 \times 10.000) + (900 \times 2.000)}
 {100 + 900}
-= 2.800$$
+= `r formatC(population_income_mean, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`$$
 
 Si se seleccionan 50 personas en cada región y se ignora el diseño de muestreo, asignando el mismo peso a todas las observaciones, el promedio estimado sería:
 
 $$\hat{\theta} =
 \frac{(50 \times 10.000) + (50 \times 2.000)}
 {100}
-= 6.000$$
+= `r formatC(unweighted_income_mean, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`$$
 
-En este caso, la estimación sobrestima considerablemente el ingreso nacional, ya que la Región A, que representa únicamente el 10% de la población, termina influyendo tanto como la Región B, que concentra el 90%. En cambio, al aplicar pesos proporcionales a los tamaños poblacionales (1 para la Región A y 9 para la Región B), se obtiene la siguiente estimación:
+En este caso, la estimación sobrestima considerablemente el ingreso nacional, ya que la Región A, que representa únicamente el `r formatC(100 * region_population["A"] / sum(region_population), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` % de la población, termina influyendo tanto como la Región B, que concentra el `r formatC(100 * region_population["B"] / sum(region_population), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` %. En cambio, al aplicar pesos proporcionales a los tamaños poblacionales (1 para la Región A y 9 para la Región B), se obtiene la siguiente estimación:
 
 $$\hat{\theta} =
 \frac{(1 \times 50 \times 10.000) + (9 \times 50 \times 2.000)}
 {(1 \times 50) + (9 \times 50)}
-= 2.800$$
+= `r formatC(weighted_income_mean, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`$$
 
 Este resultado coincide con el valor verdadero de la población y muestra cómo el uso adecuado de los pesos corrige el sesgo introducido por un análisis que ignora el diseño de muestreo.
 
@@ -75,7 +90,7 @@ En las encuestas de hogares con diseños complejos, los marcos de muestreo suele
 
 En la práctica, este tipo de diseños permite reducir los costos operativos y facilitar el trabajo de campo; sin embargo, también tiene implicaciones importantes sobre la precisión de las estimaciones. Cuando los hogares pertenecientes a un mismo conglomerado comparten características similares, la información adicional que aporta cada nueva observación dentro del conglomerado disminuye.
 
-Por ejemplo, supóngase una encuesta que selecciona 100 conglomerados y, dentro de cada uno, 10 hogares, obteniendo así una muestra total de 1.000 hogares. Si los hogares de un mismo conglomerado presentan comportamientos muy parecidos (por ejemplo, niveles de ingreso cercanos, o todos cuentan con acceso a electricidad), la variabilidad efectiva de los datos en la muestra se reducirá considerablemente. En términos prácticos, la precisión obtenida podría ser equivalente a la de una muestra aleatoria simple de apenas 100 hogares [@kish1974inference]. Analizar los 1.000 hogares como si fueran observaciones completamente independientes, ignorando la estructura de conglomeración, conduce a una subestimación de los errores estándar y, en consecuencia, a intervalos de confianza artificialmente estrechos y conclusiones potencialmente erróneas.
+Por ejemplo, supóngase una encuesta que selecciona 100 conglomerados y, dentro de cada uno, 10 hogares, obteniendo así una muestra total de `r formatC(cluster_sample_size, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` hogares. Si los hogares de un mismo conglomerado presentan comportamientos muy parecidos (por ejemplo, niveles de ingreso cercanos, o todos cuentan con acceso a electricidad), la variabilidad efectiva de los datos en la muestra se reducirá considerablemente. En términos prácticos, la precisión obtenida podría ser equivalente a la de una muestra aleatoria simple de apenas 100 hogares [@kish1974inference]. Analizar los `r formatC(cluster_sample_size, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` hogares como si fueran observaciones completamente independientes, ignorando la estructura de conglomeración, conduce a una subestimación de los errores estándar y, en consecuencia, a intervalos de confianza artificialmente estrechos y conclusiones potencialmente erróneas.
 
 ### Estratificación
 
@@ -113,13 +128,24 @@ $$ {#eq-varHT}
 
 En donde $d_{kl} = 1/\pi_{kl}$ y $\pi_{kl} = \Pr(k,l \in s)$ representan probabilidades de inclusión conjuntas. Para garantizar el insesgamiento en @eq-varHT, el diseño muestral debe satisfacer $\pi_{kl}>0$ para todo par de unidades $k,l\in U$.
 
-Para comprender de manera más concreta la relevancia de considerar el diseño muestral en la estimación de totales y de sus varianzas, analicemos un ejemplo de @UNhandbook que permite visualizar cómo el método de estimación se ajusta al esquema de selección adoptado. Suponga una población finita de tamaño $N=6$, de la cual se selecciona una muestra aleatoria simple (MAS) sin reemplazo de tamaño $n=3$. En dicha muestra se observan los valores $(y_1=10, y_2=14, y_3=18)$. Bajo este diseño, el estimador de Horvitz–Thompson del total poblacional se define como la suma de los valores observados divididos por sus probabilidades de inclusión, y su varianza estimada se obtiene a partir de las covarianzas inducidas por el proceso de selección. De esta forma, la estimación del total poblacional es $\hat{t}_{y}=84$.
+```{r calcular-ejemplo-mas, include=FALSE}
+srs_population_size <- 6
+srs_values <- c(10, 14, 18)
+srs_sample_size <- length(srs_values)
+srs_total <- srs_population_size * mean(srs_values)
+srs_variance_without_fpc <-
+  srs_population_size^2 / srs_sample_size * var(srs_values)
+srs_variance <-
+  (1 - srs_sample_size / srs_population_size) * srs_variance_without_fpc
+```
+
+Para comprender de manera más concreta la relevancia de considerar el diseño muestral en la estimación de totales y de sus varianzas, analicemos un ejemplo de @UNhandbook que permite visualizar cómo el método de estimación se ajusta al esquema de selección adoptado. Suponga una población finita de tamaño $N=6$, de la cual se selecciona una muestra aleatoria simple (MAS) sin reemplazo de tamaño $n=3$. En dicha muestra se observan los valores $(y_1=10, y_2=14, y_3=18)$. Bajo este diseño, el estimador de Horvitz–Thompson del total poblacional se define como la suma de los valores observados divididos por sus probabilidades de inclusión, y su varianza estimada se obtiene a partir de las covarianzas inducidas por el proceso de selección. De esta forma, la estimación del total poblacional es $\hat{t}_{y}= `r srs_total`$.
 
 Como señala @Gutierrez2016, para este diseño de muestreo particular, la expresión general de la varianza presentada en @eq-varHT se reduce a:
 
 $$\widehat{Var}_{MAS}(\hat{t}_{y}) = \frac{N^2}{n}\left(1-\frac{n}{N}\right)S_{y_s}^2$$
 
-donde $S_{y_s}^2$ corresponde a la varianza muestral de los valores observados. Sustituyendo los valores del ejemplo en la expresión anterior, se obtiene $\widehat{Var}_{MAS}(\hat{t}_{y})=96$. En contraste, si se ignoraran las características del diseño muestral y los datos se analizaran como si provinieran de una muestra aleatoria simple, la varianza se estimaría incorrectamente mediante la expresión $\frac{N^2}{n}S_{y_s}^2 = 192$. Este valor duplica la varianza estimada bajo el diseño de muestreo, y conduce, por tanto, a una sobreestimación de la incertidumbre asociada al estimador. En consecuencia, el intervalo de confianza resultante sería innecesariamente más amplio, lo que reduciría la precisión aparente de la estimación y podría conducir a conclusiones equivocadas sobre la incertidumbre de los resultados.
+donde $S_{y_s}^2$ corresponde a la varianza muestral de los valores observados. Sustituyendo los valores del ejemplo en la expresión anterior, se obtiene $\widehat{Var}_{MAS}(\hat{t}_{y})= `r srs_variance`$. En contraste, si se omitiera la corrección por población finita, la varianza se calcularía mediante la expresión $\frac{N^2}{n}S_{y_s}^2 = `r srs_variance_without_fpc`$. En este ejemplo, esa omisión multiplica por `r srs_variance_without_fpc / srs_variance` la varianza estimada y produce un intervalo de confianza innecesariamente más amplio.
 
 ## El efecto de diseño (DEFF)
 
@@ -149,7 +175,7 @@ En el análisis de encuestas de hogares, es habitual estimar estadísticas descr
 
 ### Estimación puntual {#estimacion-puntual}
 
-Una vez definidos la población objetivo, las variables de interés y el diseño muestral, se procede a estimar los parámetros poblacionales correspondientes. Para establecer la notación del libro, se utilizará la letra $h$ para identificar los estratos; la letra $i$ para representar las unidades primarias de muestreo (UPM) contenidas en cada estrato; y la letra $k$ para denotar las unidades finales observadas, como hogares o personas. Además, con el propósito de simplificar la escritura a lo largo de este documento, a menos que se indique lo contrario, $\sum_{h}$ denotará la suma sobre todos los estratos de la población; $\sum_{i}$ representará la suma sobre todas las UPM seleccionadas en la muestra dentro del estrato $h$; y $\sum_{k}$ corresponderá a la suma sobre todos los elementos observados en la muestra de la UPM $i$, perteneciente al estrato $h$ de la población de interés. Con esta notación, el estimador de un total poblacional puede expresarse como:
+Una vez definidas la población objetivo, las variables de interés y el diseño muestral, se procede a estimar los parámetros poblacionales correspondientes. Para establecer la notación del libro, se utilizará la letra $h$ para identificar los estratos; la letra $i$ para representar las unidades primarias de muestreo (UPM) contenidas en cada estrato; y la letra $k$ para denotar las unidades finales observadas, como hogares o personas. Además, con el propósito de simplificar la escritura a lo largo de este documento, a menos que se indique lo contrario, $\sum_{h}$ denotará la suma sobre todos los estratos de la población; $\sum_{i}$ representará la suma sobre todas las UPM seleccionadas en la muestra dentro del estrato $h$; y $\sum_{k}$ corresponderá a la suma sobre todos los elementos observados en la muestra de la UPM $i$, perteneciente al estrato $h$ de la población de interés. Con esta notación, el estimador de un total poblacional puede expresarse como:
 
 $$\hat{t}_y = \sum_{h} \sum_{i} \sum_{k} w_{hik} \, y_{hik}$$
 
@@ -274,7 +300,7 @@ Este enfoque asegura que la dispersión entre réplicas capture fielmente la inc
 
 ### Intervalos de confianza {#intervalos-de-confianza}
 
-Además de producir estimaciones puntuales, uno de los objetivos fundamentales de una encuesta es cuantificar la incertidumbre asociada a dichas estimaciones. En este contexto, los intervalos de confianza permiten construir un rango de valores plausibles para el parámetro poblacional de interés, incorporando explícitamente la variabilidad introducida por el diseño muestral. El intervalo de confianza de nivel $(1-\alpha)100\%$ para el total poblacional $Y$ se calcula como:
+Además de producir estimaciones puntuales, uno de los objetivos fundamentales de una encuesta es cuantificar la incertidumbre asociada a dichas estimaciones. En este contexto, los intervalos de confianza permiten construir un rango de valores plausibles para el parámetro poblacional de interés, incorporando explícitamente la variabilidad introducida por el diseño muestral. Un intervalo de confianza aproximado de nivel $(1-\alpha)100\%$ para el parámetro poblacional $\theta$ se construye como:
 
 $$\hat{\theta} \pm t_{1-\alpha/2, df} \times \sqrt{\widehat{Var}(\hat{\theta})}$$ {#eq-intervalo-confianza-general}
 
