@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>6&nbsp; Modelos lineales generalizados – &lt;span style='font-weight: 700'&gt;Análisis de Encuestas de Hogares&lt;/span&gt;&lt;br/&gt;&lt;i style='color: #00b7ff'&gt;usando R&lt;/i&gt;</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/07-Multinivel.html" rel="next">
+<link href="../chapters/05-Regresion.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-631496449bf32ff9b0bb69a6bfd9195d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script>
+
+window.MathJax = {
+
+  tex: {
+
+    macros: {
+
+      E: "\\mathbb{E}",
+
+      Var: "\\operatorname{Var}",
+
+      Cov: "\\operatorname{Cov}",
+
+      Corr: "\\operatorname{Corr}",
+
+      Pr: "\\operatorname{Pr}",
+
+      deff: "\\operatorname{deff}",
+
+      bold: ["\\boldsymbol{#1}", 1]
+
+    }
+
+  }
+
+};
+
+</script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/06-GLM.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modelos lineales generalizados</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../"><span style="font-weight: 700">Análisis de Encuestas de Hogares</span><br><i style="color: #00b7ff">usando R</i></a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Página legal</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-Introduccion-alternativa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-Conceptos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Conceptos básicos en encuestas de hogares</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-Categoricas-alternativa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis de variables categóricas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-Continuas-alternativa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Análisis de las variables continuas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-Regresion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modelos de regresión</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-GLM.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modelos lineales generalizados</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-Multinivel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modelos multinivel</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Anexos</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/A1-TidyVerse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Manejo de bases de datos con <code>R</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/A2-MPVbinder.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Inferencia en poblaciones finitas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/A3-Imputacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Imputación usando R</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referencias</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#sec-logistica" id="toc-sec-logistica" class="nav-link active" data-scroll-target="#sec-logistica"><span class="header-section-number">6.1</span> Modelo de regresión logística</a></li>
+  <li><a href="#sec-multinomial" id="toc-sec-multinomial" class="nav-link" data-scroll-target="#sec-multinomial"><span class="header-section-number">6.2</span> Modelo de regresión multinomial</a></li>
+  <li><a href="#sec-gamma" id="toc-sec-gamma" class="nav-link" data-scroll-target="#sec-gamma"><span class="header-section-number">6.3</span> Modelo de regresión Gamma</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="cap6" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modelos lineales generalizados</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><span class="citation" data-cites="nelder1972generalized">Nelder y Wedderburn (<a href="references.html#ref-nelder1972generalized" role="doc-biblioref">1972</a>)</span> introdujeron los modelos lineales generalizados como un marco capaz de integrar diversos métodos estadísticos ampliamente utilizados, como la regresión logística, los modelos log-lineales para datos de conteo y otros modelos avanzados de regresión para variables continuas. Posteriormente, <span class="citation" data-cites="McCullaghNelder1989">McCullagh y Nelder (<a href="references.html#ref-McCullaghNelder1989" role="doc-biblioref">1989</a>)</span> sistematizaron esta formulación, que permitió extender las herramientas de regresión más allá de los escenarios en los que la variable respuesta sigue una distribución normal. Cuando la variable de interés no es continua o los supuestos del modelo lineal clásico no se satisfacen, los modelos lineales generalizados constituyen una alternativa adecuada para modelar las relaciones de interés.</p>
+<p>La necesidad de esta generalización surge porque los modelos lineales clásicos asumen, entre otras cosas, normalidad y homogeneidad de varianza en los errores, condiciones que no se cumplen cuando se analizan variables categóricas, proporciones o conteos. En este tipo de situaciones, los modelos lineales generalizados ofrecen un marco flexible para modelar adecuadamente la relación entre las variables mediante la selección de una distribución de probabilidad apropiada para la respuesta y una función de enlace que conecte la media de dicha distribución con el predictor lineal.</p>
+<p>Para ilustrar los modelos de este capítulo se utiliza la muestra almacenada en <code>sample.rds</code>. El siguiente bloque carga las librerías, define la condición de pobreza (<code>poor</code>), calcula el tamaño del hogar (<code>household_size</code>) contando los integrantes de cada <code>HHID</code> y construye el diseño muestral. A partir de este diseño se seleccionan las unidades de análisis correspondientes a cada ejemplo.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(srvyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jtools)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/sample.rds"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>(HHID, <span class="at">name =</span> <span class="st">"household_size"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Stratum =</span> <span class="fu">factor</span>(Stratum),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">poor =</span> <span class="fu">factor</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      Poverty <span class="sc">!=</span> <span class="st">"NotPoor"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Not poor"</span>, <span class="st">"Poor"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>survey_design <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">strata =</span> Stratum,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">ids =</span> PSU,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> wk,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">nest =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="sec-logistica" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="sec-logistica"><span class="header-section-number">6.1</span> Modelo de regresión logística</h2>
+<p>De acuerdo con <span class="citation" data-cites="McCullaghNelder1989">McCullagh y Nelder (<a href="references.html#ref-McCullaghNelder1989" role="doc-biblioref">1989</a>)</span> y <span class="citation" data-cites="Agresti2019Intro">Agresti (<a href="references.html#ref-Agresti2019Intro" role="doc-biblioref">2019</a>)</span>, cuando la variable de interés es dicotómica, tomando valores de cero o uno, el modelo lineal clásico no resulta adecuado debido a que puede generar predicciones fuera del intervalo <span class="math inline">\((0,1)\)</span>. Para abordar estas limitaciones, el modelo de regresión logística constituye uno de los modelos más utilizados para analizar variables binarias. Además, en el contexto de encuestas de hogares, la regresión logística puede emplearse para analizar la asociación entre una condición de interés, como la pobreza, y características sociodemográficas de los individuos o los hogares.</p>
+<p>Considere, una variable dicotómica <span class="math inline">\(Y_k \in \{0,1\}\)</span>, cuya esperanza es <span class="math inline">\(\theta_k=Pr(Y_k=1)\)</span>. El modelo de regresión logística relaciona dicha probabilidad con un conjunto de variables explicativas mediante la función de enlace logit, definida como</p>
+<p><span id="eq-modelo-logistico"><span class="math display">\[
+\log\left(\frac{\theta_k}{1-\theta_k}\right)
+=
+\beta_0+\beta_1x_{k1}+\cdots+\beta_px_{kp}
+=\mathbf{x}_{k}\boldsymbol{\beta}
+\tag{6.1}\]</span></span></p>
+<p>En donde <span class="math inline">\(\boldsymbol{\beta}\)</span> es el vector de coeficientes de regresión asociado a las covariables. Esta transformación logit convierte el intervalo restringido de probabilidades <span class="math inline">\((0,1)\)</span> en toda la recta real, permitiendo modelar la relación entre la respuesta y las variables auxiliares mediante un predictor lineal. De manera equivalente, la probabilidad de éxito puede expresarse mediante la siguiente relación:</p>
+<p><span id="eq-probabilidad-logistica"><span class="math display">\[
+\theta_k
+=
+Pr(Y_k = 1 \mid \mathbf{x}_k)
+=
+\frac{\exp(\mathbf{x}_k\boldsymbol{\beta})}
+     {1+\exp(\mathbf{x}_k\boldsymbol{\beta})}
+\tag{6.2}\]</span></span></p>
+<p>De manera equivalente, la probabilidad de que la unidad no presente la característica de interés es <span class="math inline">\(Pr(Y_k = 0 \mid \mathbf{x}_k) = 1-\theta_k\)</span>. Bajo esta parametrización, cada coeficiente de <span class="math inline">\(\boldsymbol{\beta}\)</span> representa el efecto de una covariable sobre el logaritmo de la razón de probabilidades de que ocurra el evento de interés, manteniendo constantes las demás variables del modelo. Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, la estimación de los parámetros puede realizarse mediante el enfoque de pseudo-máxima verosimilitud. Este método, abordado con detalle en el <a href="A2-MPVbinder.html">segundo anexo</a>, incorpora los factores de expansión en la función de verosimilitud convencional con el fin de obtener estimadores consistentes respecto de la población objetivo. En este sentido, para este modelo, la función de pseudo-verosimilitud para el modelo logístico se define como</p>
+<p><span class="math display">\[
+PL(\boldsymbol{\beta})
+=
+\prod_{k}
+\left[
+\theta_{k}^{y_{k}}
+\left\{
+1-\theta_{k}
+\right\}^{1-y_{k}}
+\right]^{w_{k}}
+\]</span></p>
+<p>En donde el subíndice <span class="math inline">\(k\)</span> representa una unidad observada de la muestra. Asimismo, <span class="math inline">\(\theta_{k}\)</span> denota la probabilidad de que la unidad <span class="math inline">\(k\)</span> de la UPM <span class="math inline">\(i\)</span> en el estrato <span class="math inline">\(h\)</span> presente la característica de interés, <span class="math inline">\(y_{k}\)</span> corresponde al valor observado de la variable dicotómica para dicha unidad y <span class="math inline">\(w_{k}\)</span> representa el factor de expansión asociado a la observación.</p>
+<p>Dado que la contribución de cada observación al proceso de estimación está determinada por su respectivo factor de expansión, la función de pseudo-verosimilitud refleja adecuadamente las características del diseño complejo de la encuesta. Además, la maximización de esta función resulta equivalente a maximizar su logaritmo, entonces el problema se reduce a optimizar la siguiente función:</p>
+<p><span id="eq-log-pseudoverosimilitud-logistica"><span class="math display">\[
+\ell(\boldsymbol{\beta})
+=
+\sum_{k}
+w_{k}
+\left[
+y_{k}\log(\theta_{k})
++
+(1-y_{k})
+\log(1-\theta_{k})
+\right]
+\tag{6.3}\]</span></span></p>
+<p>Esta expresión constituye la función objetivo utilizada por los algoritmos de optimización numérica para obtener el estimador de los parámetros del modelo. Es importante señalar que la función anterior no corresponde a una verosimilitud en sentido estricto bajo el diseño complejo de la encuesta. Por esta razón, se utiliza el término <em>pseudo-verosimilitud</em> y los estimadores obtenidos mediante su maximización son conocidos como estimadores de pseudo-máxima verosimilitud (<em>Pseudo Maximum Likelihood Estimators</em>, PMLE).</p>
+<p>De acuerdo con <span class="citation" data-cites="molina1992pseudo">Molina y Skinner (<a href="references.html#ref-molina1992pseudo" role="doc-biblioref">1992</a>)</span> y <span class="citation" data-cites="ChambersSkinner2003">Chambers y Skinner (<a href="references.html#ref-ChambersSkinner2003" role="doc-biblioref">2003</a>)</span>, bajo condiciones de regularidad, estos estimadores son consistentes y asintóticamente normales, constituyendo la base de procedimientos de inferencia para el análisis de datos de encuestas complejas. Como explica <span class="citation" data-cites="binder1983variances">Binder (<a href="references.html#ref-binder1983variances" role="doc-biblioref">1983</a>)</span> las varianzas se estiman mediante técnicas de linealización de Taylor, las cuales incorporan explícitamente las características del diseño complejo de muestreo.</p>
+<p>La matriz de varianzas y covarianzas de los parámetros estimados, denotada por <span class="math inline">\(\text{Var}(\hat{\boldsymbol{\beta}})=\boldsymbol{\Sigma}\)</span>, se obtiene a partir de una aproximación lineal de las ecuaciones de estimación alrededor del verdadero valor de los parámetros. Esta matriz describe la precisión de los estimadores, ya que sus elementos diagonales corresponden a las varianzas de cada coeficiente, mientras que los elementos fuera de la diagonal representan las covarianzas entre pares de coeficientes. Su estimación constituye la base para el cálculo de errores estándar, la construcción de intervalos de confianza y la realización de pruebas de hipótesis sobre los parámetros del modelo.</p>
+<p>Siguiendo con la encuesta de ejemplo, y con el fin de analizar los factores asociados a la condición de pobreza, se ajusta un modelo de regresión logística utilizando como variables explicativas la edad, el sexo y la situación laboral del jefe, junto con el tamaño del hogar. Estas características demográficas y laborales son habituales en el análisis de los correlatos de la pobreza <span class="citation" data-cites="Anyanwu2014">(<a href="references.html#ref-Anyanwu2014" role="doc-biblioref">Anyanwu 2014</a>)</span>. En este ejemplo, la pobreza se define a partir del ingreso: <code>poor</code> toma la categoría <code>Poor</code> para <code>Extreme</code> o <code>Relative</code>, y <code>Not poor</code> para <code>NotPoor</code>. Se trabaja con una observación por hogar, identificada mediante <code>PersonID == "idPer01"</code>, y se utiliza el factor de expansión <code>wk</code> del jefe, siguiendo la convención descrita en la sección 3.1. Dado que los datos provienen de una encuesta con diseño muestral complejo, la estimación se realiza mediante la función <code>svyglm()</code> del paquete <code>survey</code>, especificando <code>family = quasibinomial()</code> para indicar que la variable respuesta es dicotómica y que se utilizará la función de enlace logit. Esta elección conserva los coeficientes y las varianzas basadas en el diseño que se obtendrían con la familia binomial, y evita la advertencia sobre respuestas ponderadas no enteras. El siguiente código computacional selecciona una observación por hogar y ajusta el modelo logístico de pobreza.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>household_design <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(PersonID <span class="sc">==</span> <span class="st">"idPer01"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sex =</span> <span class="fu">factor</span>(Sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>)),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Employment =</span> <span class="fu">relevel</span>(Employment, <span class="at">ref =</span> <span class="st">"Employed"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>logit_model <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> poor <span class="sc">~</span> Age <span class="sc">+</span> Sex <span class="sc">+</span> Employment <span class="sc">+</span> household_size,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">quasibinomial</span>(),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> household_design</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>En la especificación del modelo, el argumento <code>formula = poor ~ Age + Sex + Employment + household_size</code> define la relación entre la variable respuesta <code>poor</code> y las covariables incluidas en el predictor lineal (<code>Age</code>, <code>Sex</code>, <code>Employment</code> y <code>household_size</code>). Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento <code>design = household_design</code> incorpora la información del diseño muestral para los hogares seleccionados. Las categorías de referencia son jefatura masculina y jefe ocupado. La muestra de análisis contiene 696 hogares, de los cuales 225 son pobres; estos conteos corresponden a observaciones muestrales, sin ponderar. El objeto resultante, <code>logit_model</code>, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo.</p>
+<p>EE indica el error estándar y DE la desviación estándar. LI y LS identifican, respectivamente, los límites inferior y superior del intervalo de confianza; el porcentaje que acompaña estas siglas indica su nivel de confianza. El siguiente código computacional organiza los coeficientes del modelo logístico, sus medidas de precisión y sus exponenciales para presentarlos en la tabla.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>logistic_intervals_table <span class="ot">&lt;-</span> logit_results <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">OR =</span> <span class="fu">exp</span>(estimate)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    term,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    estimate,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    std.error,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    p.value,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    conf.low,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    conf.high,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    OR</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>logistic_intervals_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-ic-logistica" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ic-logistica-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;6.1: Intervalos de confianza al 95% para los parámetros del modelo logístico
+</figcaption>
+<div aria-describedby="tbl-ic-logistica-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: right;">Estimación</th>
+<th style="text-align: right;">EE</th>
+<th style="text-align: right;">Valor p</th>
+<th style="text-align: right;">LI 95 %</th>
+<th style="text-align: right;">LS 95 %</th>
+<th style="text-align: right;">OR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-1.7217</td>
+<td style="text-align: right;">0.4252</td>
+<td style="text-align: right;">0.0001</td>
+<td style="text-align: right;">-2.5641</td>
+<td style="text-align: right;">-0.8794</td>
+<td style="text-align: right;">0.1788</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Age</td>
+<td style="text-align: right;">-0.0071</td>
+<td style="text-align: right;">0.0078</td>
+<td style="text-align: right;">0.3597</td>
+<td style="text-align: right;">-0.0225</td>
+<td style="text-align: right;">0.0082</td>
+<td style="text-align: right;">0.9929</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SexFemale</td>
+<td style="text-align: right;">0.4521</td>
+<td style="text-align: right;">0.2468</td>
+<td style="text-align: right;">0.0696</td>
+<td style="text-align: right;">-0.0368</td>
+<td style="text-align: right;">0.9411</td>
+<td style="text-align: right;">1.5717</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EmploymentUnemployed</td>
+<td style="text-align: right;">2.4380</td>
+<td style="text-align: right;">0.7007</td>
+<td style="text-align: right;">0.0007</td>
+<td style="text-align: right;">1.0498</td>
+<td style="text-align: right;">3.8262</td>
+<td style="text-align: right;">11.4500</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EmploymentInactive</td>
+<td style="text-align: right;">0.1693</td>
+<td style="text-align: right;">0.3272</td>
+<td style="text-align: right;">0.6058</td>
+<td style="text-align: right;">-0.4788</td>
+<td style="text-align: right;">0.8174</td>
+<td style="text-align: right;">1.1845</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">household_size</td>
+<td style="text-align: right;">0.2990</td>
+<td style="text-align: right;">0.0671</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.1660</td>
+<td style="text-align: right;">0.4319</td>
+<td style="text-align: right;">1.3485</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Los resultados de la <a href="#tbl-ic-logistica" class="quarto-xref">tabla&nbsp;<span>6.1</span></a> muestran las estimaciones de los coeficientes de regresión, sus exponenciales, errores estándar, intervalos de confianza y valores-<em>p</em>. Los errores estándar y los límites de confianza se mantienen en la escala de los coeficientes <span class="math inline">\(\beta\)</span>. En la regresión logística, <span class="math inline">\(\exp(\beta_j)\)</span> representa el <em>odds ratio</em> asociado a una covariable, manteniendo constantes las demás variables.</p>
+<p>Manteniendo constantes las demás variables, el <em>odds ratio</em> de pobreza asociado a cada integrante adicional del hogar es 1.35, con un intervalo de confianza del 95 % entre 1.18 y 1.54. Al ser mayor que uno, indica mayores <em>odds</em> de pobreza asociadas con un mayor tamaño del hogar. Asimismo, el <em>odds ratio</em> de los hogares con jefe desocupado respecto de aquellos con jefe ocupado es 11.45, con un intervalo de confianza del 95 % entre 2.86 y 45.89. Esta última estimación presenta una incertidumbre considerable, pues solo se observan 16 jefes desocupados. Los odds ratios superiores a uno indican mayores odds de pobreza respecto de la comparación correspondiente, pero no expresan cuántas veces mayor es esa probabilidad. Estas asociaciones no establecen efectos causales.</p>
+<p>La <a href="#fig-logistica-base" class="quarto-xref">figura&nbsp;<span>6.1</span></a> presenta la distribución de los estimadores de los coeficientes de regresión. Se observa que los intervalos de confianza asociados a la desocupación del jefe y al tamaño del hogar no incluyen el valor cero, lo que proporciona evidencia de una asociación estadísticamente significativa. En contraste, la edad, la jefatura femenina y la inactividad del jefe presentan valores-<em>p</em> de 0.360, 0.070 y 0.606, respectivamente, por lo que no se encuentra evidencia suficiente de asociación al nivel del 5 % una vez controladas las demás covariables incluidas en el modelo.</p>
+<p>Para visualizar la distribución de los coeficientes se emplea <code>ggstance</code> para la geometría horizontal de los intervalos <span class="citation" data-cites="ggstance2024">(<a href="references.html#ref-ggstance2024" role="doc-biblioref">Henry et&nbsp;al. 2024</a>)</span>, junto con <code>plot_summs()</code> del paquete <code>jtools</code> <span class="citation" data-cites="jtools2026">(<a href="references.html#ref-jtools2026" role="doc-biblioref">Long 2026</a>)</span>. El siguiente código computacional construye la <a href="#fig-logistica-base" class="quarto-xref">figura&nbsp;<span>6.1</span></a> a partir de los datos y las estimaciones descritos.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstance)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_summs</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  logit_model,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.distributions =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-logistica-base" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-logistica-base-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-logistica-base-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-logistica-base-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;6.1: Distribución de los parámetros del modelo logístico base
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>El modelo puede ampliarse incorporando términos de interacción para evaluar si el efecto de una variable explicativa depende de los valores que toma otra. En este caso, se incluye una interacción entre el sexo del jefe y el tamaño del hogar mediante el término <code>Sex:household_size</code>, con el objetivo de analizar si la relación entre el número de integrantes y las <em>odds</em> de pobreza es la misma para hogares con jefatura masculina y femenina. Sin este término, el modelo asume que la pendiente del tamaño del hogar sobre el logit de pobreza es idéntica para ambos tipos de jefatura. En cambio, al incorporar la interacción, se permite que dicha pendiente varíe, capturando posibles diferencias en la forma en que el tamaño del hogar se asocia con la pobreza en cada grupo. Los resultados del modelo ajustado se presentan en la <a href="#tbl-logistica-interaccion" class="quarto-xref">tabla&nbsp;<span>6.2</span></a>. El siguiente código computacional ajusta el modelo logístico que incorpora la interacción entre sexo y tamaño del hogar. Para comparar los coeficientes del modelo con interacción, el siguiente código computacional reúne las estimaciones, los errores estándar, los intervalos de confianza y sus exponenciales.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>interaction_logit_model <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> poor <span class="sc">~</span> Age <span class="sc">+</span> Sex <span class="sc">+</span> Employment <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    household_size <span class="sc">+</span> Sex<span class="sc">:</span>household_size,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">quasibinomial</span>(),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> household_design</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>interaction_logistic_coefficients_table <span class="ot">&lt;-</span> interaction_logit_results <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">OR =</span> <span class="fu">exp</span>(estimate)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    term,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    estimate,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    std.error,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    p.value,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    conf.low,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    conf.high,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    OR</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>interaction_logistic_coefficients_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-logistica-interaccion" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-logistica-interaccion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;6.2: Coeficientes del modelo logístico con interacciones
+</figcaption>
+<div aria-describedby="tbl-logistica-interaccion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 14%">
+<col style="width: 9%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: right;">Estimación</th>
+<th style="text-align: right;">EE</th>
+<th style="text-align: right;">Valor p</th>
+<th style="text-align: right;">LI 95 %</th>
+<th style="text-align: right;">LS 95 %</th>
+<th style="text-align: right;">OR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-1.8438</td>
+<td style="text-align: right;">0.4260</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">-2.6878</td>
+<td style="text-align: right;">-0.9998</td>
+<td style="text-align: right;">0.1582</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Age</td>
+<td style="text-align: right;">-0.0074</td>
+<td style="text-align: right;">0.0079</td>
+<td style="text-align: right;">0.3498</td>
+<td style="text-align: right;">-0.0230</td>
+<td style="text-align: right;">0.0082</td>
+<td style="text-align: right;">0.9926</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SexFemale</td>
+<td style="text-align: right;">0.7993</td>
+<td style="text-align: right;">0.4825</td>
+<td style="text-align: right;">0.1004</td>
+<td style="text-align: right;">-0.1567</td>
+<td style="text-align: right;">1.7553</td>
+<td style="text-align: right;">2.2240</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EmploymentUnemployed</td>
+<td style="text-align: right;">2.4724</td>
+<td style="text-align: right;">0.6989</td>
+<td style="text-align: right;">0.0006</td>
+<td style="text-align: right;">1.0877</td>
+<td style="text-align: right;">3.8571</td>
+<td style="text-align: right;">11.8508</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EmploymentInactive</td>
+<td style="text-align: right;">0.1739</td>
+<td style="text-align: right;">0.3292</td>
+<td style="text-align: right;">0.5984</td>
+<td style="text-align: right;">-0.4784</td>
+<td style="text-align: right;">0.8261</td>
+<td style="text-align: right;">1.1899</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">household_size</td>
+<td style="text-align: right;">0.3304</td>
+<td style="text-align: right;">0.0852</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.1617</td>
+<td style="text-align: right;">0.4991</td>
+<td style="text-align: right;">1.3915</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SexFemale:household_size</td>
+<td style="text-align: right;">-0.0926</td>
+<td style="text-align: right;">0.1288</td>
+<td style="text-align: right;">0.4738</td>
+<td style="text-align: right;">-0.3477</td>
+<td style="text-align: right;">0.1626</td>
+<td style="text-align: right;">0.9116</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>En ambas tablas, la exponencial del intercepto corresponde a las <em>odds</em> del perfil de referencia, no a un <em>odds ratio</em>; en la tabla con interacción, la exponencial de <code>SexFemale:household_size</code> representa la razón entre los <em>odds ratios</em> del tamaño del hogar de ambos tipos de jefatura.</p>
+<p>Al incorporar la interacción entre sexo y tamaño del hogar, se permite estimar una pendiente del tamaño del hogar diferente para cada tipo de jefatura. Para los hogares con jefe hombre, el <em>odds ratio</em> asociado a un integrante adicional es 1.39; para los hogares con jefa mujer, se obtiene combinando el coeficiente principal y el de interacción, y es igual a 1.27. El coeficiente de interacción tiene un valor-<em>p</em> de 0.474. Estos resultados no aportan evidencia suficiente de diferencias entre las pendientes al nivel del 5 %; el efecto principal del sexo, por su parte, corresponde a un tamaño del hogar igual a cero, fuera del rango observado, por lo que no debe interpretarse como una diferencia general entre jefaturas.</p>
+<p>La <a href="#fig-comparacion-logistica" class="quarto-xref">figura&nbsp;<span>6.2</span></a> presenta una comparación de las estimaciones de los coeficientes y sus respectivos intervalos de confianza para los modelos con y sin interacción. Al incorporar el término de interacción, cambia la interpretación de los efectos principales del sexo y del tamaño del hogar, que pasan a ser condicionales a los valores de referencia de la otra covariable. Los intervalos de confianza permiten valorar la incertidumbre asociada a estas estimaciones y al coeficiente de interacción. El siguiente código computacional construye la <a href="#fig-comparacion-logistica" class="quarto-xref">figura&nbsp;<span>6.2</span></a> a partir de los datos y las estimaciones descritos.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_summs</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  interaction_logit_model,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  logit_model,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.distributions =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-comparacion-logistica" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-comparacion-logistica-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-comparacion-logistica-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-comparacion-logistica-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;6.2: Comparación de los parámetros del modelo logístico con y sin interacciones
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Los coeficientes del modelo permiten identificar la dirección de las asociaciones entre las covariables y la condición de pobreza, pero no indican directamente la probabilidad de pobreza de un hogar. Para facilitar la interpretación, se estiman probabilidades predichas para perfiles específicos. En el siguiente ejemplo se comparan hogares con jefatura masculina o femenina, manteniendo iguales la edad del jefe, su situación laboral y el tamaño del hogar.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>perfiles <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Age =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">40</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sex =</span> <span class="fu">factor</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">levels =</span> <span class="fu">levels</span>(household_design<span class="sc">$</span>variables<span class="sc">$</span>Sex)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Employment =</span> <span class="fu">factor</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"Employed"</span>, <span class="st">"Employed"</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">levels =</span> <span class="fu">levels</span>(household_design<span class="sc">$</span>variables<span class="sc">$</span>Employment)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">household_size =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>predicciones <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  logit_model,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> perfiles,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"response"</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">se.fit =</span> <span class="cn">TRUE</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>probabilidad <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(predicciones)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>error_estandar <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(predicciones))</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>tabla_predicciones <span class="ot">&lt;-</span> perfiles <span class="sc">%&gt;%</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">probabilidad =</span> probabilidad,</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">error_estandar =</span> error_estandar,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">li_95 =</span> <span class="fu">pmax</span>(<span class="dv">0</span>, probabilidad <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> error_estandar),</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">ls_95 =</span> <span class="fu">pmin</span>(<span class="dv">1</span>, probabilidad <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> error_estandar)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    Sex,</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    Age,</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    Employment,</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    household_size,</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    probabilidad,</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    li_95,</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    ls_95</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Los perfiles se fijan en 40 años, cuatro integrantes y jefe ocupado; cuatro integrantes corresponde a la mediana del tamaño del hogar entre los jefes seleccionados. Los niveles de <code>Sex</code> y <code>Employment</code> se conservan tal como fueron definidos para el modelo, de modo que las categorías de los perfiles coincidan con las usadas durante la estimación. A partir de las probabilidades y sus errores estándar se calculan límites aproximados del 95 % en la escala de probabilidad, restringidos al intervalo de cero a uno.</p>
+<div class="cell" data-layout-align="center">
+<div id="tbl-probabilidades-perfiles-logistica" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-probabilidades-perfiles-logistica-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;6.3: Probabilidades predichas de pobreza para perfiles seleccionados
+</figcaption>
+<div aria-describedby="tbl-probabilidades-perfiles-logistica-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 5%">
+<col style="width: 19%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 8%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Sexo de la jefatura</th>
+<th style="text-align: right;">Edad</th>
+<th style="text-align: left;">Situación laboral</th>
+<th style="text-align: right;">Tamaño del hogar</th>
+<th style="text-align: right;">Probabilidad (%)</th>
+<th style="text-align: right;">LI 95 %</th>
+<th style="text-align: right;">LS 95 %</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Male</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">Employed</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">30.76</td>
+<td style="text-align: right;">24.34</td>
+<td style="text-align: right;">37.17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Female</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">Employed</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">41.11</td>
+<td style="text-align: right;">32.41</td>
+<td style="text-align: right;">49.82</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>La <a href="#tbl-probabilidades-perfiles-logistica" class="quarto-xref">tabla&nbsp;<span>6.3</span></a> presenta las probabilidades e intervalos como porcentajes. Para el perfil de jefatura masculina, la probabilidad predicha de pobreza es 30.8 % (IC aproximado del 95 %: 24.3–37.2 %); para el de jefatura femenina, es 41.1 % (IC aproximado del 95 %: 32.4–49.8 %). La diferencia descriptiva es de 10.4 puntos porcentuales. Son predicciones condicionadas a los perfiles definidos, no proporciones generales de pobreza; esta diferencia por sí sola tampoco constituye una prueba de significación estadística.</p>
+</section>
+<section id="sec-multinomial" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="sec-multinomial"><span class="header-section-number">6.2</span> Modelo de regresión multinomial</h2>
+<p>En las encuestas de hogares es frecuente encontrar variables de respuesta con más de dos categorías, como la situación laboral, cuyos posibles estados incluyen tres categorías: empleado, desempleado e inactivo. Cuando estas categorías son mutuamente excluyentes y no poseen un orden natural, la regresión logística multinomial ofrece una herramienta adecuada para modelar su relación con un conjunto de covariables y puede entenderse como una extensión de la regresión logística binaria <span class="citation" data-cites="McCullaghNelder1989 Agresti2019Intro">(<a href="references.html#ref-McCullaghNelder1989" role="doc-biblioref">McCullagh y Nelder 1989</a>; <a href="references.html#ref-Agresti2019Intro" role="doc-biblioref">Agresti 2019</a>)</span>.</p>
+<p>Este modelo permite estimar la probabilidad de pertenecer a cada categoría de la variable respuesta en función de variables explicativas de naturaleza continua o categórica. Su aplicación requiere que las categorías de respuesta sean exhaustivas y mutuamente excluyentes y que no exista multicolinealidad severa entre las covariables. Además, para las covariables continuas, se asume que existe una relación lineal entre estas y el logaritmo de las razones de probabilidades (<em>log-odds</em>) de cada categoría respecto a una categoría de referencia.</p>
+<p>El modelo logístico multinomial especifica la probabilidad <span class="math inline">\(\theta_{k(j)}\)</span> de que la unidad <span class="math inline">\(k\)</span> pertenezca a la categoría <span class="math inline">\(j\)</span>, con <span class="math inline">\(j=1,\ldots,J\)</span>, dado el vector de covariables <span class="math inline">\(\mathbf{x}_k\)</span>, mediante la siguiente expresión:</p>
+<p><span id="eq-probabilidad-multinomial"><span class="math display">\[
+Pr(Y_{k} = j \mid \mathbf{x}_{k})
+=
+\theta_{k(j)}
+=
+\frac{\exp(\mathbf{x}_{k}\boldsymbol{\beta}_j)}
+     {\sum_{l=1}^{J} \exp(\mathbf{x}_{k}\boldsymbol{\beta}_l)}
+\tag{6.4}\]</span></span></p>
+<p>En donde <span class="math inline">\(\boldsymbol{\beta}_j\)</span> es el vector de coeficientes de regresión para la <span class="math inline">\(j\)</span>-ésima categoría. Para que el modelo sea identificable, debe fijarse el vector de una categoría de referencia en cero; de ese modo, la expresión produce <span class="math inline">\(J-1\)</span> conjuntos de coeficientes estimables. Aunque existen parametrizaciones alternativas que facilitan la interpretación de los parámetros, esta formulación expresa directamente las probabilidades de pertenencia a cada categoría. Con una categoría de referencia, cada conjunto de coeficientes describe cómo cambian, en escala logarítmica, las razones entre la probabilidad de pertenecer a una categoría y la probabilidad de pertenecer a la categoría de referencia (<em>log-odds</em> relativos a la referencia).</p>
+<p>Según <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, la estimación de los parámetros del modelo se realiza mediante el enfoque de pseudo-máxima verosimilitud, definida de la siguiente manera:</p>
+<p><span class="math display">\[
+PL(\boldsymbol{\beta} \mid \mathbf{X}) =
+\prod_{k}
+\left\{
+\prod_{j=1}^{J}
+\theta_{k(j)}^{y_{k(j)}}
+\right\}^{w_{k}}
+\]</span></p>
+<p>En donde <span class="math inline">\(k\)</span> representa las unidades de observación pertenecientes a la muestra compleja. Asimismo, <span class="math inline">\(y_{k(j)}\)</span> es una variable indicadora que toma el valor de uno cuando dicha unidad pertenece a la categoría <span class="math inline">\(j\)</span> y cero en caso contrario, y <span class="math inline">\(w_{k}\)</span> corresponde al factor de expansión asociado a la unidad observada. Por conveniencia matemática y computacional, la estimación de los parámetros se realiza a partir de la pseudo-logverosimilitud, <span class="math inline">\(\ell(\boldsymbol{\beta})\)</span>, cuya maximización conduce a los mismos estimadores que la pseudo-verosimilitud original.</p>
+<p><span id="eq-log-pseudoverosimilitud-multinomial"><span class="math display">\[
+\ell(\boldsymbol{\beta})
+=
+\sum_{k} w_k
+\sum_{j=1}^{J}
+y_{k(j)}
+\log(\theta_{k(j)})
+\tag{6.5}\]</span></span></p>
+<p>La inferencia estadística para los parámetros de interés se basa en estimaciones de varianza obtenidas mediante técnicas de linealización de Taylor que incorporan explícitamente las características del diseño muestral complejo, permitiendo calcular errores estándar, intervalos de confianza y pruebas de hipótesis apropiados para datos de encuestas. Bajo condiciones regulares, los estimadores obtenidos mediante este procedimiento son consistentes y asintóticamente normales <span class="citation" data-cites="molina1992pseudo binder1983variances">(<a href="references.html#ref-molina1992pseudo" role="doc-biblioref">Molina y Skinner 1992</a>; <a href="references.html#ref-binder1983variances" role="doc-biblioref">Binder 1983</a>)</span>.</p>
+<p>Como referencia inicial, se estiman las proporciones de personas por estado de empleo, restringiendo las unidades de interés a las personas de 15 años o más, como se presenta en la <a href="#tbl-prop-empleo-15" class="quarto-xref">tabla&nbsp;<span>6.4</span></a>. El siguiente código computacional estima la composición por condición de empleo de la población de edad laboral.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>employment_proportion <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">15</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Employment) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">proportion =</span> <span class="fu">survey_mean</span>(<span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>employment_proportions_table <span class="ot">&lt;-</span> employment_proportion</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>employment_proportions_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-prop-empleo-15" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-prop-empleo-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;6.4: Proporción estimada de personas por estado de empleo (de 15 años o más)
+</figcaption>
+<div aria-describedby="tbl-prop-empleo-15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Condición de actividad</th>
+<th style="text-align: right;">Proporción</th>
+<th style="text-align: right;">EE</th>
+<th style="text-align: right;">LI 95 %</th>
+<th style="text-align: right;">LS 95 %</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Unemployed</td>
+<td style="text-align: right;">0.0429</td>
+<td style="text-align: right;">0.0071</td>
+<td style="text-align: right;">0.0288</td>
+<td style="text-align: right;">0.0571</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inactive</td>
+<td style="text-align: right;">0.3840</td>
+<td style="text-align: right;">0.0152</td>
+<td style="text-align: right;">0.3539</td>
+<td style="text-align: right;">0.4142</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Employed</td>
+<td style="text-align: right;">0.5731</td>
+<td style="text-align: right;">0.0140</td>
+<td style="text-align: right;">0.5453</td>
+<td style="text-align: right;">0.6008</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>De acuerdo con <span class="citation" data-cites="svyVGAM2026">Lumley (<a href="references.html#ref-svyVGAM2026" role="doc-biblioref">2026</a>)</span>, para modelar una variable de respuesta multinomial se emplea la función <code>svy_vglm()</code> del paquete <code>svyVGAM</code>, que permite ajustar modelos de regresión multinomial incorporando explícitamente las características del diseño complejo de la encuesta. En este ejemplo, se especifica un modelo donde la condición de actividad se explica en función de la edad, el sexo y la zona de residencia. A diferencia de los modelos multinomiales convencionales, <code>svy_vglm()</code> calcula las varianzas de los estimadores considerando la complejidad del diseño muestral.</p>
+<p>Las siguientes líneas de código ajustan un modelo de regresión multinomial sobre las personas de 15 años o más, susceptibles de ser clasificadas en una de las tres categorías de <code>Employment</code>. Note que el argumento <code>family = multinomial(refLevel = "Unemployed")</code> define un modelo logístico multinomial tomando la categoría <code>Unemployed</code> como referencia. Bajo esta especificación, se estiman de manera simultánea los logaritmos de las razones de probabilidades (<em>log-odds</em>) entre cada una de las categorías de <code>Employment</code> y la categoría de referencia. Los parámetros se obtienen mediante pseudo-máxima verosimilitud, incorporando los factores de expansión de la encuesta en la función objetivo.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(svyVGAM)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>survey_design_15 <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">15</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>multinomial_model <span class="ot">&lt;-</span> <span class="fu">svy_vglm</span>(</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> Employment <span class="sc">~</span> Age <span class="sc">+</span> Sex <span class="sc">+</span> Zone,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_15,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">crit =</span> <span class="st">"coef"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">multinomial</span>(<span class="at">refLevel =</span> <span class="st">"Unemployed"</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>La <a href="#tbl-multinomial-coef" class="quarto-xref">tabla&nbsp;<span>6.5</span></a> presenta los coeficientes estimados del modelo logístico multinomial, tomando la categoría <code>Unemployed</code> como referencia. Los errores estándar y los intervalos de confianza del 95 % se expresan en la escala de los coeficientes <span class="math inline">\(\beta\)</span>. Para el intercepto, la exponencial es la razón de probabilidades del perfil de referencia, no una comparación entre perfiles. Los resultados muestran que la edad tiene una asociación positiva y estadísticamente significativa con las probabilidades relativas de pertenecer a las categorías <code>Inactive</code> y <code>Employed</code> frente a <code>Unemployed</code>. Asimismo, la variable <code>SexMale</code> presenta coeficientes negativos y significativos, indicando que, manteniendo constantes la edad y la zona, los hombres tienen menores razones relativas de estar <code>Inactive</code> o <code>Employed</code> frente a estar <code>Unemployed</code> que las mujeres. Por el contrario, la variable de zona de residencia no muestra efectos estadísticamente significativos al nivel convencional del 5%. El siguiente código computacional prepara los coeficientes del modelo multinomial para la tabla: asigna etiquetas a las categorías de respuesta y calcula la razón de riesgo relativo como la exponencial del coeficiente.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>multinomial_coefficients_table <span class="ot">&lt;-</span> multinomial_results <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">y.level =</span> <span class="fu">recode</span>(y.level, <span class="st">`</span><span class="at">1</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Inactive"</span>, <span class="st">`</span><span class="at">2</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Employed"</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">RRR =</span> <span class="fu">exp</span>(estimate)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    y.level,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    term,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    estimate,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    std.error,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    p.value,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    conf.low,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    conf.high,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    RRR</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>multinomial_coefficients_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-multinomial-coef" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-multinomial-coef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;6.5: Coeficientes estimados del modelo de regresión multinomial
+</figcaption>
+<div aria-describedby="tbl-multinomial-coef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 16%">
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Categoría</th>
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: right;">Estimación</th>
+<th style="text-align: right;">EE</th>
+<th style="text-align: right;">Valor p</th>
+<th style="text-align: right;">LI 95 %</th>
+<th style="text-align: right;">LS 95 %</th>
+<th style="text-align: right;">RRR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Inactive</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">2.5565</td>
+<td style="text-align: right;">0.5500</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">1.4785</td>
+<td style="text-align: right;">3.6344</td>
+<td style="text-align: right;">12.8902</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inactive</td>
+<td style="text-align: left;">Age</td>
+<td style="text-align: right;">0.0221</td>
+<td style="text-align: right;">0.0104</td>
+<td style="text-align: right;">0.0343</td>
+<td style="text-align: right;">0.0016</td>
+<td style="text-align: right;">0.0425</td>
+<td style="text-align: right;">1.0223</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inactive</td>
+<td style="text-align: left;">SexMale</td>
+<td style="text-align: right;">-2.1851</td>
+<td style="text-align: right;">0.3166</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">-2.8057</td>
+<td style="text-align: right;">-1.5646</td>
+<td style="text-align: right;">0.1125</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Inactive</td>
+<td style="text-align: left;">ZoneUrban</td>
+<td style="text-align: right;">-0.2536</td>
+<td style="text-align: right;">0.4045</td>
+<td style="text-align: right;">0.5307</td>
+<td style="text-align: right;">-1.0464</td>
+<td style="text-align: right;">0.5392</td>
+<td style="text-align: right;">0.7760</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Employed</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">2.3063</td>
+<td style="text-align: right;">0.4614</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">1.4020</td>
+<td style="text-align: right;">3.2107</td>
+<td style="text-align: right;">10.0377</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Employed</td>
+<td style="text-align: left;">Age</td>
+<td style="text-align: right;">0.0181</td>
+<td style="text-align: right;">0.0088</td>
+<td style="text-align: right;">0.0398</td>
+<td style="text-align: right;">0.0008</td>
+<td style="text-align: right;">0.0355</td>
+<td style="text-align: right;">1.0183</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Employed</td>
+<td style="text-align: left;">SexMale</td>
+<td style="text-align: right;">-0.5783</td>
+<td style="text-align: right;">0.2766</td>
+<td style="text-align: right;">0.0365</td>
+<td style="text-align: right;">-1.1203</td>
+<td style="text-align: right;">-0.0362</td>
+<td style="text-align: right;">0.5609</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Employed</td>
+<td style="text-align: left;">ZoneUrban</td>
+<td style="text-align: right;">0.0392</td>
+<td style="text-align: right;">0.3605</td>
+<td style="text-align: right;">0.9135</td>
+<td style="text-align: right;">-0.6674</td>
+<td style="text-align: right;">0.7457</td>
+<td style="text-align: right;">1.0399</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>La columna RRR (<em>relative risk ratio</em>), se calcula como <span class="math inline">\(\exp(\beta)\)</span> e indica el factor de cambio en la razón entre la probabilidad de la categoría indicada y la de referencia, manteniendo constantes las demás covariables. En la tabla, el RRR de <code>SexMale</code> para la categoría <code>Employed</code> es 0.56. Manteniendo constantes la edad y la zona, la razón entre la probabilidad de estar empleado y la de estar desempleado para los hombres equivale a ese valor multiplicado por la razón correspondiente para las mujeres. Esto representa una razón relativa aproximadamente 43.9 % menor.</p>
+<p>De acuerdo con <span class="citation" data-cites="gtools2025">Warnes et&nbsp;al. (<a href="references.html#ref-gtools2025" role="doc-biblioref">2023</a>)</span> y <span class="citation" data-cites="dotwhisker2025">Solt y Hu (<a href="references.html#ref-dotwhisker2025" role="doc-biblioref">2025</a>)</span>, la <a href="#fig-multinomial-ic" class="quarto-xref">figura&nbsp;<span>6.3</span></a> muestra los intervalos de confianza de los coeficientes estimados para cada ecuación del modelo multinomial. Se usa <code>gtools::stars.pval()</code> para codificar la significación estadística, y la visualización se construye con <code>dotwhisker::dwplot()</code>, lo que permite comparar coeficientes e intervalos en una escala común. Las covariables cuyos intervalos no incluyen el valor cero presentan evidencia de asociación estadística significativa con la variable respuesta, mientras que aquellos cuyos intervalos contienen el cero no muestran efectos significativos al nivel de confianza considerado. El siguiente código computacional construye la <a href="#fig-multinomial-ic" class="quarto-xref">figura&nbsp;<span>6.3</span></a> a partir de los datos y las estimaciones descritos.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>multinomial_results <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="fu">if_else</span>(y.level <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Inactive"</span>, <span class="st">"Employed"</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sig =</span> gtools<span class="sc">::</span><span class="fu">stars.pval</span>(p.value)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  dotwhisker<span class="sc">::</span><span class="fu">dwplot</span>(</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">dodge_size =</span> <span class="fl">0.3</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">vline =</span> <span class="fu">geom_vline</span>(</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">xintercept =</span> <span class="dv">0</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> <span class="st">"grey60"</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">linetype =</span> <span class="dv">2</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">reverse =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-multinomial-ic" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-multinomial-ic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-multinomial-ic-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multinomial-ic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;6.3: Intervalos de confianza para los coeficientes del modelo multinomial
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-gamma" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="sec-gamma"><span class="header-section-number">6.3</span> Modelo de regresión Gamma</h2>
+<p>La regresión Gamma constituye una extensión de los modelos lineales generalizados adecuada para variables respuesta continuas, estrictamente positivas y cuya variabilidad aumenta con la media <span class="citation" data-cites="McCullaghNelder1989">(<a href="references.html#ref-McCullaghNelder1989" role="doc-biblioref">McCullagh y Nelder 1989</a>)</span>. Este comportamiento es frecuente en variables económicas y sociales, como los ingresos de los hogares o los gastos en consumo.</p>
+<p>Si <span class="math inline">\(Y_{k}\)</span>, la variable de interés observada para la unidad <span class="math inline">\(k\)</span>, sigue una distribución Gamma con media <span class="math inline">\(\mu_{k}\)</span> y parámetro de dispersión <span class="math inline">\(\phi\)</span>, el modelo relaciona el valor esperado de la variable respuesta con un conjunto de covariables mediante una función de enlace. El enlace logarítmico es una opción frecuente y garantiza predicciones positivas, aunque el enlace canónico de la familia Gamma es el inverso. En este caso, el modelo se expresa como</p>
+<p><span id="eq-modelo-gamma-log"><span class="math display">\[
+\log(\mu_{k})
+=
+\mathbf{x}_{k}\boldsymbol{\beta}
+\tag{6.6}\]</span></span></p>
+<p>En donde <span class="math inline">\(\mathbf{x}_{k}\)</span> corresponde al vector de variables explicativas asociado a la unidad observada y <span class="math inline">\(\boldsymbol{\beta}\)</span> es el vector de parámetros desconocidos del modelo. De forma equivalente, se tiene que:</p>
+<p><span class="math display">\[
+\mu_{k}
+= E(Y_{k}\mid \mathbf{x}_{k})
+=
+\exp(\mathbf{x}_{k}\boldsymbol{\beta}),
+\]</span></p>
+<p>Con el enlace logarítmico, cada parámetro puede interpretarse como el efecto de una covariable sobre el logaritmo de la media esperada, de manera que <span class="math inline">\(\exp(\beta_j)\)</span> representa el cambio multiplicativo asociado a un incremento unitario en la covariable correspondiente, manteniendo constantes las demás variables del modelo. Bajo la distribución Gamma, la función de densidad condicional de <span class="math inline">\(Y_{k}\)</span> puede escribirse como</p>
+<p><span class="math display">\[
+f(y_{k}\mid \mu_{k},\phi)
+=
+\frac{1}
+{\Gamma(1/\phi)
+(\phi\mu_{k})^{1/\phi}}
+y_{k}^{\frac{1}{\phi}-1}
+\exp\left(
+-\frac{y_{k}}
+{\phi\mu_{k}}
+\right),
+\qquad y_{k}&gt;0,
+\]</span></p>
+<p>donde <span class="math inline">\(\Gamma(\cdot)\)</span> denota la función Gamma y <span class="math inline">\(\phi\)</span> representa el parámetro de dispersión. Bajo el enfoque de inferencia basado en pseudo-máxima verosimilitud, la función objetivo que se optimiza para obtener los estimadores de los parámetros del modelo está dada por</p>
+<p><span class="math display">\[
+\ell(\boldsymbol{\beta},\phi)
+=
+\sum_{k}
+w_{k}
+\log
+\left[
+f(y_{k}\mid\mu_{k},\phi)
+\right]
+\]</span></p>
+<p>En donde <span class="math inline">\(k\)</span> representa las unidades de observación de la muestra y <span class="math inline">\(w_k\)</span> corresponde al factor de expansión asociado a cada una de ellas. Esta función define el criterio de optimización utilizado para estimar los parámetros del modelo bajo el enfoque de pseudo-máxima verosimilitud, descrito para encuestas complejas por <span class="citation" data-cites="ChambersSkinner2003">Chambers y Skinner (<a href="references.html#ref-ChambersSkinner2003" role="doc-biblioref">2003</a>)</span>.</p>
+<p>El siguiente código ajusta, mediante <code>svyglm()</code>, un modelo de regresión Gamma para el ingreso per cápita del hogar (<code>Income</code>), incorporando el diseño complejo de la encuesta conservado en el objeto <code>household_design</code>. La unidad de análisis es el hogar, con una observación por hogar identificada mediante <code>PersonID == "idPer01"</code>, siguiendo la convención utilizada en el modelo logístico. La muestra de análisis contiene 696 hogares; las categorías de referencia son jefatura masculina y zona rural. El modelo utiliza como variables explicativas el gasto per cápita del hogar (<code>Expenditure</code>), la edad del jefe de hogar (<code>Age</code>), su sexo (<code>Sex</code>) y la zona de residencia (<code>Zone</code>). Asimismo, se especifica una función de enlace logarítmica, garantizando predicciones positivas y permitiendo interpretar los efectos de las variables explicativas en términos multiplicativos sobre el ingreso per cápita esperado. Los coeficientes estimados se presentan en la <a href="#tbl-gamma-coeficientes" class="quarto-xref">tabla&nbsp;<span>6.6</span></a>: Para presentar los resultados del modelo Gamma, el siguiente código computacional reúne los coeficientes y sus medidas de precisión, y calcula el factor multiplicativo correspondiente a cada coeficiente.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>gamma_model <span class="ot">&lt;-</span> <span class="fu">svyglm</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> Income <span class="sc">~</span> Expenditure <span class="sc">+</span> Age <span class="sc">+</span> Sex <span class="sc">+</span> Zone,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> household_design,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">Gamma</span>(<span class="at">link =</span> <span class="st">"log"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>gamma_results <span class="ot">&lt;-</span> broom<span class="sc">::</span><span class="fu">tidy</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  gamma_model,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.int =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">conf.level =</span> <span class="fl">0.95</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>gamma_coefficients_table <span class="ot">&lt;-</span> gamma_results <span class="sc">%&gt;%</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">factor =</span> <span class="fu">exp</span>(estimate)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    term,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    estimate,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    std.error,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    p.value,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    conf.low,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    conf.high,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    factor</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>gamma_coefficients_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-gamma-coeficientes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-gamma-coeficientes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;6.6: Coeficientes del modelo Gamma para el ingreso per cápita de los hogares
+</figcaption>
+<div aria-describedby="tbl-gamma-coeficientes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 14%">
+<col style="width: 9%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parámetro</th>
+<th style="text-align: right;">Estimación</th>
+<th style="text-align: right;">EE</th>
+<th style="text-align: right;">Valor p</th>
+<th style="text-align: right;">LI 95 %</th>
+<th style="text-align: right;">LS 95 %</th>
+<th style="text-align: right;">Factor multiplicativo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">5.4392</td>
+<td style="text-align: right;">0.1257</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">5.1902</td>
+<td style="text-align: right;">5.6882</td>
+<td style="text-align: right;">230.2624</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Expenditure</td>
+<td style="text-align: right;">0.0019</td>
+<td style="text-align: right;">0.0001</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.0017</td>
+<td style="text-align: right;">0.0021</td>
+<td style="text-align: right;">1.0019</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Age</td>
+<td style="text-align: right;">0.0002</td>
+<td style="text-align: right;">0.0014</td>
+<td style="text-align: right;">0.8634</td>
+<td style="text-align: right;">-0.0026</td>
+<td style="text-align: right;">0.0030</td>
+<td style="text-align: right;">1.0002</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SexFemale</td>
+<td style="text-align: right;">-0.1521</td>
+<td style="text-align: right;">0.0785</td>
+<td style="text-align: right;">0.0551</td>
+<td style="text-align: right;">-0.3077</td>
+<td style="text-align: right;">0.0034</td>
+<td style="text-align: right;">0.8589</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ZoneUrban</td>
+<td style="text-align: right;">0.1606</td>
+<td style="text-align: right;">0.0747</td>
+<td style="text-align: right;">0.0336</td>
+<td style="text-align: right;">0.0127</td>
+<td style="text-align: right;">0.3085</td>
+<td style="text-align: right;">1.1742</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Dado que el modelo utiliza un enlace logarítmico, la columna Factor multiplicativo muestra <span class="math inline">\(\exp(\beta)\)</span>, es decir, el cambio multiplicativo en el ingreso esperado asociado a una unidad adicional de una covariable, manteniendo constantes las demás; para una variable categórica, la comparación se realiza respecto de su categoría de referencia. El cambio porcentual correspondiente es <span class="math inline">\(100[\exp(\beta)-1]\)</span>. Para el intercepto, la exponencial representa la media esperada del perfil de referencia. Los errores estándar y los intervalos de confianza del 95 % permanecen en la escala de los coeficientes <span class="math inline">\(\beta\)</span>. El coeficiente asociado al gasto per cápita es positivo y estadísticamente significativo (valor-<em>p</em>: &lt;0.001): manteniendo constantes las demás covariables, un dólar adicional de gasto per cápita se asocia con un aumento aproximado del 0,187 % en el ingreso per cápita esperado. La residencia en zona urbana también presenta una asociación positiva y estadísticamente significativa (valor-<em>p</em>: 0.0336), con un ingreso per cápita esperado aproximadamente 17,4 % mayor que en la zona rural, manteniendo constantes el gasto per cápita, la edad y el sexo del jefe. En cambio, no se encuentra evidencia suficiente de asociación para la edad del jefe (valor-<em>p</em>: 0.863) ni para la jefatura femenina respecto de la masculina (valor-<em>p</em>: 0.0551) al nivel del 5 %. Estas asociaciones no establecen efectos causales.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-Agresti2019Intro" class="csl-entry" role="listitem">
+Agresti, Alan. 2019. <em>An Introduction to Categorical Data Analysis</em>. 3.ª ed. John Wiley &amp; Sons. <a href="https://doi.org/10.1002/9781119405283">https://doi.org/10.1002/9781119405283</a>.
+</div>
+<div id="ref-Anyanwu2014" class="csl-entry" role="listitem">
+Anyanwu, John C. 2014. <span>«Marital Status, Household Size and Poverty in <span>Nigeria</span>: Evidence from the 2009/2010 Survey Data»</span>. <em>African Development Review</em> 26 (1): 118-37. <a href="https://doi.org/10.1111/1467-8268.12069">https://doi.org/10.1111/1467-8268.12069</a>.
+</div>
+<div id="ref-binder1983variances" class="csl-entry" role="listitem">
+Binder, David A. 1983. <span>«On the variances of asymptotically normal estimators from complex surveys»</span>. <em>International Statistical Review/Revue Internationale de Statistique</em>, 279-92.
+</div>
+<div id="ref-ChambersSkinner2003" class="csl-entry" role="listitem">
+Chambers, Raymond L., y Chris J. Skinner, eds. 2003. <em>Analysis of Survey Data</em>. John Wiley &amp; Sons. <a href="https://doi.org/10.1002/0470867205">https://doi.org/10.1002/0470867205</a>.
+</div>
+<div id="ref-HeeringaWestBerglund2017" class="csl-entry" role="listitem">
+Heeringa, Steven G., Brady T. West, y Patricia A. Berglund. 2017. <em>Applied Survey Data Analysis</em>. 2.ª ed. Chapman &amp; Hall/CRC. <a href="https://doi.org/10.1201/9781315153278">https://doi.org/10.1201/9781315153278</a>.
+</div>
+<div id="ref-ggstance2024" class="csl-entry" role="listitem">
+Henry, Lionel, Hadley Wickham, y Winston Chang. 2024. <em>ggstance: Horizontal ’ggplot2’ Components</em>. <a href="https://doi.org/10.32614/CRAN.package.ggstance">https://doi.org/10.32614/CRAN.package.ggstance</a>.
+</div>
+<div id="ref-jtools2026" class="csl-entry" role="listitem">
+Long, Jacob A. 2026. <em>jtools: Analysis and Presentation of Social Scientific Data</em>. <a href="https://doi.org/10.32614/CRAN.package.jtools">https://doi.org/10.32614/CRAN.package.jtools</a>.
+</div>
+<div id="ref-svyVGAM2026" class="csl-entry" role="listitem">
+Lumley, Thomas. 2026. <em>svyVGAM: Design-Based Inference in Vector Generalised Linear Models</em>. <a href="https://doi.org/10.32614/CRAN.package.svyVGAM">https://doi.org/10.32614/CRAN.package.svyVGAM</a>.
+</div>
+<div id="ref-McCullaghNelder1989" class="csl-entry" role="listitem">
+McCullagh, Peter, y John A. Nelder. 1989. <em>Generalized Linear Models</em>. 2.ª ed. Chapman &amp; Hall. <a href="https://doi.org/10.1007/978-1-4899-3242-6">https://doi.org/10.1007/978-1-4899-3242-6</a>.
+</div>
+<div id="ref-molina1992pseudo" class="csl-entry" role="listitem">
+Molina, Elizabeth A., y Chris J. Skinner. 1992. <span>«Pseudo-likelihood and quasi-likelihood estimation for complex sampling schemes»</span>. <em>Computational Statistics &amp; Data Analysis</em> 13: 395-405.
+</div>
+<div id="ref-nelder1972generalized" class="csl-entry" role="listitem">
+Nelder, John A., y Robert W. M. Wedderburn. 1972. <span>«Generalized Linear Models»</span>. <em>Journal of the Royal Statistical Society: Series A (General)</em> 135 (3): 370-84. <a href="https://doi.org/10.2307/2344614">https://doi.org/10.2307/2344614</a>.
+</div>
+<div id="ref-dotwhisker2025" class="csl-entry" role="listitem">
+Solt, Frederick, y Yue Hu. 2025. <em>dotwhisker: Dot-and-Whisker Plots of Regression Results</em>. <a href="https://doi.org/10.32614/CRAN.package.dotwhisker">https://doi.org/10.32614/CRAN.package.dotwhisker</a>.
+</div>
+<div id="ref-gtools2025" class="csl-entry" role="listitem">
+Warnes, Gregory R., Ben Bolker, Thomas Lumley, et&nbsp;al. 2023. <em>gtools: Various R Programming Tools</em>. <a href="https://doi.org/10.32614/CRAN.package.gtools">https://doi.org/10.32614/CRAN.package.gtools</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  const labels = {
+
+    note: "Nota",
+
+    tip: "Consejo",
+
+    important: "Importante",
+
+    warning: "Advertencia",
+
+    caution: "Precaución"
+
+  };
+
+
+
+  Object.keys(labels).forEach(function (type) {
+
+    document.querySelectorAll(".callout-" + type).forEach(function (callout, index) {
+
+      const title = callout.querySelector(".callout-title-container");
+
+      if (!title || title.dataset.numbered === "true") {
+
+        return;
+
+      }
+
+
+
+      const text = title.textContent.trim();
+
+      if (!text || text === labels[type]) {
+
+        title.textContent = labels[type] + " " + (index + 1);
+
+      } else if (!new RegExp("^" + labels[type] + "\\s+\\d+").test(text)) {
+
+        title.textContent = labels[type] + " " + (index + 1) + ". " + text;
+
+      }
+
+      title.dataset.numbered = "true";
+
+    });
+
+  });
+
+});
+
+</script>
+
+<script>
+
+(() => {
+
+  const initTocScrollspy = () => {
+
+    const toc = document.querySelector("#TOC.toc-active");
+
+
+
+    if (!toc || toc.dataset.aehrScrollspy === "true") {
+
+      return;
+
+    }
+
+
+
+    const links = Array.from(
+
+      toc.querySelectorAll("a[data-scroll-target]")
+
+    );
+
+
+
+    const entries = links
+
+      .map((link) => {
+
+        const target = link.getAttribute("data-scroll-target");
+
+
+
+        if (!target || !target.startsWith("#")) {
+
+          return null;
+
+        }
+
+
+
+        let id;
+
+        try {
+
+          id = decodeURIComponent(target.slice(1));
+
+        } catch {
+
+          id = target.slice(1);
+
+        }
+
+
+
+        const section = document.getElementById(id);
+
+        return section ? { link, section } : null;
+
+      })
+
+      .filter(Boolean);
+
+
+
+    if (entries.length === 0) {
+
+      return;
+
+    }
+
+
+
+    const nestedLists = Array.from(toc.querySelectorAll("ul ul"));
+
+    let scheduled = false;
+
+
+
+    const updateNestedLists = (activeLink) => {
+
+      nestedLists.forEach((list) => {
+
+        const parentLink = Array.from(list.parentElement.children).find(
+
+          (element) => element.matches("a[data-scroll-target]")
+
+        );
+
+        const shouldOpen =
+
+          parentLink === activeLink || list.contains(activeLink);
+
+
+
+        list.classList.toggle("collapse", !shouldOpen);
+
+      });
+
+    };
+
+
+
+    const updateActiveLink = () => {
+
+      scheduled = false;
+
+
+
+      const position = window.scrollY + 200;
+
+      let activeEntry = entries[0];
+
+
+
+      entries.forEach((entry) => {
+
+        if (entry.section.offsetTop <= position) {
+
+          activeEntry = entry;
+
+        }
+
+      });
+
+
+
+      const atPageEnd =
+
+        window.innerHeight + window.scrollY >=
+
+        document.documentElement.scrollHeight - 2;
+
+
+
+      if (atPageEnd) {
+
+        activeEntry = entries[entries.length - 1];
+
+      }
+
+
+
+      links.forEach((link) => {
+
+        link.classList.toggle("active", link === activeEntry.link);
+
+      });
+
+      updateNestedLists(activeEntry.link);
+
+    };
+
+
+
+    const scheduleUpdate = () => {
+
+      if (!scheduled) {
+
+        scheduled = true;
+
+        window.requestAnimationFrame(updateActiveLink);
+
+      }
+
+    };
+
+
+
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+
+    window.addEventListener("resize", scheduleUpdate, { passive: true });
+
+    toc.dataset.aehrScrollspy = "true";
+
+    updateActiveLink();
+
+  };
+
+
+
+  if (document.readyState === "loading") {
+
+    document.addEventListener("DOMContentLoaded", initTocScrollspy);
+
+  } else {
+
+    initTocScrollspy();
+
+  }
+
+})();
+
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/05-Regresion.html" class="pagination-link" aria-label="Modelos de regresión">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modelos de regresión</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/07-Multinivel.html" class="pagination-link" aria-label="Modelos multinivel">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modelos multinivel</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Análisis de encuestas de hogares usando R</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

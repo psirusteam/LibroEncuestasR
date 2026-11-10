@@ -135,13 +135,12 @@ $$
 \end{bmatrix}
 $$
 
-En este capítulo se mostrará cómo implementar estos modelos en `R` mediante las librerías `survey` y `srvyr`, junto con `tidyverse` para organizar el flujo de trabajo. Se abordará la especificación del diseño muestral, la estimación de modelos lineales, así como la obtención de errores estándar y pruebas de hipótesis ajustadas al diseño, integrando los fundamentos teóricos con ejemplos prácticos reproducibles. Para ejemplificar los conceptos desarrollados hasta este punto, se empleará la misma base de datos utilizada a lo largo del libro. El proceso inicia con la carga de las librerías, los datos y la definición del diseño de muestreo:
+En este capítulo se mostrará cómo implementar estos modelos en `R` mediante las librerías `survey` y `srvyr`, junto con `tidyverse` para organizar el flujo de trabajo. Se abordará la especificación del diseño muestral, la estimación de modelos lineales, así como la obtención de errores estándar y pruebas de hipótesis ajustadas al diseño, integrando los fundamentos teóricos con ejemplos prácticos reproducibles. Para ejemplificar los conceptos desarrollados hasta este punto, se empleará la misma base de datos utilizada a lo largo del libro. El siguiente código computacional carga los paquetes y los datos, prepara las variables categóricas y define el diseño de muestreo que se utilizará en los modelos del capítulo.
 
 ```{r opciones-regresion, echo = FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, error = FALSE)
 options(digits = 4)
 ```
-
 
 ```{r preparar-diseno-regresion, eval = TRUE}
 library(survey)
@@ -173,7 +172,7 @@ La base `sample.rds` conserva los nombres de las variables y utiliza etiquetas y
 
 En este capítulo se trabaja con una observación por hogar, identificada mediante `PersonID == "idPer01"`, y se utiliza el factor de expansión `wk` del jefe, siguiendo la convención descrita en la sección 3.1. La muestra de análisis contiene `r formatC(nrow(survey_data), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` hogares con ingreso y gasto positivos, condición necesaria para calcular sus logaritmos naturales. La edad y el sexo corresponden al jefe del hogar; las categorías de referencia son hombre, zona rural y región Norte.
 
-Con el objetivo de ajustar un modelo de regresión entre los logaritmos del ingreso y del gasto per cápita, resulta conveniente explorar previamente la relación existente entre ambas variables. Para ello, se construye un diagrama de dispersión mediante `ggplot2`, el cual permite evaluar visualmente la forma y la intensidad de la asociación. El resultado se presenta en la @fig-scatter-muestra-sinP.
+Con el objetivo de ajustar un modelo de regresión entre los logaritmos del ingreso y del gasto per cápita, resulta conveniente explorar previamente la relación existente entre ambas variables. Para ello, se construye un diagrama de dispersión mediante `ggplot2`, el cual permite evaluar visualmente la forma y la intensidad de la asociación. El resultado se presenta en la @fig-scatter-muestra-sinP, obtenida con el siguiente código computacional.
 
 ```{r fig-scatter-muestra-sinP, fig.cap="Diagrama de dispersión entre los logaritmos del ingreso y del gasto per cápita de los hogares (sin ponderar)", fig.align='center', out.width='65%', echo = TRUE}
 unweighted_plot <- ggplot(
@@ -192,7 +191,7 @@ unweighted_plot
 
 Los datos muestrales conservan una relación positiva y aproximadamente lineal entre los logaritmos del ingreso y del gasto per cápita, aunque se observa dispersión alrededor de la recta ajustada. Una vez completada la exploración gráfica de los datos, se procede al ajuste de los modelos de regresión lineal.
 
-Para ajustar modelos incorporando los factores de expansión se usa la función `svyglm` de la librería `survey`, que permite estimar modelos lineales incorporando explícitamente las características del diseño muestral. En este caso, la expresión `log(Expenditure) ~ log(Income) + Age + Sex + Zone + Region` especifica que el logaritmo del gasto per cápita se modela en función del logaritmo del ingreso per cápita, la edad y el sexo del jefe de hogar, la zona y la región de residencia; es decir, se ajusta una regresión lineal múltiple en escala logarítmica, cuyo coeficiente del ingreso representa la elasticidad del gasto respecto al ingreso, manteniendo constantes las demás variables. El argumento `design = survey_design` indica que el modelo debe utilizar el objeto de diseño muestral previamente definido, mientras que `family = stats::gaussian()` especifica que se ajusta un modelo lineal con distribución normal, equivalente a una regresión lineal clásica.
+El siguiente código computacional ajusta un modelo lineal mediante `svyglm()` del paquete `survey`, incorporando los factores de expansión y las demás características del diseño muestral. En este caso, la expresión `log(Expenditure) ~ log(Income) + Age + Sex + Zone + Region` especifica que el logaritmo del gasto per cápita se modela en función del logaritmo del ingreso per cápita, la edad y el sexo del jefe de hogar, la zona y la región de residencia; es decir, se ajusta una regresión lineal múltiple en escala logarítmica, cuyo coeficiente del ingreso representa la elasticidad del gasto respecto al ingreso, manteniendo constantes las demás variables. El argumento `design = survey_design` indica que el modelo debe utilizar el objeto de diseño muestral previamente definido, mientras que `family = stats::gaussian()` especifica que se ajusta un modelo lineal con distribución normal, equivalente a una regresión lineal clásica.
 
 ```{r ajustar-modelo-svy, echo = TRUE, eval = TRUE}
 fit_svy <- svyglm(
@@ -233,7 +232,7 @@ De acuerdo con @pfeffermann2011modelling, dado que el $R^{2}$ tiende a increment
 
 De esta manera, el ajuste permite evaluar la capacidad explicativa del modelo controlando el efecto derivado de la incorporación de nuevas variables. Este ajuste facilita una comparación más equitativa entre modelos con distinto número de predictores y resulta particularmente útil en el análisis de encuestas, donde la complejidad del diseño y el uso de ponderaciones pueden influir notablemente en la magnitud del $R^{2}$.
 
-En `R`, el coeficiente de determinación $R^{2}$ puede estimarse a partir de los modelos ajustados previamente. Para ello, se ajusta inicialmente un modelo nulo (incluyendo únicamente el intercepto), el cual permite calcular la suma total ponderada de cuadrados ($\widehat{SST}$).
+El siguiente código computacional obtiene los componentes necesarios para calcular el coeficiente de determinación $R^{2}$. Para estimar la suma total ponderada de cuadrados ($\widehat{SST}$), ajusta primero un modelo nulo que incluye únicamente el intercepto.
 
 ```{r calcular-r2-componentes, echo = TRUE}
 null_model <- svyglm(log(Expenditure) ~ 1, design = survey_design)
@@ -287,7 +286,7 @@ survey_design$variables <-
 
 ```
 
-El análisis de normalidad puede complementarse con el histograma de los residuales estandarizados, presentado en la @fig-hist-residuales. El histograma sugiere una desviación respecto a la curva normal teórica (en rojo), pero la inspección gráfica por sí sola no constituye una prueba formal ni demuestra que el modelo sea inválido. La distribución de los residuos (representada en azul) permite examinar la concentración central y las colas respecto de la curva normal. Las posibles discrepancias deben valorarse junto con los demás diagnósticos, teniendo presente que el modelo ya utiliza una transformación logarítmica de la variable dependiente.
+El análisis de normalidad puede complementarse con el histograma de los residuales estandarizados, presentado en la @fig-hist-residuales, obtenida con el siguiente código computacional. El histograma sugiere una desviación respecto a la curva normal teórica (en rojo), pero la inspección gráfica por sí sola no constituye una prueba formal ni demuestra que el modelo sea inválido. La distribución de los residuos (representada en azul) permite examinar la concentración central y las colas respecto de la curva normal. Las posibles discrepancias deben valorarse junto con los demás diagnósticos, teniendo presente que el modelo ya utiliza una transformación logarítmica de la variable dependiente.
 
 ```{r fig-hist-residuales, fig.cap="Histograma de residuales estandarizados con curva de densidad estimada y distribución normal teórica", fig.align='center', out.width='65%', echo = TRUE, eval = TRUE}
 ggplot(
@@ -312,7 +311,7 @@ ggplot(
 
 Según @ChambersSkinner2003, la homocedasticidad de los errores (varianza constante) constituye uno de los supuestos centrales en los modelos de regresión. Su incumplimiento afecta la eficiencia de los estimadores y las varianzas basadas exclusivamente en el modelo; las varianzas robustas ajustadas al diseño ofrecen protección adicional, aunque no corrigen una especificación incorrecta de la media. Dado que los residuos representan las discrepancias entre los valores observados y los valores ajustados por el modelo, su análisis en función de los valores predichos o de las covariables constituye una herramienta diagnóstica fundamental. Bajo un modelo adecuadamente especificado, se espera que los residuos se distribuyan de forma aleatoria alrededor de cero, sin patrones estructurados; en cambio, la aparición de formas sistemáticas (como estructuras en embudo o curvaturas) sugiere la presencia de heterocedasticidad (varianza no constante) o posibles relaciones funcionales no captadas por la especificación del modelo.
 
-Para evaluar este supuesto, se analizan gráficamente los residuos en función de los valores estimados $\hat{\mu}_{k}$ o de covariables específicas del modelo. La aparición de patrones sistemáticos en estos gráficos constituye evidencia de heterocedasticidad o de posibles problemas de especificación funcional. En particular, para evaluar la homocedasticidad respecto de las covariables incluidas en el modelo, se construyen gráficos de residuos frente a cada una de ellas y se combinan con `patchwork`.
+Para evaluar este supuesto, se analizan gráficamente los residuos en función de los valores estimados $\hat{\mu}_{k}$ o de covariables específicas del modelo. La aparición de patrones sistemáticos en estos gráficos constituye evidencia de heterocedasticidad o de posibles problemas de especificación funcional. El siguiente código computacional construye gráficos de residuos frente a las covariables del modelo y los combina con `patchwork` en la @fig-residuales-covariables.
 
 ```{r fig-residuales-covariables, fig.height=8, fig.cap="Gráficos de residuales estandarizados frente a cada covariable del modelo", fig.align='center', out.width='80%', echo = TRUE, eval = TRUE}
 library(patchwork)
@@ -367,10 +366,7 @@ $$
 \frac{(df-p+1)\,c_{k}}{df} \sim F_{(p,\,df-p)},
 $$
 
-Donde $p$ denota los parámetros del modelo y $df$ representa los grados de libertad asociados al diseño muestral. En la práctica, una observación puede considerarse influyente si su distancia de Cook supera valores de referencia aproximados entre 2 y 3.
-
-
-
+Donde $p$ denota los parámetros del modelo y $df$ representa los grados de libertad asociados al diseño muestral. En la práctica, una observación puede considerarse influyente si su distancia de Cook supera valores de referencia aproximados entre 2 y 3. El siguiente código computacional genera la @fig-cook.
 
 ```{r fig-cook, fig.cap="Distancia de Cook para cada observación de la muestra", fig.align='center', out.width='65%', echo = TRUE, eval = TRUE}
 cook_values <- svyCooksD(fit_svy, doplot = TRUE)
@@ -412,8 +408,7 @@ tabla_fmt(dfbetas_first_ten_table,
           col.names = paste("Beta", 0:(length(coef(fit_svy)) - 1)))
 ```
 
-Una vez obtenidos los valores de la medida DFBETA para cada observación y coeficiente del modelo, se calcula el correspondiente umbral de influencia a partir de los resultados generados por la función `svydfbetas`. Con base en este criterio, se construye una variable dicotómica que permite clasificar las observaciones según su nivel de influencia sobre las estimaciones del modelo. Los resultados de esta clasificación se presentan en la @tbl-dfbetas-influyentes.
-
+A partir de los valores DFBETA de cada observación y coeficiente del modelo, el siguiente código computacional calcula el correspondiente umbral de influencia a partir de los resultados generados por la función `svydfbetas`. Con base en este criterio, se construye una variable dicotómica que permite clasificar las observaciones según su nivel de influencia sobre las estimaciones del modelo. Los resultados de esta clasificación se presentan en la @tbl-dfbetas-influyentes.
 
 ```{r cod-dfbetas-influyentes}
 #| results: hide
@@ -443,7 +438,7 @@ tabla_fmt(influential_dfbetas_table,
           col.names = c("ID", "Parámetro", "Valor", "Criterio"))
 ```
 
-Los resultados muestran que `r sum(d_dfbetas$criterion == "Yes")` combinaciones de observación y coeficiente superan el umbral establecido por el criterio DFBETAS, lo que indica que dichas unidades ejercen una influencia importante sobre la estimación de algunos coeficientes del modelo, sugiriendo la presencia de unidades con alto impacto sobre la estabilidad del ajuste. La @fig-dfbetas muestra la representación gráfica de los valores de $D_f\text{Beta}$ junto con el umbral de referencia utilizado para identificar observaciones influyentes. En la figura, los puntos resaltados en rojo corresponden a las observaciones que exceden dicho umbral y que, por tanto, requieren una revisión más detallada dentro del proceso de diagnóstico del modelo.
+Los resultados muestran que `r sum(d_dfbetas$criterion == "Yes")` combinaciones de observación y coeficiente superan el umbral establecido por el criterio DFBETAS, lo que indica que dichas unidades ejercen una influencia importante sobre la estimación de algunos coeficientes del modelo, sugiriendo la presencia de unidades con alto impacto sobre la estabilidad del ajuste. La @fig-dfbetas, obtenida con el siguiente código computacional, muestra la representación gráfica de los valores de $D_f\text{Beta}$ junto con el umbral de referencia utilizado para identificar observaciones influyentes. En la figura, los puntos resaltados en rojo corresponden a las observaciones que exceden dicho umbral y que, por tanto, requieren una revisión más detallada dentro del proceso de diagnóstico del modelo.
 
 ```{r fig-dfbetas, fig.height=7, fig.cap="Valores DfBetas por parámetro: observaciones influyentes señaladas en rojo", fig.align='center', out.width='80%', echo = TRUE, eval = TRUE}
 ggplot(d_dfbetas, aes(y = abs(value), x = id)) +
@@ -469,7 +464,7 @@ $$
 $$
 
 
-Donde $z$ toma comúnmente valores de 2 o 3, mientras que $n$ representa el tamaño muestral total de elementos incluidos en la encuesta y $DEFF$ es el efecto de diseño asociado a la variable respuesta. En `R`, el cálculo de este estadístico puede realizarse mediante la función `svydffits` del paquete `svydiags`, la cual obtiene las medidas de influencia considerando explícitamente la estructura del diseño muestral.
+Donde $z$ toma comúnmente valores de 2 o 3, mientras que $n$ representa el tamaño muestral total de elementos incluidos en la encuesta y $DEFF$ es el efecto de diseño asociado a la variable respuesta. En `R`, el cálculo de este estadístico puede realizarse mediante la función `svydffits` del paquete `svydiags`, la cual obtiene las medidas de influencia considerando explícitamente la estructura del diseño muestral. El siguiente código computacional genera la @fig-dffits.
 
 ```{r fig-dffits, fig.cap="Valores DfFits: observaciones influyentes sobre el ajuste global señaladas en rojo", fig.align='center', out.width='65%', echo = TRUE, eval = TRUE}
 d_dffits <- data.frame(
@@ -529,7 +524,7 @@ $$ {#eq-intervalo-coeficiente-regresion}
 
 donde $t_{1-\frac{\alpha}{2},\,df}$ representa el cuantil de orden $1-\alpha/2$ de la distribución $t$ de Student con $df$ grados de libertad.
 
-Para implementar estos procedimientos en `R`, se utilizan las funciones `summary.svyglm` y `confint.svyglm`, las cuales permiten obtener, respectivamente, las pruebas de significación basadas en el estadístico $t$ y los intervalos de confianza de los coeficientes estimados bajo el diseño muestral complejo. Los resultados correspondientes se presentan en la @tbl-inferencia-modelo.
+Para implementar estos procedimientos en `R`, se utilizan las funciones `summary.svyglm` y `confint.svyglm`, las cuales permiten obtener, respectivamente, las pruebas de significación basadas en el estadístico $t$ y los intervalos de confianza de los coeficientes estimados bajo el diseño muestral complejo. Los resultados correspondientes se presentan en la @tbl-inferencia-modelo. El siguiente código computacional extrae las estimaciones y los resultados de las pruebas de los coeficientes del modelo.
 
 ```{r cod-tabla-inferencia-modelo}
 #| results: hide
@@ -550,7 +545,7 @@ summary_table <- dplyr::left_join(
 summary_table
 ```
 
-Se incorporan explícitamente los límites producidos por `confint()` para que la tabla contenga tanto las pruebas $t$ como los intervalos de confianza anunciados.
+El siguiente código computacional prepara la tabla de inferencia e incorpora los límites producidos por `confint()`, de modo que se presenten tanto las pruebas $t$ como los intervalos de confianza de los coeficientes.
 
 ```{r cod-inferencia-modelo-objeto}
 #| results: hide
@@ -587,7 +582,7 @@ $$ {#eq-varianza-media-condicional}
 
 En donde $\hat{\boldsymbol{\Sigma}}=\widehat{Var}(\hat{\boldsymbol{\beta}})$ corresponde a la matriz de varianzas y covarianzas estimada de los parámetros del modelo de regresión. Esta expresión cuantifica únicamente la incertidumbre del valor medio estimado debida a los coeficientes. Como explican @FoxWeisberg2019, un intervalo de predicción para una nueva respuesta debe incorporar además la variabilidad residual. En consecuencia, aquellas unidades cuyos valores de las covariables estén asociados a regiones con mayor incertidumbre en la estimación de los coeficientes presentarán varianzas más elevadas. Por tanto, la precisión de las estimaciones depende directamente de la precisión con la que se estimen los coeficientes del modelo de regresión. Continuando con el modelo del ejemplo, recordemos que los coeficientes estimados del modelo se presentan en la @tbl-coeficientes-modelo.
 
-De acuerdo con @broom2026, los coeficientes del modelo se convierten, mediante `broom::tidy()`, a una tabla ordenada, lo que facilita presentar estimaciones, errores estándar y pruebas en una estructura rectangular.
+El siguiente código computacional utiliza `broom::tidy()` [@broom2026] para organizar los coeficientes del modelo, sus errores estándar y las pruebas correspondientes en una tabla ordenada.
 
 ```{r cod-coeficientes-modelo-objeto}
 #| results: hide
@@ -636,9 +631,7 @@ hat_mu %>%
 
 En primer lugar, la instrucción `model.matrix(fit_svy)` construye la matriz de diseño asociada al modelo ajustado, incorporando automáticamente las variables explicativas. A continuación, `coef(fit_svy)` extrae explícitamente el vector de coeficientes estimados; posteriormente, se obtienen las estimaciones mediante el producto matricial `x_obs %*% hat_beta`. Finalmente, la función `head(10)` permite visualizar las primeras diez estimaciones obtenidas.
 
-Para calcular la varianza de las estimaciones se requiere la matriz de varianzas y covarianzas de los parámetros del modelo. Los elementos de la diagonal principal corresponden a las varianzas de los parámetros estimados, mientras que los elementos fuera de la diagonal representan las covarianzas entre pares de coeficientes. La matriz estimada de varianzas y covarianzas se presenta en la @tbl-vcov-modelo, utilizando las etiquetas Beta 0 a Beta 8 en el mismo orden de los coeficientes descrito anteriormente:
-
-
+Para calcular la varianza de las estimaciones se requiere la matriz de varianzas y covarianzas de los parámetros del modelo. Los elementos de la diagonal principal corresponden a las varianzas de los parámetros estimados, mientras que los elementos fuera de la diagonal representan las covarianzas entre pares de coeficientes. El siguiente código computacional extrae esta matriz y la organiza con las etiquetas Beta 0 a Beta 8, siguiendo el orden de los coeficientes descrito anteriormente, para presentarla en la @tbl-vcov-modelo.
 
 ```{r cod-vcov-modelo}
 #| results: hide
@@ -680,7 +673,7 @@ $$
 \mathbf{x}_{k}}
 $$
 
-De acuerdo con @Lumley2026, en `R`, la función `predict(fit_svy, type = "link")` genera estimaciones del valor medio en la escala del predictor lineal, es decir, utilizando directamente la combinación lineal de las covariables y los coeficientes estimados. Posteriormente, la función `confint()` calcula los intervalos de confianza asociados a dichas estimaciones.
+El siguiente código computacional utiliza `predict(fit_svy, type = "link")` para estimar el valor medio en la escala del predictor lineal, es decir, mediante la combinación lineal de las covariables y los coeficientes del modelo [@Lumley2026]. Después obtiene los intervalos de confianza con `confint()`.
 
 ```{r predicciones-muestra, echo = TRUE, eval = TRUE}
 hat_mu <- data.frame(predict(fit_svy, type = "link"))
@@ -689,7 +682,7 @@ colnames(mu_ci) <- c("lower_limit", "upper_limit")
 ```
 
 
-Las estimaciones obtenidas a partir del modelo, junto con sus respectivos intervalos de confianza, pueden visualizarse gráficamente en la @fig-pred-intervalos.
+Las estimaciones obtenidas a partir del modelo, junto con sus respectivos intervalos de confianza, pueden visualizarse gráficamente en la @fig-pred-intervalos, obtenida con el siguiente código computacional.
 
 ```{r fig-pred-intervalos, fig.cap="Estimaciones del logaritmo del gasto per cápita e intervalos de confianza para los primeros 100 hogares de la muestra", fig.align='center', out.width='65%', echo = TRUE, eval = TRUE}
 pred <- cbind(hat_mu, mu_ci)

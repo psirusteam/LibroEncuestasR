@@ -367,7 +367,7 @@ window.Quarto = {
 <li>La matriz <span class="math inline">\(\boldsymbol{M}_{n \times p}\)</span> presenta un comportamiento al azar (MAR, por sus siglas en inglés) si la probabilidad de respuesta es completamente independiente de las variables no observadas y no de las observadas. En este caso, el mecanismo de respuesta se considera ignorable para inferencias basadas en máxima verosimilitud.</li>
 <li>La matriz <span class="math inline">\(\boldsymbol{M}_{n \times p}\)</span> presenta un comportamiento no al azar (MNAR, por sus siglas en inglés) si la probabilidad de respuesta no es completamente independiente de las variables no observadas y posiblemente también de las observadas. El mecanismo de respuesta es no ignorable.</li>
 </ul>
-<p>La <a href="#tbl-ap3-patron-no-monotono" class="quarto-xref">tabla&nbsp;<span>10.1</span></a> ilustra datos faltantes en posiciones dispersas. Cada fila representa un caso y cada columna <span class="math inline">\(X_j\)</span> una variable. <strong>O</strong> indica un dato observado y <strong>?</strong> un dato faltante.</p>
+<p>La <a href="#tbl-ap3-patron-no-monotono" class="quarto-xref">tabla&nbsp;<span>10.1</span></a> ilustra datos faltantes en posiciones dispersas. Cada fila representa un caso y cada columna <span class="math inline">\(X_j\)</span> una variable. <strong>O</strong> indica un dato observado y <strong>?</strong> un dato faltante. El siguiente código computacional construye el esquema de datos observados y faltantes presentado en la tabla.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>missing_pattern_table <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>case, <span class="sc">~</span>x1, <span class="sc">~</span>x2, <span class="sc">~</span>x3, <span class="sc">~</span>x4, <span class="sc">~</span>x5, <span class="sc">~</span>x6, <span class="sc">~</span>type,</span>
@@ -497,7 +497,7 @@ Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>App
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/sample.rds"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La base <code>sample.rds</code> conserva los nombres de las variables y utiliza etiquetas y categorías en inglés. En <code>Region</code>, las categorías <code>North</code>, <code>South</code>, <code>Central</code>, <code>West</code> y <code>East</code> corresponden a Norte, Sur, Centro, Occidente y Oriente; <code>CatAge</code> contiene grupos decenales ordenados: <code>0-9</code>, <code>10-19</code>, <code>20-29</code>, y así sucesivamente hasta <code>90-99</code>.</p>
-<p>Primero, se cargan los paquetes y se estima la tasa de desocupación antes de generar los valores faltantes. El diseño se construye con la muestra completa y luego se crea <code>labor_force_subset</code>, que contiene a las personas de 15 años o más ocupadas o desocupadas. Posteriormente, los ejercicios de imputación utilizan la población de 15 años o más, incluidas las personas inactivas.</p>
+<p>El siguiente código computacional carga los paquetes y estima la tasa de desocupación antes de generar los valores faltantes. El diseño se construye con la muestra completa y luego se crea <code>labor_force_subset</code>, que contiene a las personas de 15 años o más ocupadas o desocupadas. Posteriormente, los ejercicios de imputación utilizan la población de 15 años o más, incluidas las personas inactivas.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
@@ -533,7 +533,7 @@ Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>App
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">15</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>La tasa de desocupación estimada es de 6.97 %, con un error estándar de 1.1 %. También se calcula el promedio de ingresos en la muestra:</p>
+<p>La tasa de desocupación estimada es de 6.97 %, con un error estándar de 1.1 %. Como referencia para los ejercicios posteriores, el siguiente código computacional calcula también la media del ingreso en la muestra.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>income_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(survey_data<span class="sc">$</span>Income, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>income_mean</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
@@ -551,7 +551,7 @@ Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>App
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">.id =</span> <span class="st">"data_source"</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>La <a href="#fig-ap3-mcar-cajas" class="quarto-xref">figura&nbsp;<span>10.1</span></a> compara el ingreso por zona y sexo en la base completa (<code>survey_data</code>) y en la muestra con pérdida MCAR (<code>mcar_data</code>). Las medianas y la amplitud de las cajas son similares en ambas bases. La línea roja indica la media del ingreso en la base completa.</p>
+<p>El siguiente código computacional compara el ingreso por zona y sexo en la base completa (<code>survey_data</code>) y en la muestra con pérdida MCAR (<code>mcar_data</code>) (<a href="#fig-ap3-mcar-cajas" class="quarto-xref">figura&nbsp;<span>10.1</span></a>). Las medianas y la amplitud de las cajas son similares en ambas bases. La línea roja indica la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>zone_income_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  mcar_plot_data,</span>
@@ -578,7 +578,7 @@ Figura&nbsp;10.1: Distribución del ingreso por zona y sexo con datos completos 
 </div>
 </div>
 </div>
-<p>La <a href="#fig-ap3-mcar-ingreso" class="quarto-xref">figura&nbsp;<span>10.2</span></a> muestra las densidades del ingreso para la base completa (<code>survey_data</code>) y la muestra con pérdida MCAR (<code>mcar_data</code>), en el total y por sexo. Las curvas prácticamente se superponen, lo que indica pocos cambios en la distribución en esta simulación. La línea roja representa la media del ingreso en la base completa.</p>
+<p>El siguiente código computacional muestra las densidades del ingreso para la base completa (<code>survey_data</code>) y la muestra con pérdida MCAR (<code>mcar_data</code>), en el total y por sexo (<a href="#fig-ap3-mcar-ingreso" class="quarto-xref">figura&nbsp;<span>10.2</span></a>). Las curvas prácticamente se superponen, lo que indica pocos cambios en la distribución en esta simulación. La línea roja representa la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  mcar_plot_data,</span>
@@ -607,7 +607,7 @@ Figura&nbsp;10.2: Distribución del ingreso, total y por sexo, bajo un patrón M
 </div>
 </div>
 </div>
-<p>La <a href="#fig-ap3-mcar-gasto" class="quarto-xref">figura&nbsp;<span>10.3</span></a> compara las densidades del gasto en la base completa (<code>survey_data</code>) y la muestra con pérdida MCAR (<code>mcar_data</code>), en el total y por sexo. La superposición de las curvas muestra que se conserva la forma de la distribución. La línea roja indica la media del gasto en la base completa.</p>
+<p>El siguiente código computacional compara las densidades del gasto en la base completa (<code>survey_data</code>) y la muestra con pérdida MCAR (<code>mcar_data</code>), en el total y por sexo (<a href="#fig-ap3-mcar-gasto" class="quarto-xref">figura&nbsp;<span>10.3</span></a>). La superposición de las curvas muestra que se conserva la forma de la distribución. La línea roja indica la media del gasto en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  mcar_plot_data,</span>
@@ -664,7 +664,7 @@ RuralFemale   RuralMale UrbanFemale   UrbanMale
 </div>
 <p>El código anterior utiliza el paquete <code>TeachingSampling</code> para realizar un muestreo aleatorio en cada combinación de zona y sexo. Primero, se fija la semilla en <code>1234</code> para que los resultados sean reproducibles. Luego, se crea la variable <code>stratum_id</code>, que combina <code>Zone</code> y <code>Sex</code> mediante la función <code>paste0</code> para definir los estratos. La función <code>table</code> muestra la frecuencia de cada estrato. El muestreo estratificado se realiza con <code>S.STSI</code>, cuyos argumentos son <code>S</code>, el vector de estratos; <code>Nh</code>, el número de unidades en cada estrato (481, 428, 531, 439, en el orden mostrado por <code>stratum_sizes</code>); y <code>nh</code>, el tamaño de muestra deseado en cada estrato (20, 380, 20 y 280).</p>
 <p>El muestreo estratificado devuelve un vector con los índices de las filas seleccionadas. Estas observaciones se excluyen de la base para crear <code>mar_data</code>. Por último, la función <code>bind_rows</code> del paquete <code>dplyr</code> reúne <code>survey_data</code> y <code>mar_data</code> en <code>mar_plot_data</code>. La nueva variable <code>data_source</code> identifica la base de origen de cada observación.</p>
-<p>La <a href="#fig-ap3-mar-cajas" class="quarto-xref">figura&nbsp;<span>10.4</span></a> compara el gasto por zona y sexo entre la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>). Las medianas permanecen próximas, aunque cambian la dispersión y algunos valores extremos, especialmente entre los hombres. La línea roja señala la media del gasto en la base completa.</p>
+<p>El siguiente código computacional compara el gasto por zona y sexo entre la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>) (<a href="#fig-ap3-mar-cajas" class="quarto-xref">figura&nbsp;<span>10.4</span></a>). Las medianas permanecen próximas, aunque cambian la dispersión y algunos valores extremos, especialmente entre los hombres. La línea roja señala la media del gasto en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mar_expenditure_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  mar_plot_data,</span>
@@ -692,7 +692,7 @@ Figura&nbsp;10.4: Distribución del gasto por zona y sexo bajo un patrón MAR
 </div>
 </div>
 </div>
-<p>La <a href="#fig-ap3-mar-ingreso" class="quarto-xref">figura&nbsp;<span>10.5</span></a> compara las densidades del ingreso de la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>). Las diferencias son pequeñas en el total y más visibles entre los hombres, lo que muestra la utilidad de revisar las desagregaciones. La línea roja indica la media del ingreso en la base completa.</p>
+<p>El siguiente código computacional compara las densidades del ingreso de la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>) (<a href="#fig-ap3-mar-ingreso" class="quarto-xref">figura&nbsp;<span>10.5</span></a>). Las diferencias son pequeñas en el total y más visibles entre los hombres, lo que muestra la utilidad de revisar las desagregaciones. La línea roja indica la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  mar_plot_data,</span>
@@ -721,7 +721,7 @@ Figura&nbsp;10.5: Distribución del ingreso, total y por sexo, bajo un patrón M
 </div>
 </div>
 </div>
-<p>La <a href="#fig-ap3-mar-gasto" class="quarto-xref">figura&nbsp;<span>10.6</span></a> muestra las densidades del gasto en la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>), en el total y por sexo. Las curvas son próximas entre las mujeres y presentan diferencias más visibles entre los hombres. La línea roja representa la media del gasto en la base completa.</p>
+<p>El siguiente código computacional muestra las densidades del gasto en la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>), en el total y por sexo (<a href="#fig-ap3-mar-gasto" class="quarto-xref">figura&nbsp;<span>10.6</span></a>). Las curvas son próximas entre las mujeres y presentan diferencias más visibles entre los hombres. La línea roja representa la media del gasto en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  mar_plot_data,</span>
@@ -753,7 +753,7 @@ Figura&nbsp;10.6: Distribución del gasto, total y por sexo, bajo un patrón MAR
 </div>
 </div>
 </div>
-<p>Por último, se simula una pérdida de información no al azar (MNAR). Como se explicó al inicio del anexo, en este mecanismo la probabilidad de que un dato falte está relacionada con su propio valor. Esta dependencia puede introducir un sesgo apreciable en la inferencia y el análisis estadístico de las encuestas de hogares, por lo que el tratamiento de los datos faltantes requiere especial atención.</p>
+<p>Por último, se simula una pérdida de información no al azar (MNAR). Como se explicó al inicio del anexo, en este mecanismo la probabilidad de que un dato falte está relacionada con su propio valor. Esta dependencia puede introducir un sesgo apreciable en la inferencia y el análisis estadístico de las encuestas de hogares, por lo que el tratamiento de los datos faltantes requiere especial atención. El siguiente código computacional crea <code>mnar_data</code> conservando las 1.300 observaciones con menor ingreso y la combina con la base completa para comparar ambas distribuciones.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mnar_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Income) <span class="sc">%&gt;%</span></span>
@@ -764,7 +764,7 @@ Figura&nbsp;10.6: Distribución del gasto, total y por sexo, bajo un patrón MAR
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">.id =</span> <span class="st">"data_source"</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>El código anterior conserva en <code>mnar_data</code> las 1.300 observaciones con menores ingresos y las reúne con la base completa en <code>mnar_plot_data</code>. La <a href="#fig-ap3-mnar-ingreso" class="quarto-xref">figura&nbsp;<span>10.7</span></a> muestra cómo esta selección elimina la cola de ingresos altos y desplaza la distribución hacia valores menores. La media de los casos conservados, en azul, queda por debajo de la media de la base completa, en rojo.</p>
+<p>El código anterior conserva en <code>mnar_data</code> las 1.300 observaciones con menores ingresos y las reúne con la base completa en <code>mnar_plot_data</code>. La <a href="#fig-ap3-mnar-ingreso" class="quarto-xref">figura&nbsp;<span>10.7</span></a>, obtenida con el siguiente código computacional, muestra cómo esta selección elimina la cola de ingresos altos y desplaza la distribución hacia valores menores. La media de los casos conservados, en azul, queda por debajo de la media de la base completa, en rojo.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mnar_income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  mnar_plot_data,</span>
@@ -790,7 +790,7 @@ Figura&nbsp;10.7: Distribución del ingreso bajo un patrón MNAR
 </div>
 </div>
 </div>
-<p>La <a href="#fig-ap3-mnar-gasto" class="quarto-xref">figura&nbsp;<span>10.8</span></a> compara la distribución del gasto en la base completa (<code>survey_data</code>) y entre los casos conservados bajo MNAR (<code>mnar_data</code>). La selección por ingreso también reduce la presencia de gastos altos. La línea azul señala la media del gasto de los casos conservados y la roja, la media de la base completa.</p>
+<p>El siguiente código computacional compara la distribución del gasto en la base completa (<code>survey_data</code>) y entre los casos conservados bajo MNAR (<code>mnar_data</code>) (<a href="#fig-ap3-mnar-gasto" class="quarto-xref">figura&nbsp;<span>10.8</span></a>). La selección por ingreso también reduce la presencia de gastos altos. La línea azul señala la media del gasto de los casos conservados y la roja, la media de la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mnar_expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  mnar_plot_data,</span>
@@ -822,7 +822,7 @@ Figura&nbsp;10.8: Distribución del gasto bajo un patrón MNAR
 </div>
 </div>
 </div>
-<p>La <a href="#fig-ap3-mnar-cajas" class="quarto-xref">figura&nbsp;<span>10.9</span></a> compara el ingreso por zona y sexo en la base completa (<code>survey_data</code>) y entre los casos conservados bajo MNAR (<code>mnar_data</code>). La eliminación de ingresos altos reduce las medianas y la dispersión, con cambios más marcados en la zona urbana. La línea roja indica la media del ingreso en la base completa.</p>
+<p>El siguiente código computacional compara el ingreso por zona y sexo en la base completa (<code>survey_data</code>) y entre los casos conservados bajo MNAR (<code>mnar_data</code>) (<a href="#fig-ap3-mnar-cajas" class="quarto-xref">figura&nbsp;<span>10.9</span></a>). La eliminación de ingresos altos reduce las medianas y la dispersión, con cambios más marcados en la zona urbana. La línea roja indica la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mnar_income_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  mnar_plot_data,</span>
@@ -912,7 +912,7 @@ Figura&nbsp;10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR
 </div>
 </div>
 <p>El código anterior calcula la media de los valores observados de <code>income_missing</code> y la almacena en <code>observed_income_mean</code>. Luego, reemplaza los valores faltantes con esa media y guarda el resultado en <code>income_imputed</code>. La última línea cuenta los valores faltantes de esta nueva columna de <code>survey_data</code> y confirma que no quedan datos sin imputar.</p>
-<p>La <a href="#fig-ap3-media-no-condicional" class="quarto-xref">figura&nbsp;<span>10.10</span></a> compara el ingreso original (<code>Income</code>) con el completado mediante la media no condicional (<code>income_imputed</code>). La imputación produce una concentración artificial alrededor de la media, visible como un pico pronunciado. Las líneas roja y azul representan las medias original e imputada, respectivamente; su cercanía no implica que las distribuciones sean iguales.</p>
+<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) con el completado mediante la media no condicional (<code>income_imputed</code>) (<a href="#fig-ap3-media-no-condicional" class="quarto-xref">figura&nbsp;<span>10.10</span></a>). La imputación produce una concentración artificial alrededor de la media, visible como un pico pronunciado. Las líneas roja y azul representan las medias original e imputada, respectivamente; su cercanía no implica que las distribuciones sean iguales.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mean_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -945,7 +945,7 @@ Figura&nbsp;10.10: Distribución del ingreso original e imputado por la media no
 </div>
 </div>
 </div>
-<p>La <a href="#fig-ap3-media-no-condicional-grupos" class="quarto-xref">figura&nbsp;<span>10.11</span></a> compara el ingreso original (<code>Income</code>) y el completado por la media no condicional (<code>income_imputed</code>) dentro de cada combinación de zona y sexo. Las cajas muestran cambios en la mediana y la dispersión al asignar un mismo valor a todos los datos faltantes. La línea roja señala la media del ingreso original.</p>
+<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) y el completado por la media no condicional (<code>income_imputed</code>) dentro de cada combinación de zona y sexo (<a href="#fig-ap3-media-no-condicional-grupos" class="quarto-xref">figura&nbsp;<span>10.11</span></a>). Las cajas muestran cambios en la mediana y la dispersión al asignar un mismo valor a todos los datos faltantes. La línea roja señala la media del ingreso original.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mean_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  mean_plot_data,</span>
@@ -1038,7 +1038,7 @@ Figura&nbsp;10.11: Ingreso original e imputado por la media no condicional, por 
 </div>
 </div>
 <p>Los sesgos relativos de la media del ingreso son del 1,87 % en la zona rural y del 0,81 % en la urbana. En ambos casos, las medias obtenidas tras la imputación son próximas a las originales.</p>
-<p>La <a href="#fig-ap3-media-condicional" class="quarto-xref">figura&nbsp;<span>10.12</span></a> compara las densidades del ingreso original (<code>Income</code>) y del completado con medias por estrato (<code>income_imputed</code>). La curva imputada se aproxima a la original, aunque conserva diferencias en el tramo central. Las líneas roja y azul señalan las medias original e imputada, respectivamente.</p>
+<p>El siguiente código computacional compara las densidades del ingreso original (<code>Income</code>) y del completado con medias por estrato (<code>income_imputed</code>) (<a href="#fig-ap3-media-condicional" class="quarto-xref">figura&nbsp;<span>10.12</span></a>). La curva imputada se aproxima a la original, aunque conserva diferencias en el tramo central. Las líneas roja y azul señalan las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>conditional_mean_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -1071,7 +1071,7 @@ Figura&nbsp;10.12: Distribución del ingreso original e imputado por la media co
 </div>
 </div>
 </div>
-<p>La <a href="#fig-ap3-media-condicional-grupos" class="quarto-xref">figura&nbsp;<span>10.13</span></a> compara el ingreso original (<code>Income</code>) y el completado con medias por estrato (<code>income_imputed</code>), desagregados por zona y sexo. Las medianas son próximas y persisten algunas diferencias en la amplitud de las cajas. La línea roja indica la media del ingreso original en toda la muestra.</p>
+<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) y el completado con medias por estrato (<code>income_imputed</code>), desagregados por zona y sexo (<a href="#fig-ap3-media-condicional-grupos" class="quarto-xref">figura&nbsp;<span>10.13</span></a>). Las medianas son próximas y persisten algunas diferencias en la amplitud de las cajas. La línea roja indica la media del ingreso original en toda la muestra.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>conditional_mean_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  conditional_mean_plot_data,</span>
@@ -1119,7 +1119,7 @@ Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zon
 </div>
 </div>
 <p>El código anterior identifica las observaciones con y sin valores faltantes en <code>income_missing</code> y crea <code>income_imputed</code> para almacenar los resultados. Luego, un bucle <code>for</code> recorre las observaciones receptoras. En cada iteración, la función <code>sample</code> selecciona aleatoriamente un donante entre las observaciones con ingreso disponible.</p>
-<p>Una vez realizada la imputación, se calculan la media y la desviación estándar de los ingresos originales y de los completados por imputación:</p>
+<p>Una vez realizada la imputación, el siguiente código computacional compara la media y la desviación estándar del ingreso original con las del ingreso completado.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -1151,7 +1151,7 @@ Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zon
 2 Urban        731.      609.                726.              624.</code></pre>
 </div>
 </div>
-<p>El sesgo relativo de la media del ingreso es del 7,37 % en la zona rural y del -0,71 % en la urbana. El mismo ejercicio se realiza por sexo:</p>
+<p>El sesgo relativo de la media del ingreso es del 7,37 % en la zona rural y del -0,71 % en la urbana. El siguiente código computacional extiende la comparación de estos resúmenes a los grupos definidos por sexo.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex) <span class="sc">%&gt;%</span></span>
@@ -1169,7 +1169,7 @@ Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zon
 2 Male          622.      523.                636.              556.</code></pre>
 </div>
 </div>
-<p>La <a href="#fig-ap3-hot-deck" class="quarto-xref">figura&nbsp;<span>10.14</span></a> compara la densidad del ingreso original (<code>Income</code>) con la del ingreso completado mediante donantes aleatorios (<code>income_imputed</code>). Las curvas prácticamente se superponen en esta simulación, conservando la asimetría y la cola de ingresos altos. Las líneas roja y azul representan las medias original e imputada, respectivamente.</p>
+<p>El siguiente código computacional compara la densidad del ingreso original (<code>Income</code>) con la del ingreso completado mediante donantes aleatorios (<code>income_imputed</code>) (<a href="#fig-ap3-hot-deck" class="quarto-xref">figura&nbsp;<span>10.14</span></a>). Las curvas prácticamente se superponen en esta simulación, conservando la asimetría y la cola de ingresos altos. Las líneas roja y azul representan las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>hot_deck_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -1206,7 +1206,7 @@ Figura&nbsp;10.14: Distribución del ingreso original e imputado mediante hot-de
 <section id="imputación-por-regresión" class="level3" data-number="10.2.4">
 <h3 data-number="10.2.4" class="anchored" data-anchor-id="imputación-por-regresión"><span class="header-section-number">10.2.4</span> Imputación por regresión</h3>
 <p>La imputación por regresión utiliza las variables auxiliares disponibles para predecir los valores faltantes de la variable de interés. Primero, se identifican las variables predictoras relacionadas con ella. Luego, se ajusta un modelo con los valores observados y se utilizan sus coeficientes para predecir los valores faltantes.</p>
-<p>En este ejemplo, se imputa el ingreso mediante un modelo de regresión lineal múltiple que utiliza la zona, el sexo y el gasto como covariables:</p>
+<p>El siguiente código computacional ajusta un modelo de regresión lineal múltiple para imputar el ingreso, utilizando la zona, el sexo y el gasto como covariables.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>survey_data<span class="sc">$</span>income_imputed <span class="ot">&lt;-</span> survey_data<span class="sc">$</span>income_missing</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>observed_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(survey_data, <span class="sc">!</span><span class="fu">is.na</span>(income_missing))</span>
@@ -1217,7 +1217,7 @@ Figura&nbsp;10.14: Distribución del ingreso original e imputado mediante hot-de
 <span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> observed_data</span>
 <span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Una vez ajustado el modelo, se predicen los valores faltantes:</p>
+<p>Una vez ajustado el modelo, el siguiente código computacional obtiene las predicciones y las utiliza para completar los ingresos faltantes.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>predicted_income <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  imputation_model,</span>
@@ -1240,7 +1240,7 @@ Figura&nbsp;10.14: Distribución del ingreso original e imputado mediante hot-de
 1         604       513                 612               498</code></pre>
 </div>
 </div>
-<p>El sesgo relativo de la media del ingreso es del 1,24 %. El mismo ejercicio se realiza por zona:</p>
+<p>El sesgo relativo de la media del ingreso es del 1,24 %. El siguiente código computacional compara por zona los resúmenes del ingreso original y del completado por regresión.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
@@ -1258,7 +1258,7 @@ Figura&nbsp;10.14: Distribución del ingreso original e imputado mediante hot-de
 2 Urban        731.      609.                739.              595.</code></pre>
 </div>
 </div>
-<p>La <a href="#fig-ap3-regresion" class="quarto-xref">figura&nbsp;<span>10.15</span></a> compara las densidades del ingreso original (<code>Income</code>) y del completado con predicciones del modelo de regresión (<code>income_imputed</code>). La forma general es similar, aunque aparecen diferencias alrededor del tramo central de la distribución. Las líneas roja y azul indican las medias original e imputada, respectivamente.</p>
+<p>El siguiente código computacional compara las densidades del ingreso original (<code>Income</code>) y del completado con predicciones del modelo de regresión (<code>income_imputed</code>) (<a href="#fig-ap3-regresion" class="quarto-xref">figura&nbsp;<span>10.15</span></a>). La forma general es similar, aunque aparecen diferencias alrededor del tramo central de la distribución. Las líneas roja y azul indican las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>regression_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -1332,7 +1332,7 @@ Figura&nbsp;10.15: Distribución del ingreso original e imputado por regresión
 1         604       513                 611               514</code></pre>
 </div>
 </div>
-<p>La media imputada supera a la original en aproximadamente 6,3 unidades monetarias. El mismo ejercicio se realiza por zona:</p>
+<p>La media imputada supera a la original en aproximadamente 6,3 unidades monetarias. El siguiente código computacional compara por zona los resúmenes del ingreso original y del completado con donantes.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
@@ -1351,7 +1351,7 @@ Figura&nbsp;10.15: Distribución del ingreso original e imputado por regresión
 </div>
 </div>
 <p>La media imputada supera a la original en aproximadamente 8,8 unidades monetarias en la zona rural y 3,9 en la urbana.</p>
-<p>La <a href="#fig-ap3-vecino-cercano" class="quarto-xref">figura&nbsp;<span>10.16</span></a> compara la densidad del ingreso original (<code>Income</code>) y la del ingreso imputado con donantes de gasto similar (<code>income_imputed</code>). Las curvas son muy próximas y conservan la cola de ingresos altos. Las líneas roja y azul muestran las medias original e imputada, respectivamente.</p>
+<p>El siguiente código computacional compara la densidad del ingreso original (<code>Income</code>) y la del ingreso imputado con donantes de gasto similar (<code>income_imputed</code>) (<a href="#fig-ap3-vecino-cercano" class="quarto-xref">figura&nbsp;<span>10.16</span></a>). Las curvas son muy próximas y conservan la cola de ingresos altos. Las líneas roja y azul muestran las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>nearest_neighbor_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -1406,7 +1406,7 @@ Figura&nbsp;10.16: Distribución del ingreso original e imputado por el vecino m
 <span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> observed_data</span>
 <span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Con el modelo ajustado, se predicen los ingresos de las observaciones con y sin datos faltantes. Para cada receptor, se identifica el donante con la predicción más cercana y se utiliza su ingreso observado como valor imputado:</p>
+<p>Con el modelo ajustado, el siguiente código computacional predice los ingresos de las observaciones con y sin datos faltantes. Para cada receptor, identifica al donante con la predicción más cercana y utiliza su ingreso observado para completar el valor faltante.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>observed_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  imputation_model,</span>
@@ -1425,7 +1425,7 @@ Figura&nbsp;10.16: Distribución del ingreso original e imputado por el vecino m
 <span id="cb64-15"><a href="#cb64-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb64-16"><a href="#cb64-16" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Por último, se calculan la media y la desviación estándar de los ingresos originales y de los completados por imputación, como en los ejemplos anteriores:</p>
+<p>Como en los ejemplos anteriores, el siguiente código computacional compara la media y la desviación estándar del ingreso original con las del ingreso completado, en este caso mediante donantes seleccionados por la proximidad de sus predicciones.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -1440,7 +1440,7 @@ Figura&nbsp;10.16: Distribución del ingreso original e imputado por el vecino m
 </div>
 </div>
 <p>La diferencia entre la media del ingreso original y la obtenida tras la imputación es de aproximadamente 4,0 unidades monetarias.</p>
-<p>La <a href="#fig-ap3-vecino-cercano-regresion" class="quarto-xref">figura&nbsp;<span>10.17</span></a> compara el ingreso original (<code>Income</code>) con el completado mediante donantes cuyas predicciones son próximas a las del receptor (<code>income_imputed</code>). Las densidades prácticamente se superponen en esta simulación. Las líneas roja y azul representan las medias original e imputada, respectivamente.</p>
+<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) con el completado mediante donantes cuyas predicciones son próximas a las del receptor (<code>income_imputed</code>) (<a href="#fig-ap3-vecino-cercano-regresion" class="quarto-xref">figura&nbsp;<span>10.17</span></a>). Las densidades prácticamente se superponen en esta simulación. Las líneas roja y azul representan las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>predictive_matching_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -1508,7 +1508,7 @@ V(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})
 <span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>n_missing <span class="ot">&lt;-</span> <span class="fu">nrow</span>(missing_data)</span>
 <span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>n_observed <span class="ot">&lt;-</span> <span class="fu">nrow</span>(observed_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Primero, se separan las observaciones con y sin valores faltantes y se calcula el número de observaciones de cada grupo.</p>
+<p>Primero, se separan las observaciones con y sin valores faltantes y se calcula el número de observaciones de cada grupo. El siguiente código computacional genera los valores imputados a partir del modelo y los incorpora a los conjuntos de datos completados.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>n_imputations <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
@@ -1531,7 +1531,7 @@ V(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})
 <span id="cb69-19"><a href="#cb69-19" aria-hidden="true" tabindex="-1"></a>  observed_data[[imputation_column]] <span class="ot">&lt;-</span> observed_data<span class="sc">$</span>Income</span>
 <span id="cb69-20"><a href="#cb69-20" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>El código anterior ajusta modelos de regresión lineal con <code>Income</code> como variable de respuesta y <code>Zone</code>, <code>Sex</code> y <code>Expenditure</code> como covariables. Estos modelos permiten predecir los ingresos faltantes en <code>missing_data</code>. Una vez ejecutado el código, se muestran los ingresos originales y algunos de los valores imputados:</p>
+<p>El código anterior ajusta modelos de regresión lineal con <code>Income</code> como variable de respuesta y <code>Zone</code>, <code>Sex</code> y <code>Expenditure</code> como covariables. Estos modelos permiten predecir los ingresos faltantes en <code>missing_data</code>. El siguiente código computacional permite revisar los ingresos originales junto con algunos de los valores imputados.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">select</span>(missing_data, Income, <span class="fu">matches</span>(<span class="st">"income_draw_"</span>))[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1548,7 +1548,7 @@ V(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})
 10  685.5           593           558           541</code></pre>
 </div>
 </div>
-<p>La <a href="#fig-ap3-imputacion-multiple" class="quarto-xref">figura&nbsp;<span>10.18</span></a> compara la densidad del ingreso original, representada por la línea negra, con las de los 10 conjuntos completados, representadas por las líneas de colores (<code>income_draw_1</code> a income_draw_10). Las curvas mantienen una forma similar, con pequeñas diferencias en el tramo central que reflejan la variación entre las imputaciones.</p>
+<p>El siguiente código computacional compara la densidad del ingreso original, representada por la línea negra, con las de los 10 conjuntos completados, representadas por las líneas de colores (<code>income_draw_1</code> a income_draw_10) (<a href="#fig-ap3-imputacion-multiple" class="quarto-xref">figura&nbsp;<span>10.18</span></a>). Las curvas mantienen una forma similar, con pequeñas diferencias en el tramo central que reflejan la variación entre las imputaciones.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1584,7 +1584,7 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 </div>
 </div>
 </div>
-<p>Con los conjuntos de datos completados, se define el diseño muestral para estimar los parámetros de interés:</p>
+<p>Con los conjuntos de datos completados, el siguiente código computacional define el diseño muestral que se utilizará para estimar los parámetros de interés.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>survey_design <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(</span>
@@ -1594,7 +1594,7 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 <span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">nest =</span> <span class="cn">TRUE</span></span>
 <span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Con este diseño, se estima la media del ingreso y su varianza para cada conjunto de datos completado:</p>
+<p>A partir de este diseño, el siguiente código computacional estima la media del ingreso y su varianza en cada conjunto de datos completado.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>mean_estimates <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -1632,7 +1632,7 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 10         10  616.  870.</code></pre>
 </div>
 </div>
-<p>Para obtener la estimación combinada de la media y su varianza, se realizan los cálculos basados en las expresiones anteriores:</p>
+<p>El siguiente código computacional combina las medias estimadas y sus varianzas mediante las reglas de imputación múltiple descritas anteriormente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>pooled_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(mean_estimates<span class="sc">$</span>mean)</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>within_variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(mean_estimates<span class="sc">$</span>var)</span>
@@ -1660,7 +1660,7 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>variance_estimates <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(<span class="fu">matches</span>(<span class="st">"income_draw"</span>)), survey_var, <span class="at">vartype =</span> <span class="st">"var"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Otro parámetro de interés es la varianza del ingreso, que mide su dispersión entre las personas de la muestra. Para estimarla, se aplica el mismo procedimiento utilizado para la media, cambiando el parámetro de interés:</p>
+<p>Otro parámetro de interés es la varianza del ingreso, que mide su dispersión entre las personas de la muestra. Se sigue el mismo procedimiento utilizado para la media: el siguiente código computacional reorganiza las estimaciones de la varianza del ingreso y sus medidas de incertidumbre para combinarlas por imputación.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>variance_estimates <span class="ot">&lt;-</span> variance_estimates <span class="sc">%&gt;%</span></span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>() <span class="sc">%&gt;%</span></span>
@@ -1692,7 +1692,7 @@ Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos
 10         10 275462. 3258214990.</code></pre>
 </div>
 </div>
-<p>Por último, se combinan las estimaciones mediante las expresiones anteriores:</p>
+<p>Por último, el siguiente código computacional combina las estimaciones de la varianza del ingreso y su incertidumbre mediante las expresiones anteriores.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>pooled_variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(variance_estimates<span class="sc">$</span>mean)</span>
 <span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>within_variance <span class="ot">&lt;-</span> <span class="fu">mean</span>(variance_estimates<span class="sc">$</span>var)</span>

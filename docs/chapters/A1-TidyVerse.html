@@ -386,13 +386,13 @@ window.MathJax = {
 <section id="carga-e-inspeccion-inicial-de-la-base" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="carga-e-inspeccion-inicial-de-la-base"><span class="header-section-number">8.2</span> Carga e inspección inicial de la base</h2>
 <p>De acuerdo con <span class="citation" data-cites="WickhamEtAl2023">Wickham et&nbsp;al. (<a href="references.html#ref-WickhamEtAl2023" role="doc-biblioref">2023</a>)</span>, es muy usual que al trabajar proyectos en <code>R</code> sea necesario importar bases de datos con información relevante para un estudio en particular. Los formatos que pueden importarse mediante <code>R</code> y sus paquetes son diversos; entre ellos se encuentran <code>.xlsx</code>, <code>.csv</code>, <code>.txt</code> y <code>.dta</code>, que es el formato utilizado por <code>Stata</code>. Una vez leída la base de datos en el formato pertinente es recomendable transformarla al formato nativo de <code>R</code>, es decir <code>.RDS</code>. Este es un formato más eficiente y propio de <code>R</code>, y su uso facilita la importación, la transformación y el almacenamiento dentro de un flujo reproducible de análisis.</p>
-<p>Una vez se carga la base de datos se procede a utilizar las funciones en <code>R</code> para poder obtener resultados de los procesamientos agregados y gráficos de interés. Para ejemplificar el uso de funciones que permitan obtener resultados agregados, utilizaremos la base de datos <code>BigCity</code> del paquete <code>TeachingSampling</code>.</p>
+<p>Los ejemplos de procesamiento y visualización utilizan la base <code>BigCity</code> del paquete <code>TeachingSampling</code>. El siguiente código computacional la carga y crea una copia para trabajar con ella.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(BigCity)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bigcity_data <span class="ot">&lt;-</span> BigCity</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Esta base corresponde a un conjunto de variables socioeconómicas de 150.266 personas en un año en particular.</p>
-<p>El objeto <code>bigcity_data</code> contiene una copia de <code>BigCity</code>. La función <code>head()</code> permite observar las primeras filas y obtener una impresión rápida de la estructura de la base.</p>
+<p>El objeto <code>bigcity_data</code> contiene una copia de <code>BigCity</code>. El siguiente código computacional utiliza <code>head()</code> para mostrar sus primeras filas y obtener una impresión rápida de su estructura.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bigcity_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -412,7 +412,7 @@ window.MathJax = {
 6         217   Employed Relative</code></pre>
 </div>
 </div>
-<p>Una vez cargada la base de datos en <code>R</code>, se puede empezar a realizar los procesamientos según las necesidades de cada lector. En este sentido, una de las primeras revisiones que se realizan al cargar una base de datos es verificar su dimensión; es decir, identificar la cantidad de filas y columnas que contiene. Lo anterior se puede hacer con la función <code>nrow</code>, que identifica el número de registros en la base de datos, y con la función <code>ncol</code>, que muestra el número de variables. Los códigos computacionales son los siguientes:</p>
+<p>Una primera revisión consiste en conocer las dimensiones de la base. El siguiente código computacional utiliza <code>nrow()</code> para obtener el número de registros y <code>ncol()</code> para obtener el número de variables.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(bigcity_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -425,7 +425,7 @@ window.MathJax = {
 <pre><code>[1] 12</code></pre>
 </div>
 </div>
-<p>Una forma resumida de revisar la cantidad de filas y columnas de una base de datos es mediante la función <code>dim</code>, la cual devuelve un vector cuya primera componente corresponde al número de filas y cuya segunda componente indica el número de columnas.</p>
+<p>El siguiente código computacional consulta ambas dimensiones mediante <code>dim()</code>, que devuelve un vector con el número de filas en la primera posición y el número de columnas en la segunda.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(bigcity_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -436,7 +436,7 @@ window.MathJax = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(bigcity_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Otra verificación importante al cargar una base de datos en <code>R</code> consiste en identificar las variables que contiene. Para ello, se puede utilizar la función <code>names</code>, la cual muestra los nombres de las variables incluidas en la base de datos.</p>
+<p>Para identificar las variables disponibles, el siguiente código computacional muestra sus nombres mediante <code>names()</code>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(bigcity_data)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -489,7 +489,7 @@ window.MathJax = {
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>female_data <span class="ot">&lt;-</span> bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Sex <span class="sc">==</span> <span class="st">"Female"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>También puede filtrarse por condición de pobreza. En este caso se conservan solo las personas clasificadas como no pobres. El objeto <code>nonpoor_data</code> contiene el subconjunto de registros cuya variable <code>Poverty</code> toma el valor <code>"NotPoor"</code>.</p>
+<p>El siguiente código computacional filtra la base por condición de pobreza y guarda en <code>nonpoor_data</code> los registros cuya variable <code>Poverty</code> toma el valor <code>"NotPoor"</code>, correspondiente a las personas no pobres.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>nonpoor_data <span class="ot">&lt;-</span> bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Poverty <span class="sc">==</span> <span class="st">"NotPoor"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
@@ -505,12 +505,12 @@ window.MathJax = {
 </section>
 <section id="select-seleccionar-variables" class="level3" data-number="8.3.2">
 <h3 data-number="8.3.2" class="anchored" data-anchor-id="select-seleccionar-variables"><span class="header-section-number">8.3.2</span> <code>select</code>: seleccionar variables</h3>
-<p>La función <code>select()</code> conserva columnas específicas. Para ilustrar la selección de columnas, se retoma la base completa <code>bigcity_data</code> y se redefine <code>working_data</code>. Por tanto, este objeto ya no conserva el filtro de ingresos del ejemplo anterior. Se seleccionan variables de identificación de la persona y el hogar y otras como zona, sexo, edad e ingreso. El resultado es una base más reducida en columnas. Se mantiene <code>Age</code> porque será utilizada posteriormente para ordenar registros por edad.</p>
+<p>La función <code>select()</code> conserva columnas específicas. Para ilustrar esta operación, el siguiente código computacional retoma la base completa <code>bigcity_data</code> y se redefine <code>working_data</code>. Por tanto, este objeto ya no conserva el filtro de ingresos del ejemplo anterior. Se seleccionan variables de identificación de la persona y el hogar y otras como zona, sexo, edad e ingreso. El resultado es una base más reducida en columnas. Se mantiene <code>Age</code> porque será utilizada posteriormente para ordenar registros por edad.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>working_data <span class="ot">&lt;-</span> bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(PersonID, HHID, PSU, Zone, Sex, Age, Income)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Adicionalmente, <code>select()</code> también permite excluir variables. Para eliminar columnas, se antepone el signo menos (<code>-</code>) al nombre de cada variable. El objeto <code>compact_data</code> conserva las variables de <code>working_data</code>, excepto <code>HHID</code> y <code>PersonID</code>. Esta operación es útil cuando se desea trabajar con una base más compacta.</p>
+<p><code>select()</code> también permite excluir variables anteponiendo el signo menos (<code>-</code>) a sus nombres. El siguiente código computacional crea <code>compact_data</code> a partir de <code>working_data</code>, omitiendo las columnas de identificación <code>HHID</code> y <code>PersonID</code>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>compact_data <span class="ot">&lt;-</span> working_data <span class="sc">%&gt;%</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>HHID, <span class="sc">-</span>PersonID)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
@@ -519,7 +519,7 @@ window.MathJax = {
 <section id="arrange-ordenamiento-de-filas" class="level3" data-number="8.3.3">
 <h3 data-number="8.3.3" class="anchored" data-anchor-id="arrange-ordenamiento-de-filas"><span class="header-section-number">8.3.3</span> <code>arrange</code>: ordenamiento de filas</h3>
 <p>La función <code>arrange()</code> ordena las filas de una base según una o más variables. En el primer ejemplo, <code>working_data</code> se ordena de menor a mayor ingreso, mientras que <code>sorted_data</code> contiene las mismas columnas que <code>working_data</code>, pero sus filas quedan ordenadas por <code>Income</code>. La función <code>head()</code> muestra los primeros registros después del ordenamiento.</p>
-<p>La base <code>BigCity</code> contiene registros a nivel de persona, por lo que un mismo <code>HHID</code> puede aparecer en varias filas, una por cada persona del hogar. <code>PersonID</code> identifica a la persona dentro de su hogar y puede repetirse en hogares distintos; por ello, la combinación <code>HHID</code> y <code>PersonID</code> identifica a cada persona. Estas repeticiones de <code>HHID</code> son parte de la estructura de la base y no indican por sí solas que haya filas duplicadas.</p>
+<p>La base <code>BigCity</code> contiene registros a nivel de persona, por lo que un mismo <code>HHID</code> puede aparecer en varias filas, una por cada persona del hogar. <code>PersonID</code> identifica a la persona dentro de su hogar y puede repetirse en hogares distintos; por ello, la combinación <code>HHID</code> y <code>PersonID</code> identifica a cada persona. Estas repeticiones de <code>HHID</code> son parte de la estructura de la base y no indican por sí solas que haya filas duplicadas. El siguiente código computacional ordena <code>working_data</code> de menor a mayor ingreso y muestra las primeras filas del resultado.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sorted_data <span class="ot">&lt;-</span> working_data <span class="sc">%&gt;%</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Income)</span>
@@ -643,7 +643,7 @@ window.MathJax = {
 1     87893117         585</code></pre>
 </div>
 </div>
-<p>También pueden calcularse medidas de localización para describir la posición de los valores dentro de la distribución. En este caso, se obtiene la mediana, el primer decil, el noveno decil y la diferencia entre estos dos últimos. El resultado permite resumir distintos puntos de la distribución del ingreso, mientras que el rango decílico muestra la distancia entre el 10% inferior y el 10% superior de los ingresos observados.</p>
+<p>También pueden calcularse medidas de localización para describir la posición de los valores dentro de la distribución. El siguiente código computacional obtiene la mediana, el primer decil, el noveno decil y la diferencia entre estos dos últimos. El resultado permite resumir distintos puntos de la distribución del ingreso, mientras que el rango decílico muestra la distancia entre el 10% inferior y el 10% superior de los ingresos observados.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -657,7 +657,7 @@ window.MathJax = {
 1           449      165     1126          961</code></pre>
 </div>
 </div>
-<p>Con <code>summarise()</code> también es posible calcular medidas de dispersión, tales como la varianza, la desviación estándar, el valor mínimo, el valor máximo, el rango y el rango intercuartílico. Estas estadísticas permiten describir el grado de variabilidad del ingreso per cápita entre los registros de <code>BigCity</code>. En particular, el rango se obtiene como la diferencia entre el valor máximo y el valor mínimo, mientras que el rango intercuartílico resume la dispersión del 50% central de la distribución.</p>
+<p>El siguiente código computacional utiliza <code>summarise()</code> para calcular medidas de dispersión: la varianza, la desviación estándar, el valor mínimo, el valor máximo, el rango y el rango intercuartílico. Estas estadísticas permiten describir el grado de variabilidad del ingreso per cápita entre los registros de <code>BigCity</code>. En particular, el rango se obtiene como la diferencia entre el valor máximo y el valor mínimo, mientras que el rango intercuartílico resume la dispersión del 50% central de la distribución.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -707,7 +707,7 @@ window.MathJax = {
 5  North 25396</code></pre>
 </div>
 </div>
-<p>Para obtener el número de registros por sexo, se aplica la misma lógica de agrupación y conteo. En este caso, la base se agrupa según la variable <code>Sex</code> y luego se calcula el número de registros asociados con cada una de sus categorías. El resultado permite identificar cuántas observaciones corresponden a cada sexo dentro de la base de datos.</p>
+<p>La misma lógica de agrupación y conteo permite conocer cuántos registros corresponden a cada sexo. El siguiente código computacional agrupa la base por <code>Sex</code> y cuenta las observaciones de cada categoría.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Sex) <span class="sc">%&gt;%</span></span>
@@ -729,7 +729,7 @@ window.MathJax = {
 2 Rural 72102</code></pre>
 </div>
 </div>
-<p>Además de los conteos, también es posible calcular medidas resumen por grupo, como la media. En este caso, para obtener el ingreso promedio por región junto con el número total de registros, se agrupa la base según la variable <code>Region</code> y luego se aplica <code>summarise()</code>. El resultado es una tabla regional que presenta, para cada región, el total de observaciones y el ingreso medio correspondiente.</p>
+<p>Además de los conteos, pueden calcularse medidas resumen por grupo. El siguiente código computacional agrupa la base por <code>Region</code> y utiliza <code>summarise()</code> para obtener el número de registros y el ingreso medio de cada región.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">%&gt;%</span></span>
@@ -748,7 +748,7 @@ window.MathJax = {
 5 East   39160        530.</code></pre>
 </div>
 </div>
-<p>El mismo procedimiento puede aplicarse para calcular el ingreso medio por sexo. En este caso, la base se agrupa según la variable <code>Sex</code> y luego se obtiene el promedio de <code>Income</code> para cada categoría. La tabla resultante permite comparar el ingreso medio observado entre los distintos grupos definidos por el sexo.</p>
+<p>El siguiente código computacional aplica el mismo procedimiento por sexo: agrupa la base por <code>Sex</code> y calcula el promedio de <code>Income</code> para comparar el ingreso medio de cada categoría.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>bigcity_data <span class="sc">%&gt;%</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex) <span class="sc">%&gt;%</span></span>
