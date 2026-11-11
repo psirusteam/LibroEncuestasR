@@ -1,4 +1,6 @@
 /.quarto/
 **/*.quarto_ipynb
 /_site/
+/Figuras_PDF_HTML/
+tmp/
 .Rproj.user

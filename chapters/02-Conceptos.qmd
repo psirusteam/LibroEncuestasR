@@ -1,4 +1,4 @@
-```{r setup-conceptos, include=FALSE}
+```{r setup-concepts, include=FALSE}
 knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
@@ -44,7 +44,7 @@ Los ajustes de los pesos no solo corrigen las imperfecciones derivadas de la no 
 
 @Valliant_Dever_2017 presentan un marco sistemático para construir, ajustar y evaluar los pesos de una encuesta compleja, que abarca desde el cálculo de los pesos iniciales hasta los ajustes por falta de respuesta, la calibración con información auxiliar y su consideración en la estimación de varianzas. En consonancia con este enfoque, el paquete `weightflow` permite implementar estas etapas mediante un flujo de trabajo reproducible [@Ferreira2026weightflow].
 
-```{r calcular-ejemplo-ponderacion, include=FALSE}
+```{r calculate-example-weighting, include=FALSE}
 region_population <- c(A = 100, B = 900)
 region_income <- c(A = 10000, B = 2000)
 region_sample_size <- c(A = 50, B = 50)
@@ -126,7 +126,7 @@ $$ {#eq-varHT}
 
 En donde $d_{kl} = 1/\pi_{kl}$ y $\pi_{kl} = \Pr(k,l \in s)$ representan probabilidades de inclusión conjuntas. Para garantizar el insesgamiento en @eq-varHT, el diseño muestral debe satisfacer $\pi_{kl}>0$ para todo par de unidades $k,l\in U$.
 
-```{r calcular-ejemplo-mas, include=FALSE}
+```{r calculate-example-additional, include=FALSE}
 srs_population_size <- 6
 srs_values <- c(10, 14, 18)
 srs_sample_size <- length(srs_values)

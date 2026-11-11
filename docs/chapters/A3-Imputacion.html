@@ -551,7 +551,7 @@ Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>App
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">.id =</span> <span class="st">"data_source"</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>El siguiente código computacional compara el ingreso por zona y sexo en la base completa (<code>survey_data</code>) y en la muestra con pérdida MCAR (<code>mcar_data</code>) (<a href="#fig-ap3-mcar-cajas" class="quarto-xref">figura&nbsp;<span>10.1</span></a>). Las medianas y la amplitud de las cajas son similares en ambas bases. La línea roja indica la media del ingreso en la base completa.</p>
+<p>El siguiente código computacional compara el ingreso por zona y sexo en la base completa (<code>survey_data</code>) y en la muestra con pérdida MCAR (<code>mcar_data</code>) (<a href="#fig-ap3-mcar-boxplots" class="quarto-xref">figura&nbsp;<span>10.1</span></a>). Las medianas y la amplitud de las cajas son similares en ambas bases. La línea roja indica la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>zone_income_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  mcar_plot_data,</span>
@@ -566,19 +566,19 @@ Tabla&nbsp;10.1: Patrón no monótono de datos faltantes. Adaptación de <em>App
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>zone_income_plot <span class="sc">|</span> sex_income_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-mcar-cajas" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mcar-boxplots" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-mcar-cajas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-mcar-cajas-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mcar-boxplots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mcar-boxplots-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mcar-cajas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mcar-boxplots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.1: Distribución del ingreso por zona y sexo con datos completos y bajo un patrón MCAR
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El siguiente código computacional muestra las densidades del ingreso para la base completa (<code>survey_data</code>) y la muestra con pérdida MCAR (<code>mcar_data</code>), en el total y por sexo (<a href="#fig-ap3-mcar-ingreso" class="quarto-xref">figura&nbsp;<span>10.2</span></a>). Las curvas prácticamente se superponen, lo que indica pocos cambios en la distribución en esta simulación. La línea roja representa la media del ingreso en la base completa.</p>
+<p>El siguiente código computacional muestra las densidades del ingreso para la base completa (<code>survey_data</code>) y la muestra con pérdida MCAR (<code>mcar_data</code>), en el total y por sexo (<a href="#fig-ap3-mcar-income" class="quarto-xref">figura&nbsp;<span>10.2</span></a>). Las curvas prácticamente se superponen, lo que indica pocos cambios en la distribución en esta simulación. La línea roja representa la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  mcar_plot_data,</span>
@@ -595,19 +595,19 @@ Figura&nbsp;10.1: Distribución del ingreso por zona y sexo con datos completos 
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="sc">/</span> sex_income_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-mcar-ingreso" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mcar-income" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-mcar-ingreso-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-mcar-ingreso-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mcar-income-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mcar-income-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mcar-ingreso-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mcar-income-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.2: Distribución del ingreso, total y por sexo, bajo un patrón MCAR
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El siguiente código computacional compara las densidades del gasto en la base completa (<code>survey_data</code>) y la muestra con pérdida MCAR (<code>mcar_data</code>), en el total y por sexo (<a href="#fig-ap3-mcar-gasto" class="quarto-xref">figura&nbsp;<span>10.3</span></a>). La superposición de las curvas muestra que se conserva la forma de la distribución. La línea roja indica la media del gasto en la base completa.</p>
+<p>El siguiente código computacional compara las densidades del gasto en la base completa (<code>survey_data</code>) y la muestra con pérdida MCAR (<code>mcar_data</code>), en el total y por sexo (<a href="#fig-ap3-mcar-expenditure" class="quarto-xref">figura&nbsp;<span>10.3</span></a>). La superposición de las curvas muestra que se conserva la forma de la distribución. La línea roja indica la media del gasto en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  mcar_plot_data,</span>
@@ -627,12 +627,12 @@ Figura&nbsp;10.2: Distribución del ingreso, total y por sexo, bajo un patrón M
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="sc">/</span> sex_expenditure_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-mcar-gasto" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mcar-expenditure" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-mcar-gasto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-mcar-gasto-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mcar-expenditure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mcar-expenditure-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mcar-gasto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mcar-expenditure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.3: Distribución del gasto, total y por sexo, bajo un patrón MCAR
 </figcaption>
 </figure>
@@ -664,7 +664,7 @@ RuralFemale   RuralMale UrbanFemale   UrbanMale
 </div>
 <p>El código anterior utiliza el paquete <code>TeachingSampling</code> para realizar un muestreo aleatorio en cada combinación de zona y sexo. Primero, se fija la semilla en <code>1234</code> para que los resultados sean reproducibles. Luego, se crea la variable <code>stratum_id</code>, que combina <code>Zone</code> y <code>Sex</code> mediante la función <code>paste0</code> para definir los estratos. La función <code>table</code> muestra la frecuencia de cada estrato. El muestreo estratificado se realiza con <code>S.STSI</code>, cuyos argumentos son <code>S</code>, el vector de estratos; <code>Nh</code>, el número de unidades en cada estrato (481, 428, 531, 439, en el orden mostrado por <code>stratum_sizes</code>); y <code>nh</code>, el tamaño de muestra deseado en cada estrato (20, 380, 20 y 280).</p>
 <p>El muestreo estratificado devuelve un vector con los índices de las filas seleccionadas. Estas observaciones se excluyen de la base para crear <code>mar_data</code>. Por último, la función <code>bind_rows</code> del paquete <code>dplyr</code> reúne <code>survey_data</code> y <code>mar_data</code> en <code>mar_plot_data</code>. La nueva variable <code>data_source</code> identifica la base de origen de cada observación.</p>
-<p>El siguiente código computacional compara el gasto por zona y sexo entre la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>) (<a href="#fig-ap3-mar-cajas" class="quarto-xref">figura&nbsp;<span>10.4</span></a>). Las medianas permanecen próximas, aunque cambian la dispersión y algunos valores extremos, especialmente entre los hombres. La línea roja señala la media del gasto en la base completa.</p>
+<p>El siguiente código computacional compara el gasto por zona y sexo entre la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>) (<a href="#fig-ap3-mar-boxplots" class="quarto-xref">figura&nbsp;<span>10.4</span></a>). Las medianas permanecen próximas, aunque cambian la dispersión y algunos valores extremos, especialmente entre los hombres. La línea roja señala la media del gasto en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mar_expenditure_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  mar_plot_data,</span>
@@ -680,19 +680,19 @@ RuralFemale   RuralMale UrbanFemale   UrbanMale
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>mar_expenditure_boxplot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-mar-cajas" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mar-boxplots" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-mar-cajas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-mar-cajas-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mar-boxplots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mar-boxplots-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mar-cajas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mar-boxplots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.4: Distribución del gasto por zona y sexo bajo un patrón MAR
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El siguiente código computacional compara las densidades del ingreso de la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>) (<a href="#fig-ap3-mar-ingreso" class="quarto-xref">figura&nbsp;<span>10.5</span></a>). Las diferencias son pequeñas en el total y más visibles entre los hombres, lo que muestra la utilidad de revisar las desagregaciones. La línea roja indica la media del ingreso en la base completa.</p>
+<p>El siguiente código computacional compara las densidades del ingreso de la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>) (<a href="#fig-ap3-mar-income" class="quarto-xref">figura&nbsp;<span>10.5</span></a>). Las diferencias son pequeñas en el total y más visibles entre los hombres, lo que muestra la utilidad de revisar las desagregaciones. La línea roja indica la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  mar_plot_data,</span>
@@ -709,19 +709,19 @@ Figura&nbsp;10.4: Distribución del gasto por zona y sexo bajo un patrón MAR
 <span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>income_density_plot <span class="sc">/</span> sex_income_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-mar-ingreso" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mar-income" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-mar-ingreso-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-mar-ingreso-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mar-income-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mar-income-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mar-ingreso-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mar-income-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.5: Distribución del ingreso, total y por sexo, bajo un patrón MAR
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El siguiente código computacional muestra las densidades del gasto en la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>), en el total y por sexo (<a href="#fig-ap3-mar-gasto" class="quarto-xref">figura&nbsp;<span>10.6</span></a>). Las curvas son próximas entre las mujeres y presentan diferencias más visibles entre los hombres. La línea roja representa la media del gasto en la base completa.</p>
+<p>El siguiente código computacional muestra las densidades del gasto en la base completa (<code>survey_data</code>) y la muestra con pérdida MAR (<code>mar_data</code>), en el total y por sexo (<a href="#fig-ap3-mar-expenditure" class="quarto-xref">figura&nbsp;<span>10.6</span></a>). Las curvas son próximas entre las mujeres y presentan diferencias más visibles entre los hombres. La línea roja representa la media del gasto en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  mar_plot_data,</span>
@@ -741,12 +741,12 @@ Figura&nbsp;10.5: Distribución del ingreso, total y por sexo, bajo un patrón M
 <span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>expenditure_density_plot <span class="sc">/</span> sex_expenditure_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-mar-gasto" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mar-expenditure" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-mar-gasto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-mar-gasto-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mar-expenditure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mar-expenditure-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mar-gasto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mar-expenditure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.6: Distribución del gasto, total y por sexo, bajo un patrón MAR
 </figcaption>
 </figure>
@@ -764,7 +764,7 @@ Figura&nbsp;10.6: Distribución del gasto, total y por sexo, bajo un patrón MAR
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">.id =</span> <span class="st">"data_source"</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>El código anterior conserva en <code>mnar_data</code> las 1.300 observaciones con menores ingresos y las reúne con la base completa en <code>mnar_plot_data</code>. La <a href="#fig-ap3-mnar-ingreso" class="quarto-xref">figura&nbsp;<span>10.7</span></a>, obtenida con el siguiente código computacional, muestra cómo esta selección elimina la cola de ingresos altos y desplaza la distribución hacia valores menores. La media de los casos conservados, en azul, queda por debajo de la media de la base completa, en rojo.</p>
+<p>El código anterior conserva en <code>mnar_data</code> las 1.300 observaciones con menores ingresos y las reúne con la base completa en <code>mnar_plot_data</code>. La <a href="#fig-ap3-mnar-income" class="quarto-xref">figura&nbsp;<span>10.7</span></a>, obtenida con el siguiente código computacional, muestra cómo esta selección elimina la cola de ingresos altos y desplaza la distribución hacia valores menores. La media de los casos conservados, en azul, queda por debajo de la media de la base completa, en rojo.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mnar_income_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  mnar_plot_data,</span>
@@ -778,19 +778,19 @@ Figura&nbsp;10.6: Distribución del gasto, total y por sexo, bajo un patrón MAR
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>mnar_income_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-mnar-ingreso" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mnar-income" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-mnar-ingreso-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-mnar-ingreso-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mnar-income-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mnar-income-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mnar-ingreso-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mnar-income-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.7: Distribución del ingreso bajo un patrón MNAR
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El siguiente código computacional compara la distribución del gasto en la base completa (<code>survey_data</code>) y entre los casos conservados bajo MNAR (<code>mnar_data</code>) (<a href="#fig-ap3-mnar-gasto" class="quarto-xref">figura&nbsp;<span>10.8</span></a>). La selección por ingreso también reduce la presencia de gastos altos. La línea azul señala la media del gasto de los casos conservados y la roja, la media de la base completa.</p>
+<p>El siguiente código computacional compara la distribución del gasto en la base completa (<code>survey_data</code>) y entre los casos conservados bajo MNAR (<code>mnar_data</code>) (<a href="#fig-ap3-mnar-expenditure" class="quarto-xref">figura&nbsp;<span>10.8</span></a>). La selección por ingreso también reduce la presencia de gastos altos. La línea azul señala la media del gasto de los casos conservados y la roja, la media de la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mnar_expenditure_density_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  mnar_plot_data,</span>
@@ -810,19 +810,19 @@ Figura&nbsp;10.7: Distribución del ingreso bajo un patrón MNAR
 <span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>mnar_expenditure_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-mnar-gasto" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mnar-expenditure" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-mnar-gasto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-mnar-gasto-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mnar-expenditure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mnar-expenditure-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mnar-gasto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mnar-expenditure-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.8: Distribución del gasto bajo un patrón MNAR
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El siguiente código computacional compara el ingreso por zona y sexo en la base completa (<code>survey_data</code>) y entre los casos conservados bajo MNAR (<code>mnar_data</code>) (<a href="#fig-ap3-mnar-cajas" class="quarto-xref">figura&nbsp;<span>10.9</span></a>). La eliminación de ingresos altos reduce las medianas y la dispersión, con cambios más marcados en la zona urbana. La línea roja indica la media del ingreso en la base completa.</p>
+<p>El siguiente código computacional compara el ingreso por zona y sexo en la base completa (<code>survey_data</code>) y entre los casos conservados bajo MNAR (<code>mnar_data</code>) (<a href="#fig-ap3-mnar-boxplots" class="quarto-xref">figura&nbsp;<span>10.9</span></a>). La eliminación de ingresos altos reduce las medianas y la dispersión, con cambios más marcados en la zona urbana. La línea roja indica la media del ingreso en la base completa.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mnar_income_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  mnar_plot_data,</span>
@@ -835,12 +835,12 @@ Figura&nbsp;10.8: Distribución del gasto bajo un patrón MNAR
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>mnar_income_boxplot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-mnar-cajas" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mnar-boxplots" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-mnar-cajas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-mnar-cajas-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mnar-boxplots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mnar-boxplots-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mnar-cajas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mnar-boxplots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR
 </figcaption>
 </figure>
@@ -912,7 +912,7 @@ Figura&nbsp;10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR
 </div>
 </div>
 <p>El código anterior calcula la media de los valores observados de <code>income_missing</code> y la almacena en <code>observed_income_mean</code>. Luego, reemplaza los valores faltantes con esa media y guarda el resultado en <code>income_imputed</code>. La última línea cuenta los valores faltantes de esta nueva columna de <code>survey_data</code> y confirma que no quedan datos sin imputar.</p>
-<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) con el completado mediante la media no condicional (<code>income_imputed</code>) (<a href="#fig-ap3-media-no-condicional" class="quarto-xref">figura&nbsp;<span>10.10</span></a>). La imputación produce una concentración artificial alrededor de la media, visible como un pico pronunciado. Las líneas roja y azul representan las medias original e imputada, respectivamente; su cercanía no implica que las distribuciones sean iguales.</p>
+<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) con el completado mediante la media no condicional (<code>income_imputed</code>) (<a href="#fig-ap3-mean-non-conditional" class="quarto-xref">figura&nbsp;<span>10.10</span></a>). La imputación produce una concentración artificial alrededor de la media, visible como un pico pronunciado. Las líneas roja y azul representan las medias original e imputada, respectivamente; su cercanía no implica que las distribuciones sean iguales.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mean_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -933,19 +933,19 @@ Figura&nbsp;10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR
 <span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>mean_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-media-no-condicional" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mean-non-conditional" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-media-no-condicional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-media-no-condicional-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mean-non-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mean-non-conditional-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-media-no-condicional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mean-non-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.10: Distribución del ingreso original e imputado por la media no condicional
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) y el completado por la media no condicional (<code>income_imputed</code>) dentro de cada combinación de zona y sexo (<a href="#fig-ap3-media-no-condicional-grupos" class="quarto-xref">figura&nbsp;<span>10.11</span></a>). Las cajas muestran cambios en la mediana y la dispersión al asignar un mismo valor a todos los datos faltantes. La línea roja señala la media del ingreso original.</p>
+<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) y el completado por la media no condicional (<code>income_imputed</code>) dentro de cada combinación de zona y sexo (<a href="#fig-ap3-mean-non-conditional-groups" class="quarto-xref">figura&nbsp;<span>10.11</span></a>). Las cajas muestran cambios en la mediana y la dispersión al asignar un mismo valor a todos los datos faltantes. La línea roja señala la media del ingreso original.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mean_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  mean_plot_data,</span>
@@ -958,12 +958,12 @@ Figura&nbsp;10.10: Distribución del ingreso original e imputado por la media no
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>mean_boxplot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-media-no-condicional-grupos" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mean-non-conditional-groups" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-media-no-condicional-grupos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-media-no-condicional-grupos-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mean-non-conditional-groups-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mean-non-conditional-groups-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-media-no-condicional-grupos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mean-non-conditional-groups-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.11: Ingreso original e imputado por la media no condicional, por zona y sexo
 </figcaption>
 </figure>
@@ -1038,7 +1038,7 @@ Figura&nbsp;10.11: Ingreso original e imputado por la media no condicional, por 
 </div>
 </div>
 <p>Los sesgos relativos de la media del ingreso son del 1,87 % en la zona rural y del 0,81 % en la urbana. En ambos casos, las medias obtenidas tras la imputación son próximas a las originales.</p>
-<p>El siguiente código computacional compara las densidades del ingreso original (<code>Income</code>) y del completado con medias por estrato (<code>income_imputed</code>) (<a href="#fig-ap3-media-condicional" class="quarto-xref">figura&nbsp;<span>10.12</span></a>). La curva imputada se aproxima a la original, aunque conserva diferencias en el tramo central. Las líneas roja y azul señalan las medias original e imputada, respectivamente.</p>
+<p>El siguiente código computacional compara las densidades del ingreso original (<code>Income</code>) y del completado con medias por estrato (<code>income_imputed</code>) (<a href="#fig-ap3-mean-conditional" class="quarto-xref">figura&nbsp;<span>10.12</span></a>). La curva imputada se aproxima a la original, aunque conserva diferencias en el tramo central. Las líneas roja y azul señalan las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>conditional_mean_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -1059,19 +1059,19 @@ Figura&nbsp;10.11: Ingreso original e imputado por la media no condicional, por 
 <span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>conditional_mean_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-media-condicional" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mean-conditional" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-media-condicional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-media-condicional-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mean-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mean-conditional-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-media-condicional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mean-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.12: Distribución del ingreso original e imputado por la media condicional
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) y el completado con medias por estrato (<code>income_imputed</code>), desagregados por zona y sexo (<a href="#fig-ap3-media-condicional-grupos" class="quarto-xref">figura&nbsp;<span>10.13</span></a>). Las medianas son próximas y persisten algunas diferencias en la amplitud de las cajas. La línea roja indica la media del ingreso original en toda la muestra.</p>
+<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) y el completado con medias por estrato (<code>income_imputed</code>), desagregados por zona y sexo (<a href="#fig-ap3-mean-conditional-groups" class="quarto-xref">figura&nbsp;<span>10.13</span></a>). Las medianas son próximas y persisten algunas diferencias en la amplitud de las cajas. La línea roja indica la media del ingreso original en toda la muestra.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>conditional_mean_boxplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  conditional_mean_plot_data,</span>
@@ -1084,12 +1084,12 @@ Figura&nbsp;10.12: Distribución del ingreso original e imputado por la media co
 <span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>conditional_mean_boxplot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-media-condicional-grupos" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-mean-conditional-groups" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-media-condicional-grupos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-media-condicional-grupos-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-mean-conditional-groups-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-mean-conditional-groups-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-media-condicional-grupos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-mean-conditional-groups-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.13: Ingreso original e imputado por la media condicional, por zona y sexo
 </figcaption>
 </figure>
@@ -1258,7 +1258,7 @@ Figura&nbsp;10.14: Distribución del ingreso original e imputado mediante hot-de
 2 Urban        731.      609.                739.              595.</code></pre>
 </div>
 </div>
-<p>El siguiente código computacional compara las densidades del ingreso original (<code>Income</code>) y del completado con predicciones del modelo de regresión (<code>income_imputed</code>) (<a href="#fig-ap3-regresion" class="quarto-xref">figura&nbsp;<span>10.15</span></a>). La forma general es similar, aunque aparecen diferencias alrededor del tramo central de la distribución. Las líneas roja y azul indican las medias original e imputada, respectivamente.</p>
+<p>El siguiente código computacional compara las densidades del ingreso original (<code>Income</code>) y del completado con predicciones del modelo de regresión (<code>income_imputed</code>) (<a href="#fig-ap3-regression" class="quarto-xref">figura&nbsp;<span>10.15</span></a>). La forma general es similar, aunque aparecen diferencias alrededor del tramo central de la distribución. Las líneas roja y azul indican las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>regression_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -1279,12 +1279,12 @@ Figura&nbsp;10.14: Distribución del ingreso original e imputado mediante hot-de
 <span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>regression_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-regresion" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-regression" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-regresion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-regresion-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-regression-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-regresion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.15: Distribución del ingreso original e imputado por regresión
 </figcaption>
 </figure>
@@ -1351,7 +1351,7 @@ Figura&nbsp;10.15: Distribución del ingreso original e imputado por regresión
 </div>
 </div>
 <p>La media imputada supera a la original en aproximadamente 8,8 unidades monetarias en la zona rural y 3,9 en la urbana.</p>
-<p>El siguiente código computacional compara la densidad del ingreso original (<code>Income</code>) y la del ingreso imputado con donantes de gasto similar (<code>income_imputed</code>) (<a href="#fig-ap3-vecino-cercano" class="quarto-xref">figura&nbsp;<span>10.16</span></a>). Las curvas son muy próximas y conservan la cola de ingresos altos. Las líneas roja y azul muestran las medias original e imputada, respectivamente.</p>
+<p>El siguiente código computacional compara la densidad del ingreso original (<code>Income</code>) y la del ingreso imputado con donantes de gasto similar (<code>income_imputed</code>) (<a href="#fig-ap3-nearest-neighbor" class="quarto-xref">figura&nbsp;<span>10.16</span></a>). Las curvas son muy próximas y conservan la cola de ingresos altos. Las líneas roja y azul muestran las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>nearest_neighbor_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -1372,12 +1372,12 @@ Figura&nbsp;10.15: Distribución del ingreso original e imputado por regresión
 <span id="cb62-17"><a href="#cb62-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb62-18"><a href="#cb62-18" aria-hidden="true" tabindex="-1"></a>nearest_neighbor_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-vecino-cercano" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-nearest-neighbor" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-vecino-cercano-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-vecino-cercano-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-nearest-neighbor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-nearest-neighbor-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-vecino-cercano-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-nearest-neighbor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.16: Distribución del ingreso original e imputado por el vecino más cercano
 </figcaption>
 </figure>
@@ -1440,7 +1440,7 @@ Figura&nbsp;10.16: Distribución del ingreso original e imputado por el vecino m
 </div>
 </div>
 <p>La diferencia entre la media del ingreso original y la obtenida tras la imputación es de aproximadamente 4,0 unidades monetarias.</p>
-<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) con el completado mediante donantes cuyas predicciones son próximas a las del receptor (<code>income_imputed</code>) (<a href="#fig-ap3-vecino-cercano-regresion" class="quarto-xref">figura&nbsp;<span>10.17</span></a>). Las densidades prácticamente se superponen en esta simulación. Las líneas roja y azul representan las medias original e imputada, respectivamente.</p>
+<p>El siguiente código computacional compara el ingreso original (<code>Income</code>) con el completado mediante donantes cuyas predicciones son próximas a las del receptor (<code>income_imputed</code>) (<a href="#fig-ap3-nearest-neighbor-regression" class="quarto-xref">figura&nbsp;<span>10.17</span></a>). Las densidades prácticamente se superponen en esta simulación. Las líneas roja y azul representan las medias original e imputada, respectivamente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>predictive_matching_plot_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Zone, Sex, Income, income_imputed) <span class="sc">%&gt;%</span></span>
@@ -1461,12 +1461,12 @@ Figura&nbsp;10.16: Distribución del ingreso original e imputado por el vecino m
 <span id="cb67-17"><a href="#cb67-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb67-18"><a href="#cb67-18" aria-hidden="true" tabindex="-1"></a>predictive_matching_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-vecino-cercano-regresion" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-nearest-neighbor-regression" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-vecino-cercano-regresion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-vecino-cercano-regresion-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-nearest-neighbor-regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-nearest-neighbor-regression-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-vecino-cercano-regresion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-nearest-neighbor-regression-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.17: Distribución del ingreso original e imputado por el vecino más cercano con regresión
 </figcaption>
 </figure>
@@ -1548,7 +1548,7 @@ V(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})
 10  685.5           593           558           541</code></pre>
 </div>
 </div>
-<p>El siguiente código computacional compara la densidad del ingreso original, representada por la línea negra, con las de los 10 conjuntos completados, representadas por las líneas de colores (<code>income_draw_1</code> a income_draw_10) (<a href="#fig-ap3-imputacion-multiple" class="quarto-xref">figura&nbsp;<span>10.18</span></a>). Las curvas mantienen una forma similar, con pequeñas diferencias en el tramo central que reflejan la variación entre las imputaciones.</p>
+<p>El siguiente código computacional compara la densidad del ingreso original, representada por la línea negra, con las de los 10 conjuntos completados, representadas por las líneas de colores (<code>income_draw_1</code> a income_draw_10) (<a href="#fig-ap3-imputation-multiple" class="quarto-xref">figura&nbsp;<span>10.18</span></a>). Las curvas mantienen una forma similar, con pequeñas diferencias en el tramo central que reflejan la variación entre las imputaciones.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(observed_data, missing_data)</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1572,12 +1572,12 @@ V(E(\hat{\beta} | Y_{obs}, Y_{mis}) | Y_{obs})
 <span id="cb72-20"><a href="#cb72-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-21"><a href="#cb72-21" aria-hidden="true" tabindex="-1"></a>multiple_imputation_density_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ap3-imputacion-multiple" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-ap3-imputation-multiple" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ap3-imputacion-multiple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-ap3-imputacion-multiple-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-ap3-imputation-multiple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-ap3-imputation-multiple-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-imputacion-multiple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ap3-imputation-multiple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;10.18: Distribución del ingreso original y de los valores obtenidos mediante imputación múltiple
 </figcaption>
 </figure>

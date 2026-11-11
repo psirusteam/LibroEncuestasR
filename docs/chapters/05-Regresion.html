@@ -393,7 +393,7 @@ E(y \mid \mathbf{x}) = {\beta}_{0} + {\beta}_{1}x_{1} + \cdots + {\beta}_{p}x_{p
 <p>En este contexto, surge una pregunta fundamental: ¿de qué manera deben incorporarse los pesos muestrales en los modelos de regresión? La respuesta no es sencilla, ya que los pesos de la encuesta reflejan no solo las probabilidades de selección, sino también diversos ajustes asociados a la no respuesta, calibración y correcciones de cobertura. Aunque su utilización permite producir estimaciones representativas de la población, la incorporación directa de ponderaciones en los modelos también puede reducir la eficiencia estadística e incrementar la variabilidad de los estimadores.</p>
 <p>En términos generales, <span class="citation" data-cites="pfeffermann2011modelling">Pfeffermann (<a href="references.html#ref-pfeffermann2011modelling" role="doc-biblioref">2011</a>)</span> distingue dos enfoques principales para abordar este problema. El primero corresponde al enfoque basado en el diseño muestral, cuyo objetivo es obtener inferencias válidas para la población objetivo respetando las características del proceso de selección de la muestra. De acuerdo con <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, desde esta perspectiva, los pesos muestrales son esenciales para corregir las probabilidades desiguales de inclusión y producir estimaciones insesgadas de los coeficientes de regresión. Sin embargo, este enfoque no protege frente a posibles errores de especificación del modelo; es decir, aun cuando las estimaciones sean válidas desde el punto de vista del diseño, el modelo puede no representar adecuadamente las relaciones existentes en la población.</p>
 <p>El segundo corresponde al enfoque orientado al modelo, según el cual los pesos no son necesariamente requeridos siempre que el modelo esté correctamente especificado y el mecanismo de muestreo sea no informativo. Bajo este supuesto, las relaciones entre las variables observadas en la muestra coinciden con las de la población, de manera que el diseño muestral no introduce sesgos relevantes en la estimación de los parámetros. Desde esta perspectiva, incorporar ponderaciones podría incluso resultar contraproducente, al aumentar innecesariamente la varianza de los estimadores y, en consecuencia, los errores estándar.</p>
-<p>Según <span class="citation" data-cites="skinner1989analysis">Skinner et&nbsp;al. (<a href="references.html#ref-skinner1989analysis" role="doc-biblioref">1989</a>)</span>, la discusión sobre la conveniencia de utilizar ponderaciones en modelos de regresión ha sido ampliamente desarrollada en la literatura especializada. En la práctica, una recomendación metodológica frecuente consiste en estimar los modelos tanto con ponderaciones como sin ellas y comparar posteriormente los resultados obtenidos <span class="citation" data-cites="UNhandbook">(<a href="references.html#ref-UNhandbook" role="doc-biblioref">Naciones Unidas 2026</a>)</span>. Si la inclusión de los pesos produce cambios importantes en los coeficientes estimados o modifica las conclusiones sustantivas del análisis, ello sugiere que el diseño de muestreo es informativo o que el modelo presenta problemas de especificación, por lo que el uso de ponderaciones resulta aconsejable. Por el contrario, si los coeficientes permanecen relativamente estables y las ponderaciones únicamente incrementan los errores estándar, puede considerarse que el modelo captura adecuadamente la estructura de los datos y que el uso de pesos no es estrictamente necesario.</p>
+<p>Según <span class="citation" data-cites="skinner1989analysis">Skinner et&nbsp;al. (<a href="references.html#ref-skinner1989analysis" role="doc-biblioref">1989</a>)</span>, la discusión sobre la conveniencia de utilizar ponderaciones en modelos de regresión ha sido ampliamente desarrollada en la literatura especializada. En la práctica, una recomendación metodológica frecuente consiste en estimar los modelos tanto con ponderaciones como sin ellas y comparar posteriormente los resultados obtenidos <span class="citation" data-cites="UNhandbook">(<a href="references.html#ref-UNhandbook" role="doc-biblioref">Naciones Unidas 2026</a>)</span>. Si la inclusión de los pesos produce cambios importantes en los coeficientes estimados o modifica las conclusiones sustantivas del análisis, ello sugiere que el diseño de muestreo es informativo o que el modelo presenta problemas de especificación, por lo que el uso de ponderaciones resulta aconsejable. La comparación entre ajustes ponderados y no ponderados constituye un diagnóstico, pero la estabilidad de los coeficientes no basta para justificar la omisión de los pesos. Esa decisión requiere considerar el objetivo inferencial, la especificación del modelo y el mecanismo de selección de la muestra. Asimismo, debe distinguirse la decisión de ponderar los coeficientes del tratamiento de la estratificación y la conglomeración al estimar su incertidumbre.</p>
 <p>En términos aplicados, esta decisión suele depender del propósito analítico del estudio. Cuando el objetivo es realizar inferencia descriptiva y producir estimaciones representativas de la población, la utilización de ponderaciones es indispensable. En cambio, en contextos de inferencia analítica orientados al estudio de asociaciones, relaciones causales o contrastes de hipótesis, pueden emplearse tanto modelos ponderados como no ponderados, especialmente cuando el modelo incorpora variables relacionadas con el diseño muestral, como estratos o conglomerados. No obstante, el uso de modelos no ponderados debe justificarse cuidadosamente, dado que implica asumir condiciones más restrictivas sobre el mecanismo de selección de la muestra y la correcta especificación del modelo estadístico.</p>
 <p>En resumen, cuando se opta por ponderar, las ponderaciones corrigen posibles sesgos de sobre o subrepresentación de determinados grupos y contribuyen a obtener estimaciones de varianza más exactas. Dentro del enfoque basado en el diseño, esto permite que los resultados se aproximen a valores insesgados comparables a los que se obtendrían en un censo completo, incluso cuando el modelo no esté formulado de manera óptima. Sin embargo, cuando los pesos presentan gran dispersión, pueden aumentar la varianza de los parámetros estimados y volver inestables las estimaciones, razón por la que en contextos explicativos o analíticos los modelos sin ponderar pueden, en ocasiones, arrojar resultados más consistentes y eficientes.</p>
 <p>La selección adecuada de las variables explicativas y la consideración del mecanismo de selección de la muestra son fundamentales para el análisis. Además de estas decisiones, algunas implementaciones utilizan versiones reescaladas de los pesos originales. A continuación, se presentan dos formas habituales de reescalamiento, que modifican la suma de los pesos, pero no corrigen una especificación incorrecta del modelo ni reducen la dispersión relativa de las ponderaciones:</p>
@@ -464,7 +464,7 @@ E(y \mid \mathbf{x}) = {\beta}_{0} + {\beta}_{1}x_{1} + \cdots + {\beta}_{p}x_{p
 </div>
 <p>La base <code>sample.rds</code> conserva los nombres de las variables y utiliza etiquetas y categorías en inglés. En <code>Region</code>, las categorías <code>North</code>, <code>South</code>, <code>Central</code>, <code>West</code> y <code>East</code> corresponden a Norte, Sur, Centro, Occidente y Oriente; <code>CatAge</code> contiene grupos decenales ordenados: <code>0-9</code>, <code>10-19</code>, <code>20-29</code>, y así sucesivamente hasta <code>90-99</code>.</p>
 <p>En este capítulo se trabaja con una observación por hogar, identificada mediante <code>PersonID == "idPer01"</code>, y se utiliza el factor de expansión <code>wk</code> del jefe, siguiendo la convención descrita en la sección 3.1. La muestra de análisis contiene 696 hogares con ingreso y gasto positivos, condición necesaria para calcular sus logaritmos naturales. La edad y el sexo corresponden al jefe del hogar; las categorías de referencia son hombre, zona rural y región Norte.</p>
-<p>Con el objetivo de ajustar un modelo de regresión entre los logaritmos del ingreso y del gasto per cápita, resulta conveniente explorar previamente la relación existente entre ambas variables. Para ello, se construye un diagrama de dispersión mediante <code>ggplot2</code>, el cual permite evaluar visualmente la forma y la intensidad de la asociación. El resultado se presenta en la <a href="#fig-scatter-muestra-sinP" class="quarto-xref">figura&nbsp;<span>5.1</span></a>, obtenida con el siguiente código computacional.</p>
+<p>Con el objetivo de ajustar un modelo de regresión entre los logaritmos del ingreso y del gasto per cápita, resulta conveniente explorar previamente la relación existente entre ambas variables. Para ello, se construye un diagrama de dispersión mediante <code>ggplot2</code>, el cual permite evaluar visualmente la forma y la intensidad de la asociación. El resultado se presenta en la <a href="#fig-scatter-sample-unweighted" class="quarto-xref">figura&nbsp;<span>5.1</span></a>, obtenida con el siguiente código computacional.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>unweighted_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
@@ -479,12 +479,12 @@ E(y \mid \mathbf{x}) = {\beta}_{0} + {\beta}_{1}x_{1} + \cdots + {\beta}_{p}x_{p
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>unweighted_plot</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-scatter-muestra-sinP" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-scatter-sample-unweighted" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-scatter-muestra-sinP-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-scatter-muestra-sinP-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
+<div aria-describedby="fig-scatter-sample-unweighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-scatter-sample-unweighted-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatter-muestra-sinP-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatter-sample-unweighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;5.1: Diagrama de dispersión entre los logaritmos del ingreso y del gasto per cápita de los hogares (sin ponderar)
 </figcaption>
 </figure>
@@ -589,7 +589,7 @@ r_{k} = \frac{y_k - \hat\mu_k}{\sqrt{\widehat{Var}(\hat\mu_k)/w_k}},
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  survey_design<span class="sc">$</span>variables <span class="sc">%&gt;%</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">stdresids =</span> stdresids)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>El análisis de normalidad puede complementarse con el histograma de los residuales estandarizados, presentado en la <a href="#fig-hist-residuales" class="quarto-xref">figura&nbsp;<span>5.2</span></a>, obtenida con el siguiente código computacional. El histograma sugiere una desviación respecto a la curva normal teórica (en rojo), pero la inspección gráfica por sí sola no constituye una prueba formal ni demuestra que el modelo sea inválido. La distribución de los residuos (representada en azul) permite examinar la concentración central y las colas respecto de la curva normal. Las posibles discrepancias deben valorarse junto con los demás diagnósticos, teniendo presente que el modelo ya utiliza una transformación logarítmica de la variable dependiente.</p>
+<p>El análisis de normalidad puede complementarse con el histograma de los residuales estandarizados, presentado en la <a href="#fig-hist-residuals" class="quarto-xref">figura&nbsp;<span>5.2</span></a>, obtenida con el siguiente código computacional. El histograma sugiere una desviación respecto a la curva normal teórica (en rojo), pero la inspección gráfica por sí sola no constituye una prueba formal ni demuestra que el modelo sea inválido. La distribución de los residuos (representada en azul) permite examinar la concentración central y las colas respecto de la curva normal. Las posibles discrepancias deben valorarse junto con los demás diagnósticos, teniendo presente que el modelo ya utiliza una transformación logarítmica de la variable dependiente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_design<span class="sc">$</span>variables,</span>
@@ -609,12 +609,12 @@ r_{k} = \frac{y_k - \hat\mu_k}{\sqrt{\widehat{Var}(\hat\mu_k)/w_k}},
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-hist-residuales" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-hist-residuals" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-hist-residuales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-hist-residuales-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
+<div aria-describedby="fig-hist-residuals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-hist-residuals-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-residuales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-residuals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;5.2: Histograma de residuales estandarizados con curva de densidad estimada y distribución normal teórica
 </figcaption>
 </figure>
@@ -622,7 +622,7 @@ Figura&nbsp;5.2: Histograma de residuales estandarizados con curva de densidad e
 </div>
 </div>
 <p>Según <span class="citation" data-cites="ChambersSkinner2003">Chambers y Skinner (<a href="references.html#ref-ChambersSkinner2003" role="doc-biblioref">2003</a>)</span>, la homocedasticidad de los errores (varianza constante) constituye uno de los supuestos centrales en los modelos de regresión. Su incumplimiento afecta la eficiencia de los estimadores y las varianzas basadas exclusivamente en el modelo; las varianzas robustas ajustadas al diseño ofrecen protección adicional, aunque no corrigen una especificación incorrecta de la media. Dado que los residuos representan las discrepancias entre los valores observados y los valores ajustados por el modelo, su análisis en función de los valores predichos o de las covariables constituye una herramienta diagnóstica fundamental. Bajo un modelo adecuadamente especificado, se espera que los residuos se distribuyan de forma aleatoria alrededor de cero, sin patrones estructurados; en cambio, la aparición de formas sistemáticas (como estructuras en embudo o curvaturas) sugiere la presencia de heterocedasticidad (varianza no constante) o posibles relaciones funcionales no captadas por la especificación del modelo.</p>
-<p>Para evaluar este supuesto, se analizan gráficamente los residuos en función de los valores estimados <span class="math inline">\(\hat{\mu}_{k}\)</span> o de covariables específicas del modelo. La aparición de patrones sistemáticos en estos gráficos constituye evidencia de heterocedasticidad o de posibles problemas de especificación funcional. El siguiente código computacional construye gráficos de residuos frente a las covariables del modelo y los combina con <code>patchwork</code> en la <a href="#fig-residuales-covariables" class="quarto-xref">figura&nbsp;<span>5.3</span></a>.</p>
+<p>Para evaluar este supuesto, se analizan gráficamente los residuos en función de los valores estimados <span class="math inline">\(\hat{\mu}_{k}\)</span> o de covariables específicas del modelo. La aparición de patrones sistemáticos en estos gráficos constituye evidencia de heterocedasticidad o de posibles problemas de especificación funcional. El siguiente código computacional construye gráficos de residuos frente a las covariables del modelo y los combina con <code>patchwork</code> en la <a href="#fig-residuals-covariates" class="quarto-xref">figura&nbsp;<span>5.3</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -663,19 +663,19 @@ Figura&nbsp;5.2: Histograma de residuales estandarizados con curva de densidad e
 <span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>(g1 <span class="sc">|</span> g4) <span class="sc">/</span> (g2 <span class="sc">|</span> g3) <span class="sc">/</span> g5</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-residuales-covariables" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-residuals-covariates" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-residuales-covariables-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-residuales-covariables-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+<div aria-describedby="fig-residuals-covariates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-residuals-covariates-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-residuales-covariables-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-residuals-covariates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;5.3: Gráficos de residuales estandarizados frente a cada covariable del modelo
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>La <a href="#fig-residuales-covariables" class="quarto-xref">figura&nbsp;<span>5.3</span></a> presenta los gráficos de dispersión de los residuos estandarizados frente a las covariables del modelo. En conjunto, estos resultados permiten examinar posibles limitaciones en la especificación funcional. En particular, los gráficos frente a <code>log(Income)</code> y <code>Age</code> permiten buscar curvaturas o cambios en la dispersión que no estén captados por el modelo. Por su parte, en los gráficos asociados a <code>Zone</code>, <code>Sex</code> y <code>Region</code> se compara la dispersión de los residuos entre categorías, lo que contribuye a evaluar diferencias en la variabilidad condicional o en el ajuste de la media entre grupos.</p>
+<p>La <a href="#fig-residuals-covariates" class="quarto-xref">figura&nbsp;<span>5.3</span></a> presenta los gráficos de dispersión de los residuos estandarizados frente a las covariables del modelo. En conjunto, estos resultados permiten examinar posibles limitaciones en la especificación funcional. En particular, los gráficos frente a <code>log(Income)</code> y <code>Age</code> permiten buscar curvaturas o cambios en la dispersión que no estén captados por el modelo. Por su parte, en los gráficos asociados a <code>Zone</code>, <code>Sex</code> y <code>Region</code> se compara la dispersión de los residuos entre categorías, lo que contribuye a evaluar diferencias en la variabilidad condicional o en el ajuste de la media entre grupos.</p>
 </section>
 <section id="observaciones-influyentes" class="level3" data-number="5.4.3">
 <h3 data-number="5.4.3" class="anchored" data-anchor-id="observaciones-influyentes"><span class="header-section-number">5.4.3</span> Observaciones influyentes</h3>
@@ -708,37 +708,40 @@ Figura&nbsp;5.4: Distancia de Cook para cada observación de la muestra
 \geq
 \frac{z}{\sqrt{n_I\times DEFF}},
 \]</span></p>
-<p>Donde <span class="math inline">\(z\)</span> toma comúnmente valores de 2 o 3, <span class="math inline">\(n_I\)</span> representa el número de UPMs seleccionadas en la muestra de la primera etapa y <span class="math inline">\(DEFF\)</span> corresponde al efecto de diseño asociado a la variable respuesta. A continuación, se evalúa la influencia de las observaciones sobre los coeficientes del modelo de ejemplo mediante la función <code>svydfbetas</code>. Los resultados correspondientes a las primeras diez observaciones se presentan en la <a href="#tbl-dfbetas-primeros" class="quarto-xref">tabla&nbsp;<span>5.1</span></a>. Las columnas Beta 0 a Beta 8 siguen el orden de los coeficientes del modelo: intercepto, logaritmo del ingreso, edad, sexo femenino, zona urbana y regiones Sur, Centro, Occidente y Oriente.</p>
+<p>Donde <span class="math inline">\(z\)</span> toma comúnmente valores de 2 o 3, <span class="math inline">\(n_I\)</span> representa el número de UPMs seleccionadas en la muestra de la primera etapa y <span class="math inline">\(DEFF\)</span> corresponde al efecto de diseño asociado a la variable respuesta. A continuación, se evalúa la influencia de las observaciones sobre los coeficientes del modelo de ejemplo mediante la función <code>svydfbetas</code>. Los resultados de las primeras diez observaciones se presentan en la <a href="#tbl-dfbetas-primeros" class="quarto-xref">tabla&nbsp;<span>5.1</span></a>, junto con el identificador del hogar (<code>HHID</code>). Las columnas Beta 0 a Beta 8 siguen el orden de los coeficientes del modelo: intercepto, logaritmo del ingreso, edad, sexo femenino, zona urbana y regiones Sur, Centro, Occidente y Oriente.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>d_dfbetas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">t</span>(<span class="fu">svydfbetas</span>(fit_svy)<span class="sc">$</span>Dfbetas))</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(d_dfbetas) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Beta_"</span>, <span class="dv">0</span><span class="sc">:</span>(<span class="fu">length</span>(<span class="fu">coef</span>(fit_svy)) <span class="sc">-</span> <span class="dv">1</span>))</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>dfbetas_first_ten_table <span class="ot">&lt;-</span> d_dfbetas <span class="sc">%&gt;%</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>dfbetas_first_ten_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L) <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HHID =</span> survey_data<span class="sc">$</span>HHID[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>dfbetas_first_ten_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-dfbetas-primeros" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dfbetas-primeros-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muestra
+Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muestra, con identificador del hogar
 </figcaption>
 <div aria-describedby="tbl-dfbetas-primeros-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
 </colgroup>
 <thead>
 <tr class="header">
+<th style="text-align: left;">ID del hogar</th>
 <th style="text-align: right;">Beta 0</th>
 <th style="text-align: right;">Beta 1</th>
 <th style="text-align: right;">Beta 2</th>
@@ -752,6 +755,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: left;">idHH00031</td>
 <td style="text-align: right;">-0.0009</td>
 <td style="text-align: right;">0.0044</td>
 <td style="text-align: right;">0.0267</td>
@@ -763,6 +767,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <td style="text-align: right;">-0.0253</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">idHH00041</td>
 <td style="text-align: right;">-0.0055</td>
 <td style="text-align: right;">0.0068</td>
 <td style="text-align: right;">0.0037</td>
@@ -774,6 +779,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <td style="text-align: right;">-0.0073</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">idHH20680</td>
 <td style="text-align: right;">-0.0307</td>
 <td style="text-align: right;">0.0244</td>
 <td style="text-align: right;">-0.0149</td>
@@ -785,6 +791,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <td style="text-align: right;">0.0231</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">idHH00064</td>
 <td style="text-align: right;">-0.0227</td>
 <td style="text-align: right;">0.0229</td>
 <td style="text-align: right;">-0.0559</td>
@@ -796,6 +803,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <td style="text-align: right;">0.0320</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">idHH20700</td>
 <td style="text-align: right;">0.0043</td>
 <td style="text-align: right;">0.0007</td>
 <td style="text-align: right;">-0.0038</td>
@@ -807,6 +815,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <td style="text-align: right;">-0.0100</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">idHH20705</td>
 <td style="text-align: right;">-0.0053</td>
 <td style="text-align: right;">0.0067</td>
 <td style="text-align: right;">0.0042</td>
@@ -818,6 +827,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <td style="text-align: right;">-0.0065</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">idHH20845</td>
 <td style="text-align: right;">-0.0020</td>
 <td style="text-align: right;">0.0008</td>
 <td style="text-align: right;">0.0013</td>
@@ -829,6 +839,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <td style="text-align: right;">0.0033</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">idHH20854</td>
 <td style="text-align: right;">0.0162</td>
 <td style="text-align: right;">-0.0114</td>
 <td style="text-align: right;">0.0008</td>
@@ -840,6 +851,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <td style="text-align: right;">-0.0175</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">idHH20858</td>
 <td style="text-align: right;">-0.0017</td>
 <td style="text-align: right;">-0.0050</td>
 <td style="text-align: right;">0.0054</td>
@@ -851,6 +863,7 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <td style="text-align: right;">0.0197</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">idHH20859</td>
 <td style="text-align: right;">0.0188</td>
 <td style="text-align: right;">-0.0202</td>
 <td style="text-align: right;">-0.0180</td>
@@ -883,22 +896,25 @@ Tabla&nbsp;5.1: Valores DfBetas para las primeras diez observaciones de la muest
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(value))) <span class="sc">%&gt;%</span></span>
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>L)</span>
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>influential_dfbetas_table <span class="ot">&lt;-</span> label_text</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>influential_dfbetas_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>influential_dfbetas_table <span class="ot">&lt;-</span> label_text <span class="sc">%&gt;%</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HHID =</span> survey_data<span class="sc">$</span>HHID[id]) <span class="sc">%&gt;%</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>id) <span class="sc">%&gt;%</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(HHID)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>influential_dfbetas_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-dfbetas-influyentes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dfbetas-influyentes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;5.2: Las diez observaciones más influyentes según el criterio DfBetas
+Tabla&nbsp;5.2: Las diez observaciones más influyentes según el criterio DfBetas, con identificador del hogar
 </figcaption>
 <div aria-describedby="tbl-dfbetas-influyentes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: right;">ID</th>
+<th style="text-align: left;">ID del hogar</th>
 <th style="text-align: left;">Parámetro</th>
 <th style="text-align: right;">Valor</th>
 <th style="text-align: left;">Criterio</th>
@@ -906,61 +922,61 @@ Tabla&nbsp;5.2: Las diez observaciones más influyentes según el criterio DfBet
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">688</td>
+<td style="text-align: left;">idHH20102</td>
 <td style="text-align: left;">Beta_3</td>
 <td style="text-align: right;">-0.4100</td>
 <td style="text-align: left;">Yes</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">651</td>
+<td style="text-align: left;">idHH18379</td>
 <td style="text-align: left;">Beta_8</td>
 <td style="text-align: right;">-0.3663</td>
 <td style="text-align: left;">Yes</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">653</td>
+<td style="text-align: left;">idHH39024</td>
 <td style="text-align: left;">Beta_8</td>
 <td style="text-align: right;">-0.3663</td>
 <td style="text-align: left;">Yes</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">688</td>
+<td style="text-align: left;">idHH20102</td>
 <td style="text-align: left;">Beta_2</td>
 <td style="text-align: right;">0.3482</td>
 <td style="text-align: left;">Yes</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">688</td>
+<td style="text-align: left;">idHH20102</td>
 <td style="text-align: left;">Beta_8</td>
 <td style="text-align: right;">-0.3244</td>
 <td style="text-align: left;">Yes</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">99</td>
+<td style="text-align: left;">idHH02136</td>
 <td style="text-align: left;">Beta_0</td>
 <td style="text-align: right;">0.2910</td>
 <td style="text-align: left;">Yes</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">688</td>
+<td style="text-align: left;">idHH20102</td>
 <td style="text-align: left;">Beta_4</td>
 <td style="text-align: right;">0.2684</td>
 <td style="text-align: left;">Yes</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">534</td>
+<td style="text-align: left;">idHH35243</td>
 <td style="text-align: left;">Beta_7</td>
 <td style="text-align: right;">0.2684</td>
 <td style="text-align: left;">Yes</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">651</td>
+<td style="text-align: left;">idHH18379</td>
 <td style="text-align: left;">Beta_4</td>
 <td style="text-align: right;">0.2682</td>
 <td style="text-align: left;">Yes</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">653</td>
+<td style="text-align: left;">idHH39024</td>
 <td style="text-align: left;">Beta_4</td>
 <td style="text-align: right;">0.2682</td>
 <td style="text-align: left;">Yes</td>
@@ -1084,13 +1100,6 @@ t_{1-\frac{\alpha}{2},\,df}
 <span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>summary_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>El siguiente código computacional prepara la tabla de inferencia e incorpora los límites producidos por <code>confint()</code>, de modo que se presenten tanto las pruebas <span class="math inline">\(t\)</span> como los intervalos de confianza de los coeficientes.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>regression_inference_table <span class="ot">&lt;-</span> summary_table</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>regression_inference_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>En la tabla, EE corresponde al error estándar de cada coeficiente estimado; LI 95 % y LS 95 % indican los límites inferior y superior de su intervalo de confianza del 95 %.</p>
 <div class="cell" data-layout-align="center">
 <div id="tbl-inferencia-modelo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1221,104 +1230,8 @@ Tabla&nbsp;5.3: Pruebas t e intervalos de confianza al 95% para los parámetros 
 \widehat{Var}(\hat \mu_k) =
 \mathbf{x}'_{k}\ \hat{\boldsymbol{\Sigma}}\ \mathbf{x}_{k}
 \tag{5.7}\]</span></span></p>
-<p>En donde <span class="math inline">\(\hat{\boldsymbol{\Sigma}}=\widehat{Var}(\hat{\boldsymbol{\beta}})\)</span> corresponde a la matriz de varianzas y covarianzas estimada de los parámetros del modelo de regresión. Esta expresión cuantifica únicamente la incertidumbre del valor medio estimado debida a los coeficientes. Como explican <span class="citation" data-cites="FoxWeisberg2019">Fox y Weisberg (<a href="references.html#ref-FoxWeisberg2019" role="doc-biblioref">2019</a>)</span>, un intervalo de predicción para una nueva respuesta debe incorporar además la variabilidad residual. En consecuencia, aquellas unidades cuyos valores de las covariables estén asociados a regiones con mayor incertidumbre en la estimación de los coeficientes presentarán varianzas más elevadas. Por tanto, la precisión de las estimaciones depende directamente de la precisión con la que se estimen los coeficientes del modelo de regresión. Continuando con el modelo del ejemplo, recordemos que los coeficientes estimados del modelo se presentan en la <a href="#tbl-coeficientes-modelo" class="quarto-xref">tabla&nbsp;<span>5.4</span></a>.</p>
-<p>El siguiente código computacional utiliza <code>broom::tidy()</code> <span class="citation" data-cites="broom2026">(<a href="references.html#ref-broom2026" role="doc-biblioref">Robinson et&nbsp;al. 2026</a>)</span> para organizar los coeficientes del modelo, sus errores estándar y las pruebas correspondientes en una tabla ordenada.</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>regression_coefficients_table <span class="ot">&lt;-</span> fit_svy <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>()</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>regression_coefficients_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div id="tbl-coeficientes-modelo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-coeficientes-modelo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;5.4: Coeficientes estimados del modelo de regresión con diseño muestral complejo
-</figcaption>
-<div aria-describedby="tbl-coeficientes-modelo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="cell caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">Parámetro</th>
-<th style="text-align: right;">Estimación</th>
-<th style="text-align: right;">EE</th>
-<th style="text-align: right;">Estadístico</th>
-<th style="text-align: right;">Valor p</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">2.3809</td>
-<td style="text-align: right;">0.1938</td>
-<td style="text-align: right;">12.2875</td>
-<td style="text-align: right;">0.0000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">log(Income)</td>
-<td style="text-align: right;">0.5368</td>
-<td style="text-align: right;">0.0326</td>
-<td style="text-align: right;">16.4452</td>
-<td style="text-align: right;">0.0000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Age</td>
-<td style="text-align: right;">-0.0019</td>
-<td style="text-align: right;">0.0010</td>
-<td style="text-align: right;">-1.8023</td>
-<td style="text-align: right;">0.0742</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">SexFemale</td>
-<td style="text-align: right;">0.0029</td>
-<td style="text-align: right;">0.0456</td>
-<td style="text-align: right;">0.0629</td>
-<td style="text-align: right;">0.9500</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">ZoneUrban</td>
-<td style="text-align: right;">0.1499</td>
-<td style="text-align: right;">0.0439</td>
-<td style="text-align: right;">3.4168</td>
-<td style="text-align: right;">0.0009</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">RegionSouth</td>
-<td style="text-align: right;">0.0583</td>
-<td style="text-align: right;">0.0601</td>
-<td style="text-align: right;">0.9700</td>
-<td style="text-align: right;">0.3341</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">RegionCentral</td>
-<td style="text-align: right;">0.2120</td>
-<td style="text-align: right;">0.0588</td>
-<td style="text-align: right;">3.6028</td>
-<td style="text-align: right;">0.0005</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">RegionWest</td>
-<td style="text-align: right;">0.0076</td>
-<td style="text-align: right;">0.0537</td>
-<td style="text-align: right;">0.1417</td>
-<td style="text-align: right;">0.8876</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">RegionEast</td>
-<td style="text-align: right;">0.0054</td>
-<td style="text-align: right;">0.0617</td>
-<td style="text-align: right;">0.0883</td>
-<td style="text-align: right;">0.9298</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<p>A partir de los coeficientes estimados del modelo, la estimación del valor esperado de la variable respuesta para la unidad <span class="math inline">\(k\)</span> puede expresarse como:</p>
+<p>En donde <span class="math inline">\(\hat{\boldsymbol{\Sigma}}=\widehat{Var}(\hat{\boldsymbol{\beta}})\)</span> corresponde a la matriz de varianzas y covarianzas estimada de los parámetros del modelo de regresión. Esta expresión cuantifica únicamente la incertidumbre del valor medio estimado debida a los coeficientes. Como explican <span class="citation" data-cites="FoxWeisberg2019">Fox y Weisberg (<a href="references.html#ref-FoxWeisberg2019" role="doc-biblioref">2019</a>)</span>, un intervalo de predicción para una nueva respuesta debe incorporar además la variabilidad residual. En consecuencia, aquellas unidades cuyos valores de las covariables estén asociados a regiones con mayor incertidumbre en la estimación de los coeficientes presentarán varianzas más elevadas. Por tanto, la precisión de las estimaciones depende directamente de la precisión con la que se estimen los coeficientes del modelo. Las estimaciones, los errores estándar y las pruebas de los coeficientes del modelo se presentan en la <a href="#tbl-inferencia-modelo" class="quarto-xref">tabla&nbsp;<span>5.3</span></a>.</p>
+<p>Con base en esas estimaciones, el valor esperado de la variable respuesta para el hogar <span class="math inline">\(k\)</span> puede expresarse como:</p>
 <p><span class="math display">\[
 \begin{aligned}
 \widehat{E}[\log(Expenditure_k)\mid\mathbf{x}_k]
@@ -1333,35 +1246,35 @@ Tabla&nbsp;5.4: Coeficientes estimados del modelo de regresión con diseño mues
 \]</span></p>
 <p>En la expresión anterior, <span class="math inline">\(I(\cdot)\)</span> representa una variable indicadora y el subíndice <span class="math inline">\(k\)</span> identifica al hogar. La variable respuesta <span class="math inline">\(y_k\)</span> corresponde ahora al logaritmo del gasto per cápita. Las predicciones y sus intervalos se expresan en esa escala; exponenciarlos no produce automáticamente la media aritmética del gasto en su escala original. El siguiente código calcula las predicciones del modelo de regresión para las diez primeras observaciones incluidas en la muestra, utilizando la matriz de diseño y el vector de coeficientes estimados:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>x_obs <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(fit_svy) <span class="sc">%&gt;%</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>hat_beta <span class="ot">&lt;-</span> <span class="fu">coef</span>(fit_svy)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(x_obs <span class="sc">%*%</span> hat_beta)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="sc">%&gt;%</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>x_obs <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(fit_svy) <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>hat_beta <span class="ot">&lt;-</span> <span class="fu">coef</span>(fit_svy)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(x_obs <span class="sc">%*%</span> hat_beta)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="sc">%&gt;%</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 5.482 5.873 4.690 4.862 5.434 6.209 5.580 5.281 5.961 6.061</code></pre>
 </div>
 </div>
 <p>En primer lugar, la instrucción <code>model.matrix(fit_svy)</code> construye la matriz de diseño asociada al modelo ajustado, incorporando automáticamente las variables explicativas. A continuación, <code>coef(fit_svy)</code> extrae explícitamente el vector de coeficientes estimados; posteriormente, se obtienen las estimaciones mediante el producto matricial <code>x_obs %*% hat_beta</code>. Finalmente, la función <code>head(10)</code> permite visualizar las primeras diez estimaciones obtenidas.</p>
-<p>Para calcular la varianza de las estimaciones se requiere la matriz de varianzas y covarianzas de los parámetros del modelo. Los elementos de la diagonal principal corresponden a las varianzas de los parámetros estimados, mientras que los elementos fuera de la diagonal representan las covarianzas entre pares de coeficientes. El siguiente código computacional extrae esta matriz y la organiza con las etiquetas Beta 0 a Beta 8, siguiendo el orden de los coeficientes descrito anteriormente, para presentarla en la <a href="#tbl-vcov-modelo" class="quarto-xref">tabla&nbsp;<span>5.5</span></a>.</p>
+<p>Para calcular la varianza de las estimaciones se requiere la matriz de varianzas y covarianzas de los parámetros del modelo. Los elementos de la diagonal principal corresponden a las varianzas de los parámetros estimados, mientras que los elementos fuera de la diagonal representan las covarianzas entre pares de coeficientes. El siguiente código computacional extrae esta matriz y la organiza con las etiquetas Beta 0 a Beta 8, siguiendo el orden de los coeficientes descrito anteriormente, para presentarla en la <a href="#tbl-vcov-modelo" class="quarto-xref">tabla&nbsp;<span>5.4</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>regression_covariance_table <span class="ot">&lt;-</span> <span class="fu">vcov</span>(fit_svy) <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"Parameter"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Parameter =</span> <span class="fu">paste</span>(<span class="st">"Beta"</span>, <span class="dv">0</span><span class="sc">:</span>(<span class="fu">length</span>(<span class="fu">coef</span>(fit_svy)) <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>regression_covariance_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>regression_covariance_table <span class="ot">&lt;-</span> <span class="fu">vcov</span>(fit_svy) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"Parameter"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Parameter =</span> <span class="fu">paste</span>(<span class="st">"Beta"</span>, <span class="dv">0</span><span class="sc">:</span>(<span class="fu">length</span>(<span class="fu">coef</span>(fit_svy)) <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>regression_covariance_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-vcov-modelo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-vcov-modelo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;5.5: Matriz de varianzas y covarianzas de los coeficientes del modelo
+Tabla&nbsp;5.4: Matriz de varianzas y covarianzas de los coeficientes del modelo
 </figcaption>
 <div aria-describedby="tbl-vcov-modelo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -1510,12 +1423,12 @@ Tabla&nbsp;5.5: Matriz de varianzas y covarianzas de los coeficientes del modelo
 </div>
 <p>En términos computacionales, esto implica combinar el vector de covariables de cada observación con la matriz <span class="math inline">\(\hat{\boldsymbol{\Sigma}}\)</span> para obtener la precisión de las predicciones individuales. El siguiente código calcula la varianza asociada a las predicciones obtenidas a partir del modelo de regresión:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>cov_beta <span class="ot">&lt;-</span> <span class="fu">vcov</span>(fit_svy) <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>mu_variance <span class="ot">&lt;-</span> <span class="fu">diag</span>(x_obs <span class="sc">%*%</span> cov_beta <span class="sc">%*%</span> <span class="fu">t</span>(x_obs))</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>mu_variance <span class="sc">%&gt;%</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cov_beta <span class="ot">&lt;-</span> <span class="fu">vcov</span>(fit_svy) <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>mu_variance <span class="ot">&lt;-</span> <span class="fu">diag</span>(x_obs <span class="sc">%*%</span> cov_beta <span class="sc">%*%</span> <span class="fu">t</span>(x_obs))</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>mu_variance <span class="sc">%&gt;%</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       1        2        3        4        5        6        7        8 
 0.002309 0.003809 0.004191 0.004368 0.002215 0.004216 0.002498 0.003708 
@@ -1531,37 +1444,37 @@ Tabla&nbsp;5.5: Matriz de varianzas y covarianzas de los coeficientes del modelo
 \]</span></p>
 <p>El siguiente código computacional utiliza <code>predict(fit_svy, type = "link")</code> para estimar el valor medio en la escala del predictor lineal, es decir, mediante la combinación lineal de las covariables y los coeficientes del modelo <span class="citation" data-cites="Lumley2026">(<a href="references.html#ref-Lumley2026" role="doc-biblioref">Lumley et&nbsp;al. 2026</a>)</span>. Después obtiene los intervalos de confianza con <code>confint()</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">predict</span>(fit_svy, <span class="at">type =</span> <span class="st">"link"</span>))</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>mu_ci <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">confint</span>(<span class="fu">predict</span>(fit_svy, <span class="at">type =</span> <span class="st">"link"</span>)))</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mu_ci) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"lower_limit"</span>, <span class="st">"upper_limit"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>hat_mu <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">predict</span>(fit_svy, <span class="at">type =</span> <span class="st">"link"</span>))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>mu_ci <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">confint</span>(<span class="fu">predict</span>(fit_svy, <span class="at">type =</span> <span class="st">"link"</span>)))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mu_ci) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"lower_limit"</span>, <span class="st">"upper_limit"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Las estimaciones obtenidas a partir del modelo, junto con sus respectivos intervalos de confianza, pueden visualizarse gráficamente en la <a href="#fig-pred-intervalos" class="quarto-xref">figura&nbsp;<span>5.7</span></a>, obtenida con el siguiente código computacional.</p>
+<p>Las estimaciones obtenidas a partir del modelo, junto con sus respectivos intervalos de confianza, pueden visualizarse gráficamente en la <a href="#fig-prediction-intervals" class="quarto-xref">figura&nbsp;<span>5.7</span></a>, obtenida con el siguiente código computacional.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">cbind</span>(hat_mu, mu_ci)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>pred<span class="sc">$</span>log_income <span class="ot">&lt;-</span> <span class="fu">log</span>(survey_data<span class="sc">$</span>Income)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>pd <span class="ot">&lt;-</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.2</span>)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  pred <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>L),</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> log_income, <span class="at">y =</span> link)</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> lower_limit, <span class="at">ymax =</span> upper_limit),</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> .<span class="dv">1</span>,</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="dv">1</span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">position =</span> pd) <span class="sc">+</span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Logaritmo del ingreso per cápita"</span>,</span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Logaritmo del gasto per cápita estimado"</span></span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">cbind</span>(hat_mu, mu_ci)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>pred<span class="sc">$</span>log_income <span class="ot">&lt;-</span> <span class="fu">log</span>(survey_data<span class="sc">$</span>Income)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>pd <span class="ot">&lt;-</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.2</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  pred <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>L),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> log_income, <span class="at">y =</span> link)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> lower_limit, <span class="at">ymax =</span> upper_limit),</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> .<span class="dv">1</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="dv">1</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">position =</span> pd) <span class="sc">+</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Logaritmo del ingreso per cápita"</span>,</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Logaritmo del gasto per cápita estimado"</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-pred-intervalos" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-prediction-intervals" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-pred-intervalos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-pred-intervalos-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
+<div aria-describedby="fig-prediction-intervals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-prediction-intervals-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pred-intervalos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prediction-intervals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;5.7: Estimaciones del logaritmo del gasto per cápita e intervalos de confianza para los primeros 100 hogares de la muestra
 </figcaption>
 </figure>
@@ -1627,22 +1540,22 @@ t_{\left(1-\frac{\alpha}{2},df\right)}
 \tag{5.8}\]</span></span></p>
 <p>En el siguiente ejemplo se estima la media condicional del logaritmo del gasto per cápita para un nuevo perfil de hogar y su intervalo de confianza. El perfil corresponde a un hogar cuyo jefe tiene 45 años (<code>Age</code>), es de sexo masculino (<code>Male</code>), reside en zona urbana (<code>Urban</code>) de la región Norte (<code>North</code>) y tiene un ingreso per cápita (<code>Income</code>) igual a 1600. Este perfil puede definirse en <code>R</code> mediante el siguiente conjunto de datos:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Income =</span> <span class="dv">1600</span>,</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Age =</span> <span class="dv">45</span>,</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sex =</span> <span class="st">"Male"</span>,</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Zone =</span> <span class="st">"Urban"</span>,</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Region =</span> <span class="st">"North"</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>new_prediction <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_svy, <span class="at">newdata =</span> new_data, <span class="at">type =</span> <span class="st">"link"</span>)</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>new_prediction</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Income =</span> <span class="dv">1600</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Age =</span> <span class="dv">45</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sex =</span> <span class="st">"Male"</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Zone =</span> <span class="st">"Urban"</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Region =</span> <span class="st">"North"</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>new_prediction <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_svy, <span class="at">newdata =</span> new_data, <span class="at">type =</span> <span class="st">"link"</span>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>new_prediction</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  link   SE
 1 6.41 0.05</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>new_prediction_interval <span class="ot">&lt;-</span> <span class="fu">confint</span>(new_prediction)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>new_prediction_interval</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>new_prediction_interval <span class="ot">&lt;-</span> <span class="fu">confint</span>(new_prediction)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>new_prediction_interval</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  2.5 % 97.5 %
 1 6.305  6.507</code></pre>
@@ -1690,9 +1603,6 @@ Naciones Unidas. 2026. <em>Handbook of Surveys on Households and Individuals Fou
 </div>
 <div id="ref-pfeffermann2011modelling" class="csl-entry" role="listitem">
 Pfeffermann, Danny. 2011. <span>«Modelling of complex survey data: <span>W</span>hy model? <span>W</span>hy is it a problem? <span>H</span>ow can we approach it?»</span> <em>Survey Methodology</em> 37 (2): 115-36.
-</div>
-<div id="ref-broom2026" class="csl-entry" role="listitem">
-Robinson, David, Alex Hayes, Simon Couch, y Emil Hvitfeldt. 2026. <em>broom: Convert Statistical Objects into Tidy Tibbles</em>. <a href="https://doi.org/10.32614/CRAN.package.broom">https://doi.org/10.32614/CRAN.package.broom</a>.
 </div>
 <div id="ref-shah1977inference" class="csl-entry" role="listitem">
 Shah, Babubhai V., Maurice M. Holt, y Ralph F. Folsom. 1977. <span>«Inference about regression models from sample survey data»</span>. <em>Bulletin of the International Statistical Institute</em> 41 (3): 43-57.

@@ -442,8 +442,8 @@ y_{k}\log(\theta_{k})
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> household_design</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>En la especificación del modelo, el argumento <code>formula = poor ~ Age + Sex + Employment + household_size</code> define la relación entre la variable respuesta <code>poor</code> y las covariables incluidas en el predictor lineal (<code>Age</code>, <code>Sex</code>, <code>Employment</code> y <code>household_size</code>). Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento <code>design = household_design</code> incorpora la información del diseño muestral para los hogares seleccionados. Las categorías de referencia son jefatura masculina y jefe ocupado. La muestra de análisis contiene 696 hogares, de los cuales 225 son pobres; estos conteos corresponden a observaciones muestrales, sin ponderar. El objeto resultante, <code>logit_model</code>, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo.</p>
-<p>EE indica el error estándar y DE la desviación estándar. LI y LS identifican, respectivamente, los límites inferior y superior del intervalo de confianza; el porcentaje que acompaña estas siglas indica su nivel de confianza. El siguiente código computacional organiza los coeficientes del modelo logístico, sus medidas de precisión y sus exponenciales para presentarlos en la tabla.</p>
+<p>En la especificación del modelo, el argumento <code>formula = poor ~ Age + Sex + Employment + household_size</code> define la relación entre la variable respuesta <code>poor</code> y las covariables incluidas en el predictor lineal (<code>Age</code>, <code>Sex</code>, <code>Employment</code> y <code>household_size</code>). Para las variables categóricas, la función genera automáticamente las variables indicadoras correspondientes y estima sus efectos con respecto a una categoría de referencia. Por su parte, el argumento <code>design = household_design</code> incorpora la información del diseño muestral para los hogares seleccionados. Las categorías de referencia son jefatura masculina y jefe ocupado. La muestra de análisis contiene 696 hogares, de los cuales 225 son pobres; estos conteos corresponden a observaciones muestrales, sin ponderar.</p>
+<p>El objeto resultante, <code>logit_model</code>, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo. El siguiente código computacional organiza los coeficientes del modelo logístico, sus medidas de precisión y sus exponenciales para presentarlos en la tabla.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>logistic_intervals_table <span class="ot">&lt;-</span> logit_results <span class="sc">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">OR =</span> <span class="fu">exp</span>(estimate)) <span class="sc">%&gt;%</span></span>
@@ -552,8 +552,7 @@ Tabla&nbsp;6.1: Intervalos de confianza al 95% para los parámetros del modelo l
 </div>
 <p>Los resultados de la <a href="#tbl-ic-logistica" class="quarto-xref">tabla&nbsp;<span>6.1</span></a> muestran las estimaciones de los coeficientes de regresión, sus exponenciales, errores estándar, intervalos de confianza y valores-<em>p</em>. Los errores estándar y los límites de confianza se mantienen en la escala de los coeficientes <span class="math inline">\(\beta\)</span>. En la regresión logística, <span class="math inline">\(\exp(\beta_j)\)</span> representa el <em>odds ratio</em> asociado a una covariable, manteniendo constantes las demás variables.</p>
 <p>Manteniendo constantes las demás variables, el <em>odds ratio</em> de pobreza asociado a cada integrante adicional del hogar es 1.35, con un intervalo de confianza del 95 % entre 1.18 y 1.54. Al ser mayor que uno, indica mayores <em>odds</em> de pobreza asociadas con un mayor tamaño del hogar. Asimismo, el <em>odds ratio</em> de los hogares con jefe desocupado respecto de aquellos con jefe ocupado es 11.45, con un intervalo de confianza del 95 % entre 2.86 y 45.89. Esta última estimación presenta una incertidumbre considerable, pues solo se observan 16 jefes desocupados. Los odds ratios superiores a uno indican mayores odds de pobreza respecto de la comparación correspondiente, pero no expresan cuántas veces mayor es esa probabilidad. Estas asociaciones no establecen efectos causales.</p>
-<p>La <a href="#fig-logistica-base" class="quarto-xref">figura&nbsp;<span>6.1</span></a> presenta la distribución de los estimadores de los coeficientes de regresión. Se observa que los intervalos de confianza asociados a la desocupación del jefe y al tamaño del hogar no incluyen el valor cero, lo que proporciona evidencia de una asociación estadísticamente significativa. En contraste, la edad, la jefatura femenina y la inactividad del jefe presentan valores-<em>p</em> de 0.360, 0.070 y 0.606, respectivamente, por lo que no se encuentra evidencia suficiente de asociación al nivel del 5 % una vez controladas las demás covariables incluidas en el modelo.</p>
-<p>El siguiente código computacional genera la <a href="#fig-logistica-base" class="quarto-xref">figura&nbsp;<span>6.1</span></a> mediante <code>plot_summs()</code> del paquete <code>jtools</code> <span class="citation" data-cites="jtools2026">(<a href="references.html#ref-jtools2026" role="doc-biblioref">Long 2026</a>)</span> y las geometrías horizontales de <code>ggstance</code> <span class="citation" data-cites="ggstance2024">(<a href="references.html#ref-ggstance2024" role="doc-biblioref">Henry et&nbsp;al. 2024</a>)</span>, para visualizar los coeficientes y sus intervalos.</p>
+<p>La <a href="#fig-logistic-base" class="quarto-xref">figura&nbsp;<span>6.1</span></a> presenta la distribución de los estimadores de los coeficientes de regresión. Se observa que los intervalos de confianza asociados a la desocupación del jefe y al tamaño del hogar no incluyen el valor cero, lo que proporciona evidencia de una asociación estadísticamente significativa. En contraste, la edad, la jefatura femenina y la inactividad del jefe presentan valores-<em>p</em> de 0.360, 0.070 y 0.606, respectivamente, por lo que no se encuentra evidencia suficiente de asociación al nivel del 5 % una vez controladas las demás covariables incluidas en el modelo. El siguiente código computacional genera el gráfico mediante <code>plot_summs()</code> del paquete <code>jtools</code> <span class="citation" data-cites="jtools2026">(<a href="references.html#ref-jtools2026" role="doc-biblioref">Long 2026</a>)</span> y las geometrías horizontales de <code>ggstance</code> <span class="citation" data-cites="ggstance2024">(<a href="references.html#ref-ggstance2024" role="doc-biblioref">Henry et&nbsp;al. 2024</a>)</span>, para visualizar los coeficientes y sus intervalos.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstance)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_summs</span>(</span>
@@ -562,12 +561,12 @@ Tabla&nbsp;6.1: Intervalos de confianza al 95% para los parámetros del modelo l
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.distributions =</span> <span class="cn">TRUE</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-logistica-base" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-logistic-base" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-logistica-base-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-logistica-base-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+<div aria-describedby="fig-logistic-base-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-logistic-base-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-logistica-base-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-logistic-base-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;6.1: Distribución de los parámetros del modelo logístico base
 </figcaption>
 </figure>
@@ -700,7 +699,7 @@ Tabla&nbsp;6.2: Coeficientes del modelo logístico con interacciones
 </div>
 <p>En ambas tablas, la exponencial del intercepto corresponde a las <em>odds</em> del perfil de referencia, no a un <em>odds ratio</em>; en la tabla con interacción, la exponencial de <code>SexFemale:household_size</code> representa la razón entre los <em>odds ratios</em> del tamaño del hogar de ambos tipos de jefatura.</p>
 <p>Al incorporar la interacción entre sexo y tamaño del hogar, se permite estimar una pendiente del tamaño del hogar diferente para cada tipo de jefatura. Para los hogares con jefe hombre, el <em>odds ratio</em> asociado a un integrante adicional es 1.39; para los hogares con jefa mujer, se obtiene combinando el coeficiente principal y el de interacción, y es igual a 1.27. El coeficiente de interacción tiene un valor-<em>p</em> de 0.474. Estos resultados no aportan evidencia suficiente de diferencias entre las pendientes al nivel del 5 %; el efecto principal del sexo, por su parte, corresponde a un tamaño del hogar igual a cero, fuera del rango observado, por lo que no debe interpretarse como una diferencia general entre jefaturas.</p>
-<p>La <a href="#fig-comparacion-logistica" class="quarto-xref">figura&nbsp;<span>6.2</span></a>, obtenida con el siguiente código computacional, presenta una comparación de las estimaciones de los coeficientes y sus respectivos intervalos de confianza para los modelos con y sin interacción. Al incorporar el término de interacción, cambia la interpretación de los efectos principales del sexo y del tamaño del hogar, que pasan a ser condicionales a los valores de referencia de la otra covariable. Los intervalos de confianza permiten valorar la incertidumbre asociada a estas estimaciones y al coeficiente de interacción.</p>
+<p>La <a href="#fig-logistic-comparison" class="quarto-xref">figura&nbsp;<span>6.2</span></a>, obtenida con el siguiente código computacional, presenta una comparación de las estimaciones de los coeficientes y sus respectivos intervalos de confianza para los modelos con y sin interacción. Al incorporar el término de interacción, cambia la interpretación de los efectos principales del sexo y del tamaño del hogar, que pasan a ser condicionales a los valores de referencia de la otra covariable. Los intervalos de confianza permiten valorar la incertidumbre asociada a estas estimaciones y al coeficiente de interacción.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_summs</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  interaction_logit_model,</span>
@@ -709,12 +708,12 @@ Tabla&nbsp;6.2: Coeficientes del modelo logístico con interacciones
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot.distributions =</span> <span class="cn">TRUE</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-comparacion-logistica" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-logistic-comparison" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-comparacion-logistica-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-comparacion-logistica-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
+<div aria-describedby="fig-logistic-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-logistic-comparison-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-comparacion-logistica-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-logistic-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;6.2: Comparación de los parámetros del modelo logístico con y sin interacciones
 </figcaption>
 </figure>
@@ -723,7 +722,7 @@ Figura&nbsp;6.2: Comparación de los parámetros del modelo logístico con y sin
 </div>
 <p>Los coeficientes del modelo permiten identificar la dirección de las asociaciones entre las covariables y la condición de pobreza, pero no indican directamente la probabilidad de pobreza de un hogar. Para facilitar la interpretación, se estiman probabilidades predichas para perfiles específicos. En el siguiente ejemplo se comparan hogares con jefatura masculina o femenina, manteniendo iguales la edad del jefe, su situación laboral y el tamaño del hogar.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>perfiles <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>prediction_profiles <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Age =</span> <span class="fu">c</span>(<span class="dv">40</span>, <span class="dv">40</span>),</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sex =</span> <span class="fu">factor</span>(</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>),</span>
@@ -736,31 +735,31 @@ Figura&nbsp;6.2: Comparación de los parámetros del modelo logístico con y sin
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">household_size =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>)</span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>predicciones <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  logit_model,</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> perfiles,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> prediction_profiles,</span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"response"</span>,</span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">se.fit =</span> <span class="cn">TRUE</span></span>
 <span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>probabilidad <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(predicciones)</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>error_estandar <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(predicciones))</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>predicted_probability <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(predictions)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>standard_error <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(predictions))</span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>tabla_predicciones <span class="ot">&lt;-</span> perfiles <span class="sc">%&gt;%</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>prediction_table <span class="ot">&lt;-</span> prediction_profiles <span class="sc">%&gt;%</span></span>
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">probabilidad =</span> probabilidad,</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">error_estandar =</span> error_estandar,</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">li_95 =</span> <span class="fu">pmax</span>(<span class="dv">0</span>, probabilidad <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> error_estandar),</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">ls_95 =</span> <span class="fu">pmin</span>(<span class="dv">1</span>, probabilidad <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> error_estandar)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">predicted_probability =</span> predicted_probability,</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">standard_error =</span> standard_error,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower_95 =</span> <span class="fu">pmax</span>(<span class="dv">0</span>, predicted_probability <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> standard_error),</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper_95 =</span> <span class="fu">pmin</span>(<span class="dv">1</span>, predicted_probability <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> standard_error)</span>
 <span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
 <span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    Sex,</span>
 <span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    Age,</span>
 <span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    Employment,</span>
 <span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    household_size,</span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    probabilidad,</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    li_95,</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    ls_95</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    predicted_probability,</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    lower_95,</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    upper_95</span>
 <span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Los perfiles se fijan en 40 años, cuatro integrantes y jefe ocupado; cuatro integrantes corresponde a la mediana del tamaño del hogar entre los jefes seleccionados. Los niveles de <code>Sex</code> y <code>Employment</code> se conservan tal como fueron definidos para el modelo, de modo que las categorías de los perfiles coincidan con las usadas durante la estimación. A partir de las probabilidades y sus errores estándar se calculan límites aproximados del 95 % en la escala de probabilidad, restringidos al intervalo de cero a uno.</p>
@@ -1069,7 +1068,7 @@ Tabla&nbsp;6.5: Coeficientes estimados del modelo de regresión multinomial
 </div>
 </div>
 <p>La columna RRR (<em>relative risk ratio</em>), se calcula como <span class="math inline">\(\exp(\beta)\)</span> e indica el factor de cambio en la razón entre la probabilidad de la categoría indicada y la de referencia, manteniendo constantes las demás covariables. En la tabla, el RRR de <code>SexMale</code> para la categoría <code>Employed</code> es 0.56. Manteniendo constantes la edad y la zona, la razón entre la probabilidad de estar empleado y la de estar desempleado para los hombres equivale a ese valor multiplicado por la razón correspondiente para las mujeres. Esto representa una razón relativa aproximadamente 43.9 % menor.</p>
-<p>De acuerdo con <span class="citation" data-cites="gtools2025">Warnes et&nbsp;al. (<a href="references.html#ref-gtools2025" role="doc-biblioref">2023</a>)</span> y <span class="citation" data-cites="dotwhisker2025">Solt y Hu (<a href="references.html#ref-dotwhisker2025" role="doc-biblioref">2025</a>)</span>, la <a href="#fig-multinomial-ic" class="quarto-xref">figura&nbsp;<span>6.3</span></a>, obtenida con el siguiente código computacional, muestra los intervalos de confianza de los coeficientes estimados para cada ecuación del modelo multinomial. Se usa <code>gtools::stars.pval()</code> para codificar la significación estadística, y la visualización se construye con <code>dotwhisker::dwplot()</code>, lo que permite comparar coeficientes e intervalos en una escala común. Las covariables cuyos intervalos no incluyen el valor cero presentan evidencia de asociación estadística significativa con la variable respuesta, mientras que aquellos cuyos intervalos contienen el cero no muestran efectos significativos al nivel de confianza considerado.</p>
+<p>De acuerdo con <span class="citation" data-cites="gtools2025">Warnes et&nbsp;al. (<a href="references.html#ref-gtools2025" role="doc-biblioref">2023</a>)</span> y <span class="citation" data-cites="dotwhisker2025">Solt y Hu (<a href="references.html#ref-dotwhisker2025" role="doc-biblioref">2025</a>)</span>, la <a href="#fig-multinomial-ci" class="quarto-xref">figura&nbsp;<span>6.3</span></a>, obtenida con el siguiente código computacional, muestra los intervalos de confianza de los coeficientes estimados para cada ecuación del modelo multinomial. Se usa <code>gtools::stars.pval()</code> para codificar la significación estadística, y la visualización se construye con <code>dotwhisker::dwplot()</code>, lo que permite comparar coeficientes e intervalos en una escala común. Las covariables cuyos intervalos no incluyen el valor cero presentan evidencia de asociación estadística significativa con la variable respuesta, mientras que aquellos cuyos intervalos contienen el cero no muestran efectos significativos al nivel de confianza considerado.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>multinomial_results <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -1088,12 +1087,12 @@ Tabla&nbsp;6.5: Coeficientes estimados del modelo de regresión multinomial
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-multinomial-ic" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-multinomial-ci" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-multinomial-ic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-multinomial-ic-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
+<div aria-describedby="fig-multinomial-ci-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-multinomial-ci-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multinomial-ic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multinomial-ci-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;6.3: Intervalos de confianza para los coeficientes del modelo multinomial
 </figcaption>
 </figure>

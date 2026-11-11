@@ -2651,7 +2651,7 @@ Tabla&nbsp;4.32: Diferencia rural menos urbana de las razones de dependencia dem
 <section id="histogramas" class="level3" data-number="4.5.1">
 <h3 data-number="4.5.1" class="anchored" data-anchor-id="histogramas"><span class="header-section-number">4.5.1</span> Histogramas</h3>
 <p>Un histograma es una representación gráfica de la distribución de una variable numérica continua, construida a partir de rectángulos cuya altura es proporcional a la frecuencia de observaciones dentro de determinados intervalos. En el contexto de las encuestas de hogares, los histogramas ponderados permiten aproximar la distribución de la variable de interés en la población, incorporando los factores de expansión asociados al diseño muestral.</p>
-<p>A continuación, se presenta el histograma ponderado de la variable <code>Income</code>, construido incorporando los pesos muestrales (<code>wk</code>) con el fin de representar la distribución estimada del ingreso en la población. Los resultados obtenidos se muestran en la <a href="#fig-hist-ingreso-ponde" class="quarto-xref">figura&nbsp;<span>4.2</span></a>:</p>
+<p>A continuación, se presenta el histograma ponderado de la variable <code>Income</code>, construido incorporando los pesos muestrales (<code>wk</code>) con el fin de representar la distribución estimada del ingreso en la población. Los resultados obtenidos se muestran en la <a href="#fig-hist-income-weighted" class="quarto-xref">figura&nbsp;<span>4.2</span></a>:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>weighted_income_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
@@ -2666,12 +2666,12 @@ Tabla&nbsp;4.32: Diferencia rural menos urbana de las razones de dependencia dem
 <span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>weighted_income_hist</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-hist-ingreso-ponde" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-hist-income-weighted" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-hist-ingreso-ponde-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-hist-ingreso-ponde-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
+<div aria-describedby="fig-hist-income-weighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-hist-income-weighted-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-ingreso-ponde-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-income-weighted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.2: Histograma ponderado del ingreso per cápita
 </figcaption>
 </figure>
@@ -2679,7 +2679,7 @@ Figura&nbsp;4.2: Histograma ponderado del ingreso per cápita
 </div>
 </div>
 <p>En este código, se inicia la construcción del gráfico utilizando la base de datos <code>survey_data</code>. Dentro de <code>aes()</code>, el argumento <code>x = Income</code> indica que la variable representada en el eje horizontal corresponde al ingreso, mientras que <code>weight = wk</code> incorpora los pesos muestrales para construir un histograma ponderado que refleje la distribución estimada en la población. La función <code>geom_histogram()</code> genera el histograma y, mediante <code>aes(y = after_stat(density))</code>, la altura de las barras se expresa en términos de densidad en lugar de frecuencias absolutas. La opción <code>bins = 30</code> fija el número de intervalos. <code>labs()</code> identifica las unidades del eje horizontal y la densidad del eje vertical; el área de las barras, y no su altura aislada, representa proporciones. <code>ggtitle()</code> añade el título.</p>
-<p>Para comparar la distribución del ingreso entre zonas urbanas y rurales, se presenta un histograma ponderado en paneles separados y con escalas comunes, como se muestra en la <a href="#fig-hist-zona" class="quarto-xref">figura&nbsp;<span>4.3</span></a>, obtenida con el siguiente código computacional.</p>
+<p>Para comparar la distribución del ingreso entre zonas urbanas y rurales, se presenta un histograma ponderado en paneles separados y con escalas comunes, como se muestra en la <a href="#fig-hist-zone" class="quarto-xref">figura&nbsp;<span>4.3</span></a>, obtenida con el siguiente código computacional.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>zone_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Urban =</span> <span class="st">"#48C9B0"</span>, <span class="at">Rural =</span> <span class="st">"#117864"</span>)</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -2705,12 +2705,12 @@ Figura&nbsp;4.2: Histograma ponderado del ingreso per cápita
 <span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a>weighted_zone_hist</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-hist-zona" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-hist-zone" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-hist-zona-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-hist-zona-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
+<div aria-describedby="fig-hist-zone-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-hist-zone-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-zona-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-zone-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.3: Histograma ponderado del ingreso por zona geográfica
 </figcaption>
 </figure>
@@ -2718,7 +2718,7 @@ Figura&nbsp;4.3: Histograma ponderado del ingreso por zona geográfica
 </div>
 </div>
 <p>Cada panel muestra la distribución ponderada del ingreso per cápita para una zona. <code>facet_wrap(~ Zone, ncol = 1)</code> separa las zonas en filas y conserva escalas comunes, de modo que las alturas y los rangos del eje horizontal se puedan comparar directamente. Las etiquetas de los paneles se presentan en español. Se utilizan los mismos 30 intervalos en ambos paneles; el eje vertical muestra densidades, por lo que el área de las barras representa proporciones.</p>
-<p>Además, es posible superponer curvas de densidad suavizadas mediante la función <code>geom_density()</code>, lo que permite representar de manera continua la forma de la distribución de la variable analizada. Este tipo de gráfico facilita la identificación de características como la asimetría, la concentración de los valores y la posible presencia de múltiples modas. En la <a href="#fig-densidades" class="quarto-xref">figura&nbsp;<span>4.4</span></a>, obtenida con el siguiente código computacional, se presentan los histogramas del ingreso y el gasto junto con sus respectivas curvas de densidad estimadas. Para disponer ambos gráficos uno al lado del otro, se utiliza el operador <code>|</code> del paquete <code>patchwork</code>, que permite combinar distintas visualizaciones en una misma composición gráfica.</p>
+<p>Además, es posible superponer curvas de densidad suavizadas mediante la función <code>geom_density()</code>, lo que permite representar de manera continua la forma de la distribución de la variable analizada. Este tipo de gráfico facilita la identificación de características como la asimetría, la concentración de los valores y la posible presencia de múltiples modas. En la <a href="#fig-densities" class="quarto-xref">figura&nbsp;<span>4.4</span></a>, obtenida con el siguiente código computacional, se presentan los histogramas del ingreso y el gasto junto con sus respectivas curvas de densidad estimadas. Para disponer ambos gráficos uno al lado del otro, se utiliza el operador <code>|</code> del paquete <code>patchwork</code>, que permite combinar distintas visualizaciones en una misma composición gráfica.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>weighted_expenditure_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  survey_data,</span>
@@ -2733,12 +2733,12 @@ Figura&nbsp;4.3: Histograma ponderado del ingreso por zona geográfica
 <span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>(weighted_income_hist <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>)) <span class="sc">|</span></span>
 <span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>  (weighted_expenditure_hist <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"green"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-densidades" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-densities" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-densidades-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-densidades-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+<div aria-describedby="fig-densities-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-densities-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-densidades-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-densities-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.4: Histogramas ponderados y densidades del ingreso y gasto per cápita
 </figcaption>
 </figure>
@@ -2749,7 +2749,7 @@ Figura&nbsp;4.4: Histogramas ponderados y densidades del ingreso y gasto per cá
 <section id="diagramas-de-caja-boxplots" class="level3" data-number="4.5.2">
 <h3 data-number="4.5.2" class="anchored" data-anchor-id="diagramas-de-caja-boxplots"><span class="header-section-number">4.5.2</span> Diagramas de caja (<em>boxplots</em>)</h3>
 <p>Introducidos por <span class="citation" data-cites="Tukey1977EDA">Tukey (<a href="references.html#ref-Tukey1977EDA" role="doc-biblioref">1977</a>)</span>, los diagramas de caja (<em>boxplots</em>) permiten identificar valores atípicos y evaluar la dispersión de la distribución. Son una representación gráfica que resume una variable mediante estadísticas basadas en cuartiles, permitiendo identificar la mediana, la dispersión de los datos y la presencia de valores atípicos. En el contexto de encuestas de hogares, este tipo de gráfico resulta útil para comparar distribuciones entre distintos grupos poblacionales de manera compacta y visualmente intuitiva.</p>
-<p>Los cuartiles y la mediana corresponden a los conceptos de la <a href="#sec-estimacion-de-percentiles" class="quarto-xref"><span>Sección 4.2.2</span></a>. Las cajas resumen la dispersión y no son intervalos de confianza de la mediana. Para incorporar las ponderaciones y el diseño muestral, se utiliza <code>svyboxplot()</code> del paquete <code>survey</code>, que calcula y representa diagramas de caja directamente a partir del objeto de diseño. Como el ingreso y el gasto presentan asimetría y valores altos, se muestran en escala logarítmica: esta comprime la cola superior y facilita comparar los valores centrales entre zonas. En esta escala, las distancias representan cambios multiplicativos. La transformación requiere valores positivos, condición que cumplen ambas variables en esta base. Las fórmulas especifican la variable graficada a la izquierda de <code>~</code> y el grupo de comparación a la derecha. El argumento <code>design</code> especifica el diseño muestral, <code>horizontal = TRUE</code> dispone las cajas horizontalmente y <code>col</code> asigna un color a cada zona. <code>par(mfrow = c(1, 2))</code> organiza los dos gráficos en una fila, y <code>par(old_par)</code> restaura la configuración gráfica anterior. El siguiente código computacional genera la <a href="#fig-boxplot-zona-sexo" class="quarto-xref">figura&nbsp;<span>4.5</span></a>.</p>
+<p>Los cuartiles y la mediana corresponden a los conceptos de la <a href="#sec-estimacion-de-percentiles" class="quarto-xref"><span>Sección 4.2.2</span></a>. Las cajas resumen la dispersión y no son intervalos de confianza de la mediana. Para incorporar las ponderaciones y el diseño muestral, se utiliza <code>svyboxplot()</code> del paquete <code>survey</code>, que calcula y representa diagramas de caja directamente a partir del objeto de diseño. Como el ingreso y el gasto presentan asimetría y valores altos, se muestran en escala logarítmica: esta comprime la cola superior y facilita comparar los valores centrales entre zonas. En esta escala, las distancias representan cambios multiplicativos. La transformación requiere valores positivos, condición que cumplen ambas variables en esta base. Las fórmulas especifican la variable graficada a la izquierda de <code>~</code> y el grupo de comparación a la derecha. El argumento <code>design</code> especifica el diseño muestral, <code>horizontal = TRUE</code> dispone las cajas horizontalmente y <code>col</code> asigna un color a cada zona. <code>par(mfrow = c(1, 2))</code> organiza los dos gráficos en una fila, y <code>par(old_par)</code> restaura la configuración gráfica anterior. El siguiente código computacional genera la <a href="#fig-boxplot-zone-sex" class="quarto-xref">figura&nbsp;<span>4.5</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>survey_design_log <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -2782,23 +2782,23 @@ Figura&nbsp;4.4: Histogramas ponderados y densidades del ingreso y gasto per cá
 <span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(old_par)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-boxplot-zona-sexo" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-boxplot-zone-sex" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-boxplot-zona-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-boxplot-zona-sexo-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+<div aria-describedby="fig-boxplot-zone-sex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-boxplot-zone-sex-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-boxplot-zona-sexo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-boxplot-zone-sex-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.5: Cuartiles ponderados del logaritmo del ingreso y el gasto per cápita por zona
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>La <a href="#fig-boxplot-zona-sexo" class="quarto-xref">figura&nbsp;<span>4.5</span></a> compara las distribuciones del ingreso y el gasto per cápita en escala logarítmica entre las zonas urbana y rural. Los bigotes se extienden hasta los valores observados más extremos que quedan dentro de 1,5 rangos intercuartílicos; con el valor predeterminado de <code>all.outliers = FALSE</code>, solo se muestran como puntos los extremos más alejados. Las diferencias entre medianas y cajas se interpretan en escala logarítmica y reflejan cambios relativos, no diferencias absolutas en dólares.</p>
+<p>La <a href="#fig-boxplot-zone-sex" class="quarto-xref">figura&nbsp;<span>4.5</span></a> compara las distribuciones del ingreso y el gasto per cápita en escala logarítmica entre las zonas urbana y rural. Los bigotes se extienden hasta los valores observados más extremos que quedan dentro de 1,5 rangos intercuartílicos; con el valor predeterminado de <code>all.outliers = FALSE</code>, solo se muestran como puntos los extremos más alejados. Las diferencias entre medianas y cajas se interpretan en escala logarítmica y reflejan cambios relativos, no diferencias absolutas en dólares.</p>
 </section>
 <section id="diagramas-de-dispersion" class="level3" data-number="4.5.3">
 <h3 data-number="4.5.3" class="anchored" data-anchor-id="diagramas-de-dispersion"><span class="header-section-number">4.5.3</span> Diagramas de dispersión</h3>
-<p>Los diagramas de dispersión permiten examinar la relación entre dos variables numéricas. En esta sección se compara el ingreso con el gasto mensual per cápita. Ambas variables presentan distribuciones asimétricas y valores altos, por lo que se representan en escala logarítmica: esta comprime los valores extremos y facilita apreciar la concentración y los patrones de asociación. Como las dos variables son positivas en esta base, es posible aplicar esta transformación; en esa escala, las distancias expresan cambios multiplicativos y no diferencias absolutas. En el primer gráfico, el tamaño de cada punto representa el peso muestral de la observación, lo que ayuda a explorar cuánta población representa. Esta codificación visual no sustituye el ajuste de un modelo ni incorpora por sí misma la incertidumbre del diseño. El siguiente código computacional construye la <a href="#fig-scatter-basico" class="quarto-xref">figura&nbsp;<span>4.6</span></a>.</p>
+<p>Los diagramas de dispersión permiten examinar la relación entre dos variables numéricas. En esta sección se compara el ingreso con el gasto mensual per cápita. Ambas variables presentan distribuciones asimétricas y valores altos, por lo que se representan en escala logarítmica: esta comprime los valores extremos y facilita apreciar la concentración y los patrones de asociación. Como las dos variables son positivas en esta base, es posible aplicar esta transformación; en esa escala, las distancias expresan cambios multiplicativos y no diferencias absolutas. En el primer gráfico, el tamaño de cada punto representa el peso muestral de la observación, lo que ayuda a explorar cuánta población representa. Esta codificación visual no sustituye el ajuste de un modelo ni incorpora por sí misma la incertidumbre del diseño. El siguiente código computacional construye la <a href="#fig-scatter-basic" class="quarto-xref">figura&nbsp;<span>4.6</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>weighted_basic_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
@@ -2814,12 +2814,12 @@ Figura&nbsp;4.5: Cuartiles ponderados del logaritmo del ingreso y el gasto per c
 <span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>weighted_basic_scatter</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-scatter-basico" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-scatter-basic" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-scatter-basico-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-scatter-basico-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
+<div aria-describedby="fig-scatter-basic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-scatter-basic-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatter-basico-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatter-basic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.6: Diagrama de dispersión entre ingreso y gasto per cápita
 </figcaption>
 </figure>
@@ -2827,7 +2827,7 @@ Figura&nbsp;4.6: Diagrama de dispersión entre ingreso y gasto per cápita
 </div>
 </div>
 <p>La transparencia, fijada en 0,3 para todas las observaciones, facilita la lectura de las zonas con mayor concentración de puntos.</p>
-<p>Adicionalmente, es posible incorporar variables de agrupamiento en los diagramas de dispersión mediante los argumentos <code>shape</code> y <code>color</code>, los cuales permiten diferenciar visualmente las observaciones según categorías específicas de la población. Esto facilita la identificación de patrones diferenciados entre grupos y mejora la interpretación de la relación entre las variables analizadas. Un ejemplo de este tipo de representación se presenta en la <a href="#fig-scatter-zona" class="quarto-xref">figura&nbsp;<span>4.7</span></a>, obtenida con el siguiente código computacional.</p>
+<p>Adicionalmente, es posible incorporar variables de agrupamiento en los diagramas de dispersión mediante los argumentos <code>shape</code> y <code>color</code>, los cuales permiten diferenciar visualmente las observaciones según categorías específicas de la población. Esto facilita la identificación de patrones diferenciados entre grupos y mejora la interpretación de la relación entre las variables analizadas. Un ejemplo de este tipo de representación se presenta en la <a href="#fig-scatter-zone" class="quarto-xref">figura&nbsp;<span>4.7</span></a>, obtenida con el siguiente código computacional.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>weighted_zone_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
@@ -2845,19 +2845,19 @@ Figura&nbsp;4.6: Diagrama de dispersión entre ingreso y gasto per cápita
 <span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a>weighted_zone_scatter</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-scatter-zona" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<div id="fig-scatter-zone" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-scatter-zona-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../figures/fig-scatter-zona-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
+<div aria-describedby="fig-scatter-zone-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/fig-scatter-zone-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatter-zona-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scatter-zone-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.7: Diagrama de dispersión entre ingreso y gasto por zona geográfica
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>La <a href="#fig-scatter-zona" class="quarto-xref">figura&nbsp;<span>4.7</span></a> mantiene las mismas escalas logarítmicas del gráfico anterior y diferencia las zonas por color y forma. Así se pueden comparar los patrones entre zonas sin que los valores altos compriman la mayor parte de los puntos. La escala logarítmica cambia la lectura de los ejes: por ejemplo, un mismo tramo visual corresponde a una razón constante entre valores, no a una diferencia fija en dólares.</p>
+<p>La <a href="#fig-scatter-zone" class="quarto-xref">figura&nbsp;<span>4.7</span></a> mantiene las mismas escalas logarítmicas del gráfico anterior y diferencia las zonas por color y forma. Así se pueden comparar los patrones entre zonas sin que los valores altos compriman la mayor parte de los puntos. La escala logarítmica cambia la lectura de los ejes: por ejemplo, un mismo tramo visual corresponde a una razón constante entre valores, no a una diferencia fija en dólares.</p>
 <p>Las distribuciones y la correlación permiten reconocer heterogeneidad y patrones de asociación. Junto con las herramientas para variables categóricas, preparan el estudio de modelos de regresión del capítulo siguiente, donde se analizarán varias variables simultáneamente incorporando el diseño muestral.</p>
 
 

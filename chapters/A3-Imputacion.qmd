@@ -1,5 +1,5 @@
 
-```{r setup-imputacion, include = FALSE}
+```{r setup-imputation, include = FALSE}
 knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
@@ -33,7 +33,7 @@ Para describir la ausencia de respuesta, sea $\boldsymbol{X}_{n \times p} = x_{i
 
 La @tbl-ap3-patron-no-monotono ilustra datos faltantes en posiciones dispersas. Cada fila representa un caso y cada columna $X_j$ una variable. **O** indica un dato observado y **?** un dato faltante. El siguiente código computacional construye el esquema de datos observados y faltantes presentado en la tabla.
 
-```{r cod-patron-no-monotono}
+```{r code-pattern-non-monotone}
 #| results: hide
 missing_pattern_table <- tibble::tribble(
   ~case, ~x1, ~x2, ~x3, ~x4, ~x5, ~x6, ~type,
@@ -62,7 +62,7 @@ tabla_fmt(missing_pattern_table, format = "pipe",
 Como en los capítulos anteriores, se carga la base de datos de la muestra seleccionada. Para ilustrar el tratamiento de los datos faltantes, se introducirán pérdidas de información de forma simulada. La base se carga de la siguiente manera:
 
 
-```{r cargar-datos-imputacion}
+```{r load-data-imputation}
 survey_data <- readRDS("../data/sample.rds")
 ```
 
@@ -70,7 +70,7 @@ La base `sample.rds` conserva los nombres de las variables y utiliza etiquetas y
 
 El siguiente código computacional carga los paquetes y estima la tasa de desocupación antes de generar los valores faltantes. El diseño se construye con la muestra completa y luego se crea `labor_force_subset`, que contiene a las personas de 15 años o más ocupadas o desocupadas. Posteriormente, los ejercicios de imputación utilizan la población de 15 años o más, incluidas las personas inactivas.
 
-```{r preparar-datos-imputacion}
+```{r prepare-data-imputation}
 library(tidyverse)
 library(survey)
 library(srvyr)
@@ -103,14 +103,14 @@ survey_data <- survey_data %>%
 
 La tasa de desocupación estimada es de `r round(100 * unemployment_rate$unemployment_rate, 2)` %, con un error estándar de `r round(100 * unemployment_rate$unemployment_rate_se, 2)` %. Como referencia para los ejercicios posteriores, el siguiente código computacional calcula también la media del ingreso en la muestra.
 
-```{r media-inicial-imputacion}
+```{r mean-initial-imputation}
 income_mean <- mean(survey_data$Income, na.rm = TRUE)
 income_mean
 ```
 
 A continuación, se genera un 20 % de valores faltantes siguiendo un mecanismo MCAR. La función `sample_frac` del paquete `dplyr` permite seleccionar aleatoriamente una fracción de las filas de un conjunto de datos.
 
-```{r simular-mcar-imputacion}
+```{r simulate-mcar-imputation}
 set.seed(1234)
 mcar_data <- sample_frac(survey_data, 0.8)
 
@@ -121,9 +121,9 @@ mcar_plot_data <- bind_rows(
 ```
 
 
-El siguiente código computacional compara el ingreso por zona y sexo en la base completa (`survey_data`) y en la muestra con pérdida MCAR (`mcar_data`) (@fig-ap3-mcar-cajas). Las medianas y la amplitud de las cajas son similares en ambas bases. La línea roja indica la media del ingreso en la base completa.
+El siguiente código computacional compara el ingreso por zona y sexo en la base completa (`survey_data`) y en la muestra con pérdida MCAR (`mcar_data`) (@fig-ap3-mcar-boxplots). Las medianas y la amplitud de las cajas son similares en ambas bases. La línea roja indica la media del ingreso en la base completa.
 
-```{r fig-ap3-mcar-cajas, fig.cap = "Distribución del ingreso por zona y sexo con datos completos y bajo un patrón MCAR"}
+```{r fig-ap3-mcar-boxplots, fig.cap = "Distribución del ingreso por zona y sexo con datos completos y bajo un patrón MCAR"}
 zone_income_plot <- ggplot(
   mcar_plot_data,
   aes(x = Zone, y = Income)
@@ -138,9 +138,9 @@ sex_income_plot <- zone_income_plot + aes(x = Sex)
 zone_income_plot | sex_income_plot
 ```
 
-El siguiente código computacional muestra las densidades del ingreso para la base completa (`survey_data`) y la muestra con pérdida MCAR (`mcar_data`), en el total y por sexo (@fig-ap3-mcar-ingreso). Las curvas prácticamente se superponen, lo que indica pocos cambios en la distribución en esta simulación. La línea roja representa la media del ingreso en la base completa.
+El siguiente código computacional muestra las densidades del ingreso para la base completa (`survey_data`) y la muestra con pérdida MCAR (`mcar_data`), en el total y por sexo (@fig-ap3-mcar-income). Las curvas prácticamente se superponen, lo que indica pocos cambios en la distribución en esta simulación. La línea roja representa la media del ingreso en la base completa.
 
-```{r fig-ap3-mcar-ingreso, fig.cap = "Distribución del ingreso, total y por sexo, bajo un patrón MCAR"}
+```{r fig-ap3-mcar-income, fig.cap = "Distribución del ingreso, total y por sexo, bajo un patrón MCAR"}
 income_density_plot <- ggplot(
   mcar_plot_data,
   aes(x = Income, fill = data_source)
@@ -157,9 +157,9 @@ sex_income_density_plot <- income_density_plot +
 income_density_plot / sex_income_density_plot
 ```
 
-El siguiente código computacional compara las densidades del gasto en la base completa (`survey_data`) y la muestra con pérdida MCAR (`mcar_data`), en el total y por sexo (@fig-ap3-mcar-gasto). La superposición de las curvas muestra que se conserva la forma de la distribución. La línea roja indica la media del gasto en la base completa.
+El siguiente código computacional compara las densidades del gasto en la base completa (`survey_data`) y la muestra con pérdida MCAR (`mcar_data`), en el total y por sexo (@fig-ap3-mcar-expenditure). La superposición de las curvas muestra que se conserva la forma de la distribución. La línea roja indica la media del gasto en la base completa.
 
-```{r fig-ap3-mcar-gasto, fig.cap = "Distribución del gasto, total y por sexo, bajo un patrón MCAR"}
+```{r fig-ap3-mcar-expenditure, fig.cap = "Distribución del gasto, total y por sexo, bajo un patrón MCAR"}
 expenditure_density_plot <- ggplot(
   mcar_plot_data,
   aes(x = Expenditure, fill = data_source)
@@ -182,7 +182,7 @@ expenditure_density_plot / sex_expenditure_density_plot
 A continuación, se simula una pérdida de información al azar (MAR) que depende de la zona y del sexo:
 
 
-```{r simular-mar-imputacion}
+```{r simulate-mar-imputation}
 set.seed(1234)
 stratum_id <- paste0(survey_data$Zone, survey_data$Sex)
 stratum_sizes <- table(stratum_id)
@@ -205,9 +205,9 @@ El código anterior utiliza el paquete `TeachingSampling` para realizar un muest
 
 El muestreo estratificado devuelve un vector con los índices de las filas seleccionadas. Estas observaciones se excluyen de la base para crear `mar_data`. Por último, la función `bind_rows` del paquete `dplyr` reúne `survey_data` y `mar_data` en `mar_plot_data`. La nueva variable `data_source` identifica la base de origen de cada observación.
 
-El siguiente código computacional compara el gasto por zona y sexo entre la base completa (`survey_data`) y la muestra con pérdida MAR (`mar_data`) (@fig-ap3-mar-cajas). Las medianas permanecen próximas, aunque cambian la dispersión y algunos valores extremos, especialmente entre los hombres. La línea roja señala la media del gasto en la base completa.
+El siguiente código computacional compara el gasto por zona y sexo entre la base completa (`survey_data`) y la muestra con pérdida MAR (`mar_data`) (@fig-ap3-mar-boxplots). Las medianas permanecen próximas, aunque cambian la dispersión y algunos valores extremos, especialmente entre los hombres. La línea roja señala la media del gasto en la base completa.
 
-```{r fig-ap3-mar-cajas, fig.cap = "Distribución del gasto por zona y sexo bajo un patrón MAR"}
+```{r fig-ap3-mar-boxplots, fig.cap = "Distribución del gasto por zona y sexo bajo un patrón MAR"}
 mar_expenditure_boxplot <- ggplot(
   mar_plot_data,
   aes(x = data_source, y = Expenditure)
@@ -223,9 +223,9 @@ mar_expenditure_boxplot <- ggplot(
 mar_expenditure_boxplot
 ```
 
-El siguiente código computacional compara las densidades del ingreso de la base completa (`survey_data`) y la muestra con pérdida MAR (`mar_data`) (@fig-ap3-mar-ingreso). Las diferencias son pequeñas en el total y más visibles entre los hombres, lo que muestra la utilidad de revisar las desagregaciones. La línea roja indica la media del ingreso en la base completa.
+El siguiente código computacional compara las densidades del ingreso de la base completa (`survey_data`) y la muestra con pérdida MAR (`mar_data`) (@fig-ap3-mar-income). Las diferencias son pequeñas en el total y más visibles entre los hombres, lo que muestra la utilidad de revisar las desagregaciones. La línea roja indica la media del ingreso en la base completa.
 
-```{r fig-ap3-mar-ingreso, fig.cap = "Distribución del ingreso, total y por sexo, bajo un patrón MAR"}
+```{r fig-ap3-mar-income, fig.cap = "Distribución del ingreso, total y por sexo, bajo un patrón MAR"}
 income_density_plot <- ggplot(
   mar_plot_data,
   aes(x = Income, fill = data_source)
@@ -242,9 +242,9 @@ sex_income_density_plot <- income_density_plot +
 income_density_plot / sex_income_density_plot
 ```
 
-El siguiente código computacional muestra las densidades del gasto en la base completa (`survey_data`) y la muestra con pérdida MAR (`mar_data`), en el total y por sexo (@fig-ap3-mar-gasto). Las curvas son próximas entre las mujeres y presentan diferencias más visibles entre los hombres. La línea roja representa la media del gasto en la base completa.
+El siguiente código computacional muestra las densidades del gasto en la base completa (`survey_data`) y la muestra con pérdida MAR (`mar_data`), en el total y por sexo (@fig-ap3-mar-expenditure). Las curvas son próximas entre las mujeres y presentan diferencias más visibles entre los hombres. La línea roja representa la media del gasto en la base completa.
 
-```{r fig-ap3-mar-gasto, fig.cap = "Distribución del gasto, total y por sexo, bajo un patrón MAR"}
+```{r fig-ap3-mar-expenditure, fig.cap = "Distribución del gasto, total y por sexo, bajo un patrón MAR"}
 expenditure_density_plot <- ggplot(
   mar_plot_data,
   aes(x = Expenditure, fill = data_source)
@@ -266,7 +266,7 @@ expenditure_density_plot / sex_expenditure_density_plot
 
 Por último, se simula una pérdida de información no al azar (MNAR). Como se explicó al inicio del anexo, en este mecanismo la probabilidad de que un dato falte está relacionada con su propio valor. Esta dependencia puede introducir un sesgo apreciable en la inferencia y el análisis estadístico de las encuestas de hogares, por lo que el tratamiento de los datos faltantes requiere especial atención. El siguiente código computacional crea `mnar_data` conservando las `r formatC(min(1300L, nrow(survey_data)), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` observaciones con menor ingreso y la combina con la base completa para comparar ambas distribuciones.
 
-```{r simular-mnar-imputacion}
+```{r simulate-mnar-imputation}
 mnar_data <- survey_data %>%
   arrange(Income) %>%
   slice(1:1300L)
@@ -277,9 +277,9 @@ mnar_plot_data <- bind_rows(
 )
 ```
 
-El código anterior conserva en `mnar_data` las `r formatC(nrow(mnar_data), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` observaciones con menores ingresos y las reúne con la base completa en `mnar_plot_data`. La @fig-ap3-mnar-ingreso, obtenida con el siguiente código computacional, muestra cómo esta selección elimina la cola de ingresos altos y desplaza la distribución hacia valores menores. La media de los casos conservados, en azul, queda por debajo de la media de la base completa, en rojo.
+El código anterior conserva en `mnar_data` las `r formatC(nrow(mnar_data), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` observaciones con menores ingresos y las reúne con la base completa en `mnar_plot_data`. La @fig-ap3-mnar-income, obtenida con el siguiente código computacional, muestra cómo esta selección elimina la cola de ingresos altos y desplaza la distribución hacia valores menores. La media de los casos conservados, en azul, queda por debajo de la media de la base completa, en rojo.
 
-```{r fig-ap3-mnar-ingreso, fig.cap = "Distribución del ingreso bajo un patrón MNAR"}
+```{r fig-ap3-mnar-income, fig.cap = "Distribución del ingreso bajo un patrón MNAR"}
 mnar_income_density_plot <- ggplot(
   mnar_plot_data,
   aes(x = Income, fill = data_source)
@@ -293,9 +293,9 @@ mnar_income_density_plot <- ggplot(
 mnar_income_density_plot
 ```
 
-El siguiente código computacional compara la distribución del gasto en la base completa (`survey_data`) y entre los casos conservados bajo MNAR (`mnar_data`) (@fig-ap3-mnar-gasto). La selección por ingreso también reduce la presencia de gastos altos. La línea azul señala la media del gasto de los casos conservados y la roja, la media de la base completa.
+El siguiente código computacional compara la distribución del gasto en la base completa (`survey_data`) y entre los casos conservados bajo MNAR (`mnar_data`) (@fig-ap3-mnar-expenditure). La selección por ingreso también reduce la presencia de gastos altos. La línea azul señala la media del gasto de los casos conservados y la roja, la media de la base completa.
 
-```{r fig-ap3-mnar-gasto, fig.cap = "Distribución del gasto bajo un patrón MNAR"}
+```{r fig-ap3-mnar-expenditure, fig.cap = "Distribución del gasto bajo un patrón MNAR"}
 mnar_expenditure_density_plot <- ggplot(
   mnar_plot_data,
   aes(x = Expenditure, fill = data_source)
@@ -315,9 +315,9 @@ mnar_expenditure_density_plot <- ggplot(
 mnar_expenditure_density_plot
 ```
 
-El siguiente código computacional compara el ingreso por zona y sexo en la base completa (`survey_data`) y entre los casos conservados bajo MNAR (`mnar_data`) (@fig-ap3-mnar-cajas). La eliminación de ingresos altos reduce las medianas y la dispersión, con cambios más marcados en la zona urbana. La línea roja indica la media del ingreso en la base completa.
+El siguiente código computacional compara el ingreso por zona y sexo en la base completa (`survey_data`) y entre los casos conservados bajo MNAR (`mnar_data`) (@fig-ap3-mnar-boxplots). La eliminación de ingresos altos reduce las medianas y la dispersión, con cambios más marcados en la zona urbana. La línea roja indica la media del ingreso en la base completa.
 
-```{r fig-ap3-mnar-cajas, fig.cap = "Distribución del ingreso por zona y sexo bajo un patrón MNAR"}
+```{r fig-ap3-mnar-boxplots, fig.cap = "Distribución del ingreso por zona y sexo bajo un patrón MNAR"}
 mnar_income_boxplot <- ggplot(
   mnar_plot_data,
   aes(x = data_source, y = Income)
@@ -340,7 +340,7 @@ La imputación por la media no condicional consiste en reemplazar los valores fa
 
 Para ilustrar el tratamiento de los datos faltantes bajo un mecanismo MCAR, se construye la siguiente base de datos:
 
-```{r preparar-valores-faltantes-imputacion}
+```{r prepare-values-missing-imputation}
 survey_data <- full_join(
   survey_data,
   mcar_data %>% transmute(
@@ -356,7 +356,7 @@ survey_data <- full_join(
 
 El código anterior utiliza la función `full_join` del paquete `dplyr` para combinar las dos bases de datos. Esta unión conserva todas las filas de ambas bases, combina las que tienen claves coincidentes y asigna valores faltantes donde no hay correspondencia. Para conocer el porcentaje de valores faltantes, se ejecuta el siguiente código:
 
-```{r resumir-valores-faltantes-imputacion}
+```{r summarize-values-missing-imputation}
 survey_data %>%
   group_by(Zone) %>%
   summarise(
@@ -374,7 +374,7 @@ survey_data %>%
 La imputación por la media no condicional es un método simple y rápido. Puede resultar útil cuando la distribución de la variable no es muy asimétrica o cuando hay pocos valores faltantes en relación con el tamaño de la muestra. Sin embargo, presenta limitaciones cuando existen sesgos o patrones en los datos faltantes, o cuando las variables están muy correlacionadas. Aunque conserva la media de los valores observados, modifica la variabilidad y los percentiles, y puede afectar el sesgo. El método se aplica de la siguiente manera:
 
 
-```{r imputar-media-no-condicional}
+```{r impute-mean-non-conditional}
 observed_income_mean <- mean(survey_data$income_missing, na.rm = TRUE)
 survey_data <- survey_data %>%
   mutate(
@@ -390,9 +390,9 @@ sum(is.na(survey_data$income_imputed))
 
 El código anterior calcula la media de los valores observados de `income_missing` y la almacena en `observed_income_mean`. Luego, reemplaza los valores faltantes con esa media y guarda el resultado en `income_imputed`. La última línea cuenta los valores faltantes de esta nueva columna de `survey_data` y confirma que no quedan datos sin imputar.
 
-El siguiente código computacional compara el ingreso original (`Income`) con el completado mediante la media no condicional (`income_imputed`) (@fig-ap3-media-no-condicional). La imputación produce una concentración artificial alrededor de la media, visible como un pico pronunciado. Las líneas roja y azul representan las medias original e imputada, respectivamente; su cercanía no implica que las distribuciones sean iguales.
+El siguiente código computacional compara el ingreso original (`Income`) con el completado mediante la media no condicional (`income_imputed`) (@fig-ap3-mean-non-conditional). La imputación produce una concentración artificial alrededor de la media, visible como un pico pronunciado. Las líneas roja y azul representan las medias original e imputada, respectivamente; su cercanía no implica que las distribuciones sean iguales.
 
-```{r fig-ap3-media-no-condicional, fig.cap = "Distribución del ingreso original e imputado por la media no condicional"}
+```{r fig-ap3-mean-non-conditional, fig.cap = "Distribución del ingreso original e imputado por la media no condicional"}
 mean_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
   tidyr::gather(data_source, income_value, -Zone, -Sex)
@@ -413,9 +413,9 @@ mean_density_plot <- ggplot(
 mean_density_plot
 ```
 
-El siguiente código computacional compara el ingreso original (`Income`) y el completado por la media no condicional (`income_imputed`) dentro de cada combinación de zona y sexo (@fig-ap3-media-no-condicional-grupos). Las cajas muestran cambios en la mediana y la dispersión al asignar un mismo valor a todos los datos faltantes. La línea roja señala la media del ingreso original.
+El siguiente código computacional compara el ingreso original (`Income`) y el completado por la media no condicional (`income_imputed`) dentro de cada combinación de zona y sexo (@fig-ap3-mean-non-conditional-groups). Las cajas muestran cambios en la mediana y la dispersión al asignar un mismo valor a todos los datos faltantes. La línea roja señala la media del ingreso original.
 
-```{r fig-ap3-media-no-condicional-grupos, fig.cap = "Ingreso original e imputado por la media no condicional, por zona y sexo"}
+```{r fig-ap3-mean-non-conditional-groups, fig.cap = "Ingreso original e imputado por la media no condicional, por zona y sexo"}
 mean_boxplot <- ggplot(
   mean_plot_data,
   aes(x = data_source, y = income_value)
@@ -434,7 +434,7 @@ La imputación por la media condicional reemplaza los valores faltantes de una v
 
 En el siguiente ejemplo, se calculan las medias por estrato para imputar los ingresos faltantes, bajo el supuesto de que existe una relación entre el estrato y el ingreso de los hogares:
 
-```{r imputar-media-condicional}
+```{r impute-mean-conditional}
 survey_data <- survey_data %>%
   group_by(Stratum) %>%
   mutate(
@@ -462,7 +462,7 @@ sum(is.na(survey_data$income_imputed))
 
 El código anterior utiliza `group_by` para agrupar las observaciones de `survey_data` por `Stratum`. Los valores faltantes de `income_missing` se reemplazan con la media de los ingresos observados en el estrato correspondiente, mientras que los valores observados se conservan. El resultado se almacena en `income_imputed`. A continuación, se calculan las medias y las desviaciones estándar de los ingresos originales y de los completados por imputación para comparar el efecto del método:
 
-```{r resumir-media-condicional}
+```{r summarize-mean-conditional}
 survey_data %>%
   summarise(
     income_mean = mean(Income),
@@ -475,7 +475,7 @@ survey_data %>%
 
 En este ejemplo, el sesgo relativo de la media del ingreso es de `r formatC(with(survey_data, 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %, y el de la desviación estándar es de `r formatC(with(survey_data, 100 * (sd(income_imputed) / sd(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %. Al desagregar los resultados de la imputación por zona, se obtiene lo siguiente:
 
-```{r resumir-media-condicional-zona}
+```{r summarize-mean-conditional-zone}
 survey_data %>%
   group_by(Zone) %>%
   summarise(
@@ -489,9 +489,9 @@ survey_data %>%
 
 Los sesgos relativos de la media del ingreso son del `r formatC(with(subset(survey_data, Zone == "Rural"), 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` % en la zona rural y del `r formatC(with(subset(survey_data, Zone == "Urban"), 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` % en la urbana. En ambos casos, las medias obtenidas tras la imputación son próximas a las originales.
 
-El siguiente código computacional compara las densidades del ingreso original (`Income`) y del completado con medias por estrato (`income_imputed`) (@fig-ap3-media-condicional). La curva imputada se aproxima a la original, aunque conserva diferencias en el tramo central. Las líneas roja y azul señalan las medias original e imputada, respectivamente.
+El siguiente código computacional compara las densidades del ingreso original (`Income`) y del completado con medias por estrato (`income_imputed`) (@fig-ap3-mean-conditional). La curva imputada se aproxima a la original, aunque conserva diferencias en el tramo central. Las líneas roja y azul señalan las medias original e imputada, respectivamente.
 
-```{r fig-ap3-media-condicional, fig.cap = "Distribución del ingreso original e imputado por la media condicional"}
+```{r fig-ap3-mean-conditional, fig.cap = "Distribución del ingreso original e imputado por la media condicional"}
 conditional_mean_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
   tidyr::gather(data_source, income_value, -Zone, -Sex)
@@ -512,9 +512,9 @@ conditional_mean_density_plot <- ggplot(
 conditional_mean_density_plot
 ```
 
-El siguiente código computacional compara el ingreso original (`Income`) y el completado con medias por estrato (`income_imputed`), desagregados por zona y sexo (@fig-ap3-media-condicional-grupos). Las medianas son próximas y persisten algunas diferencias en la amplitud de las cajas. La línea roja indica la media del ingreso original en toda la muestra.
+El siguiente código computacional compara el ingreso original (`Income`) y el completado con medias por estrato (`income_imputed`), desagregados por zona y sexo (@fig-ap3-mean-conditional-groups). Las medianas son próximas y persisten algunas diferencias en la amplitud de las cajas. La línea roja indica la media del ingreso original en toda la muestra.
 
-```{r fig-ap3-media-condicional-grupos, fig.cap = "Ingreso original e imputado por la media condicional, por zona y sexo"}
+```{r fig-ap3-mean-conditional-groups, fig.cap = "Ingreso original e imputado por la media condicional, por zona y sexo"}
 conditional_mean_boxplot <- ggplot(
   conditional_mean_plot_data,
   aes(x = data_source, y = income_value)
@@ -535,7 +535,7 @@ El término *hot-deck* hace referencia a las tarjetas perforadas utilizadas en l
 
 El siguiente código ilustra el hot-deck aleatorio no condicionado: para cada ingreso faltante se selecciona un donante entre todos los registros con ingreso observado, sin formar grupos ni comparar características auxiliares.
 
-```{r imputar-hot-deck}
+```{r impute-hot-deck}
 donor_indices <- which(!is.na(survey_data$income_missing))
 recipient_indices <- which(is.na(survey_data$income_missing))
 survey_data$income_imputed <- survey_data$income_missing
@@ -553,7 +553,7 @@ El código anterior identifica las observaciones con y sin valores faltantes en 
 
 Una vez realizada la imputación, el siguiente código computacional compara la media y la desviación estándar del ingreso original con las del ingreso completado.
 
-```{r resumir-hot-deck}
+```{r summarize-hot-deck}
 survey_data %>%
   summarise(
     income_mean = mean(Income),
@@ -566,7 +566,7 @@ survey_data %>%
 
 El sesgo relativo de la media del ingreso es del `r formatC(with(survey_data, 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %. Al desagregar los resultados por zona, se obtiene lo siguiente:
 
-```{r resumir-hot-deck-zona}
+```{r summarize-hot-deck-zone}
 survey_data %>%
   group_by(Zone) %>%
   summarise(
@@ -580,7 +580,7 @@ survey_data %>%
 
 El sesgo relativo de la media del ingreso es del `r formatC(with(subset(survey_data, Zone == "Rural"), 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` % en la zona rural y del `r formatC(with(subset(survey_data, Zone == "Urban"), 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` % en la urbana. El siguiente código computacional extiende la comparación de estos resúmenes a los grupos definidos por sexo.
 
-```{r resumir-hot-deck-sexo}
+```{r summarize-hot-deck-sex}
 survey_data %>%
   group_by(Sex) %>%
   summarise(
@@ -622,7 +622,7 @@ La imputación por regresión utiliza las variables auxiliares disponibles para 
 
 El siguiente código computacional ajusta un modelo de regresión lineal múltiple para imputar el ingreso, utilizando la zona, el sexo y el gasto como covariables.
 
-```{r ajustar-regresion-imputacion}
+```{r fit-regression-imputation}
 survey_data$income_imputed <- survey_data$income_missing
 observed_data <- filter(survey_data, !is.na(income_missing))
 missing_data <- filter(survey_data, is.na(income_missing))
@@ -635,7 +635,7 @@ imputation_model <- lm(
 
 Una vez ajustado el modelo, el siguiente código computacional obtiene las predicciones y las utiliza para completar los ingresos faltantes.
 
-```{r imputar-regresion}
+```{r impute-regression}
 predicted_income <- predict(
   imputation_model,
   newdata = missing_data
@@ -646,7 +646,7 @@ survey_data <- bind_rows(observed_data, missing_data)
 
 A continuación, se calculan la media y la desviación estándar de los ingresos originales y de los completados por imputación:
 
-```{r resumir-regresion-imputacion}
+```{r summarize-regression-imputation}
 survey_data %>%
   summarise(
     income_mean = mean(Income),
@@ -659,7 +659,7 @@ survey_data %>%
 
 El sesgo relativo de la media del ingreso es del `r formatC(with(survey_data, 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %. El siguiente código computacional compara por zona los resúmenes del ingreso original y del completado por regresión.
 
-```{r resumir-regresion-imputacion-zona}
+```{r summarize-regression-imputation-zone}
 survey_data %>%
   group_by(Zone) %>%
   summarise(
@@ -671,9 +671,9 @@ survey_data %>%
 
 ```
 
-El siguiente código computacional compara las densidades del ingreso original (`Income`) y del completado con predicciones del modelo de regresión (`income_imputed`) (@fig-ap3-regresion). La forma general es similar, aunque aparecen diferencias alrededor del tramo central de la distribución. Las líneas roja y azul indican las medias original e imputada, respectivamente.
+El siguiente código computacional compara las densidades del ingreso original (`Income`) y del completado con predicciones del modelo de regresión (`income_imputed`) (@fig-ap3-regression). La forma general es similar, aunque aparecen diferencias alrededor del tramo central de la distribución. Las líneas roja y azul indican las medias original e imputada, respectivamente.
 
-```{r fig-ap3-regresion, fig.cap = "Distribución del ingreso original e imputado por regresión"}
+```{r fig-ap3-regression, fig.cap = "Distribución del ingreso original e imputado por regresión"}
 regression_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
   tidyr::gather(data_source, income_value, -Zone, -Sex)
@@ -710,7 +710,7 @@ La aplicación del método con un solo vecino comprende tres pasos:
 
 En el siguiente ejemplo, se imputa el ingreso utilizando el gasto del individuo como variable auxiliar y la distancia euclidiana como medida de similitud.
 
-```{r imputar-vecino-cercano}
+```{r impute-nearest-neighbor}
 survey_data$income_imputed <- survey_data$income_missing
 observed_data <- filter(survey_data, !is.na(income_missing))
 missing_data <- filter(survey_data, is.na(income_missing))
@@ -727,7 +727,7 @@ survey_data <- bind_rows(observed_data, missing_data)
 
 Las medias y las desviaciones estándar de los ingresos originales y de los completados por imputación se calculan de la siguiente manera:
 
-```{r resumir-vecino-cercano}
+```{r summarize-nearest-neighbor}
 survey_data %>%
   summarise(
     income_mean = mean(Income),
@@ -740,7 +740,7 @@ survey_data %>%
 
 La media imputada supera a la original en aproximadamente `r format(round(mean(survey_data$income_imputed) - mean(survey_data$Income), 1), decimal.mark = ",", nsmall = 1)` unidades monetarias. El siguiente código computacional compara por zona los resúmenes del ingreso original y del completado con donantes.
 
-```{r resumir-vecino-cercano-zona}
+```{r summarize-nearest-neighbor-zone}
 survey_data %>%
   group_by(Zone) %>%
   summarise(
@@ -754,9 +754,9 @@ survey_data %>%
 
 La media imputada supera a la original en aproximadamente `r format(round(with(subset(survey_data, Zone == "Rural"), mean(income_imputed) - mean(Income)), 1), decimal.mark = ",", nsmall = 1)` unidades monetarias en la zona rural y `r format(round(with(subset(survey_data, Zone == "Urban"), mean(income_imputed) - mean(Income)), 1), decimal.mark = ",", nsmall = 1)` en la urbana.
 
-El siguiente código computacional compara la densidad del ingreso original (`Income`) y la del ingreso imputado con donantes de gasto similar (`income_imputed`) (@fig-ap3-vecino-cercano). Las curvas son muy próximas y conservan la cola de ingresos altos. Las líneas roja y azul muestran las medias original e imputada, respectivamente.
+El siguiente código computacional compara la densidad del ingreso original (`Income`) y la del ingreso imputado con donantes de gasto similar (`income_imputed`) (@fig-ap3-nearest-neighbor). Las curvas son muy próximas y conservan la cola de ingresos altos. Las líneas roja y azul muestran las medias original e imputada, respectivamente.
 
-```{r fig-ap3-vecino-cercano, fig.cap = "Distribución del ingreso original e imputado por el vecino más cercano"}
+```{r fig-ap3-nearest-neighbor, fig.cap = "Distribución del ingreso original e imputado por el vecino más cercano"}
 nearest_neighbor_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
   tidyr::gather(data_source, income_value, -Zone, -Sex)
@@ -790,7 +790,7 @@ La imputación por el vecino más cercano con regresión comprende los siguiente
 En el siguiente ejemplo, se imputan los ingresos mediante un modelo que utiliza el sexo, la zona y el gasto como covariables:
 
 
-```{r ajustar-regresion-vecino-cercano}
+```{r fit-regression-nearest-neighbor}
 survey_data$income_imputed <- survey_data$income_missing
 observed_data <- filter(survey_data, !is.na(income_missing))
 missing_data <- filter(survey_data, is.na(income_missing))
@@ -803,7 +803,7 @@ imputation_model <- lm(
 
 Con el modelo ajustado, el siguiente código computacional predice los ingresos de las observaciones con y sin datos faltantes. Para cada receptor, identifica al donante con la predicción más cercana y utiliza su ingreso observado para completar el valor faltante.
 
-```{r imputar-vecino-cercano-regresion}
+```{r impute-nearest-neighbor-regression}
 observed_predictions <- predict(
   imputation_model,
   newdata = observed_data
@@ -824,7 +824,7 @@ survey_data <- bind_rows(observed_data, missing_data)
 
 Como en los ejemplos anteriores, el siguiente código computacional compara la media y la desviación estándar del ingreso original con las del ingreso completado, en este caso mediante donantes seleccionados por la proximidad de sus predicciones.
 
-```{r resumir-vecino-cercano-regresion}
+```{r summarize-nearest-neighbor-regression}
 survey_data %>%
   summarise(
     income_mean = mean(Income),
@@ -837,9 +837,9 @@ survey_data %>%
 
 La diferencia entre la media del ingreso original y la obtenida tras la imputación es de aproximadamente `r formatC(abs(mean(survey_data$income_imputed) - mean(survey_data$Income)), format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` unidades monetarias.
 
-El siguiente código computacional compara el ingreso original (`Income`) con el completado mediante donantes cuyas predicciones son próximas a las del receptor (`income_imputed`) (@fig-ap3-vecino-cercano-regresion). Las densidades prácticamente se superponen en esta simulación. Las líneas roja y azul representan las medias original e imputada, respectivamente.
+El siguiente código computacional compara el ingreso original (`Income`) con el completado mediante donantes cuyas predicciones son próximas a las del receptor (`income_imputed`) (@fig-ap3-nearest-neighbor-regression). Las densidades prácticamente se superponen en esta simulación. Las líneas roja y azul representan las medias original e imputada, respectivamente.
 
-```{r fig-ap3-vecino-cercano-regresion, fig.cap = "Distribución del ingreso original e imputado por el vecino más cercano con regresión"}
+```{r fig-ap3-nearest-neighbor-regression, fig.cap = "Distribución del ingreso original e imputado por el vecino más cercano con regresión"}
 predictive_matching_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
   tidyr::gather(data_source, income_value, -Zone, -Sex)
@@ -913,7 +913,7 @@ $$\hat{V}(\hat{\beta} | Y_{obs}) = \bar{U} + (1 + \frac{1}{M}) B$$ {#eq-varianza
 
 El siguiente ejemplo aplica la imputación múltiple a los datos de la encuesta:
 
-```{r preparar-imputacion-multiple}
+```{r prepare-imputation-multiple}
 survey_data$income_imputed <- survey_data$income_missing
 survey_data$employment_imputed <- survey_data$employment_missing
 observed_data <- filter(survey_data, !is.na(income_missing))
@@ -924,7 +924,7 @@ n_observed <- nrow(observed_data)
 
 Primero, se separan las observaciones con y sin valores faltantes y se calcula el número de observaciones de cada grupo. El siguiente código computacional genera los valores imputados a partir del modelo y los incorpora a los conjuntos de datos completados.
 
-```{r generar-imputaciones-multiples}
+```{r generate-multiple-imputations}
 n_imputations <- 10
 set.seed(1234)
 
@@ -950,13 +950,13 @@ for (i in seq_len(n_imputations)) {
 
 El código anterior ajusta modelos de regresión lineal con `Income` como variable de respuesta y `Zone`, `Sex` y `Expenditure` como covariables. Estos modelos permiten predecir los ingresos faltantes en `missing_data`. El siguiente código computacional permite revisar los ingresos originales junto con algunos de los valores imputados.
 
-```{r mostrar-imputaciones-multiples}
+```{r show-multiple-imputations}
 dplyr::select(missing_data, Income, matches("income_draw_"))[1:10, 1:4]
 ```
 
-El siguiente código computacional compara la densidad del ingreso original, representada por la línea negra, con las de los `r n_imputations` conjuntos completados, representadas por las líneas de colores (`income_draw_1` a `r paste0("income_draw_", n_imputations)`) (@fig-ap3-imputacion-multiple). Las curvas mantienen una forma similar, con pequeñas diferencias en el tramo central que reflejan la variación entre las imputaciones.
+El siguiente código computacional compara la densidad del ingreso original, representada por la línea negra, con las de los `r n_imputations` conjuntos completados, representadas por las líneas de colores (`income_draw_1` a `r paste0("income_draw_", n_imputations)`) (@fig-ap3-imputation-multiple). Las curvas mantienen una forma similar, con pequeñas diferencias en el tramo central que reflejan la variación entre las imputaciones.
 
-```{r fig-ap3-imputacion-multiple, fig.cap = "Distribución del ingreso original y de los valores obtenidos mediante imputación múltiple"}
+```{r fig-ap3-imputation-multiple, fig.cap = "Distribución del ingreso original y de los valores obtenidos mediante imputación múltiple"}
 survey_data <- bind_rows(observed_data, missing_data)
 
 multiple_imputation_plot_data <- survey_data %>%
@@ -982,7 +982,7 @@ multiple_imputation_density_plot
 
 Con los conjuntos de datos completados, el siguiente código computacional define el diseño muestral que se utilizará para estimar los parámetros de interés.
 
-```{r definir-diseno-imputacion}
+```{r define-design-imputation}
 survey_design <- survey_data %>%
   as_survey_design(
     strata = Stratum,
@@ -995,7 +995,7 @@ survey_design <- survey_data %>%
 
 A partir de este diseño, el siguiente código computacional estima la media del ingreso y su varianza en cada conjunto de datos completado.
 
-```{r estimar-medias-imputacion}
+```{r estimate-means-imputation}
 mean_estimates <- survey_design %>%
   summarise(
     across(
@@ -1020,7 +1020,7 @@ mean_estimates
 
 El siguiente código computacional combina las medias estimadas y sus varianzas mediante las reglas de imputación múltiple descritas anteriormente.
 
-```{r combinar-medias-imputacion}
+```{r combine-means-imputation}
 pooled_mean <- mean(mean_estimates$mean)
 within_variance <- mean(mean_estimates$var)
 between_variance <- var(mean_estimates$mean)
@@ -1043,7 +1043,7 @@ variance_estimates <- survey_design %>%
 
 Otro parámetro de interés es la varianza del ingreso, que mide su dispersión entre las personas de la muestra. Se sigue el mismo procedimiento utilizado para la media: el siguiente código computacional reorganiza las estimaciones de la varianza del ingreso y sus medidas de incertidumbre para combinarlas por imputación.
 
-```{r organizar-varianzas-imputacion}
+```{r organize-variances-imputation}
 variance_estimates <- variance_estimates %>%
   tidyr::gather() %>%
   separate(
@@ -1062,7 +1062,7 @@ variance_estimates
 
 Por último, el siguiente código computacional combina las estimaciones de la varianza del ingreso y su incertidumbre mediante las expresiones anteriores.
 
-```{r combinar-varianzas-imputacion}
+```{r combine-variances-imputation}
 pooled_variance <- mean(variance_estimates$mean)
 within_variance <- mean(variance_estimates$var)
 between_variance <- var(variance_estimates$mean)

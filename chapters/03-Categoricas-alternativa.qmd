@@ -1,5 +1,5 @@
 
-```{r setup-categoricas, include=FALSE}
+```{r setup-categorical, include=FALSE}
 knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
@@ -37,7 +37,7 @@ De acuerdo con @RCoreSerialization2026, las bases de datos utilizadas en el aná
 
 A continuación, se carga el archivo `sample.rds`, que se utilizará a lo largo de los capítulos aplicados para ilustrar la sintaxis computacional del análisis de encuestas:
 
-```{r cargar-datos-categoricas, eval=TRUE}
+```{r load-data-categorical, eval=TRUE}
 library(tidyverse)
 
 survey_data <- readRDS("../data/sample.rds")
@@ -45,7 +45,7 @@ survey_data <- readRDS("../data/sample.rds")
 
 El objeto `survey_data` contiene la información del archivo `sample.rds`: cada fila corresponde a una unidad observada y las columnas incluyen las variables de interés y la información del diseño muestral. El siguiente código computacional utiliza `glimpse()` para examinar el número de observaciones y variables, sus nombres, sus tipos de datos y una muestra de los valores registrados.
 
-```{r describir-datos-categoricas, eval=TRUE}
+```{r describe-data-categorical, eval=TRUE}
 dplyr::glimpse(survey_data)
 ```
 
@@ -63,7 +63,7 @@ Otra corroboración simple consiste en sumar los factores de expansión en toda 
 
 Asimismo, el tamaño medio del hogar puede compararse con el censo o con otra referencia demográfica pertinente, considerando las diferencias de fecha, cobertura y definición de hogar. Otros indicadores útiles para estas comprobaciones son el índice de masculinidad y la razón de dependencia demográfica, cuya estimación se desarrolla en el capítulo 4. Su comparación con las proyecciones de población puede revelar diferencias que una revisión exclusivamente agregada no detectaría. El siguiente código computacional revisa la validez de los factores de expansión y calcula la población representada por la base, además del tamaño medio de los hogares observados en la muestra.
 
-```{r corroborar-pesos-y-hogares}
+```{r validate-weights-and-households}
 household_sizes <- survey_data %>%
   filter(!is.na(HHID)) %>%
   count(HHID, name = "household_size")
@@ -87,7 +87,7 @@ La base contiene `r formatC(weight_check$observations, format = "f", digits = 0,
 
 Una vez cargada la encuesta de hogares en `R`, el siguiente paso es definir el diseño muestral del cual proviene dicha muestra. Para ello se utilizará el paquete `srvyr`, que surge como un complemento del paquete `survey`. Estas librerías permiten definir objetos tipo `survey.design`, a los que se aplican las funciones de estimación y análisis de encuestas, y que pueden ser combinadas con la programación del paquete `tidyverse`. A continuación, se muestra un ejemplo en el que se define el objeto `survey_design`, de clase `tbl_svy` y compatible con los métodos de `survey` para la encuesta:
 
-```{r definir-diseno-categoricas, message=FALSE, warning=FALSE}
+```{r define-design-categorical, message=FALSE, warning=FALSE}
 options(survey.lonely.psu = "adjust")
 
 library(survey)
@@ -111,7 +111,7 @@ Así mismo, `survey_data` corresponde a la base de datos que contiene la muestra
 
 A partir de la información original de la encuesta, también es posible construir algunas variables adicionales que serán utilizadas en los ejercicios desarrollados a lo largo de este capítulo. El siguiente código computacional define una variable dicotómica que identifica si una persona se encuentra o no en condición de pobreza, considerando como pobres a quienes pertenecen a cualquiera de las categorías de pobreza registradas en la encuesta. Asimismo, se crea una variable que permite distinguir a las personas desempleadas del resto de la población y otra que clasifica a las personas en dos grupos de edad: menores de 18 años y personas de 18 años o más. Estas variables facilitarán la desagregación de los resultados y la comparación de indicadores entre distintos grupos de la población.
 
-```{r crear-variables-categoricas, echo=TRUE, eval=TRUE}
+```{r create-variables-categorical, echo=TRUE, eval=TRUE}
 survey_design <- survey_design %>%
   mutate(
     poor = ifelse(Poverty != "NotPoor", 1, 0),
@@ -129,7 +129,7 @@ En el código anterior se crean nuevas variables derivadas utilizando la funció
 
 Además de las variables categóricas definidas previamente, es necesario establecer subpoblaciones que permitan obtener estimaciones desagregadas y comparar los indicadores entre distintos grupos. El siguiente código computacional define seis subpoblaciones para los ejemplos del capítulo: población urbana, población rural, mujeres, hombres, población económicamente activa y población en edad de trabajar. Para esta base, las dos últimas se restringen a personas de 15 años o más. La población en edad de trabajar incluye también a las personas inactivas y constituye el denominador de la tasa de ocupación; mientras que la población económicamente activa incluye a las personas ocupadas y desocupadas y constituye el denominador de la tasa de desocupación.
 
-```{r crear-subpoblaciones-categoricas, eval=TRUE}
+```{r create-subpopulations-categorical, eval=TRUE}
 urban_subset <- survey_design %>%
   filter(Zone == "Urban")
 
@@ -231,7 +231,7 @@ La fórmula cuantifica la variación entre las contribuciones de las UPM al tama
 
 La función `survey_total()` estima totales poblacionales incorporando los factores de expansión y el diseño muestral. Si se omite `x`, estima el tamaño de la población que se quiere representar. Su sintaxis general es:
 
-```{r sintaxis-survey-total-categoricas, eval=FALSE}
+```{r syntax-survey-total-categorical, eval=FALSE}
 survey_total(
   x = NULL,
   na.rm = FALSE,
@@ -248,7 +248,7 @@ Cuando se solicita `vartype = "ci"`, se construyen intervalos de confianza de Wa
 
 El siguiente código computacional utiliza el diseño muestral definido previamente para generar resúmenes por categoría de la variable `Zone`. Para ello, los datos se agrupan según la zona geográfica, lo que permite obtener resultados independientes para cada uno de estos dominios de estudio. A partir de este procedimiento se producen dos tipos principales de resultados. En primer lugar, se calcula el número de observaciones efectivamente recolectadas en la muestra, sin considerar los factores de expansión, usando la función `unweighted()`. En segundo lugar, se estima el tamaño poblacional asociado a cada dominio incorporando la información del diseño de muestreo. Junto con las estimaciones poblacionales también se obtienen medidas de precisión, como el error estándar y el intervalo de confianza. El objeto `zone_population_size` conserva estos resultados, que se presentan en la @tbl-tamano-zona. En las tablas del capítulo, EE indica el error estándar; «LI 95 %» e «LS 95 %» indican los límites inferior y superior del intervalo de confianza del 95 %.
 
-```{r cod-tamano-zona}
+```{r code-size-zone}
 #| results: hide
 zone_population_size <- survey_design %>%
   group_by(Zone) %>%
@@ -275,7 +275,7 @@ En efecto, el tamaño de muestra fue de `r formatC(zone_population_size$n[zone_p
 
 Para este ejemplo se utiliza directamente `CatAge`, la variable que contiene los grupos de edad en `sample.rds`. Sus categorías son grupos decenales ordenados: de 0 a 9, de 10 a 19, de 20 a 29 años, y así sucesivamente hasta el grupo de 90 a 99 años. El siguiente código computacional agrupa el objeto de diseño por `CatAge` y obtiene el número de personas observadas en la muestra y el tamaño poblacional estimado de cada grupo, junto con su error estándar y su intervalo de confianza del 95 %, como se presenta en la @tbl-tamano-edad.
 
-```{r cod-tamano-edad}
+```{r code-size-age}
 #| results: hide
 age_population_size <- survey_design %>%
   group_by(CatAge) %>%
@@ -303,7 +303,7 @@ La @tbl-tamano-edad distingue el tamaño muestral, que cuenta los registros obse
 
 Además de estas características demográficas, el análisis puede extenderse a las condiciones socioeconómicas de la población. A continuación, se aplica el mismo procedimiento para estimar el número de personas según los distintos niveles de pobreza.
 
-```{r cod-tamano-pobreza}
+```{r code-size-poverty}
 #| results: hide
 poverty_population_size <- survey_design %>%
   group_by(Poverty) %>%
@@ -326,7 +326,7 @@ La @tbl-tamano-pobreza refleja una población en la que la mayoría de las perso
 
 Otra variable categórica relevante en las encuestas de hogares es el estado de ocupación. En este caso, la información se agrupa según las categorías de la variable `Employment`, lo que permite obtener estimaciones separadas para cada condición de actividad laboral de la población. Mediante el uso de la función `group_by()` es posible desagregar las estimaciones en niveles más detallados, facilitando el análisis comparativo entre los distintos grupos ocupacionales. En el siguiente código computacional, primero se excluyen los registros con valores faltantes en la variable de empleo, garantizando que los resultados se calculen únicamente con personas con condición de ocupación observada. Posteriormente, para cada categoría de ocupación se estima el tamaño poblacional, junto con el error estándar y los intervalos de confianza.
 
-```{r cod-tamano-empleo}
+```{r code-size-employment}
 #| results: hide
 employment_population_size <- survey_design %>%
   filter(!is.na(Employment)) %>%
@@ -349,7 +349,7 @@ A partir de los resultados presentados en la @tbl-tamano-empleo, se estima que l
 
 Las estimaciones también pueden desagregarse simultáneamente por más de una variable categórica. Por ejemplo, un primer análisis de las estructuras poblacionales consiste en estimar los tamaños entre el grupo de edad y el sexo. El código agrupa el diseño por edad y sexo con `group_by()` y guarda en `age_sex_population_size` el total estimado para cada combinación mediante `summarise()` y `survey_total()`. Como `CatAge` es un factor ordenado, `arrange(Sex, CatAge)` conserva el orden de los grupos desde el de menor edad hasta el de mayor edad. Como es posible que algunos grupos de edad no tengan un tamaño de muestra lo sufcientemente grande para producir cifras confiables, algunos de los intervalos de confianza resultan con límites inferiores menores a cero. En ese caso, se usa la función `mutate` para truncar estos valores en cero. La @tbl-tamano-edad-sexo presenta únicamente tamaños poblacionales estimados y sus medidas de precisión, sin incluir el número de observaciones de la muestra.
 
-```{r cod-tamano-edad-sexo}
+```{r code-size-age-sex}
 #| results: hide
 age_sex_population_size <- survey_design %>%
   group_by(CatAge, Sex) %>%
@@ -380,7 +380,7 @@ La @tbl-tamano-edad-sexo permite comparar el número estimado de mujeres y hombr
 
 El siguiente código computacional estima el tamaño poblacional de cada combinación de estado ocupacional y condición de pobreza. Los resultados de la @tbl-tamano-empleo-pobreza permiten describir la asociación entre ambas variables, sin establecer una relación causal.
 
-```{r cod-tamano-empleo-pobreza}
+```{r code-size-employment-poverty}
 #| results: hide
 employment_poverty_population_size <- survey_design %>%
   filter(!is.na(Employment)) %>%
@@ -471,7 +471,7 @@ $$
 
 El valor $U_d$ es el extremo superior en la escala logit. Al aplicar la transformación inversa del logit, los límites permanecen entre 0 y 1 para estimaciones interiores a ese rango. El término $t_{1-\alpha/2,df}$ es el cuantil correspondiente al nivel de confianza. Los grados de libertad dependen del diseño y del procedimiento; `survey::degf(survey_design)` permite consultar los disponibles en el diseño completo, que para diseños estratificados convencionales suelen corresponder al número de UPM menos el número de estratos. No se sustituyen automáticamente por el número de personas del dominio. Los casos de proporción exactamente cero o uno requieren tratamiento específico. A continuación se ilustra cómo obtener la proporción de personas por zona usando el diseño muestral previamente definido.
 
-```{r cod-prop-zona-media}
+```{r code-proportion-zone-mean}
 #| results: hide
 zone_proportion <- survey_design %>%
   group_by(Zone) %>%
@@ -498,7 +498,7 @@ En este ejemplo, `survey_prop()` sin variable explícita estima la composición 
 
 La función `survey_prop()` permite estimar la composición de las categorías de un objeto agrupado. Aquí se utiliza `proportion = TRUE` y `prop_method = "logit"`. En una agrupación con varias variables, las primeras definen los grupos condicionantes y la última las categorías cuya composición se estima. Así, `group_by(Zone, Poverty)` produce proporciones de pobreza dentro de cada zona. El orden de agrupación forma parte de la definición del indicador. El siguiente código computacional estima la composición por sexo de la población urbana.
 
-```{r cod-prop-sexo-urbano}
+```{r code-proportion-sex-urban}
 #| results: hide
 urban_sex_proportion <- urban_subset %>%
   group_by(Sex) %>%
@@ -524,7 +524,7 @@ La @tbl-prop-sexo-urbano muestra una leve mayoría femenina en la población urb
 
 Para conocer cómo se distribuye la población masculina entre las zonas urbana y rural, el siguiente código computacional estima las proporciones de hombres según su zona de residencia, incorporando el diseño muestral previamente definido.
 
-```{r cod-prop-zona-hombre}
+```{r code-proportion-zone-male}
 #| results: hide
 male_zone_proportion <- male_subset %>%
   group_by(Zone) %>%
@@ -550,7 +550,7 @@ Los resultados de la @tbl-prop-zona-hombre revelan una población masculina repa
 
 La función `group_by()` permite generar distintos niveles de desagregación mediante la combinación de dos o más variables categóricas. El siguiente código computacional ilustra esta posibilidad al estimar la composición por condición de pobreza dentro de cada zona de la población masculina. Este tipo de análisis permite caracterizar con mayor detalle las condiciones socioeconómicas de subpoblaciones específicas.
 
-```{r cod-prop-zona-pobreza-hombre}
+```{r code-proportion-zone-poverty-male}
 #| results: hide
 male_zone_poverty_proportion <- male_subset %>%
   group_by(Zone, Poverty) %>%
@@ -576,7 +576,7 @@ La @tbl-prop-zona-pobreza-hombre revela una geografía social particular. Mientr
 
 Las variables cuantitativas también pueden agruparse en categorías. El siguiente código computacional compara la tasa de desocupación de las mujeres de 15 a 45 años, inclusive, con la de las mayores de 45 años. Se utiliza `labor_force_subset`, que ya contiene únicamente a las personas ocupadas y desocupadas de 15 años o más. El denominador de cada tasa es la fuerza de trabajo femenina del grupo correspondiente.
 
-```{r cod-tasa-desocupacion-edad-mujer}
+```{r code-rate-unemployment-age-female}
 #| results: hide
 female_unemployment_rate <- labor_force_subset %>%
   filter(Sex == "Female") %>%
@@ -632,7 +632,7 @@ donde $w_{hik}$ representa el factor de expansión asociado al elemento $k$ de l
 
 Además de las frecuencias conjuntas, también es posible estimar los tamaños marginales por filas y columnas, definidos respectivamente como $\hat{N}_{r+} = \sum_{c=1}^{C} \hat{N}_{rc}$ y $\hat{N}_{+c} = \sum_{r=1}^{R} \hat{N}_{rc}$. Mientras que el total general se expresa como $\hat{N}_{++} = \sum_{r=1}^{R}\sum_{c=1}^{C} \hat{N}_{rc}$. Tradicionalmente, las tablas de contingencia se representan mediante arreglos bidimensionales de dimensión $R \times C$, donde $R$ corresponde al número de filas y $C$ al número de columnas. La @tbl-estructura-contingencia presenta la estructura general de este tipo de tablas:
 
-```{r cod-estructura-contingencia-objeto}
+```{r code-structure-contingency-object}
 #| echo: false
 #| results: hide
 contingency_structure <- tibble::tribble(
@@ -668,7 +668,7 @@ Aunque las tablas de contingencia se representan tradicionalmente como arreglos 
 
 Siguiendo con el análisis del ejemplo, se puede comparar la composición por sexo dentro de cada condición de pobreza. Para cada categoría de `poor`, el denominador es la población correspondiente a esa condición; por tanto, las proporciones muestran cómo se distribuye por sexo la población pobre y la no pobre. Para presentar las categorías con etiquetas, se crea una copia de `survey_design` en la que `poor` se convierte en factor. El objeto original conserva la variable numérica para los cálculos posteriores. El siguiente código estima las proporciones, sus errores estándar e intervalos de confianza, que se presentan en la @tbl-contingencia-pobreza-sexo.
 
-```{r cod-contingencia-pobreza-sexo}
+```{r code-contingency-poverty-sex}
 #| results: hide
 poverty_design <- survey_design %>%
   mutate(
@@ -703,7 +703,7 @@ Los resultados indican que el `r formatC(100 * poverty_sex_proportion$proportion
 
 Otro análisis de interés consiste en estimar la tasa de desocupación por sexo. El siguiente código computacional utiliza `labor_force_subset` y agrupa las observaciones por `Sex` y `unemployed` para calcular la proporción de desocupados dentro de cada sexo. La fila `unemployed == 1` se selecciona después de estimar las proporciones, para conservar a toda la fuerza de trabajo en el denominador. La @tbl-tasa-desocupacion-sexo presenta las tasas en escala de cero a uno, con sus errores estándar e intervalos de confianza; para expresarlas como porcentajes se multiplican por 100.
 
-```{r cod-tasa-desocupacion-sexo}
+```{r code-rate-unemployment-sex}
 #| results: hide
 sex_unemployment_rate <- labor_force_subset %>%
   filter(!is.na(unemployed)) %>%
@@ -734,7 +734,7 @@ La tasa de desocupación es de `r round(100 * sex_unemployment_rate$unemployment
 
 Por otro lado, la tasa de ocupación por sexo se calcula entre las personas de 15 años o más con información observada sobre su condición de empleo, incluidas en `working_age_subset`. Su denominador comprende a todas las personas de ese universo —ocupadas, desocupadas e inactivas— y su numerador, únicamente a quienes están ocupadas. Para estimarla, el código crea el indicador `employed` y agrupa los datos por sexo y condición de ocupación; `survey_prop()` calcula la proporción de cada categoría dentro de cada sexo. Luego se conserva la categoría ocupada. Aplicar ese filtro antes del cálculo excluiría del denominador a las personas desocupadas e inactivas y alteraría la tasa.
 
-```{r cod-tasa-ocupacion-sexo}
+```{r code-rate-employment-sex}
 #| results: hide
 sex_employment_rate <- working_age_subset %>%
   filter(!is.na(Employment)) %>%
@@ -771,7 +771,7 @@ La @tbl-tasa-ocupacion-sexo presenta las estimaciones en escala de cero a uno. L
 Para comparar la distribución de la pobreza entre regiones, el siguiente código computacional agrupa el diseño por `Region` y `poor`. Así, `survey_prop()` estima las proporciones de personas pobres y no pobres dentro de cada región, junto con sus errores estándar e intervalos de confianza. Los resultados se presentan en la @tbl-svyby-region-pobreza.
 
 
-```{r cod-svyby-region-pobreza}
+```{r code-svyby-region-poverty}
 #| results: hide
 region_poverty_proportion <- survey_design %>%
   group_by(Region, poor) %>%
@@ -798,7 +798,7 @@ Los resultados muestran diferencias regionales relevantes en la incidencia de la
 
 La tasa de pobreza por edad estima la proporción de personas de cada grupo etario que vive en hogares en condición de pobreza por ingresos. Se utilizan cuatro rangos de edad: 0 a 14, 15 a 29, 30 a 64 y 65 años o más. En este caso, los cuatro rangos pertenecen al universo del indicador. Se construyen a partir de `Age`, sin modificar `CatAge`. Para cada grupo, el denominador es la población de ese grupo con condición de pobreza observada. La variable `poor` reúne la pobreza extrema y la no extrema. El siguiente código computacional define los grupos de edad y estima la tasa de pobreza de cada uno.
 
-```{r cod-pobreza-edad}
+```{r code-poverty-age}
 #| results: hide
 poverty_age_table <- survey_design %>%
   filter(!is.na(Age), !is.na(poor)) %>%
@@ -861,7 +861,7 @@ Un valor igual a uno indicaría ausencia de asociación entre las variables, es 
 
 Para estimar la razón de odds definida anteriormente, primero se necesitan las proporciones conjuntas de sexo y condición de pobreza, junto con sus varianzas y covarianzas. En la interfaz de fórmulas de `survey`, `~interaction(Sex, poor)` identifica las cuatro combinaciones de estas variables. El siguiente código computacional estima sus proporciones mediante `svymean()` y organiza las estimaciones, los errores estándar y los intervalos de confianza que se presentan en la @tbl-interaccion-sexo-pobreza. El objeto resultante conserva las covarianzas necesarias para calcular después la razón de odds y su error estándar con `svycontrast()`. La @sec-contrastes-y-diferencias-de-proporciones desarrolla el uso de esta función para contrastes lineales.
 
-```{r cod-interaccion-sexo-pobreza}
+```{r code-interaction-sex-poverty}
 #| results: hide
 sex_poverty_odds_contrast <- svymean(
   ~interaction(Sex, poor),
@@ -873,7 +873,7 @@ names(coef(sex_poverty_odds_contrast))
 sex_poverty_odds_contrast
 ```
 
-```{r cod-interaccion-sexo-pobreza-objeto}
+```{r code-interaction-sex-poverty-object}
 #| results: hide
 joint_ci <- confint(
   sex_poverty_odds_contrast,
@@ -904,7 +904,7 @@ tabla_fmt(sex_poverty_joint_table,
 
 La expresión se construye con `quote()` para que `svycontrast()` la evalúe sobre las estimaciones. Los acentos graves delimitan los nombres de las celdas; estos se comprueban con `names(coef())`. El siguiente código computacional define la razón de odds y la estima mediante `svycontrast()`.
 
-```{r cod-razon-odds-pobreza-sexo, echo=TRUE, eval=TRUE}
+```{r code-ratio-odds-poverty-sex, echo=TRUE, eval=TRUE}
 odds_ratio <- quote(
  (`interaction(Sex, poor)Female.0` /
   `interaction(Sex, poor)Female.1`) /
@@ -1001,7 +1001,7 @@ Aquí, $T$ representa una variable aleatoria con distribución $t$ de Student y 
 
 Para evaluar si la tasa de desocupación difiere entre hombres y mujeres, se utiliza la subpoblación `labor_force_subset`, creada previamente a partir del diseño completo. Dentro de este dominio, `unemployed` vale uno para las personas desocupadas y cero para las ocupadas. Su media ponderada por sexo estima la tasa de desocupación de cada grupo. Las personas inactivas y las menores de 15 años no forman parte del denominador. El siguiente código computacional recupera las tasas de desocupación por sexo calculadas previamente. Se fija `Female` como referencia para que la diferencia sea hombres menos mujeres. El intervalo devuelto por esta prueba es del 95 %.
 
-```{r cod-tab-desocupacion-sexo}
+```{r code-table-unemployment-sex}
 #| results: hide
 sex_unemployment_rate
 ```
@@ -1018,7 +1018,7 @@ tabla_fmt(sex_unemployment_rate,
 
 Las tasas por sexo, calculadas en `sex_unemployment_rate`, se presentan en la @tbl-tasa-desocupacion-sexo-prueba. El siguiente código computacional utiliza `svyttest()` del paquete `survey` para contrastar la diferencia entre las tasas de desocupación de hombres y mujeres, incorporando el diseño muestral. Luego reúne la diferencia estimada, el estadístico, el valor-*p*, los grados de libertad y el intervalo de confianza para su presentación en una tabla.
 
-```{r cod-ttest-desocupacion-sexo}
+```{r code-ttest-unemployment-sex}
 #| results: hide
 
 ttest_unemployment_sex <- svyttest(
@@ -1032,7 +1032,7 @@ ttest_unemployment_sex <- svyttest(
 ttest_unemployment_sex
 ```
 
-```{r cod-ttest-desocupacion-sexo-objeto}
+```{r code-ttest-unemployment-sex-object}
 #| results: hide
 unemployment_test_summary <- tibble(
   estimated_difference = ttest_unemployment_sex$estimate,
@@ -1088,7 +1088,7 @@ En la función `svychisq()`, el argumento `formula` especifica las dos variables
 
 A modo de ejemplo, para evaluar si la condición de pobreza es independiente del sexo, se puede ejecutar el siguiente código:
 
-```{r cod-chi-pobreza-sexo, eval=TRUE}
+```{r code-chi-poverty-sex, eval=TRUE}
 poverty_sex_test <- svychisq(
   formula = ~Sex + poor,
   design = survey_design,
@@ -1100,7 +1100,7 @@ poverty_sex_test
 
 El resultado de la prueba de independencia de Rao-Scott no proporciona evidencia de una asociación estadísticamente significativa entre el sexo y la condición de pobreza. En particular, el valor-*p* obtenido es considerablemente mayor que los niveles de significancia usuales, por lo que no se rechaza la hipótesis nula de independencia entre ambas variables. En consecuencia, con base en la muestra analizada y teniendo en cuenta el diseño complejo de la encuesta, que dispone de `r degf(survey_design)` grados de libertad, no se observan diferencias estadísticamente significativas en la distribución de la condición de pobreza entre hombres y mujeres. El siguiente código computacional aplica el mismo procedimiento para evaluar la asociación entre condición de empleo y sexo.
 
-```{r cod-chi-empleo-sexo, eval=TRUE}
+```{r code-chi-employment-sex, eval=TRUE}
 employment_sex_test <- svychisq(
   formula = ~Sex + Employment,
   design = survey_design %>%
@@ -1114,7 +1114,7 @@ employment_sex_test
 
 En este caso, para el contraste de independencia entre las variables `Sex` y `Employment`, el estadístico obtenido fue $F = `r formatC(unname(employment_sex_test$statistic), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`$, con un valor-*p* de `r format.pval(employment_sex_test$p.value, digits = 3, eps = 0.001)`, lo que proporciona evidencia estadísticamente significativa para rechazar la hipótesis nula de independencia entre ambas variables. En consecuencia, los resultados sugieren que sí existe una asociación significativa entre el sexo y la condición de empleo en la población de estudio. El siguiente código computacional aplica la prueba de independencia entre la condición de pobreza y la región.
 
-```{r cod-chi-pobreza-region, eval=TRUE}
+```{r code-chi-poverty-region, eval=TRUE}
 poverty_region_test <- svychisq(
   formula = ~Region + poor,
   design = survey_design,
@@ -1150,7 +1150,7 @@ Supóngase, por ejemplo, que se desea comparar la proporción de mujeres en situ
 
 Al solicitar `vartype = "ci"`, `svyby()` obtiene los límites mediante el método de intervalo correspondiente al estimador indicado en `FUN`. En los ejemplos del libro que emplean `svymean()` o `svyratio()` dentro de `svyby()`, esos límites se calculan con la aproximación normal. El siguiente código computacional estima las proporciones de pobreza por sexo y conserva sus covarianzas para los contrastes posteriores.
 
-```{r cod-prop-pobreza-sexo}
+```{r code-proportion-poverty-sex}
 #| results: hide
 sex_poverty_contrast <- svyby(
   formula = ~poor,
@@ -1175,7 +1175,7 @@ tabla_fmt(sex_poverty_contrast, row.names = FALSE,
 
 A partir de las estimaciones de la @tbl-svyby-pobreza-sexo2, el siguiente código computacional utiliza `svycontrast()` para calcular la proporción de mujeres en pobreza menos la de hombres y obtener el error estándar de esa diferencia.
 
-```{r cod-diferencia-pobreza-sexo}
+```{r code-difference-poverty-sex}
 sex_poverty_estimate <- setNames(
   as.numeric(sex_poverty_contrast[["poor"]]),
   sex_poverty_contrast[["Sex"]]
@@ -1201,14 +1201,14 @@ $$
 
 El siguiente código computacional extrae la matriz de varianzas y covarianzas con `vcov()` y conserva sus nombres de fila como una columna para presentarla en la @tbl-vcov-sex-pobreza.
 
-```{r cod-vcov-pobreza-sexo}
+```{r code-vcov-poverty-sex}
 #| results: hide
 sex_poverty_vcov <- vcov(sex_poverty_contrast)
 
 sex_poverty_vcov
 ```
 
-```{r cod-vcov-sex-pobreza-objeto}
+```{r code-vcov-sex-poverty-object}
 #| results: hide
 sex_poverty_vcov_table <- as.data.frame(sex_poverty_vcov) %>%
   tibble::rownames_to_column("domain")
@@ -1226,7 +1226,7 @@ tabla_fmt(sex_poverty_vcov_table, digits = 10,
 
 El siguiente código computacional calcula el error estándar de la diferencia a partir de la matriz anterior. Para ello, obtiene la raíz cuadrada de la suma de las varianzas de ambas proporciones menos dos veces su covarianza.
 
-```{r cod-se-diferencia-pobreza-sexo}
+```{r code-se-difference-poverty-sex}
 sqrt(
   sex_poverty_vcov["Female", "Female"] +
     sex_poverty_vcov["Male", "Male"] -
@@ -1236,7 +1236,7 @@ sqrt(
 
 No obstante, el paquete `survey` permite realizar este procedimiento de forma directa mediante la función `svycontrast`, la cual calcula tanto el contraste lineal como su error estándar asociado. Para obtener la diferencia entre las proporciones de mujeres y hombres en condición de pobreza, se utiliza el siguiente código:
 
-```{r cod-contraste-pobreza-sexo}
+```{r code-contrast-poverty-sex}
 poverty_sex_difference <- svycontrast(
   stat = sex_poverty_contrast,
   contrasts = list(
@@ -1251,7 +1251,7 @@ De lo que se concluye que la diferencia estimada entre las proporciones de mujer
 
 El siguiente código computacional estima las tasas de desocupación por región y conserva sus covarianzas para los contrastes posteriores. Se utiliza `labor_force_subset`, de modo que el denominador es la fuerza de trabajo de cada región. Los resultados se presentan en la @tbl-tasa-desocupacion-region y se expresan en escala de cero a uno.
 
-```{r cod-tasa-desocupacion-region}
+```{r code-rate-unemployment-region}
 #| results: hide
 region_unemployment_rate <- svyby(
   formula = ~ unemployed,
@@ -1288,14 +1288,14 @@ $$
 
 El error estándar de cada contraste requiere considerar tanto las varianzas de las tasas regionales como sus covarianzas. El siguiente código computacional extrae esta matriz y la organiza en una tabla, conservando los nombres de las regiones.
 
-```{r cod-vcov-desocupacion-region, echo=TRUE}
+```{r code-vcov-unemployment-region, echo=TRUE}
 #| results: hide
 region_unemployment_vcov <- vcov(region_unemployment_rate)
 
 region_unemployment_vcov
 ```
 
-```{r cod-vcov-desocupacion-region-objeto}
+```{r code-vcov-unemployment-region-object}
 #| results: hide
 region_unemployment_vcov_table <- as.data.frame(region_unemployment_vcov) %>%
   tibble::rownames_to_column("domain")
@@ -1313,7 +1313,7 @@ tabla_fmt(region_unemployment_vcov_table, digits = 7,
 
 La @tbl-vcov-desocupacion-region permite examinar las covarianzas estimadas. Si la selección por región se realiza de manera independiente, las covarianzas entre estimadores de regiones distintas pueden ser nulas. Esta conclusión debe apoyarse en el diseño y no únicamente en ceros impresos tras redondear. A continuación se calculan los errores estándar de cada diferencia conservando el término de covarianza.
 
-```{r cod-se-contrastes-desocupacion-region}
+```{r code-se-contrasts-unemployment-region}
 # North - Central
 sqrt(
   region_unemployment_vcov["North", "North"] +
@@ -1339,7 +1339,7 @@ sqrt(
 
 Alternativamente, el paquete `survey` permite calcular estos contrastes de manera directa mediante la función `svycontrast`, la cual obtiene tanto las diferencias estimadas entre tasas como sus respectivos errores estándar. En este caso, la estimación de los contrastes definidos anteriormente se realiza de la siguiente manera:
 
-```{r cod-contrastes-desocupacion-region}
+```{r code-contrasts-unemployment-region}
 unemployment_region_differences <- svycontrast(
   stat = region_unemployment_rate,
   contrasts = list(
@@ -1365,13 +1365,13 @@ La construcción de los gráficos presentados en este documento se basa en el en
 ### Gráficos de barras {#graficos-de-barras}
 La construcción de gráficos de barras en `R` requiere, como paso previo, obtener las estimaciones que se desean representar visualmente. En el contexto de encuestas complejas, estas estimaciones pueden calcularse mediante las funciones `survey_total()` o `survey_prop()` del paquete `srvyr`, dependiendo de si el interés se centra en totales poblacionales o proporciones. El siguiente código computacional carga `ggplot2`, que se utilizará para representar estas estimaciones.
 
-```{r setup-graficos-categoricas, message=FALSE, warning=FALSE}
+```{r setup-plots-categorical, message=FALSE, warning=FALSE}
 library(ggplot2)
 ```
 
-Para representar adecuadamente la variabilidad de las estimaciones derivada del diseño muestral, los gráficos de barras deberían incorporar los correspondientes intervalos de confianza obtenidos mediante los procedimientos descritos en este capítulo. De esta manera, el gráfico no solo muestra la magnitud de las estimaciones puntuales, sino también la incertidumbre asociada a cada una de ellas, lo que permite realizar una interpretación más completa de los resultados. A continuación, se ilustra este procedimiento utilizando las estimaciones del tamaño poblacional según zona de residencia. Los resultados se presentan en la @fig-barras-zona.
+Para representar adecuadamente la variabilidad de las estimaciones derivada del diseño muestral, los gráficos de barras deberían incorporar los correspondientes intervalos de confianza obtenidos mediante los procedimientos descritos en este capítulo. De esta manera, el gráfico no solo muestra la magnitud de las estimaciones puntuales, sino también la incertidumbre asociada a cada una de ellas, lo que permite realizar una interpretación más completa de los resultados. A continuación, se ilustra este procedimiento utilizando las estimaciones del tamaño poblacional según zona de residencia. Los resultados se presentan en la @fig-bar-zone.
 
-```{r fig-barras-zona, fig.cap="Estimación del tamaño poblacional por zona geográfica", fig.align='center', out.width='70%', echo=TRUE}
+```{r fig-bar-zone, fig.cap="Estimación del tamaño poblacional por zona geográfica", fig.align='center', out.width='70%', echo=TRUE}
 zone_size <- survey_design %>%
   group_by(Zone) %>%
   summarise(
@@ -1402,9 +1402,9 @@ ggplot(
 
 El código comienza estimando, para cada categoría de la variable `Zone`, el tamaño poblacional mediante `survey_total()`, teniendo en cuenta el diseño muestral complejo. Además de la estimación puntual, se solicitan el error estándar y los límites del intervalo de confianza mediante `vartype = c("se", "ci")`, cuyos resultados se almacenan en el objeto `zone_size`. Posteriormente, se define una paleta de colores específica para las zonas urbana y rural y se construye el gráfico con `ggplot2`. En la estética del gráfico, `size` determina la altura de cada barra, mientras que `size_low` y `size_upp` establecen los límites inferior y superior de las barras de error. La función `geom_bar()` representa los tamaños poblacionales estimados y `geom_errorbar()` añade los intervalos de confianza correspondientes. Finalmente, `scale_fill_manual()` asigna los colores definidos previamente, `theme_bw()` aplica un formato visual limpio y `theme(legend.position = "top")` ubica la leyenda en la parte superior del gráfico.
 
-El procedimiento anterior puede extenderse naturalmente a variables con más de dos categorías. En estos casos, el gráfico de barras facilita la comparación simultánea de las estimaciones correspondientes a cada categoría y, al incorporar sus intervalos de confianza, permite apreciar también la precisión asociada a cada una de ellas. A modo de ejemplo, a continuación se presenta la distribución estimada de la población según su condición de pobreza; los resultados gráficos se muestran en la @fig-barras-pobreza.
+El procedimiento anterior puede extenderse naturalmente a variables con más de dos categorías. En estos casos, el gráfico de barras facilita la comparación simultánea de las estimaciones correspondientes a cada categoría y, al incorporar sus intervalos de confianza, permite apreciar también la precisión asociada a cada una de ellas. A modo de ejemplo, a continuación se presenta la distribución estimada de la población según su condición de pobreza; los resultados gráficos se muestran en la @fig-bar-poverty.
 
-```{r fig-barras-pobreza, fig.cap="Estimación del número de personas según condición de pobreza", fig.align='center', out.width='70%', echo=TRUE}
+```{r fig-bar-poverty, fig.cap="Estimación del número de personas según condición de pobreza", fig.align='center', out.width='70%', echo=TRUE}
 poverty_size <- 
   survey_design %>%
   group_by(Poverty) %>%
@@ -1431,9 +1431,9 @@ ggplot(
   theme(legend.position = "top")
 ```
 
-Una de las ventajas de los gráficos de barras es que pueden extenderse fácilmente al análisis conjunto de dos variables categóricas. En este contexto, permiten comparar las estimaciones correspondientes a las distintas combinaciones de categorías y apreciar de manera visual las diferencias entre grupos. A modo de ejemplo, se presenta la estimación del número de personas según su condición de pobreza y estado de ocupación, cuyos resultados se muestran en la @fig-barras-empleo-pobreza, obtenida con el siguiente código computacional.
+Una de las ventajas de los gráficos de barras es que pueden extenderse fácilmente al análisis conjunto de dos variables categóricas. En este contexto, permiten comparar las estimaciones correspondientes a las distintas combinaciones de categorías y apreciar de manera visual las diferencias entre grupos. A modo de ejemplo, se presenta la estimación del número de personas según su condición de pobreza y estado de ocupación, cuyos resultados se muestran en la @fig-bar-employment-poverty, obtenida con el siguiente código computacional.
 
-```{r fig-barras-empleo-pobreza, fig.cap="Estimación del número de personas por estado de ocupación y situación de pobreza", fig.align='center', out.width='80%', echo=TRUE}
+```{r fig-bar-employment-poverty, fig.cap="Estimación del número de personas por estado de ocupación y situación de pobreza", fig.align='center', out.width='80%', echo=TRUE}
 employment_poverty_size <- survey_design %>%
   filter(!is.na(Employment)) %>%
   group_by(Employment, Poverty) %>%
@@ -1467,9 +1467,9 @@ ggplot(
 
 El gráfico usa las categorías originales de `Employment` y excluye sus faltantes: no confunde inactividad con ocupación ni asigna a los faltantes una condición laboral no observada.
 
-Este tipo de análisis gráfico resulta especialmente útil para examinar posibles intersecciones de vulnerabilidad, ya que permite representar simultáneamente dos o más características de la población y comparar los resultados entre distintos grupos. Además de mostrar conteos o tamaños poblacionales estimados, los gráficos de barras pueden emplearse para representar proporciones, junto con sus correspondientes medidas de precisión. A modo de ejemplo, se presenta la proporción estimada de hombres en condición de pobreza según zona de residencia, incorporando los intervalos de confianza asociados a cada estimación. Se muestran las tres categorías de pobreza dentro de cada zona de la población masculina. Los resultados se muestran en la @fig-barras-prop-zona-hombre, obtenida con el siguiente código computacional.
+Este tipo de análisis gráfico resulta especialmente útil para examinar posibles intersecciones de vulnerabilidad, ya que permite representar simultáneamente dos o más características de la población y comparar los resultados entre distintos grupos. Además de mostrar conteos o tamaños poblacionales estimados, los gráficos de barras pueden emplearse para representar proporciones, junto con sus correspondientes medidas de precisión. A modo de ejemplo, se presenta la proporción estimada de hombres en condición de pobreza según zona de residencia, incorporando los intervalos de confianza asociados a cada estimación. Se muestran las tres categorías de pobreza dentro de cada zona de la población masculina. Los resultados se muestran en la @fig-bar-proportion-zone-male, obtenida con el siguiente código computacional.
 
-```{r fig-barras-prop-zona-hombre, fig.cap="Proporción de hombres en condición de pobreza por zona geográfica", fig.align='center', out.width='70%', echo=TRUE}
+```{r fig-bar-proportion-zone-male, fig.cap="Proporción de hombres en condición de pobreza por zona geográfica", fig.align='center', out.width='70%', echo=TRUE}
 male_zone_poverty_proportion <- 
   male_subset %>%
   group_by(Zone, Poverty) %>%
@@ -1501,9 +1501,9 @@ ggplot(
   theme(legend.position = "top")
 ```
 
-De manera análoga, este tipo de representación puede extenderse a niveles más detallados de desagregación geográfica. Por ejemplo, es posible comparar, entre regiones, las proporciones de hombres pobres y no pobres e incorporar sus correspondientes intervalos de confianza. Esta representación permite observar la composición de la población masculina de cada región según la condición de pobreza y evaluar la precisión de las estimaciones. La leyenda identifica las categorías como «No pobre» y «Pobre»; el mapa posterior selecciona únicamente la categoría `poor == 1`. Los resultados se presentan en la @fig-barras-prop-region-hombre, obtenida con el siguiente código computacional.
+De manera análoga, este tipo de representación puede extenderse a niveles más detallados de desagregación geográfica. Por ejemplo, es posible comparar, entre regiones, las proporciones de hombres pobres y no pobres e incorporar sus correspondientes intervalos de confianza. Esta representación permite observar la composición de la población masculina de cada región según la condición de pobreza y evaluar la precisión de las estimaciones. La leyenda identifica las categorías como «No pobre» y «Pobre»; el mapa posterior selecciona únicamente la categoría `poor == 1`. Los resultados se presentan en la @fig-bar-proportion-region-male, obtenida con el siguiente código computacional.
 
-```{r fig-barras-prop-region-hombre, fig.cap="Proporciones de hombres pobres y no pobres por región", fig.align='center', out.width='75%', echo=TRUE}
+```{r fig-bar-proportion-region-male, fig.cap="Proporciones de hombres pobres y no pobres por región", fig.align='center', out.width='75%', echo=TRUE}
 male_region_poverty_proportion <- 
   male_subset %>%
   group_by(Region, poor) %>%
@@ -1540,9 +1540,9 @@ ggplot(
   theme(legend.position = "top")
 ```
 
-Otra forma de representar los tamaños poblacionales es la pirámide por edad y sexo de la @fig-piramide-poblacional, obtenida con el siguiente código computacional. Se utilizan las estimaciones y los intervalos de confianza de la @tbl-tamano-edad-sexo, almacenados en `age_sex_population_size`. Los hombres se sitúan a la izquierda, en azul, y las mujeres a la derecha, en rosa; los grupos de menor edad aparecen en la base. La longitud de cada barra representa el número estimado de personas y las líneas negras muestran sus intervalos de confianza del 95 %.
+Otra forma de representar los tamaños poblacionales es la pirámide por edad y sexo de la @fig-pyramid-population, obtenida con el siguiente código computacional. Se utilizan las estimaciones y los intervalos de confianza de la @tbl-tamano-edad-sexo, almacenados en `age_sex_population_size`. Los hombres se sitúan a la izquierda, en azul, y las mujeres a la derecha, en rosa; los grupos de menor edad aparecen en la base. La longitud de cada barra representa el número estimado de personas y las líneas negras muestran sus intervalos de confianza del 95 %.
 
-```{r fig-piramide-poblacional, fig.cap="Pirámide de población estimada por edad y sexo con intervalos de confianza del 95 %", fig.align='center', fig.width=10.5, fig.height=9, out.width='100%', echo=TRUE}
+```{r fig-pyramid-population, fig.cap="Pirámide de población estimada por edad y sexo con intervalos de confianza del 95 %", fig.align='center', fig.width=10.5, fig.height=9, out.width='100%', echo=TRUE}
 ggplot(
   age_sex_population_size,
   aes(
@@ -1593,7 +1593,7 @@ Como explica @Tennekes2018tmap, los mapas temáticos constituyen una herramienta
 
 El siguiente código computacional carga las librerías `sf` y `tmap` para trabajar con la información geográfica y vincularla con los resultados de la encuesta. La librería `sf` permite leer y manipular objetos espaciales modernos, mientras que `tmap` proporciona herramientas para elaborar mapas temáticos. La instrucción `tmap_mode("plot")` establece el modo de visualización estática de los mapas, apropiado para documentos y reportes. Finalmente, la función `read_sf()` importa el archivo geográfico `BigCity.shp`, almacenándolo en el objeto `bigcity_shape`, el cual contiene los polígonos correspondientes a las regiones de análisis.
 
-```{r mapas-setup, echo=TRUE, eval=TRUE}
+```{r maps-setup, echo=TRUE, eval=TRUE}
 library(sf)
 library(tmap)
 tmap_mode("plot")
@@ -1609,19 +1609,18 @@ bigcity_shape <- read_sf("../data/shapeBigCity/BigCity.shp") %>%
     )
   )
 
-stopifnot(setequal(bigcity_shape$Region, levels(survey_data$Region)))
 ```
 
-La columna `Region` del mapa se recodifica al inglés para que sus claves coincidan con las de `sample.rds`; esta correspondencia se comprueba antes de unir las estimaciones con `setequal()`. Así se detectan discrepancias antes de unir el mapa con las estimaciones y el archivo geográfico original se conserva. Con el *shapefile* cargado, el siguiente código computacional genera el mapa de la @fig-mapa-regiones mediante `tm_shape()` y `tm_polygons()`.
+La columna `Region` del mapa se recodifica al inglés para que sus nombres coincidan con los de `sample.rds` y permitan unir el mapa con las estimaciones. La recodificación se realiza en el objeto cargado en R y conserva el archivo geográfico original. Con el *shapefile* cargado, el siguiente código computacional genera el mapa de la @fig-map-regions mediante `tm_shape()` y `tm_polygons()`.
 
-```{r fig-mapa-regiones, fig.cap="Mapa de regiones geográficas de BigCity", fig.align='center', out.width='70%', echo=TRUE}
+```{r fig-map-regions, fig.cap="Mapa de regiones geográficas de BigCity", fig.align='center', out.width='70%', echo=TRUE}
 tm_shape(bigcity_shape) +
   tm_polygons(col = "Region")
 ```
 
-Por ejemplo, si se desea representar geográficamente la proporción de hombres en condición de pobreza por región, mostrada previamente en la @fig-barras-prop-region-hombre, es necesario integrar las estimaciones obtenidas con la información espacial del shapefile. En el siguiente código computacional, el objeto `male_region_poverty_proportion`, que contiene las proporciones estimadas para cada región, se vincula con el archivo geográfico mediante la función `left_join()`. Posteriormente, se filtran únicamente las observaciones correspondientes a la categoría de pobreza (`poor == 1`), de manera que el mapa represente exclusivamente la distribución espacial de la población masculina en condición de pobreza.
+Por ejemplo, si se desea representar geográficamente la proporción de hombres en condición de pobreza por región, mostrada previamente en la @fig-bar-proportion-region-male, es necesario integrar las estimaciones obtenidas con la información espacial del shapefile. En el siguiente código computacional, el objeto `male_region_poverty_proportion`, que contiene las proporciones estimadas para cada región, se vincula con el archivo geográfico mediante la función `left_join()`. Posteriormente, se filtran únicamente las observaciones correspondientes a la categoría de pobreza (`poor == 1`), de manera que el mapa represente exclusivamente la distribución espacial de la población masculina en condición de pobreza.
 
-```{r mapas-pobreza-setup, echo=TRUE, eval=TRUE}
+```{r maps-poverty-setup, echo=TRUE, eval=TRUE}
 shape_region_map <- tm_shape(
   bigcity_shape %>%
     left_join(
@@ -1633,9 +1632,9 @@ shape_region_map <- tm_shape(
 
 ```
 
-Una vez construido el objeto espacial con las estimaciones de interés, los puntos de corte de la escala de color se calculan a partir del rango observado de las proporciones de hombres pobres. Así, los colores permiten distinguir mejor las diferencias entre regiones cuando las estimaciones se concentran en un tramo reducido de la escala de cero a uno. El siguiente código computacional representa esta distribución regional en la @fig-mapa-pobreza-hombre; sus colores deben interpretarse según los intervalos indicados en la leyenda.
+Una vez construido el objeto espacial con las estimaciones de interés, los puntos de corte de la escala de color se calculan a partir del rango observado de las proporciones de hombres pobres. Así, los colores permiten distinguir mejor las diferencias entre regiones cuando las estimaciones se concentran en un tramo reducido de la escala de cero a uno. El siguiente código computacional representa esta distribución regional en la @fig-map-poverty-male; sus colores deben interpretarse según los intervalos indicados en la leyenda.
 
-```{r fig-mapa-pobreza-hombre, fig.cap="Proporción de hombres en condición de pobreza por región", fig.align='center', out.width='70%', echo=TRUE}
+```{r fig-map-poverty-male, fig.cap="Proporción de hombres en condición de pobreza por región", fig.align='center', out.width='70%', echo=TRUE}
 poverty_estimates <- male_region_poverty_proportion %>%
   filter(poor == 1) %>%
   pull(proportion)
@@ -1657,11 +1656,11 @@ shape_region_map +
   )
 ```
 
-Otro uso de los mapas en encuestas, señalado por @CEPAL2023Diseno, es la visualización de la precisión de las estimaciones. Por ejemplo, usando el coeficiente de variación de la proporción de pobreza por región es posible identificar las áreas donde las estimaciones son menos confiables, como se muestra en la @fig-mapa-cv-pobreza.
+Otro uso de los mapas en encuestas, señalado por @CEPAL2023Diseno, es la visualización de la precisión de las estimaciones. Por ejemplo, usando el coeficiente de variación de la proporción de pobreza por región es posible identificar las áreas donde las estimaciones son menos confiables, como se muestra en la @fig-map-cv-poverty.
 
 El siguiente código calcula y representa geográficamente el coeficiente de variación de la proporción de pobreza por región. En primer lugar, se estima la proporción de pobreza agrupando por `Region` y `poor` y aplicando `survey_prop()`; después se conserva la categoría `poor == 1`. El argumento `vartype = "cv"` solicita el cálculo del coeficiente de variación de cada estimación. Posteriormente, se definen los intervalos de clasificación de la escala de color mediante el objeto `cv_breaks`, y las estimaciones se integran con la información geográfica del shapefile usando `left_join()`. Finalmente, mediante las funciones `tm_shape()` y `tm_polygons()` del paquete `tmap`, se construye el mapa que representa espacialmente los coeficientes de variación utilizando una escala de colores en blanco y negro y ajustando la proporción del mapa con `tm_layout(asp = 0)`.
 
-```{r fig-mapa-cv-pobreza, fig.cap="Coeficiente de variación de la proporción de pobreza por región", fig.align='center', out.width='70%', echo=TRUE}
+```{r fig-map-cv-poverty, fig.cap="Coeficiente de variación de la proporción de pobreza por región", fig.align='center', out.width='70%', echo=TRUE}
 region_poverty_cv <- survey_design %>%
   filter(!is.na(poor)) %>%
   group_by(Region, poor) %>%
@@ -1699,9 +1698,9 @@ shape_cv_map +
 
 Los polígonos con tonos más oscuros corresponden a regiones donde la proporción estimada presenta mayor variabilidad relativa. El CV se expresa como razón, de modo que 0,1 equivale al 10 %; no representa el error estándar en %. Un coeficiente de variación elevado indica menor precisión relativa, pero no permite atribuirla únicamente a un tamaño muestral insuficiente, pues también puede reflejar la ponderación y otras características del diseño.
 
-De acuerdo con @biscale2025 y @cowplot2025, cuando se desea representar simultáneamente dos variables (por ejemplo, la proporción de pobreza y su coeficiente de variación) es posible construir un mapa bivariante utilizando `ggplot2` junto con los paquetes `biscale` y `cowplot`. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la @fig-mapa-bivariante. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando una fila por región. El denominador es la población femenina rural de cada región; el CV expresa precisión relativa y no incertidumbre absoluta.
+De acuerdo con @biscale2025 y @cowplot2025, cuando se desea representar simultáneamente dos variables (por ejemplo, la proporción de pobreza y su coeficiente de variación) es posible construir un mapa bivariante utilizando `ggplot2` junto con los paquetes `biscale` y `cowplot`. Este tipo de visualización permite identificar regiones con alta pobreza y alta incertidumbre en la estimación de forma conjunta, como se presenta en la @fig-map-bivariate. El siguiente código estima la proporción de mujeres en condición de pobreza en zonas rurales para cada región, incorporando además el cálculo del coeficiente de variación de las estimaciones, generando una fila por región. El denominador es la población femenina rural de cada región; el CV expresa precisión relativa y no incertidumbre absoluta.
 
-```{r mapas-bivar-setup, echo=TRUE, eval=TRUE}
+```{r maps-bivariate-setup, echo=TRUE, eval=TRUE}
 region_sex_poverty_proportion <- survey_design %>%
   filter(Zone == "Rural", Sex == "Female") %>%
   filter(!is.na(poor)) %>%
@@ -1725,11 +1724,10 @@ El siguiente código construye un mapa bivariado que permite visualizar simultá
 A continuación, la función `bi_legend()` crea una leyenda especializada que permite interpretar simultáneamente ambas dimensiones del mapa: el coeficiente de variación y la pobreza femenina rural. Finalmente, mediante las funciones `ggdraw()` y `draw_plot()` del paquete `cowplot`, se combinan el mapa y la leyenda en una única visualización.
 
 
-```{r fig-mapa-bivariante, fig.cap="Mapa bivariante: proporción de pobreza femenina rural y su coeficiente de variación por región", fig.align='center', out.width='80%', echo=TRUE}
+```{r fig-map-bivariate, fig.cap="Mapa bivariante: proporción de pobreza femenina rural y su coeficiente de variación por región", fig.align='center', out.width='80%', echo=TRUE}
 library(biscale)
 library(cowplot)
 
-stopifnot(!anyDuplicated(region_sex_poverty_proportion$Region))
 bivariate_shape <- bigcity_shape %>%
   left_join(region_sex_poverty_proportion, by = "Region")
 
@@ -1773,7 +1771,7 @@ En este mapa, cada celda de la leyenda combina un tono de la proporción de pobr
 
 Al desagregar los resultados por territorio y características sociodemográficas, algunas estimaciones directas pueden presentar una precisión limitada. El siguiente código computacional ilustra esta situación al estimar la proporción de pobreza entre las mujeres rurales de 15 a 29 años de cada región y resumir su precisión, incorporando los factores de expansión, los estratos y las UPM del diseño muestral.
 
-```{r cod-pobreza-mujeres-rurales-jovenes}
+```{r code-poverty-women-rural-young}
 #| results: hide
 rural_young_women <- survey_design %>%
   filter(

@@ -62,7 +62,7 @@ $$
 
 La siguiente simulación de Monte Carlo reproduce este proceso. En cada repetición se genera una población completa de tamaño $N=100$ y se calcula su media. El promedio de esas medias poblacionales debe aproximarse a $\theta$.
 
-```{r sim-mv-modelo, echo = TRUE, eval = TRUE}
+```{r simulate-multivariate-model, echo = TRUE, eval = TRUE}
 set.seed(2026)
 population_size <- 100
 theta <- 0.3
@@ -129,7 +129,7 @@ el cual trata la muestra como si fuera autoponderada. Este estimador es sesgado 
 
 En este ejemplo artificial, cada hogar constituye un conglomerado y actúa como unidad primaria de muestreo. Se seleccionan hogares con probabilidades proporcionales a su tamaño y se observan todas las personas que los integran. En esta simulación, todas las personas de la población artificial pertenecen a la fuerza de trabajo; por tanto, la media de la indicadora de desocupación representa la tasa de desocupación. Este universo simulado es independiente de `sample.rds` y de su dominio `labor_force_subset`. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño mediante `S.piPS()` del paquete `TeachingSampling`. En cada muestra se calculan dos estimadores: `design_estimates`, que corresponde a $\hat{\bar{y}}$, y `simple_estimates`, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, $\bar{y}_s$. Además, estos estimadores se comparan con la tasa poblacional `unemployment_rate_population`, calculada sobre la realización finita generada con el modelo.
 
-```{r sim-muestreo, echo = TRUE, eval = TRUE}
+```{r simulate-sampling, echo = TRUE, eval = TRUE}
 library(TeachingSampling)
 
 set.seed(2026)
@@ -330,7 +330,7 @@ De acuerdo con @HeeringaWestBerglund2017, este resultado extiende de manera natu
 
 La siguiente simulación de Monte Carlo anidada ilustra la inferencia doble. En el ciclo externo se genera una nueva población bajo el modelo Bernoulli. En el ciclo interno se seleccionan muchas muestras por diseño y se comparan el estimador que incorpora el diseño y el promedio simple de la muestra.
 
-```{r sim-doble, echo = TRUE, eval = TRUE}
+```{r simulate-double-sampling, echo = TRUE, eval = TRUE}
 set.seed(2026)
 population_size <- 100
 theta <- 0.3
