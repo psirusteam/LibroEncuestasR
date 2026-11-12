@@ -116,11 +116,7 @@ survey_design <- survey_design %>%
   mutate(
     poor = ifelse(Poverty != "NotPoor", 1, 0),
     unemployed = ifelse(Employment == "Unemployed", 1, 0),
-    age_18 = case_when(
-      is.na(Age) ~ NA_character_,
-      Age < 18 ~ "< 18 years",
-      TRUE ~ ">= 18 years"
-    )
+    age_18 = if_else(Age < 18, "< 18 years", ">= 18 years")
   )
 
 ```
@@ -885,11 +881,6 @@ sex_poverty_odds_contrast <- svymean(
 )
 names(coef(sex_poverty_odds_contrast))
 
-sex_poverty_odds_contrast
-```
-
-```{r code-interaction-sex-poverty-object}
-#| results: hide
 joint_ci <- confint(
   sex_poverty_odds_contrast,
   level = 0.95,
@@ -1014,24 +1005,7 @@ $$
 
 Aquí, $T$ representa una variable aleatoria con distribución $t$ de Student y $df$ grados de libertad bajo $H_0$, mientras que $t$ es el estadístico observado. Un valor-*p* pequeño indica mayor incompatibilidad entre los datos y la hipótesis nula. Si es menor que el nivel de significación $\alpha$, se rechaza $H_0$; en caso contrario, no se rechaza. Nòtese que el valor-*p* no representa la probabilidad de que $H_0$ sea verdadera.
 
-Para evaluar si la tasa de desocupación difiere entre hombres y mujeres, se utiliza la subpoblación `labor_force_subset`, creada previamente a partir del diseño completo. Dentro de este dominio, `unemployed` vale uno para las personas desocupadas y cero para las ocupadas. Su media ponderada por sexo estima la tasa de desocupación de cada grupo. Las personas inactivas y las menores de 15 años no forman parte del denominador. El siguiente código computacional recupera las tasas de desocupación por sexo calculadas previamente. Se fija `Female` como referencia para que la diferencia sea hombres menos mujeres. El intervalo devuelto por esta prueba es del 95 %.
-
-```{r code-table-unemployment-sex}
-#| results: hide
-sex_unemployment_rate
-```
-
-```{r}
-#| label: tbl-tasa-desocupacion-sexo-prueba
-#| tbl-cap: "Tasas de desocupación por sexo para la prueba de hipótesis"
-#| echo: false
-tabla_fmt(sex_unemployment_rate,
-          col.names = c("Sexo", "Tasa", "EE", "LI 95 %", "LS 95 %"))
-```
-
-
-
-Las tasas por sexo, calculadas en `sex_unemployment_rate`, se presentan en la @tbl-tasa-desocupacion-sexo-prueba. El siguiente código computacional utiliza `svyttest()` del paquete `survey` para contrastar la diferencia entre las tasas de desocupación de hombres y mujeres, incorporando el diseño muestral. Luego reúne la diferencia estimada, el estadístico, el valor-*p*, los grados de libertad y el intervalo de confianza para su presentación en una tabla.
+Las tasas de desocupación por sexo, con sus errores estándar e intervalos de confianza, ya se presentan en la @tbl-tasa-desocupacion-sexo. Para evaluar si la diferencia entre hombres y mujeres es estadísticamente significativa, se utiliza `svyttest()` del paquete `survey` sobre `labor_force_subset`, que excluye a las personas inactivas y a quienes tienen menos de 15 años. Se fija `Female` como categoría de referencia para que la diferencia se interprete como hombres menos mujeres. El siguiente código computacional realiza el contraste y obtiene el intervalo de confianza del 95 %.
 
 ```{r code-ttest-unemployment-sex}
 #| results: hide
@@ -1044,11 +1018,6 @@ ttest_unemployment_sex <- svyttest(
     )
 )
 
-ttest_unemployment_sex
-```
-
-```{r code-ttest-unemployment-sex-object}
-#| results: hide
 unemployment_test_summary <- tibble(
   estimated_difference = ttest_unemployment_sex$estimate,
   statistic = ttest_unemployment_sex$statistic,
@@ -1219,12 +1188,6 @@ El siguiente código computacional extrae la matriz de varianzas y covarianzas c
 ```{r code-vcov-poverty-sex}
 #| results: hide
 sex_poverty_vcov <- vcov(sex_poverty_contrast)
-
-sex_poverty_vcov
-```
-
-```{r code-vcov-sex-poverty-object}
-#| results: hide
 sex_poverty_vcov_table <- as.data.frame(sex_poverty_vcov) %>%
   tibble::rownames_to_column("domain")
 
@@ -1307,11 +1270,6 @@ El error estándar de cada contraste requiere considerar tanto las varianzas de 
 #| results: hide
 region_unemployment_vcov <- vcov(region_unemployment_rate)
 
-region_unemployment_vcov
-```
-
-```{r code-vcov-unemployment-region-object}
-#| results: hide
 region_unemployment_vcov_table <- as.data.frame(region_unemployment_vcov) %>%
   tibble::rownames_to_column("domain")
 
@@ -1387,11 +1345,8 @@ library(ggplot2)
 Para representar adecuadamente la variabilidad de las estimaciones derivada del diseño muestral, los gráficos de barras deberían incorporar los correspondientes intervalos de confianza obtenidos mediante los procedimientos descritos en este capítulo. De esta manera, el gráfico no solo muestra la magnitud de las estimaciones puntuales, sino también la incertidumbre asociada a cada una de ellas, lo que permite realizar una interpretación más completa de los resultados. A continuación, se ilustra este procedimiento utilizando las estimaciones del tamaño poblacional según zona de residencia. Los resultados se presentan en la @fig-bar-zone.
 
 ```{r fig-bar-zone, fig.cap="Estimación del tamaño poblacional por zona geográfica", fig.align='center', out.width='70%', echo=TRUE}
-zone_size <- survey_design %>%
-  group_by(Zone) %>%
-  summarise(
-    size = survey_total(vartype = c("se", "ci"))
-  )
+zone_size <- zone_population_size %>%
+  select(-n)
 
 zone_colors <- c(Urban = "#48C9B0", Rural = "#117864")
 
@@ -1415,17 +1370,12 @@ ggplot(
   theme(legend.position = "top")
 ```
 
-El código comienza estimando, para cada categoría de la variable `Zone`, el tamaño poblacional mediante `survey_total()`, teniendo en cuenta el diseño muestral complejo. Además de la estimación puntual, se solicitan el error estándar y los límites del intervalo de confianza mediante `vartype = c("se", "ci")`, cuyos resultados se almacenan en el objeto `zone_size`. Posteriormente, se define una paleta de colores específica para las zonas urbana y rural y se construye el gráfico con `ggplot2`. En la estética del gráfico, `size` determina la altura de cada barra, mientras que `size_low` y `size_upp` establecen los límites inferior y superior de las barras de error. La función `geom_bar()` representa los tamaños poblacionales estimados y `geom_errorbar()` añade los intervalos de confianza correspondientes. Finalmente, `scale_fill_manual()` asigna los colores definidos previamente, `theme_bw()` aplica un formato visual limpio y `theme(legend.position = "top")` ubica la leyenda en la parte superior del gráfico.
+El código reutiliza en `zone_size` las estimaciones por zona calculadas previamente con `survey_total()` y elimina la columna auxiliar `n`, que no se necesita para el gráfico. Después define los colores de las zonas y usa `ggplot2` para representar los tamaños poblacionales en `size`; `size_low` y `size_upp` determinan los límites de los intervalos de confianza. `geom_bar()` dibuja las barras, `geom_errorbar()` añade los intervalos y las funciones de escala y tema ajustan los colores y la presentación.
 
-El procedimiento anterior puede extenderse naturalmente a variables con más de dos categorías. En estos casos, el gráfico de barras facilita la comparación simultánea de las estimaciones correspondientes a cada categoría y, al incorporar sus intervalos de confianza, permite apreciar también la precisión asociada a cada una de ellas. A modo de ejemplo, a continuación se presenta la distribución estimada de la población según su condición de pobreza; los resultados gráficos se muestran en la @fig-bar-poverty.
+El procedimiento anterior puede extenderse naturalmente a variables con más de dos categorías. En estos casos, el gráfico de barras facilita la comparación simultánea de las estimaciones correspondientes a cada categoría y, al incorporar sus intervalos de confianza, permite apreciar también la precisión asociada a cada una de ellas. A modo de ejemplo, se reutilizan las estimaciones ya calculadas para presentar la distribución de la población según su condición de pobreza en la @fig-bar-poverty.
 
 ```{r fig-bar-poverty, fig.cap="Estimación del número de personas según condición de pobreza", fig.align='center', out.width='70%', echo=TRUE}
-poverty_size <- 
-  survey_design %>%
-  group_by(Poverty) %>%
-  summarise(
-    size = survey_total(vartype = c("se", "ci"))
-  )
+poverty_size <- poverty_population_size
 
 ggplot(
   data = poverty_size,
@@ -1485,17 +1435,6 @@ El gráfico usa las categorías originales de `Employment` y excluye sus faltant
 Este tipo de análisis gráfico resulta especialmente útil para examinar posibles intersecciones de vulnerabilidad, ya que permite representar simultáneamente dos o más características de la población y comparar los resultados entre distintos grupos. Además de mostrar conteos o tamaños poblacionales estimados, los gráficos de barras pueden emplearse para representar proporciones, junto con sus correspondientes medidas de precisión. A modo de ejemplo, se presenta la proporción estimada de hombres en condición de pobreza según zona de residencia, incorporando los intervalos de confianza asociados a cada estimación. Se muestran las tres categorías de pobreza dentro de cada zona de la población masculina. Los resultados se muestran en la @fig-bar-proportion-zone-male, obtenida con el siguiente código computacional.
 
 ```{r fig-bar-proportion-zone-male, fig.cap="Proporción de hombres en condición de pobreza por zona geográfica", fig.align='center', out.width='70%', echo=TRUE}
-male_zone_poverty_proportion <- 
-  male_subset %>%
-  group_by(Zone, Poverty) %>%
-  summarise(
-    proportion = survey_prop(
-      vartype = c("se", "ci"),
-      proportion = TRUE,
-      prop_method = "logit"
-    )
-  )
-
 ggplot(
   data = male_zone_poverty_proportion,
   aes(
@@ -1717,8 +1656,7 @@ De acuerdo con @biscale2025 y @cowplot2025, cuando se desea representar simultá
 
 ```{r maps-bivariate-setup, echo=TRUE, eval=TRUE}
 region_sex_poverty_proportion <- survey_design %>%
-  filter(Zone == "Rural", Sex == "Female") %>%
-  filter(!is.na(poor)) %>%
+  filter(Zone == "Rural", Sex == "Female", !is.na(poor)) %>%
   group_by(Region, poor) %>%
   summarise(
     proportion = survey_prop(

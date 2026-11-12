@@ -67,12 +67,10 @@ set.seed(2026)
 population_size <- 100
 theta <- 0.3
 n_sim_model <- 1000
-model_estimates <- rep(NA, n_sim_model)
-
-for (sim in seq_len(n_sim_model)) {
-  outcome <- rbinom(population_size, 1, theta)
-  model_estimates[sim] <- mean(outcome)
-}
+model_estimates <- replicate(
+  n_sim_model,
+  mean(rbinom(population_size, 1, theta))
+)
 
 cbind(
   theta,

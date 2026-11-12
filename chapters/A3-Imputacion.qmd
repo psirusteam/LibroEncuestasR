@@ -274,8 +274,7 @@ Por último, se simula una pérdida de información no al azar (MNAR). Como se e
 
 ```{r simulate-mnar-imputation}
 mnar_data <- survey_data %>%
-  arrange(Income) %>%
-  slice(1:1300L)
+  slice_min(Income, n = 1300L, with_ties = FALSE)
 
 mnar_plot_data <- bind_rows(
   list(mnar_data = mnar_data, survey_data = survey_data),
@@ -347,7 +346,7 @@ La imputación por la media no condicional consiste en reemplazar los valores fa
 Para ilustrar el tratamiento de los datos faltantes bajo un mecanismo MCAR, se construye la siguiente base de datos:
 
 ```{r prepare-values-missing-imputation}
-survey_data <- full_join(
+survey_data <- left_join(
   survey_data,
   mcar_data %>% transmute(
     HHID,
@@ -360,19 +359,19 @@ survey_data <- full_join(
 
 ```
 
-El código anterior utiliza la función `full_join` del paquete `dplyr` para combinar las dos bases de datos. Esta unión conserva todas las filas de ambas bases, combina las que tienen claves coincidentes y asigna valores faltantes donde no hay correspondencia. Para conocer el porcentaje de valores faltantes, se ejecuta el siguiente código:
+El código anterior utiliza `left_join()` para añadir a `survey_data` las variables con valores faltantes de `mcar_data`, conservando todas las filas de la base original. Como `mcar_data` se deriva de `survey_data`, las claves coinciden. Para conocer el porcentaje de valores faltantes, se ejecuta el siguiente código:
 
 ```{r summarize-values-missing-imputation}
 survey_data %>%
   group_by(Zone) %>%
   summarise(
-    missing_proportion = sum(is.na(income_missing) / n())
+    missing_proportion = mean(is.na(income_missing))
   )
 
 survey_data %>%
   group_by(Sex) %>%
   summarise(
-    missing_proportion = sum(is.na(income_missing) / n())
+    missing_proportion = mean(is.na(income_missing))
   )
 
 ```
@@ -384,11 +383,7 @@ La imputación por la media no condicional es un método simple y rápido. Puede
 observed_income_mean <- mean(survey_data$income_missing, na.rm = TRUE)
 survey_data <- survey_data %>%
   mutate(
-    income_imputed = ifelse(
-      is.na(income_missing),
-      observed_income_mean,
-      income_missing
-    )
+    income_imputed = coalesce(income_missing, observed_income_mean)
   )
 
 sum(is.na(survey_data$income_imputed))
@@ -444,10 +439,9 @@ En el siguiente ejemplo, se calculan las medias por estrato para imputar los ing
 survey_data <- survey_data %>%
   group_by(Stratum) %>%
   mutate(
-    income_imputed = ifelse(
-      is.na(income_missing),
-      mean(income_missing, na.rm = TRUE),
-      income_missing
+    income_imputed = coalesce(
+      income_missing,
+      mean(income_missing, na.rm = TRUE)
     )
   ) %>%
   data.frame()
@@ -456,17 +450,13 @@ sum(is.na(survey_data$income_imputed))
 
 survey_data <- survey_data %>%
   mutate(
-    income_imputed = ifelse(
-      is.na(income_imputed),
-      observed_income_mean,
-      income_imputed
-    )
+    income_imputed = coalesce(income_imputed, observed_income_mean)
   )
 
 sum(is.na(survey_data$income_imputed))
 ```
 
-El código anterior utiliza `group_by` para agrupar las observaciones de `survey_data` por `Stratum`. Los valores faltantes de `income_missing` se reemplazan con la media de los ingresos observados en el estrato correspondiente, mientras que los valores observados se conservan. El resultado se almacena en `income_imputed`. A continuación, se calculan las medias y las desviaciones estándar de los ingresos originales y de los completados por imputación para comparar el efecto del método:
+El código anterior utiliza `group_by()` para agrupar las observaciones de `survey_data` por `Stratum`. Los valores faltantes se reemplazan con la media de los ingresos observados en el estrato correspondiente, mientras que los observados se conservan. Si un estrato no tiene ingresos observados, se usa la media general almacenada en `observed_income_mean`. El resultado se guarda en `income_imputed`; a continuación se comparan las medias y desviaciones estándar originales e imputadas:
 
 ```{r summarize-mean-conditional}
 survey_data %>%
@@ -547,15 +537,18 @@ recipient_indices <- which(is.na(survey_data$income_missing))
 survey_data$income_imputed <- survey_data$income_missing
 
 set.seed(1234)
-for (i in recipient_indices) {
-  donor_index <- sample(x = donor_indices, size = 1)
-  survey_data$income_imputed[i] <- survey_data$income_missing[donor_index]
-}
+selected_donors <- sample(
+  donor_indices,
+  size = length(recipient_indices),
+  replace = TRUE
+)
+survey_data$income_imputed[recipient_indices] <-
+  survey_data$income_missing[selected_donors]
 
 sum(is.na(survey_data$income_imputed))
 ```
 
-El código anterior identifica las observaciones con y sin valores faltantes en `income_missing` y crea `income_imputed` para almacenar los resultados. Luego, un bucle `for` recorre las observaciones receptoras. En cada iteración, la función `sample` selecciona aleatoriamente un donante entre las observaciones con ingreso disponible.
+El código anterior identifica las observaciones con y sin valores faltantes en `income_missing` y crea `income_imputed` para almacenar los resultados. `sample()` selecciona con reemplazo tantos donantes como receptores hay; sus ingresos se asignan a las posiciones faltantes.
 
 Una vez realizada la imputación, el siguiente código computacional compara la media y la desviación estándar del ingreso original con las del ingreso completado.
 
@@ -642,11 +635,10 @@ imputation_model <- lm(
 Una vez ajustado el modelo, el siguiente código computacional obtiene las predicciones y las utiliza para completar los ingresos faltantes.
 
 ```{r impute-regression}
-predicted_income <- predict(
+missing_data$income_imputed <- predict(
   imputation_model,
   newdata = missing_data
 )
-missing_data$income_imputed <- predicted_income
 survey_data <- bind_rows(observed_data, missing_data)
 ```
 
@@ -926,11 +918,10 @@ survey_data$income_imputed <- survey_data$income_missing
 survey_data$employment_imputed <- survey_data$employment_missing
 observed_data <- filter(survey_data, !is.na(income_missing))
 missing_data <- filter(survey_data, is.na(income_missing))
-n_missing <- nrow(missing_data)
 n_observed <- nrow(observed_data)
 ```
 
-Primero, se separan las observaciones con y sin valores faltantes y se calcula el número de observaciones de cada grupo. El siguiente código computacional genera los valores imputados a partir del modelo y los incorpora a los conjuntos de datos completados.
+Primero, se separan las observaciones con y sin valores faltantes y se cuenta el grupo con ingresos observados, cuyo tamaño determina cuántas observaciones se extraen en cada remuestra. El siguiente código computacional genera las imputaciones a partir del modelo y las incorpora a los conjuntos de datos completados.
 
 ```{r generate-multiple-imputations}
 n_imputations <- 10
@@ -1011,17 +1002,17 @@ mean_estimates <- survey_design %>%
       ~ survey_mean(.x, vartype = "var")
     )
   ) %>%
-  tidyr::gather() %>%
-  separate(
-    key,
-    c(NA, NA, "imputation", "statistic"),
-    fill = "right"
+  rename_with(
+    ~ paste0(.x, "_mean"),
+    matches("^income_draw_[0-9]+$")
   ) %>%
-  mutate(
-    imputation = as.numeric(imputation),
-    statistic = ifelse(is.na(statistic), "mean", "var")
+  pivot_longer(
+    everything(),
+    names_to = c("imputation", ".value"),
+    names_pattern = "income_draw_([0-9]+)_(mean|var)",
+    names_transform = list(imputation = as.numeric)
   ) %>%
-  spread(statistic, value)
+  arrange(imputation)
 
 mean_estimates
 ```
@@ -1053,17 +1044,17 @@ Otro parámetro de interés es la varianza del ingreso, que mide su dispersión 
 
 ```{r organize-variances-imputation}
 variance_estimates <- variance_estimates %>%
-  tidyr::gather() %>%
-  separate(
-    key,
-    c(NA, NA, "imputation", "statistic"),
-    fill = "right"
+  rename_with(
+    ~ paste0(.x, "_mean"),
+    matches("^income_draw_[0-9]+$")
   ) %>%
-  mutate(
-    statistic = ifelse(is.na(statistic), "mean", "var"),
-    imputation = as.numeric(imputation)
+  pivot_longer(
+    everything(),
+    names_to = c("imputation", ".value"),
+    names_pattern = "income_draw_([0-9]+)_(mean|var)",
+    names_transform = list(imputation = as.numeric)
   ) %>%
-  spread(statistic, value)
+  arrange(imputation)
 
 variance_estimates
 ```

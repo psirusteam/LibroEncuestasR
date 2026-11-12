@@ -147,7 +147,6 @@ library(survey)
 library(srvyr)
 library(tidyverse)
 
-data(BigCity, package = "TeachingSampling")
 survey_data <- readRDS("../data/sample.rds") %>%
   mutate(
     Stratum = factor(Stratum),
@@ -245,11 +244,8 @@ El siguiente código computacional obtiene los componentes necesarios para calcu
 ```{r calculate-r2-components, echo = TRUE}
 null_model <- svyglm(log(Expenditure) ~ 1, design = survey_design)
 
-s1 <- summary(fit_svy)
-s0 <- summary(null_model)
-
-wsst <- s0$dispersion[1]
-wsse <- s1$dispersion[1]
+wsst <- summary(null_model)$dispersion[1]
+wsse <- summary(fit_svy)$dispersion[1]
 ```
 
 La estimación del coeficiente de determinación y su contraparte ajustada se obtiene a partir del siguiente cálculo:
@@ -288,9 +284,7 @@ De acuerdo con @Valliant2024, a continuación, estos diagnósticos se aplican a 
 library(svydiags)
 
 stdresids <- as.numeric(svystdres(fit_svy)$stdresids)
-survey_design$variables <- 
-  survey_design$variables %>%
-  mutate(stdresids = stdresids)
+survey_design$variables$stdresids <- stdresids
 
 ```
 
@@ -324,40 +318,18 @@ Para evaluar este supuesto, se analizan gráficamente los residuos en función d
 ```{r fig-residuals-covariates, fig.height=8, fig.cap="Gráficos de residuales estandarizados frente a cada covariable del modelo", fig.align='center', out.width='80%', echo = TRUE, eval = TRUE}
 library(patchwork)
 
-g1 <- ggplot(
-  data = survey_design$variables,
-  aes(x = log(Income), y = stdresids)
+residual_plot <- ggplot(
+  survey_design$variables,
+  aes(y = stdresids)
 ) +
   geom_point() +
   geom_hline(yintercept = 0)
 
-g2 <- ggplot(
-  data = survey_design$variables,
-  aes(x = Zone, y = stdresids)
-) +
-  geom_point() +
-  geom_hline(yintercept = 0)
-
-g3 <- ggplot(
-  data = survey_design$variables,
-  aes(x = Sex, y = stdresids)
-) +
-  geom_point() +
-  geom_hline(yintercept = 0)
-
-g4 <- ggplot(
-  data = survey_design$variables,
-  aes(x = Age, y = stdresids)
-) +
-  geom_point() +
-  geom_hline(yintercept = 0)
-
-g5 <- ggplot(
-  data = survey_design$variables,
-  aes(x = Region, y = stdresids)
-) +
-  geom_point() +
-  geom_hline(yintercept = 0)
+g1 <- residual_plot + aes(x = log(Income))
+g2 <- residual_plot + aes(x = Zone)
+g3 <- residual_plot + aes(x = Sex)
+g4 <- residual_plot + aes(x = Age)
+g5 <- residual_plot + aes(x = Region)
 
 (g1 | g4) / (g2 | g3) / g5
 ```
@@ -479,11 +451,12 @@ $$
 Donde $z$ toma comúnmente valores de 2 o 3, mientras que $n$ representa el tamaño muestral total de elementos incluidos en la encuesta y $DEFF$ es el efecto de diseño asociado a la variable respuesta. En `R`, el cálculo de este estadístico puede realizarse mediante la función `svydffits` del paquete `svydiags`, la cual obtiene las medidas de influencia considerando explícitamente la estructura del diseño muestral. El siguiente código computacional genera la @fig-dffits.
 
 ```{r fig-dffits, fig.cap="Valores DfFits: observaciones influyentes sobre el ajuste global señaladas en rojo", fig.align='center', out.width='65%', echo = TRUE, eval = TRUE}
+dffits_results <- svydffits(fit_svy)
 d_dffits <- data.frame(
-  dffits = svydffits(fit_svy)$Dffits,
-  id = 1:length(svydffits(fit_svy)$Dffits)
+  dffits = dffits_results$Dffits,
+  id = seq_along(dffits_results$Dffits)
 )
-cutoff <- svydffits(fit_svy)$cutoff
+cutoff <- dffits_results$cutoff
 d_dffits <- d_dffits %>%
   mutate(
     cutoff_criterion = ifelse(abs(dffits) > cutoff, "Yes", "No")
@@ -540,19 +513,12 @@ Para implementar estos procedimientos en `R`, se utilizan las funciones `summary
 
 ```{r code-inference-table-model}
 #| results: hide
-summary_table <- summary(fit_svy)$coefficients %>%
-  as.data.frame() %>%
+summary_table <- data.frame(
+  summary(fit_svy)$coefficients,
+  confint(fit_svy),
+  check.names = FALSE
+) %>%
   tibble::rownames_to_column("Parameter")
-
-confidence_table <- confint(fit_svy) %>%
-  as.data.frame() %>%
-  tibble::rownames_to_column("Parameter")
-
-summary_table <- dplyr::left_join(
-  summary_table,
-  confidence_table,
-  by = "Parameter"
-)
 
 summary_table
 ```
@@ -601,9 +567,7 @@ $$
 En la expresión anterior, $I(\cdot)$ representa una variable indicadora y el subíndice $k$ identifica al hogar. La variable respuesta $y_k$ corresponde ahora al logaritmo del gasto per cápita. Las predicciones y sus intervalos se expresan en esa escala; exponenciarlos no produce automáticamente la media aritmética del gasto en su escala original. El siguiente código calcula las predicciones del modelo de regresión para las diez primeras observaciones incluidas en la muestra, utilizando la matriz de diseño y el vector de coeficientes estimados:
 
 ```{r code-prediction-matrix, echo = TRUE}
-x_obs <- model.matrix(fit_svy) %>%
-  data.frame() %>%
-  as.matrix()
+x_obs <- model.matrix(fit_svy)
 
 hat_beta <- coef(fit_svy)
 hat_mu <- as.numeric(x_obs %*% hat_beta)
@@ -639,8 +603,7 @@ tabla_fmt(regression_covariance_table,
 En términos computacionales, esto implica combinar el vector de covariables de cada observación con la matriz $\hat{\boldsymbol{\Sigma}}$ para obtener la precisión de las predicciones individuales. El siguiente código calcula la varianza asociada a las predicciones obtenidas a partir del modelo de regresión:
 
 ```{r code-variance-predictions, echo = TRUE}
-cov_beta <- vcov(fit_svy) %>%
-  as.matrix()
+cov_beta <- vcov(fit_svy)
 
 mu_variance <- diag(x_obs %*% cov_beta %*% t(x_obs))
 mu_variance %>%
@@ -659,8 +622,9 @@ $$
 El siguiente código computacional utiliza `predict(fit_svy, type = "link")` para estimar el valor medio en la escala del predictor lineal, es decir, mediante la combinación lineal de las covariables y los coeficientes del modelo [@Lumley2026]. Después obtiene los intervalos de confianza con `confint()`.
 
 ```{r predictions-sample, echo = TRUE, eval = TRUE}
-hat_mu <- data.frame(predict(fit_svy, type = "link"))
-mu_ci <- data.frame(confint(predict(fit_svy, type = "link")))
+prediction <- predict(fit_svy, type = "link")
+hat_mu <- data.frame(prediction)
+mu_ci <- data.frame(confint(prediction))
 colnames(mu_ci) <- c("lower_limit", "upper_limit")
 ```
 

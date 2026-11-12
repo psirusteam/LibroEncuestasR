@@ -369,8 +369,7 @@ Para los conteos simples, `count()` ofrece una forma abreviada de escribir la co
 
 ```{r count-region-count}
 bigcity_data %>%
-  count(Region) %>%
-  arrange(desc(n))
+  count(Region, sort = TRUE)
 
 ```
 
@@ -378,8 +377,7 @@ La misma lógica de agrupación y conteo permite conocer cuántos registros corr
 
 ```{r count-sex}
 bigcity_data %>%
-  count(Sex) %>%
-  arrange(desc(n))
+  count(Sex, sort = TRUE)
 
 ```
 
@@ -389,8 +387,7 @@ El conteo también puede realizarse según la zona geográfica. En este caso, la
 
 ```{r count-zone}
 bigcity_data %>%
-  count(Zone) %>%
-  arrange(desc(n))
+  count(Zone, sort = TRUE)
 
 ```
 

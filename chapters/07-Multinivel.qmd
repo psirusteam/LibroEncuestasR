@@ -36,10 +36,7 @@ library(lme4)
 
 survey_data <- readRDS("../data/sample.rds") %>%
   add_count(HHID, name = "household_size") %>%
-  filter(PersonID == "idPer01")
-
-
-survey_data <- survey_data %>%
+  filter(PersonID == "idPer01") %>%
   mutate(
     poor = ifelse(Poverty != "NotPoor", 1, 0),
     log_expenditure = log(Expenditure),
@@ -67,10 +64,8 @@ Con fines ilustrativos, los ajustes iniciales de esta sección utilizan los tres
 
 ```{r survey-plot-setup, echo = TRUE, eval = TRUE}
 plot_data <- survey_data %>%
-  select(HHID, Stratum) %>%
-  distinct() %>%
-  group_by(Stratum) %>%
-  tally() %>%
+  as_tibble() %>%
+  count(Stratum) %>%
   arrange(n) %>%
   select(-n) %>%
   slice(1:3L) %>%
@@ -110,9 +105,9 @@ beta_1 <- coef(simple_model)[2]
 model_coef <- plot_data %>%
   group_by(Stratum) %>%
   summarise(
-    beta_0 = mean(log_expenditure - beta_1 * log_income)
-  ) %>%
-  mutate(beta_1 = beta_1)
+    beta_0 = mean(log_expenditure - beta_1 * log_income),
+    beta_1 = beta_1
+  )
 
 common_slope_coefficients <- model_coef
 
@@ -154,9 +149,9 @@ beta_0 <- coef(simple_model)[1]
 model_coef <- plot_data %>%
   group_by(Stratum) %>%
   summarise(
-    beta_1 = coef(lm(I(log_expenditure - beta_0) ~ 0 + log_income))[[1]]
-  ) %>%
-  mutate(beta_0 = beta_0)
+    beta_1 = coef(lm(I(log_expenditure - beta_0) ~ 0 + log_income))[[1]],
+    beta_0 = beta_0
+  )
 
 common_intercept_coefficients <- model_coef
 
@@ -390,8 +385,7 @@ Las tablas de coeficientes por estrato presentan las estimaciones condicionales 
 
 ```{r code-intercepts-null}
 #| results: hide
-coef_mod_null <- coef(mod_null)$Stratum
-null_model_intercepts_table <- coef_mod_null %>%
+null_model_intercepts_table <- coef(mod_null)$Stratum %>%
   tibble::rownames_to_column("stratum") %>%
   slice(1:5L) %>%
   transmute(stratum, intercept = .data[["(Intercept)"]])
@@ -497,8 +491,7 @@ estimated_coef <- inner_join(
   coef(random_intercept_model)$Stratum %>%
     tibble::rownames_to_column(var = "Stratum"),
   plot_data %>%
-    select(Stratum) %>%
-    distinct()
+    distinct(Stratum)
 )
 
 ```
@@ -625,8 +618,7 @@ estimated_coef <- inner_join(
   coef(random_slope_model)$Stratum %>%
     tibble::rownames_to_column(var = "Stratum"),
   plot_data %>%
-    select(Stratum) %>%
-    distinct()
+    distinct(Stratum)
 )
 
 ```

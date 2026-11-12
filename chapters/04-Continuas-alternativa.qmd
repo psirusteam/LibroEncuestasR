@@ -374,11 +374,10 @@ sex_ratio_table <- survey_design %>%
   summarise(
     ratio = survey_ratio(
       numerator = 100 * (Sex == "Male"),
-      denominator = (Sex == "Female"),
+      denominator = Sex == "Female",
       level = 0.95,
-      vartype = c("se", "ci"
+      vartype = c("se", "ci")
     )
-  )
   )
 
 sex_ratio_table
@@ -405,11 +404,10 @@ rural_sex_ratio_table <- rural_subset %>%
   summarise(
     ratio = survey_ratio(
       numerator = 100 * (Sex == "Male"),
-      denominator = (Sex == "Female"),
+      denominator = Sex == "Female",
       level = 0.95,
-      vartype = c("se", "ci"
+      vartype = c("se", "ci")
     )
-  )
   )
 
 rural_sex_ratio_table
@@ -936,8 +934,7 @@ cov_matrix <- svyvar(~Income + Expenditure, design = survey_design)
 income_expenditure_covariance_table <- data.frame(
   Variable = rownames(cov_matrix),
   as.matrix(cov_matrix)
-) %>%
-  slice(1:2)
+)
 
 income_expenditure_covariance_table
 ```
@@ -1020,7 +1017,7 @@ ttest_sex <- svyttest(Income ~ Sex, design = survey_design_heads)
 
 ```{r code-ttest-sex-object}
 #| results: hide
-df_res <- tibble(
+income_sex_test_table <- tibble(
   estimated_difference = ttest_sex$estimate,
   statistic = ttest_sex$statistic,
   p_value = ttest_sex$p.value,
@@ -1028,7 +1025,6 @@ df_res <- tibble(
   ci_lower = ttest_sex$conf.int[1],
   ci_upper = ttest_sex$conf.int[2]
 )
-income_sex_test_table <- df_res
 
 income_sex_test_table
 ```
@@ -1154,11 +1150,9 @@ region_vcov <- vcov(region_mean_contrast)
 
 ```{r code-vcov-region-object}
 #| results: hide
-df_vcov <- region_vcov %>%
+regional_income_covariance_table <- region_vcov %>%
   as.data.frame() %>%
   tibble::rownames_to_column("Region")
-
-regional_income_covariance_table <- df_vcov
 
 regional_income_covariance_table
 ```

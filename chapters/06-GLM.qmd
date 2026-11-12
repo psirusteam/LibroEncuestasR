@@ -146,15 +146,7 @@ logit_results
 #| results: hide
 logistic_intervals_table <- logit_results %>%
   mutate(OR = exp(estimate)) %>%
-  select(
-    term,
-    estimate,
-    std.error,
-    p.value,
-    conf.low,
-    conf.high,
-    OR
-  )
+  dplyr::select(-statistic)
 
 logistic_intervals_table
 ```
@@ -212,15 +204,7 @@ interaction_logit_results
 #| results: hide
 interaction_logistic_coefficients_table <- interaction_logit_results %>%
   mutate(OR = exp(estimate)) %>%
-  select(
-    term,
-    estimate,
-    std.error,
-    p.value,
-    conf.low,
-    conf.high,
-    OR
-  )
+  dplyr::select(-statistic)
 
 interaction_logistic_coefficients_table
 ```
@@ -273,13 +257,10 @@ predictions <- predict(
   se.fit = TRUE
 )
 
-predicted_probability <- as.numeric(predictions)
-standard_error <- as.numeric(SE(predictions))
-
 prediction_table <- prediction_profiles %>%
   mutate(
-    predicted_probability = predicted_probability,
-    standard_error = standard_error,
+    predicted_probability = as.numeric(predictions),
+    standard_error = as.numeric(SE(predictions)),
     lower_95 = pmax(0, predicted_probability - 1.96 * standard_error),
     upper_95 = pmin(1, predicted_probability + 1.96 * standard_error)
   ) %>%
@@ -453,16 +434,7 @@ multinomial_coefficients_table <- multinomial_results %>%
     y.level = recode(y.level, `1` = "Inactive", `2` = "Employed"),
     RRR = exp(estimate)
   ) %>%
-  select(
-    y.level,
-    term,
-    estimate,
-    std.error,
-    p.value,
-    conf.low,
-    conf.high,
-    RRR
-  )
+  dplyr::select(-statistic)
 
 multinomial_coefficients_table
 ```
@@ -581,15 +553,7 @@ gamma_results <- broom::tidy(
 )
 gamma_coefficients_table <- gamma_results %>%
   mutate(factor = exp(estimate)) %>%
-  select(
-    term,
-    estimate,
-    std.error,
-    p.value,
-    conf.low,
-    conf.high,
-    factor
-  )
+  dplyr::select(-statistic)
 
 gamma_coefficients_table
 ```
