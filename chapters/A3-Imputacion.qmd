@@ -91,7 +91,13 @@ labor_force_subset <- survey_design %>%
 
 unemployment_rate <- labor_force_subset %>%
   summarise(
-    unemployment_rate = survey_mean( Employment == "Unemployed", proportion = TRUE, prop_method = "logit", vartype = c("se", "ci"), na.rm = TRUE )
+    unemployment_rate = survey_mean(
+      Employment == "Unemployed",
+      proportion = TRUE,
+      prop_method = "logit",
+      vartype = c("se", "ci"),
+      na.rm = TRUE
+    )
   )
 
 unemployment_rate
@@ -717,7 +723,9 @@ missing_data <- filter(survey_data, is.na(income_missing))
 
 for (i in seq_len(nrow(missing_data))) {
   recipient_expenditure <- missing_data$Expenditure[[i]]
-  donor_index <- which.min(abs(recipient_expenditure - observed_data$Expenditure))
+  donor_index <- which.min(
+    abs(recipient_expenditure - observed_data$Expenditure)
+  )
   missing_data$income_imputed[[i]] <-
     observed_data$income_missing[[donor_index]]
 }

@@ -249,7 +249,11 @@ La función `mutate()` crea nuevas variables o modifica variables existentes. Da
 ```{r create-region}
 bigcity_data <- bigcity_data %>%
   mutate(
-    Region = cut( as.numeric(gsub("\\D", "", Stratum)), breaks = 5, labels = c("North", "South", "Center", "West", "East") )
+    Region = cut(
+      as.numeric(gsub("\\D", "", Stratum)),
+      breaks = 5,
+      labels = c("North", "South", "Center", "West", "East")
+    )
   )
 
 ```

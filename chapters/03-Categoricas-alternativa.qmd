@@ -637,11 +637,20 @@ Además de las frecuencias conjuntas, también es posible estimar los tamaños m
 #| results: hide
 contingency_structure <- tibble::tribble(
   ~row, ~first, ~second, ~dots, ~last, ~total,
-  "$1$", "$\\widehat{N}_{11}$", "$\\widehat{N}_{12}$", "$\\cdots$", "$\\widehat{N}_{1C}$", "$\\widehat{N}_{1+}$",
-  "$2$", "$\\widehat{N}_{21}$", "$\\widehat{N}_{22}$", "$\\cdots$", "$\\widehat{N}_{2C}$", "$\\widehat{N}_{2+}$",
-  "$\\vdots$", "$\\vdots$", "$\\vdots$", "$\\ddots$", "$\\vdots$", "$\\vdots$",
-  "$R$", "$\\widehat{N}_{R1}$", "$\\widehat{N}_{R2}$", "$\\cdots$", "$\\widehat{N}_{RC}$", "$\\widehat{N}_{R+}$",
-  "Total", "$\\widehat{N}_{+1}$", "$\\widehat{N}_{+2}$", "$\\cdots$", "$\\widehat{N}_{+C}$", "$\\widehat{N}_{++}$"
+  "$1$", "$\\widehat{N}_{11}$", "$\\widehat{N}_{12}$",
+  "$\\cdots$", "$\\widehat{N}_{1C}$", "$\\widehat{N}_{1+}$",
+
+  "$2$", "$\\widehat{N}_{21}$", "$\\widehat{N}_{22}$",
+  "$\\cdots$", "$\\widehat{N}_{2C}$", "$\\widehat{N}_{2+}$",
+
+  "$\\vdots$", "$\\vdots$", "$\\vdots$",
+  "$\\ddots$", "$\\vdots$", "$\\vdots$",
+
+  "$R$", "$\\widehat{N}_{R1}$", "$\\widehat{N}_{R2}$",
+  "$\\cdots$", "$\\widehat{N}_{RC}$", "$\\widehat{N}_{R+}$",
+
+  "Total", "$\\widehat{N}_{+1}$", "$\\widehat{N}_{+2}$",
+  "$\\cdots$", "$\\widehat{N}_{+C}$", "$\\widehat{N}_{++}$"
 )
 
 contingency_structure
@@ -838,7 +847,13 @@ La mayor tasa estimada corresponde al grupo de `r as.character(poverty_age_table
 
 ### Razón de odds {#la-razon-de-odds}
 
-De acuerdo con @Agresti2019Intro, las *odds* de un evento son la razón entre la probabilidad de que ocurra y la probabilidad de que no ocurra, $p/(1-p)$. La razón de *odds* (*odds ratio*, OR) compara las *odds* de ese evento entre dos grupos y permite estudiar la asociación entre variables categóricas [@DiazMoralesLeon2018]. En este sentido, este parámetro permite evaluar cómo cambia dicha ventaja entre diferentes grupos de interés y constituye una herramienta fundamental en estudios sociales, económicos y de salud; además, esta medida también puede utilizarse para cuantificar la relación entre los niveles de una variable y un factor categórico, comparando las ventajas relativas de ocurrencia del evento en cada grupo.
+De acuerdo con @Agresti2019Intro, las *odds* de un evento son la razón entre la probabilidad de que ocurra y la probabilidad de que no ocurra. Si $p$ denota la probabilidad del evento, se definen como:
+
+$$
+\operatorname{odds}(p)=\frac{p}{1-p},\qquad 0<p<1.
+$$ {#eq-odds}
+
+La razón de *odds* (*odds ratio*, OR) compara las *odds* de ese evento entre dos grupos y permite estudiar la asociación entre variables categóricas [@DiazMoralesLeon2018]. En este sentido, este parámetro permite evaluar cómo cambia dicha ventaja entre diferentes grupos de interés y constituye una herramienta fundamental en estudios sociales, económicos y de salud; además, esta medida también puede utilizarse para cuantificar la relación entre los niveles de una variable y un factor categórico, comparando las ventajas relativas de ocurrencia del evento en cada grupo.
 
 Por ejemplo, suponga que se desea estudiar la asociación entre el sexo de las personas y la condición de pobreza. En particular, interesa evaluar si la ventaja relativa de pertenecer al grupo de personas no pobres frente al grupo de personas pobres es diferente entre mujeres y hombres. Para ello, puede expresarse la siguiente razón de *odds*:
 
@@ -920,7 +935,7 @@ sex_poverty_odds_ratio <- svycontrast(
 sex_poverty_odds_ratio
 ```
 
-Una OR cercana a `r formatC(as.numeric(coef(sex_poverty_odds_ratio)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` indica odds de no pobreza aproximadamente `r formatC(100 * (as.numeric(coef(sex_poverty_odds_ratio)) - 1), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` % mayores en mujeres que en hombres; no significa una probabilidad `r formatC(100 * (as.numeric(coef(sex_poverty_odds_ratio)) - 1), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` % mayor ni establece una diferencia estadísticamente significativa.
+La razón de odds estimada es $\widehat{OR}=$ `r formatC(as.numeric(coef(sex_poverty_odds_ratio)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")`: las odds de no pobreza en las mujeres equivalen a ese valor multiplicado por las correspondientes a los hombres. Para expresar la diferencia en porcentaje, se resta uno a la OR y se multiplica por cien: $100(\widehat{OR}-1)=$ `r formatC(100 * (as.numeric(coef(sex_poverty_odds_ratio)) - 1), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` %. Por tanto, las odds de no pobreza son mayores en las mujeres en ese porcentaje; esto no significa un aumento porcentual de igual magnitud en la probabilidad de no pobreza ni establece por sí solo una diferencia estadísticamente significativa.
 
 
 El error estándar de esta razón depende de las covarianzas entre las cuatro celdas; no debe obtenerse tratando sus estimaciones como independientes.
