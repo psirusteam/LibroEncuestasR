@@ -1,55 +1,55 @@
-"Figura","Titulo","Archivo"
-"3.1","Figura 3.1: Estimación del tamaño poblacional por zona geográfica","Figura_3.1.pdf"
-"3.2","Figura 3.2: Estimación del número de personas según condición de pobreza","Figura_3.2.pdf"
-"3.3","Figura 3.3: Estimación del número de personas por estado de ocupación y situación de pobreza","Figura_3.3.pdf"
-"3.4","Figura 3.4: Proporción de hombres en condición de pobreza por zona geográfica","Figura_3.4.pdf"
-"3.5","Figura 3.5: Proporciones de hombres pobres y no pobres por región","Figura_3.5.pdf"
-"3.6","Figura 3.6: Pirámide de población estimada por edad y sexo con intervalos de confianza del 95 %","Figura_3.6.pdf"
-"3.7","Figura 3.7: Mapa de regiones geográficas de BigCity","Figura_3.7.pdf"
-"3.8","Figura 3.8: Proporción de hombres en condición de pobreza por región","Figura_3.8.pdf"
-"3.9","Figura 3.9: Coeficiente de variación de la proporción de pobreza por región","Figura_3.9.pdf"
-"3.10","Figura 3.10: Mapa bivariante: proporción de pobreza femenina rural y su coeficiente de variación por región","Figura_3.10.pdf"
-"4.1","Figura 4.1: Curva de Lorenz estimada para el ingreso per cápita","Figura_4.1.pdf"
-"4.2","Figura 4.2: Histograma ponderado del ingreso per cápita","Figura_4.2.pdf"
-"4.3","Figura 4.3: Histograma ponderado del ingreso por zona geográfica","Figura_4.3.pdf"
-"4.4","Figura 4.4: Histogramas ponderados y densidades del ingreso y gasto per cápita","Figura_4.4.pdf"
-"4.5","Figura 4.5: Cuartiles ponderados del logaritmo del ingreso y el gasto per cápita por zona","Figura_4.5.pdf"
-"4.6","Figura 4.6: Diagrama de dispersión entre ingreso y gasto per cápita","Figura_4.6.pdf"
-"4.7","Figura 4.7: Diagrama de dispersión entre ingreso y gasto por zona geográfica","Figura_4.7.pdf"
-"5.1","Figura 5.1: Diagrama de dispersión entre los logaritmos del ingreso y del gasto per cápita de los hogares (sin ponderar)","Figura_5.1.pdf"
-"5.2","Figura 5.2: Histograma de residuales estandarizados con curva de densidad estimada y distribución normal teórica","Figura_5.2.pdf"
-"5.3","Figura 5.3: Gráficos de residuales estandarizados frente a cada covariable del modelo","Figura_5.3.pdf"
-"5.4","Figura 5.4: Distancia de Cook para cada observación de la muestra","Figura_5.4.pdf"
-"5.5","Figura 5.5: Valores DfBetas por parámetro: observaciones influyentes señaladas en rojo","Figura_5.5.pdf"
-"5.6","Figura 5.6: Valores DfFits: observaciones influyentes sobre el ajuste global señaladas en rojo","Figura_5.6.pdf"
-"5.7","Figura 5.7: Estimaciones del logaritmo del gasto per cápita e intervalos de confianza para los primeros 100 hogares de la muestra","Figura_5.7.pdf"
-"6.1","Figura 6.1: Distribución de los parámetros del modelo logístico base","Figura_6.1.pdf"
-"6.2","Figura 6.2: Comparación de los parámetros del modelo logístico con y sin interacciones","Figura_6.2.pdf"
-"6.3","Figura 6.3: Intervalos de confianza para los coeficientes del modelo multinomial","Figura_6.3.pdf"
-"7.1","Figura 7.1: Modelo de regresión lineal simple para el logaritmo del gasto en función del logaritmo del ingreso (sin considerar estratos)","Figura_7.1.pdf"
-"7.2","Figura 7.2: Modelo con intercepto específico por estrato y pendiente común","Figura_7.2.pdf"
-"7.3","Figura 7.3: Modelo con pendiente específica por estrato e intercepto común","Figura_7.3.pdf"
-"7.4","Figura 7.4: Modelo con intercepto y pendiente específicos por estrato (ajuste independiente)","Figura_7.4.pdf"
-"7.5","Figura 7.5: Rectas de regresión estimadas por estrato: modelo con intercepto aleatorio","Figura_7.5.pdf"
-"7.6","Figura 7.6: Rectas de regresión estimadas por estrato: modelo con intercepto y pendiente aleatoria","Figura_7.6.pdf"
-"7.7","Figura 7.7: Probabilidad de pobreza según el logaritmo del gasto, controlando por el tamaño del hogar","Figura_7.7.pdf"
-"7.8","Figura 7.8: Curvas de probabilidad predichas por estrato: modelo logístico con intercepto aleatorio","Figura_7.8.pdf"
-"7.9","Figura 7.9: Curvas de probabilidad predichas por estrato: modelo logístico con intercepto y pendiente aleatoria","Figura_7.9.pdf"
-"10.1","Figura 10.1: Distribución del ingreso por zona y sexo con datos completos y bajo un patrón MCAR","Figura_10.1.pdf"
-"10.2","Figura 10.2: Distribución del ingreso, total y por sexo, bajo un patrón MCAR","Figura_10.2.pdf"
-"10.3","Figura 10.3: Distribución del gasto, total y por sexo, bajo un patrón MCAR","Figura_10.3.pdf"
-"10.4","Figura 10.4: Distribución del gasto por zona y sexo bajo un patrón MAR","Figura_10.4.pdf"
-"10.5","Figura 10.5: Distribución del ingreso, total y por sexo, bajo un patrón MAR","Figura_10.5.pdf"
-"10.6","Figura 10.6: Distribución del gasto, total y por sexo, bajo un patrón MAR","Figura_10.6.pdf"
-"10.7","Figura 10.7: Distribución del ingreso bajo un patrón MNAR","Figura_10.7.pdf"
-"10.8","Figura 10.8: Distribución del gasto bajo un patrón MNAR","Figura_10.8.pdf"
-"10.9","Figura 10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR","Figura_10.9.pdf"
-"10.10","Figura 10.10: Distribución del ingreso original e imputado por la media no condicional","Figura_10.10.pdf"
-"10.11","Figura 10.11: Ingreso original e imputado por la media no condicional, por zona y sexo","Figura_10.11.pdf"
-"10.12","Figura 10.12: Distribución del ingreso original e imputado por la media condicional","Figura_10.12.pdf"
-"10.13","Figura 10.13: Ingreso original e imputado por la media condicional, por zona y sexo","Figura_10.13.pdf"
-"10.14","Figura 10.14: Distribución del ingreso original e imputado mediante hot-deck","Figura_10.14.pdf"
-"10.15","Figura 10.15: Distribución del ingreso original e imputado por regresión","Figura_10.15.pdf"
-"10.16","Figura 10.16: Distribución del ingreso original e imputado por el vecino más cercano","Figura_10.16.pdf"
-"10.17","Figura 10.17: Distribución del ingreso original e imputado por el vecino más cercano con regresión","Figura_10.17.pdf"
-"10.18","Figura 10.18: Distribución del ingreso original y de los valores obtenidos mediante imputación múltiple","Figura_10.18.pdf"
+﻿Figura,Titulo,Archivo
+3.1,Figura 3.1: Estimación del tamaño poblacional por zona geográfica,Figura_3.1.pdf
+3.2,Figura 3.2: Estimación del número de personas según condición de pobreza,Figura_3.2.pdf
+3.3,Figura 3.3: Estimación del número de personas por estado de ocupación y situación de pobreza,Figura_3.3.pdf
+3.4,Figura 3.4: Proporción de hombres en condición de pobreza por zona geográfica,Figura_3.4.pdf
+3.5,Figura 3.5: Proporciones de hombres pobres y no pobres por región,Figura_3.5.pdf
+3.6,Figura 3.6: Pirámide de población estimada por edad y sexo con intervalos de confianza del 95 %,Figura_3.6.pdf
+3.7,Figura 3.7: Mapa de regiones geográficas de BigCity,Figura_3.7.pdf
+3.8,Figura 3.8: Proporción de hombres en condición de pobreza por región,Figura_3.8.pdf
+3.9,Figura 3.9: Coeficiente de variación de la proporción de pobreza por región,Figura_3.9.pdf
+3.10,Figura 3.10: Mapa bivariante: proporción de pobreza femenina rural y su coeficiente de variación por región,Figura_3.10.pdf
+4.1,Figura 4.1: Curva de Lorenz estimada para el ingreso per cápita,Figura_4.1.pdf
+4.2,Figura 4.2: Histograma ponderado del ingreso per cápita,Figura_4.2.pdf
+4.3,Figura 4.3: Histograma ponderado del ingreso por zona geográfica,Figura_4.3.pdf
+4.4,Figura 4.4: Histogramas ponderados y densidades del ingreso y gasto per cápita,Figura_4.4.pdf
+4.5,Figura 4.5: Cuartiles ponderados del logaritmo del ingreso y el gasto per cápita por zona,Figura_4.5.pdf
+4.6,Figura 4.6: Diagrama de dispersión entre ingreso y gasto per cápita,Figura_4.6.pdf
+4.7,Figura 4.7: Diagrama de dispersión entre ingreso y gasto por zona geográfica,Figura_4.7.pdf
+5.1,Figura 5.1: Diagrama de dispersión entre los logaritmos del ingreso y del gasto per cápita de los hogares (sin ponderar),Figura_5.1.pdf
+5.2,Figura 5.2: Histograma de residuales estandarizados con curva de densidad estimada y distribución normal teórica,Figura_5.2.pdf
+5.3,Figura 5.3: Gráficos de residuales estandarizados frente a cada covariable del modelo,Figura_5.3.pdf
+5.4,Figura 5.4: Distancia de Cook para cada observación de la muestra,Figura_5.4.pdf
+5.5,Figura 5.5: Valores DfBetas por parámetro: observaciones influyentes señaladas en rojo,Figura_5.5.pdf
+5.6,Figura 5.6: Valores DfFits: observaciones influyentes sobre el ajuste global señaladas en rojo,Figura_5.6.pdf
+5.7,Figura 5.7: Estimaciones del logaritmo del gasto per cápita e intervalos de confianza para los primeros 100 hogares de la muestra,Figura_5.7.pdf
+6.1,Figura 6.1: Distribución de los parámetros del modelo logístico base,Figura_6.1.pdf
+6.2,Figura 6.2: Comparación de los parámetros del modelo logístico con y sin interacciones,Figura_6.2.pdf
+6.3,Figura 6.3: Intervalos de confianza para los coeficientes del modelo multinomial,Figura_6.3.pdf
+7.1,Figura 7.1: Modelo de regresión lineal simple para el logaritmo del gasto en función del logaritmo del ingreso (sin considerar estratos),Figura_7.1.pdf
+7.2,Figura 7.2: Modelo con intercepto específico por estrato y pendiente común,Figura_7.2.pdf
+7.3,Figura 7.3: Modelo con pendiente específica por estrato e intercepto común,Figura_7.3.pdf
+7.4,Figura 7.4: Modelo con intercepto y pendiente específicos por estrato (ajuste independiente),Figura_7.4.pdf
+7.5,Figura 7.5: Rectas de regresión estimadas por estrato: modelo con intercepto aleatorio,Figura_7.5.pdf
+7.6,Figura 7.6: Rectas de regresión estimadas por estrato: modelo con intercepto y pendiente aleatoria,Figura_7.6.pdf
+7.7,"Figura 7.7: Probabilidad de pobreza según el logaritmo del gasto, controlando por el tamaño del hogar",Figura_7.7.pdf
+7.8,Figura 7.8: Curvas de probabilidad predichas por estrato: modelo logístico con intercepto aleatorio,Figura_7.8.pdf
+7.9,Figura 7.9: Curvas de probabilidad predichas por estrato: modelo logístico con intercepto y pendiente aleatoria,Figura_7.9.pdf
+10.1,Figura 10.1: Distribución del ingreso por zona y sexo con datos completos y bajo un patrón MCAR,Figura_10.1.pdf
+10.2,"Figura 10.2: Distribución del ingreso, total y por sexo, bajo un patrón MCAR",Figura_10.2.pdf
+10.3,"Figura 10.3: Distribución del gasto, total y por sexo, bajo un patrón MCAR",Figura_10.3.pdf
+10.4,Figura 10.4: Distribución del gasto por zona y sexo bajo un patrón MAR,Figura_10.4.pdf
+10.5,"Figura 10.5: Distribución del ingreso, total y por sexo, bajo un patrón MAR",Figura_10.5.pdf
+10.6,"Figura 10.6: Distribución del gasto, total y por sexo, bajo un patrón MAR",Figura_10.6.pdf
+10.7,Figura 10.7: Distribución del ingreso bajo un patrón MNAR,Figura_10.7.pdf
+10.8,Figura 10.8: Distribución del gasto bajo un patrón MNAR,Figura_10.8.pdf
+10.9,Figura 10.9: Distribución del ingreso por zona y sexo bajo un patrón MNAR,Figura_10.9.pdf
+10.10,Figura 10.10: Distribución del ingreso original e imputado por la media no condicional,Figura_10.10.pdf
+10.11,"Figura 10.11: Ingreso original e imputado por la media no condicional, por zona y sexo",Figura_10.11.pdf
+10.12,Figura 10.12: Distribución del ingreso original e imputado por la media condicional,Figura_10.12.pdf
+10.13,"Figura 10.13: Ingreso original e imputado por la media condicional, por zona y sexo",Figura_10.13.pdf
+10.14,Figura 10.14: Distribución del ingreso original e imputado mediante hot-deck,Figura_10.14.pdf
+10.15,Figura 10.15: Distribución del ingreso original e imputado por regresión,Figura_10.15.pdf
+10.16,Figura 10.16: Distribución del ingreso original e imputado por el vecino más cercano,Figura_10.16.pdf
+10.17,Figura 10.17: Distribución del ingreso original e imputado por el vecino más cercano con regresión,Figura_10.17.pdf
+10.18,Figura 10.18: Distribución del ingreso original y de los valores obtenidos mediante imputación múltiple,Figura_10.18.pdf

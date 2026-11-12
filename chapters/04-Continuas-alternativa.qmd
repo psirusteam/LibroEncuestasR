@@ -23,6 +23,7 @@ El capítulo anterior se centró en variables categóricas. En este se estudian 
 library(tidyverse)
 library(survey)
 library(srvyr)
+
 survey_data <- readRDS("../data/sample.rds")
 ```
 
@@ -335,7 +336,7 @@ El gasto medio varía de forma importante según la zona de residencia y la regi
 
 ### Razones {#estimacion-de-razones}
 
-Las proporciones del capítulo anterior constituyen un caso particular de razón de totales. La razón poblacional es un parámetro no lineal definido como el cociente entre los totales de dos variables de interés. Permite cuantificar la relación entre ambas variables y resulta especialmente útil para construir indicadores relativos, comparar grupos y analizar su evolución a lo largo del tiempo. En las encuestas de hogares, este parámetro se utiliza ampliamente para calcular indicadores como el número de hombres por cada mujer, la proporción de personas ocupadas respecto de la población en edad de trabajar y la prevalencia de la subalimentación [@FAO2026PoU].
+La razón poblacional es un parámetro no lineal definido como el cociente entre los totales de dos variables de interés. Permite cuantificar la relación entre ambas variables y resulta especialmente útil para construir indicadores relativos, comparar grupos y analizar su evolución a lo largo del tiempo. En las encuestas de hogares, este parámetro se utiliza ampliamente para calcular indicadores como el número de hombres por cada mujer, la proporción de personas ocupadas respecto de la población en edad de trabajar y la prevalencia de la subalimentación [@FAO2026PoU].
 
 Dado que la razón corresponde al cociente entre dos parámetros (totales) poblacionales desconocidos, tanto el numerador como el denominador deben ser estimados a partir de la muestra.  Siendo $t_y$ el total de la variable $y$ y $t_x$ el total de la variable $x$, la razón poblacional se define como $R = \frac{t_y}{t_x}$ y su estimador puntual se expresa como:
 
@@ -358,7 +359,9 @@ $$ {#eq-varianza-razon}
 
 Las varianzas de los totales y su covarianza se estiman considerando los estratos, las UPM y los pesos del diseño. El término de covarianza recoge la variación conjunta del numerador y del denominador, calculados sobre la misma muestra, por lo que no deben suponerse independientes. De manera equivalente, es poisble estimar la varianza del total ponderado de la variable linealizada $z_{hik}=y_{hik}-\hat{R}x_{hik}$ mediante el método del último conglomerado y dividir por $\hat{t}_x^{\,2}$. La raíz cuadrada de la varianza aproximada es el error estándar de $\hat{R}$. La función `survey_ratio()` realiza esta estimación y permite obtener las correspondientes medidas de precisión.
 
-Como primer ejemplo de aplicación, se estima el índice de masculinidad (*sex ratio*, en inglés), definido como el número de hombres por cada 100 mujeres en la población representada por la encuesta. En la fórmula, $\hat N_{\mathrm{hombres}}$ y $\hat N_{\mathrm{mujeres}}$ representan los totales poblacionales estimados de hombres y mujeres, respectivamente. Su estimador es:
+Algunos indicadores de esta sección comparan tamaños de grupos —por ejemplo, personas de distintas edades o sexos—, mientras que otros relacionan totales de variables numéricas, como el gasto y el ingreso. Se presentan juntos porque todos se estiman como el cociente de dos totales poblacionales. Este cociente es una función no lineal de los totales del numerador y del denominador; por ello, para calcular su varianza se consideran la variabilidad de ambos y la covarianza entre ellos. La función `survey_ratio()` aplica este procedimiento incorporando el diseño muestral. En el capítulo 3 se estimaron los tamaños de los grupos que forman algunos de estos cocientes; aquí se muestra cómo relacionarlos y evaluar la precisión de la razón resultante.
+
+Como primer ejemplo de aplicación, se estima el índice de masculinidad (*sex ratio*, en inglés), definido como el número de hombres por cada 100 mujeres en la población representada por la encuesta. En la fórmula, $\hat N_{\mathrm{hombres}}$ y $\hat N_{\mathrm{mujeres}}$ representan los tamaños poblacionales estimados de hombres y mujeres, respectivamente. Su estimador es:
 
 $$
 \hat R_{\mathrm{SR}}
@@ -375,8 +378,8 @@ sex_ratio_table <- survey_design %>%
     ratio = survey_ratio(
       numerator = 100 * (Sex == "Male"),
       denominator = Sex == "Female",
-      level = 0.95,
-      vartype = c("se", "ci")
+      vartype = c("se", "ci"),
+      level = 0.95
     )
   )
 
@@ -405,8 +408,8 @@ rural_sex_ratio_table <- rural_subset %>%
     ratio = survey_ratio(
       numerator = 100 * (Sex == "Male"),
       denominator = Sex == "Female",
-      level = 0.95,
-      vartype = c("se", "ci")
+      vartype = c("se", "ci"),
+      level = 0.95
     )
   )
 
@@ -425,7 +428,7 @@ tabla_fmt(
 
 La @tbl-razon-sexo-rural estima `r round(rural_sex_ratio_table$ratio, 2)` hombres por cada 100 mujeres en la zona rural. Su error estándar es `r round(rural_sex_ratio_table$ratio_se, 2)` y el intervalo de confianza del 95 % va de `r round(rural_sex_ratio_table$ratio_low, 2)` a `r round(rural_sex_ratio_table$ratio_upp, 2)`. Como el intervalo `r if (rural_sex_ratio_table$ratio_low <= 100 && rural_sex_ratio_table$ratio_upp >= 100) "incluye" else "no incluye"` el valor 100, al nivel del 5 % `r if (rural_sex_ratio_table$ratio_low <= 100 && rural_sex_ratio_table$ratio_upp >= 100) "no existe evidencia suficiente para concluir que las cantidades de hombres y mujeres difieren" else "existe evidencia de una diferencia entre las cantidades de hombres y mujeres"` en este dominio.
 
-Una aplicación demográfica de las razones es el índice de envejecimiento (*Ageing Index*, en inglés). De acuerdo con la definición de @CEPAL2022PanoramaEnvejecimiento, se calcula como el número de personas de 60 años o más por cada 100 personas de 0 a 14 años. En la fórmula, $\hat N_{60+}$ representa el total estimado de personas de 60 años o más y $\hat N_{0-14}$, el total estimado de personas de 0 a 14 años. Su estimador es:
+Una aplicación demográfica de las razones es el índice de envejecimiento (*Ageing Index*, en inglés). De acuerdo con la definición de @CEPAL2022PanoramaEnvejecimiento, se calcula como el número de personas de 60 años o más por cada 100 personas de 0 a 14 años. En la fórmula, $\hat N_{60+}$ representa el tamaño estimado de personas de 60 años o más y $\hat N_{0-14}$, el tamaño estimado de personas de 0 a 14 años. Su estimador es:
 
 $$
 \hat R_{\mathrm{AI}}
@@ -505,7 +508,7 @@ tabla_fmt(
 
 La @tbl-indice-envejecimiento-zona presenta un índice de `r round(zone_aging_index$aging[zone_aging_index$Zone == "Rural"], 2)` en la zona rural y de `r round(zone_aging_index$aging[zone_aging_index$Zone == "Urban"], 2)` en la urbana. En cada caso, el valor indica cuántas personas de 60 años o más se estiman por cada 100 menores de 15 años del dominio. Los intervalos de confianza describen la incertidumbre de las estimaciones.
 
-Otra aplicación demográfica de las razones es la razón de dependencia total (*Total Dependency Ratio*, en inglés), que describe la composición por edad de la población. Adoptando la definición de [CEPALSTAT](https://statistics.cepal.org/portal/cepalstat/technical-sheet.html?indicator_id=35&lang=es), se calcula como el número de personas de 0 a 14 años y de 65 años o más por cada 100 personas de 15 a 64 años. En la fórmula, $\hat N_{0-14}$ y $\hat N_{65+}$ son los totales estimados de esos grupos dependientes, que se suman en el numerador; $\hat N_{15-64}$ es el total estimado de personas de 15 a 64 años y forma el denominador. Su estimador es:
+Otra aplicación demográfica de las razones es la razón de dependencia total (*Total Dependency Ratio*, en inglés), que describe la composición por edad de la población. Adoptando la definición de [CEPALSTAT](https://statistics.cepal.org/portal/cepalstat/technical-sheet.html?indicator_id=35&lang=es), se calcula como el número de personas de 0 a 14 años y de 65 años o más por cada 100 personas de 15 a 64 años. En la fórmula, $\hat N_{0-14}$ y $\hat N_{65+}$ son los tamaños estimados de esos grupos dependientes, que se suman en el numerador; $\hat N_{15-64}$ es el tamaño estimado de personas de 15 a 64 años y forma el denominador. Su estimador es:
 
 $$
 \hat R_{\mathrm{TDR}} = 100\times\frac{\hat N_{0-14}+\hat N_{65+}}{\hat N_{15-64}}.
@@ -579,7 +582,7 @@ tabla_fmt(
 
 La @tbl-razon-dependencia-zona presenta una razón estimada de `r round(zone_dependency_ratio$dependency[zone_dependency_ratio$Zone == "Rural"], 2)` en la zona rural y de `r round(zone_dependency_ratio$dependency[zone_dependency_ratio$Zone == "Urban"], 2)` en la urbana, siempre por cada 100 personas de 15 a 64 años de la zona correspondiente. Los intervalos describen la incertidumbre de cada estimación. Para evaluar la diferencia entre zonas se requiere estimar directamente su contraste, considerando también la covarianza entre ambas razones, como se desarrolla en la [sección de contrastes](04-Continuas-alternativa.qmd#estimacion-de-contrastes).
 
-También puede definirse una razón de dependencia económica potencial (*Economic Dependency Ratio*, en inglés). En este ejemplo, el numerador corresponde al total estimado de personas no ocupadas de 15 años o más, incluidas las desocupadas y las inactivas; el denominador corresponde al total estimado de personas ocupadas de esas edades. En la fórmula, estos totales se denotan por $\hat N_{\text{no ocupadas, 15+}}$ y $\hat N_{\text{ocupadas, 15+}}$, respectivamente. Su estimador es:
+También puede definirse una razón de dependencia económica potencial (*Economic Dependency Ratio*, en inglés). En este ejemplo, el numerador corresponde al total estimado de personas no ocupadas de 15 años o más, incluidas las desocupadas y las inactivas; el denominador corresponde al total estimado de personas ocupadas de esas edades. En la fórmula, estos tamaños se denotan por $\hat N_{\text{no ocupadas, 15+}}$ y $\hat N_{\text{ocupadas, 15+}}$, respectivamente. Su estimador es:
 
 $$
 \hat R_{\mathrm{EDR},15+}
@@ -668,8 +671,8 @@ expenditure_income_ratio_table <- survey_design %>%
     ratio = survey_ratio(
       numerator = Expenditure,
       denominator = Income,
-      level = 0.95,
-      vartype = c("se", "ci")
+      vartype = c("se", "ci"),
+      level = 0.95
     )
   )
 
@@ -695,8 +698,8 @@ regional_expenditure_income_ratio_table <- survey_design %>%
     ratio = survey_ratio(
       numerator = Expenditure,
       denominator = Income,
-      level = 0.95,
-      vartype = c("se", "ci")
+      vartype = c("se", "ci"),
+      level = 0.95
     )
   )
 
@@ -739,7 +742,7 @@ El error estándar de la desviación estándar puede aproximarse mediante el mé
 income_dispersion_by_zone_table <- survey_design %>%
   group_by(Zone) %>%
   summarise(
-    Var = survey_var(
+    variance = survey_var(
       Income,
       level = 0.95,
       vartype = c("se", "ci"),
@@ -747,9 +750,9 @@ income_dispersion_by_zone_table <- survey_design %>%
     )
   ) %>%
   mutate(
-    Sd = sqrt(Var),
-    Sd_low = sqrt(pmax(Var_low, 0)),
-    Sd_upp = sqrt(Var_upp)
+    sd = sqrt(variance),
+    sd_low = sqrt(pmax(variance_low, 0)),
+    sd_upp = sqrt(variance_upp)
   )
 
 income_dispersion_by_zone_table
@@ -762,9 +765,9 @@ tabla_fmt(income_dispersion_by_zone_table,
           col.names = c("Zona", "Varianza", "Var.: EE", "Var.: LI 95 %", "Var.: LS 95 %", "DE", "DE: LI 95 %", "DE: LS 95 %"))
 ```
 
-`Var_se` es el error estándar de la varianza y no el de la desviación estándar. Los límites de esta última se obtienen transformando los de la varianza; el inferior se restringe a cero antes de aplicar la raíz si la aproximación produce un límite negativo.
+`variance_se` es el error estándar de la varianza y no el de la desviación estándar. Los límites de esta última se obtienen transformando los de la varianza; el inferior se restringe a cero antes de aplicar la raíz si la aproximación produce un límite negativo.
 
-Los argumentos de la función `survey_var()` son equivalentes a los utilizados previamente para la estimación de medias y totales. Los resultados de la @tbl-sd-ingreso-zona muestran que los ingresos presentan una dispersión considerablemente mayor en la zona urbana que en la rural. En la zona rural, la desviación estándar alcanza `r formatC(income_dispersion_by_zone_table$Sd[income_dispersion_by_zone_table$Zone == "Rural"], format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares, mientras que en la zona urbana se eleva a `r formatC(income_dispersion_by_zone_table$Sd[income_dispersion_by_zone_table$Zone == "Urban"], format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares. Los intervalos describen la incertidumbre de cada medida de dispersión. Para realizar una prueba formal de su diferencia se necesitaría estimar el contraste correspondiente. 
+Los argumentos de la función `survey_var()` son equivalentes a los utilizados previamente para la estimación de medias y totales. Los resultados de la @tbl-sd-ingreso-zona muestran que los ingresos presentan una dispersión considerablemente mayor en la zona urbana que en la rural. En la zona rural, la desviación estándar alcanza `r formatC(income_dispersion_by_zone_table$sd[income_dispersion_by_zone_table$Zone == "Rural"], format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares, mientras que en la zona urbana se eleva a `r formatC(income_dispersion_by_zone_table$sd[income_dispersion_by_zone_table$Zone == "Urban"], format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` dólares. Los intervalos describen la incertidumbre de cada medida de dispersión. Para realizar una prueba formal de su diferencia se necesitaría estimar el contraste correspondiente.
 
 ### Percentiles y medianas {#sec-estimacion-de-percentiles}
 
@@ -869,9 +872,9 @@ A continuación, se presenta la sintaxis utilizada para estimar el coeficiente d
 #| results: hide
 library(convey)
 gini_design <- convey_prep(survey_design)
-gini <- svygini(~Income, design = gini_design)
+gini <- svygini(~ Income, design = gini_design)
 income_gini_table <- data.frame(
-  Gini = coef(gini),
+  gini = coef(gini),
   standard_error = SE(gini),
   ci_lower = confint(gini)[1],
   ci_upper = confint(gini)[2]
@@ -898,10 +901,10 @@ En encuestas con diseños muestrales complejos, la estimación de las ordenadas 
 
 ```{r fig-lorenz, fig.cap="Curva de Lorenz estimada para el ingreso per cápita", fig.align="center", out.width="65%"}
 clorenz <- svylorenz(
-  formula = ~Income,
+  formula = ~ Income,
   design = gini_design,
-  quantiles = seq(0, 1, .05),
-  alpha = .05,
+  quantiles = seq(0, 1, 0.05),
+  alpha = 0.05,
   plot = TRUE
 )
 ```
@@ -927,9 +930,9 @@ El siguiente código computacional utiliza `svyvar()` del paquete `survey` para 
 
 ```{r code-covariance}
 #| results: hide
-cov_matrix <- svyvar(~Income + Expenditure, design = survey_design)
+cov_matrix <- svyvar(~ Income + Expenditure, design = survey_design)
 income_expenditure_covariance_table <- data.frame(
-  Variable = rownames(cov_matrix),
+  variable = rownames(cov_matrix),
   as.matrix(cov_matrix)
 )
 
@@ -962,7 +965,7 @@ Si además se desea realizar inferencia estadística sobre la correlación, por 
 library(jtools)
 
 svycor(
-  ~Income + Expenditure,
+  ~ Income + Expenditure,
   design = survey_design,
   sig.stats = FALSE
 )
@@ -1015,7 +1018,7 @@ income_sex_test_table <- tibble(
   estimated_difference = ttest_sex$estimate,
   statistic = ttest_sex$statistic,
   p_value = ttest_sex$p.value,
-  gl = ttest_sex$parameter,
+  df = ttest_sex$parameter,
   ci_lower = ttest_sex$conf.int[1],
   ci_upper = ttest_sex$conf.int[2]
 )
@@ -1117,10 +1120,9 @@ tabla_fmt(north_south_income_contrast_table,
           col.names = c("Contraste", "Estimación", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-La estimación de la diferencia de medias indica que el ingreso promedio en la región Norte es aproximadamente `r formatC(-as.numeric(coef(contrast_region_ns)), format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` dólares inferior al observado en la región Sur. Sin embargo, el error estándar de `r formatC(as.numeric(SE(contrast_region_ns)), format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` es mayor que la diferencia estimada, lo que refleja una incertidumbre considerable. Por tanto, no hay evidencia suficiente para concluir que exista una diferencia estadísticamente significativa entre ambas regiones. Nótese que estos mismos resultados podrían obtenerse realizando explícitamente el proceso de construcción del estimador del contraste y de su varianza estimada. El siguiente código computacional inicia este cálculo directo restando el ingreso medio estimado de Sur al de Norte.
+La estimación de la diferencia de medias indica que el ingreso promedio en la región Norte es aproximadamente `r formatC(-as.numeric(coef(contrast_region_ns)), format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` dólares inferior al observado en la región Sur. Sin embargo, el error estándar de `r formatC(as.numeric(SE(contrast_region_ns)), format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` es mayor que la diferencia estimada, lo que refleja una incertidumbre considerable. Por tanto, no hay evidencia suficiente para concluir que exista una diferencia estadísticamente significativa entre ambas regiones. Nótese que estos mismos resultados podrían obtenerse realizando explícitamente el proceso de construcción del estimador del contraste y de su varianza estimada. Como primer paso, el siguiente código computacional inicia este cálculo directo restando el ingreso medio estimado de Sur al de Norte.
 
 ```{r code-difference-north-south, eval=TRUE}
-# Paso 1: diferencia de las estimaciones (North - South)
 region_income_mean <- setNames(
   as.numeric(region_mean_contrast[["Income"]]),
   region_mean_contrast[["Region"]]
@@ -1129,11 +1131,10 @@ region_income_mean <- setNames(
 region_income_mean["North"] - region_income_mean["South"]
 ```
 
-El siguiente código computacional obtiene la matriz de varianzas y covarianzas y la organiza con los nombres de las regiones para presentarla en la @tbl-vcov-region. De ella se extraen los elementos correspondientes a Norte y Sur. Las covarianzas estimadas entre las regiones son todas nulas, lo que resulta coherente con el diseño muestral, dado que la estratificación se realizó por región y la selección de la muestra se efectuó de manera independiente en cada estrato. En consecuencia, los estimadores regionales no comparten unidades muestrales y su covarianza bajo el diseño es igual a cero.
+Como segundo paso, el siguiente código computacional obtiene la matriz de varianzas y covarianzas y la organiza con los nombres de las regiones para presentarla en la @tbl-vcov-region. De ella se extraen los elementos correspondientes a Norte y Sur. Las covarianzas estimadas entre las regiones son todas nulas, lo que resulta coherente con el diseño muestral, dado que la estratificación se realizó por región y la selección de la muestra se efectuó de manera independiente en cada estrato. En consecuencia, los estimadores regionales no comparten unidades muestrales y su covarianza bajo el diseño es igual a cero.
 
 ```{r code-vcov-region, eval=TRUE}
 #| results: hide
-# Paso 2: matriz de varianzas y covarianzas
 region_vcov <- vcov(region_mean_contrast)
 regional_income_covariance_table <- region_vcov %>%
   as.data.frame() %>%
@@ -1335,13 +1336,11 @@ tabla_fmt(sex_ratio_contrast_table,
           col.names = c("Contraste", "Estimación", "EE", "LI 95 %", "LS 95 %"))
 ```
 
-A partir de dichos resultados, puede concluirse que el contraste mujeres menos hombres es aproximadamente `r formatC(as.numeric(coef(contrast_sex_ratio)), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`; la razón ingreso/gasto es mayor para los hombres en este dominio.
-
-Finalmente, la comparación demográfica de la [sección de estimación de razones](04-Continuas-alternativa.qmd#estimacion-de-razones) puede formalizarse mediante la diferencia entre la zona rural y la urbana, cuyo estimador está dado por 
+A partir de dichos resultados, puede concluirse que el contraste mujeres menos hombres es aproximadamente `r formatC(as.numeric(coef(contrast_sex_ratio)), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`; la razón ingreso/gasto es mayor para los hombres en este dominio. Finalmente, la comparación demográfica de la [sección de estimación de razones](04-Continuas-alternativa.qmd#estimacion-de-razones) puede formalizarse mediante la diferencia entre la zona rural y la urbana, cuyo estimador está dado por 
 
 $$
 \hat\Delta_{\mathrm{TDR}}=\hat R_{\mathrm{TDR},\mathrm{rural}}-\hat R_{\mathrm{TDR},\mathrm{urbana}}
-$$. 
+$$
 
 Y su varianza estimada es:
 
@@ -1357,10 +1356,10 @@ La covarianza se obtiene estimando conjuntamente las razones con `svyby()`, `svy
 ```{r code-contrast-dependency}
 #| results: hide
 zone_dependency_joint <- svyby(
-  ~dependency_units,
-  ~Zone,
+  ~ dependency_units,
+  ~ Zone,
   design = dependency_design,
-  denominator = ~reference_age,
+  denominator = ~ reference_age,
   FUN = svyratio,
   covmat = TRUE
 )
@@ -1463,7 +1462,7 @@ weighted_zone_hist
 
 Cada panel muestra la distribución ponderada del ingreso per cápita para una zona. `facet_wrap(~ Zone, ncol = 1)` separa las zonas en filas y conserva escalas comunes, de modo que las alturas y los rangos del eje horizontal se puedan comparar directamente. Las etiquetas de los paneles se presentan en español. Se utilizan los mismos 30 intervalos en ambos paneles; el eje vertical muestra densidades, por lo que el área de las barras representa proporciones.
 
-Además, es posible superponer curvas de densidad suavizadas mediante la función `geom_density()`, lo que permite representar de manera continua la forma de la distribución de la variable analizada. Este tipo de gráfico facilita la identificación de características como la asimetría, la concentración de los valores y la posible presencia de múltiples modas. En la @fig-densities, obtenida con el siguiente código computacional, se presentan los histogramas del ingreso y el gasto junto con sus respectivas curvas de densidad estimadas. Para disponer ambos gráficos uno al lado del otro, se utiliza el operador `|` del paquete `patchwork`, que permite combinar distintas visualizaciones en una misma composición gráfica.
+Además, es posible superponer curvas de densidad suavizadas mediante la función `geom_density()`, lo que permite representar de manera continua la forma de la distribución de la variable analizada. Este tipo de gráfico facilita la identificación de características como la asimetría, la concentración de los valores y la posible presencia de múltiples modas. En la @fig-densities, obtenida con el siguiente código computacional, se presentan los histogramas del ingreso y el gasto junto con sus respectivas curvas de densidad estimadas. En `geom_density()`, `fill` asigna el color bajo cada curva y `alpha = 0.3` regula su transparencia. Para disponer ambos gráficos uno al lado del otro, se utiliza el operador `|` del paquete `patchwork`, que permite combinar distintas visualizaciones en una misma composición gráfica.
 
 ```{r fig-densities, fig.cap="Histogramas ponderados y densidades del ingreso y gasto per cápita", fig.align='center', out.width='90%'}
 weighted_expenditure_hist <- ggplot(
@@ -1484,20 +1483,20 @@ weighted_expenditure_hist <- ggplot(
 
 Introducidos por @Tukey1977EDA, los diagramas de caja (*boxplots*) permiten identificar valores atípicos y evaluar la dispersión de la distribución. Son una representación gráfica que resume una variable mediante estadísticas basadas en cuartiles, permitiendo identificar la mediana, la dispersión de los datos y la presencia de valores atípicos. En el contexto de encuestas de hogares, este tipo de gráfico resulta útil para comparar distribuciones entre distintos grupos poblacionales de manera compacta y visualmente intuitiva.
 
-Los cuartiles y la mediana corresponden a los conceptos de la @sec-estimacion-de-percentiles. Las cajas resumen la dispersión y no son intervalos de confianza de la mediana. Para incorporar las ponderaciones y el diseño muestral, se utiliza `svyboxplot()` del paquete `survey`, que calcula y representa diagramas de caja directamente a partir del objeto de diseño. Como el ingreso y el gasto presentan asimetría y valores altos, se muestran en escala logarítmica: esta comprime la cola superior y facilita comparar los valores centrales entre zonas. En esta escala, las distancias representan cambios multiplicativos. La transformación requiere valores positivos, condición que cumplen ambas variables en esta base. Las fórmulas especifican la variable graficada a la izquierda de `~` y el grupo de comparación a la derecha. El argumento `design` especifica el diseño muestral, `horizontal = TRUE` dispone las cajas horizontalmente y `col` asigna un color a cada zona. `par(mfrow = c(1, 2))` organiza los dos gráficos en una fila, y `par(old_par)` restaura la configuración gráfica anterior. El siguiente código computacional genera la @fig-boxplot-zone-sex.
+Los cuartiles y la mediana corresponden a los conceptos de la @sec-estimacion-de-percentiles. Las cajas resumen la dispersión y no son intervalos de confianza de la mediana. Para incorporar las ponderaciones y el diseño muestral, se utiliza `svyboxplot()` del paquete `survey`, que calcula y representa diagramas de caja directamente a partir del objeto de diseño. Como el ingreso y el gasto presentan asimetría y valores altos, se muestran en escala logarítmica: esta comprime la cola superior y facilita comparar los valores centrales entre zonas. En esta escala, las distancias representan cambios multiplicativos. La transformación requiere valores positivos, condición que cumplen ambas variables en esta base. Las fórmulas especifican la variable graficada a la izquierda de `~` y el grupo de comparación a la derecha. El argumento `design` especifica el diseño muestral, `horizontal = TRUE` dispone las cajas horizontalmente y `col` asigna un color a cada zona. `par(no.readonly = TRUE)` guarda los parámetros gráficos que pueden modificarse y permite restaurarlos luego con `par(old_par)`. `par(mfrow = c(1, 2))` organiza los dos gráficos en una fila, y `par(old_par)` restaura la configuración gráfica anterior. El siguiente código computacional genera la @fig-boxplot-zone-sex.
 
 ```{r fig-boxplot-zone-sex, fig.cap="Cuartiles ponderados del logaritmo del ingreso y el gasto per cápita por zona", fig.align='center', out.width='90%', fig.width=8, fig.height=4, echo=TRUE}
 survey_design_log <- survey_design %>%
   mutate(
-    log_Income = log(Income),
-    log_Expenditure = log(Expenditure)
+    log_income = log(Income),
+    log_expenditure = log(Expenditure)
   )
 
 old_par <- par(no.readonly = TRUE)
 par(mfrow = c(1, 2))
 
 svyboxplot(
-  log_Income ~ Zone,
+  log_income ~ Zone,
   design = survey_design_log,
   horizontal = TRUE,
   col = zone_colors,
@@ -1507,7 +1506,7 @@ svyboxplot(
 )
 
 svyboxplot(
-  log_Expenditure ~ Zone,
+  log_expenditure ~ Zone,
   design = survey_design_log,
   horizontal = TRUE,
   col = zone_colors,
@@ -1565,6 +1564,4 @@ weighted_zone_scatter <- ggplot(
 weighted_zone_scatter
 ```
 
-La @fig-scatter-zone mantiene las mismas escalas logarítmicas del gráfico anterior y diferencia las zonas por color y forma. Así se pueden comparar los patrones entre zonas sin que los valores altos compriman la mayor parte de los puntos. La escala logarítmica cambia la lectura de los ejes: por ejemplo, un mismo tramo visual corresponde a una razón constante entre valores, no a una diferencia fija en dólares.
-
-Las distribuciones y la correlación permiten reconocer heterogeneidad y patrones de asociación. Junto con las herramientas para variables categóricas, preparan el estudio de modelos de regresión del capítulo siguiente, donde se analizarán varias variables simultáneamente incorporando el diseño muestral.
+La @fig-scatter-zone mantiene las mismas escalas logarítmicas del gráfico anterior y diferencia las zonas por color y forma. Así se pueden comparar los patrones entre zonas sin que los valores altos compriman la mayor parte de los puntos. La escala logarítmica cambia la lectura de los ejes: por ejemplo, un mismo tramo visual corresponde a una razón constante entre valores, no a una diferencia fija en dólares. 

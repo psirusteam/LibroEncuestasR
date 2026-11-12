@@ -18,17 +18,13 @@ source("../_tabla_helper.R")
 
 Los modelos de regresión constituyen una de las herramientas más utilizadas en el análisis de datos provenientes de encuestas, ya que permiten estudiar la relación entre una variable de interés y un conjunto de variables explicativas [@ChambersSkinner2003; @HeeringaWestBerglund2017]. A través de estos modelos, es posible evaluar cómo cambian determinadas características de la población según factores demográficos, sociales o económicos observados en la muestra. No obstante, la validez de los resultados obtenidos depende de una adecuada especificación del modelo y de la correcta consideración de las características del diseño muestral de la encuesta.
 
-En términos generales, los modelos de regresión buscan describir y cuantificar la asociación entre una variable respuesta (dependiente) y una o más variables explicativas (independientes), proporcionando elementos para la interpretación estadística y la formulación de inferencias sobre la población de estudio.
-
-Por ejemplo, es posible analizar el comportamiento del gasto per cápita de los hogares como variable de respuesta, en función del ingreso per cápita, la edad y el sexo del jefe de hogar, la zona y la región de residencia, consideradas variables explicativas. Utilizando información proveniente de encuestas de hogares, este tipo de modelos permite identificar patrones de asociación, cuantificar la asociación de distintos factores socioeconómicos con el gasto y generar evidencia empírica útil para el diseño, seguimiento y evaluación de políticas públicas.
+En términos generales, los modelos de regresión buscan describir y cuantificar la asociación entre una variable respuesta (dependiente) y una o más variables explicativas (independientes), proporcionando elementos para la interpretación estadística y la formulación de inferencias sobre la población de estudio. Por ejemplo, es posible analizar el comportamiento del gasto per cápita de los hogares como variable de respuesta, en función del ingreso per cápita, la edad y el sexo del jefe de hogar, la zona y la región de residencia, consideradas variables explicativas. Utilizando información proveniente de encuestas de hogares, este tipo de modelos permite identificar patrones de asociación, cuantificar la asociación de distintos factores socioeconómicos con el gasto y generar evidencia empírica útil para el diseño, seguimiento y evaluación de políticas públicas.
 
 Como explica @pfeffermann2011modelling, dado que las encuestas de hogares están sustentadas en diseños de muestreo complejos, los métodos clásicos de regresión, desarrollados bajo supuestos de muestreo aleatorio simple, pueden resultar inapropiados. Ignorar el diseño puede sesgar los coeficientes cuando la selección es informativa o el modelo está mal especificado y, aun cuando los coeficientes no cambien de manera apreciable, puede producir errores estándar y pruebas de hipótesis incorrectos.
 
 En consecuencia, el análisis de datos provenientes de encuestas exige una atención detallada al diseño de muestreo. La incorporación de los pesos de la encuesta y los ajustes correspondientes a la estratificación y la conglomeración permite obtener inferencias válidas y precisas. Adicionalmente, en algunos casos se han propuesto alternativas simplificadas, como el uso de pesos normalizados o enfoques de ponderación aproximada, que buscan equilibrar la complejidad metodológica con la factibilidad práctica del análisis.
 
-El estudio de la regresión bajo diseños de muestreo complejos cuenta con una trayectoria bien documentada. Como señalaron @kish1974inference, estos diseños afectan las inferencias derivadas de modelos de regresión. Posteriormente, @fuller1975regression desarrolló estimadores de varianza apoyados en técnicas de linealización para modelos de regresión lineal múltiple con ponderación desigual y métodos específicos para diseños estratificados y de dos etapas.
-
-Más adelante, @shah1977inference y @binder1983variances abordaron el problema de las violaciones a los supuestos clásicos al trabajar con datos de encuestas mediante alternativas de inferencia robusta para los parámetros. En paralelo, las distribuciones muestrales de los estimadores de regresión en poblaciones finitas se incorporaron a procedimientos para estimar varianzas bajo esquemas complejos.
+El estudio de la regresión bajo diseños de muestreo complejos cuenta con una trayectoria bien documentada. Como señalaron @kish1974inference, estos diseños afectan las inferencias derivadas de modelos de regresión. Posteriormente, @fuller1975regression desarrolló estimadores de varianza apoyados en técnicas de linealización para modelos de regresión lineal múltiple con ponderación desigual y métodos específicos para diseños estratificados y de dos etapas. Más adelante, @shah1977inference y @binder1983variances abordaron el problema de las violaciones a los supuestos clásicos al trabajar con datos de encuestas mediante alternativas de inferencia robusta para los parámetros. En paralelo, las distribuciones muestrales de los estimadores de regresión en poblaciones finitas se incorporaron a procedimientos para estimar varianzas bajo esquemas complejos.
 
 En los años siguientes, @skinner1989analysis y @fuller2002regression ampliaron estos aportes mediante estimadores de varianza para los coeficientes de regresión que incorporan la estratificación y la conglomeración, así como mediante compendios de métodos de estimación aplicables a modelos de regresión en encuestas complejas. La discusión reciente incluye, además, métodos de ponderación *q-weighted* y evidencia empírica sobre su utilidad.
 
@@ -186,7 +182,7 @@ unweighted_plot <- ggplot(
 unweighted_plot
 ```
 
-Los datos muestrales conservan una relación positiva y aproximadamente lineal entre los logaritmos del ingreso y del gasto per cápita, aunque se observa dispersión alrededor de la recta ajustada. Una vez completada la exploración gráfica de los datos, se procede al ajuste de los modelos de regresión lineal.
+Los datos muestrales conservan una relación positiva y aproximadamente lineal entre los logaritmos del ingreso y del gasto per cápita, aunque se observa dispersión alrededor de la recta ajustada. En `geom_smooth()`, `method = "lm"` ajusta una recta por mínimos cuadrados y `se = FALSE` omite la banda de incertidumbre alrededor de ella. Una vez completada la exploración gráfica de los datos, se procede al ajuste de los modelos de regresión lineal.
 
 El siguiente código computacional ajusta un modelo lineal mediante `svyglm()` del paquete `survey`, incorporando los factores de expansión y las demás características del diseño muestral. En este caso, la expresión `log(Expenditure) ~ log(Income) + Age + Sex + Zone + Region` especifica que el logaritmo del gasto per cápita se modela en función del logaritmo del ingreso per cápita, la edad y el sexo del jefe de hogar, la zona y la región de residencia; es decir, se ajusta una regresión lineal múltiple en escala logarítmica, cuyo coeficiente del ingreso representa la elasticidad del gasto respecto al ingreso, manteniendo constantes las demás variables. El argumento `design = survey_design` indica que el modelo debe utilizar el objeto de diseño muestral previamente definido, mientras que `family = stats::gaussian()` especifica que se ajusta un modelo lineal con distribución normal, equivalente a una regresión lineal clásica.
 
@@ -202,21 +198,15 @@ fit_svy
 
 La salida anterior corresponde al ajuste de un modelo de regresión lineal en el que el logaritmo de `Expenditure` se explica a partir del logaritmo de `Income` y de las variables `Age`, `Sex`, `Zone` y `Region`. Como explica @Wooldridge2020, la interpretación de los coeficientes depende de cuáles variables se expresan en logaritmos. En este modelo, tanto el gasto como el ingreso per cápita están en logaritmos, por lo que el coeficiente de `log(Income)` representa directamente una elasticidad: un ingreso 1 % mayor se asocia con un gasto aproximadamente $\hat\beta_1$ % mayor, manteniendo constantes las demás variables. En cambio, para la edad, incorporada en su escala original, un año adicional se asocia con una variación porcentual de $100[\exp(\hat\beta_{\mathrm{Age}})-1]$. Para las variables categóricas, esa misma transformación expresa la diferencia porcentual respecto de la categoría de referencia. La exponencial convierte el coeficiente en una razón entre niveles de gasto ajustados; restar uno y multiplicar por cien permite expresar cuánto aumenta o disminuye el gasto respecto del nivel de comparación.
 
-Los resultados indican una asociación positiva entre ingreso y gasto. La pendiente estimada es $\hat\beta_1=$ `r formatC(coef(fit_svy)["log(Income)"], format = "f", digits = 3, decimal.mark = ",")`. Un ingreso 1 % mayor multiplica el gasto típico predicho por $1{,}01^{\hat\beta_1}$; el cambio porcentual es $100[1{,}01^{\hat\beta_1}-1]=$ `r formatC(100 * (1.01^(coef(fit_svy)["log(Income)"]) - 1), format = "f", digits = 3, decimal.mark = ",")` %, aproximadamente igual a la elasticidad estimada. Esta comparación mantiene constantes las demás covariables y se refiere al gasto típico, expresado como media geométrica condicional.
+Los resultados indican una asociación positiva entre ingreso y gasto. La pendiente estimada es $\hat\beta_1=$ `r formatC(coef(fit_svy)["log(Income)"], format = "f", digits = 3, decimal.mark = ",")`. Un ingreso 1 % mayor multiplica el gasto típico predicho por $1{,}01^{\hat\beta_1}$; el cambio porcentual es $100[1{,}01^{\hat\beta_1}-1]=$ `r formatC(100 * (1.01^(coef(fit_svy)["log(Income)"]) - 1), format = "f", digits = 3, decimal.mark = ",")` %, aproximadamente igual a la elasticidad estimada. Esta comparación mantiene constantes las demás covariables y se refiere al gasto típico, expresado como media geométrica condicional. Para la residencia en zona urbana frente a rural, el coeficiente es $\hat\beta_{\mathrm{urbana}}=$ `r formatC(coef(fit_svy)["ZoneUrban"], format = "f", digits = 3, decimal.mark = ",")`. Manteniendo constantes las demás variables, la razón entre los gastos típicos predichos es $\exp(\hat\beta_{\mathrm{urbana}})$ y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{urbana}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["ZoneUrban"]), format = "f", digits = 2, decimal.mark = ",")` %. Para la jefatura femenina frente a masculina, el coeficiente es $\hat\beta_{\mathrm{mujer}}=$ `r formatC(coef(fit_svy)["SexFemale"], format = "f", digits = 3, decimal.mark = ",")`. Manteniendo constantes las demás variables, la razón entre los gastos típicos predichos es $\exp(\hat\beta_{\mathrm{mujer}})$ y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{mujer}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["SexFemale"]), format = "f", digits = 2, decimal.mark = ",")` %. 
 
-Para la residencia en zona urbana frente a rural, el coeficiente es $\hat\beta_{\mathrm{urbana}}=$ `r formatC(coef(fit_svy)["ZoneUrban"], format = "f", digits = 3, decimal.mark = ",")`. Manteniendo constantes las demás variables, la razón entre los gastos típicos predichos es $\exp(\hat\beta_{\mathrm{urbana}})$ y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{urbana}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["ZoneUrban"]), format = "f", digits = 2, decimal.mark = ",")` %. Para la jefatura femenina frente a masculina, el coeficiente es $\hat\beta_{\mathrm{mujer}}=$ `r formatC(coef(fit_svy)["SexFemale"], format = "f", digits = 3, decimal.mark = ",")`. Manteniendo constantes las demás variables, la razón entre los gastos típicos predichos es $\exp(\hat\beta_{\mathrm{mujer}})$ y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{mujer}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["SexFemale"]), format = "f", digits = 2, decimal.mark = ",")` %. 
-
-El coeficiente de edad es $\hat\beta_{\mathrm{Age}}=$ `r formatC(coef(fit_svy)["Age"], format = "f", digits = 4, decimal.mark = ",")`. Un año adicional, a iguales valores de las demás covariables, multiplica el gasto típico por $\exp(\hat\beta_{\mathrm{Age}})$ y produce un cambio de $100[\exp(\hat\beta_{\mathrm{Age}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["Age"]), format = "f", digits = 2, decimal.mark = ",")` %. El signo negativo indica una disminución.
-
-Respecto de la región Norte y manteniendo constantes las demás variables, cada coeficiente regional se transforma mediante la exponencial. Para Sur, $\hat\beta_{\mathrm{Sur}}=$ `r formatC(coef(fit_svy)["RegionSouth"], format = "f", digits = 3, decimal.mark = ",")` y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{Sur}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["RegionSouth"]), format = "f", digits = 2, decimal.mark = ",")` %. Para Centro, $\hat\beta_{\mathrm{Centro}}=$ `r formatC(coef(fit_svy)["RegionCentral"], format = "f", digits = 3, decimal.mark = ",")` y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{Centro}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["RegionCentral"]), format = "f", digits = 2, decimal.mark = ",")` %. Para Occidente, $\hat\beta_{\mathrm{Occidente}}=$ `r formatC(coef(fit_svy)["RegionWest"], format = "f", digits = 3, decimal.mark = ",")` y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{Occidente}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["RegionWest"]), format = "f", digits = 2, decimal.mark = ",")` %. Para Oriente, $\hat\beta_{\mathrm{Oriente}}=$ `r formatC(coef(fit_svy)["RegionEast"], format = "f", digits = 3, decimal.mark = ",")` y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{Oriente}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["RegionEast"]), format = "f", digits = 2, decimal.mark = ",")` %. Los valores positivos indican un gasto típico mayor que en Norte y los negativos, uno menor. Estas asociaciones no establecen efectos causales.
+El coeficiente de edad es $\hat\beta_{\mathrm{Age}}=$ `r formatC(coef(fit_svy)["Age"], format = "f", digits = 4, decimal.mark = ",")`. Un año adicional, a iguales valores de las demás covariables, multiplica el gasto típico por $\exp(\hat\beta_{\mathrm{Age}})$ y produce un cambio de $100[\exp(\hat\beta_{\mathrm{Age}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["Age"]), format = "f", digits = 2, decimal.mark = ",")` %. El signo negativo indica una disminución. Respecto de la región Norte y manteniendo constantes las demás variables, cada coeficiente regional se transforma mediante la exponencial. Para Sur, $\hat\beta_{\mathrm{Sur}}=$ `r formatC(coef(fit_svy)["RegionSouth"], format = "f", digits = 3, decimal.mark = ",")` y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{Sur}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["RegionSouth"]), format = "f", digits = 2, decimal.mark = ",")` %. Para Centro, $\hat\beta_{\mathrm{Centro}}=$ `r formatC(coef(fit_svy)["RegionCentral"], format = "f", digits = 3, decimal.mark = ",")` y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{Centro}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["RegionCentral"]), format = "f", digits = 2, decimal.mark = ",")` %. Para Occidente, $\hat\beta_{\mathrm{Occidente}}=$ `r formatC(coef(fit_svy)["RegionWest"], format = "f", digits = 3, decimal.mark = ",")` y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{Occidente}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["RegionWest"]), format = "f", digits = 2, decimal.mark = ",")` %. Para Oriente, $\hat\beta_{\mathrm{Oriente}}=$ `r formatC(coef(fit_svy)["RegionEast"], format = "f", digits = 3, decimal.mark = ",")` y la diferencia porcentual es $100[\exp(\hat\beta_{\mathrm{Oriente}})-1]=$ `r formatC(100 * expm1(coef(fit_svy)["RegionEast"]), format = "f", digits = 2, decimal.mark = ",")` %. Los valores positivos indican un gasto típico mayor que en Norte y los negativos, uno menor. Estas asociaciones no establecen efectos causales.
 
 El intercepto estimado, igual a `r sprintf("%.3f", coef(fit_svy)["(Intercept)"])`, representa el valor esperado del logaritmo del gasto para la categoría de referencia del modelo cuando el ingreso per cápita es igual a uno y la edad es cero; este perfil queda fuera del rango observado de edad de los jefes, por lo que su interpretación es principalmente algebraica.
 
 ## Diagnóstico del modelo {#diagnostico-del-modelo}
 
-De acuerdo con @FoxWeisberg2019, en el análisis de encuestas de hogares, la evaluación de un modelo estadístico constituye un aspecto importante que contribuye a valorar la validez de las inferencias. Un modelo adecuadamente especificado no depende únicamente de la selección de las covariables, sino también del examen de los supuestos que sustentan la consistencia y confiabilidad de los resultados.
-
-En el caso de los modelos de regresión lineal aplicados a encuestas complejas, resulta necesario examinar distintos aspectos relacionados con la calidad del ajuste y el comportamiento de los errores. Como se indicó anteriormente, entre ellos se encuentran la capacidad explicativa del modelo, la normalidad y homogeneidad de la varianza de los residuos, la independencia entre errores y la posible presencia de observaciones influyentes o valores atípicos que puedan afectar las estimaciones [@Li_Valliant_2015].
+De acuerdo con @FoxWeisberg2019, en el análisis de encuestas de hogares, la evaluación de un modelo estadístico constituye un aspecto importante que contribuye a valorar la validez de las inferencias. Un modelo adecuadamente especificado no depende únicamente de la selección de las covariables, sino también del examen de los supuestos que sustentan la consistencia y confiabilidad de los resultados. En el caso de los modelos de regresión lineal aplicados a encuestas complejas, resulta necesario examinar distintos aspectos relacionados con la calidad del ajuste y el comportamiento de los errores. Como se indicó anteriormente, entre ellos se encuentran la capacidad explicativa del modelo, la normalidad y homogeneidad de la varianza de los residuos, la independencia entre errores y la posible presencia de observaciones influyentes o valores atípicos que puedan afectar las estimaciones [@Li_Valliant_2015].
 
 Estas verificaciones adquieren particular importancia en el contexto de diseños muestrales complejos, donde características como la estratificación, la conglomeración y el uso de factores de expansión pueden intensificar problemas asociados con la heterocedasticidad, la dependencia entre observaciones o la sensibilidad a valores extremos. Por esta razón, el diagnóstico del modelo no debe limitarse a los supuestos clásicos de la regresión, sino incorporar también las particularidades derivadas del diseño de la encuesta. La aplicación sistemática de estos procedimientos permite evaluar la solidez del modelo, fortalecer la confianza en las inferencias y asegurar que los resultados obtenidos sean representativos y útiles tanto para la investigación social aplicada como para el análisis de políticas públicas.
 
@@ -294,15 +284,15 @@ ggplot(
   aes(x = stdresids)
 ) +
   geom_histogram(
-    aes(y = ..density..),
-    colour = "black",
+    aes(y = after_stat(density)),
+    color = "black",
     fill = "blue",
     alpha = 0.3
   ) +
-  geom_density(size = 1, colour = "blue") +
+  geom_density(size = 1, color = "blue") +
   geom_function(
     fun = dnorm,
-    colour = "red",
+    color = "red",
     size = 1
   ) +
   labs(y = "")
@@ -350,9 +340,9 @@ Donde $p$ denota los parámetros del modelo y $df$ representa los grados de libe
 cook_values <- svyCooksD(fit_svy, doplot = TRUE)
 ```
 
-En `R`, se evalúa la presencia de observaciones influyentes mediante la distancia de Cook, estimada con la función `svyCooksD` del paquete `svydiags`. Los resultados obtenidos se presentan en la @fig-cook, en donde se observa que `r sum(cook_values > 3)` de los `r length(cook_values)` hogares superan el umbral de referencia de 3 y la distancia máxima es `r formatC(max(cook_values), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")`. Bajo este criterio diagnóstico, estas observaciones requieren una revisión más detallada de su influencia sobre el ajuste, sin que ello implique eliminarlas automáticamente.
+En `R`, se evalúa la presencia de observaciones influyentes mediante la distancia de Cook, estimada con la función `svyCooksD` del paquete `svydiags`. El argumento `doplot = TRUE` solicita que la función produzca también su gráfico diagnóstico. Los resultados obtenidos se presentan en la @fig-cook, en donde se observa que `r sum(cook_values > 3)` de los `r length(cook_values)` hogares superan el umbral de referencia de 3 y la distancia máxima es `r formatC(max(cook_values), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")`. Bajo este criterio diagnóstico, estas observaciones requieren una revisión más detallada de su influencia sobre el ajuste, sin que ello implique eliminarlas automáticamente.
 
-Otro estadístico que mide el grado de influencia de una observación es el DFBETAS, denotado como $D_f\text{Beta}_{(k)j}$, que mide el cambio que experimenta el coeficiente de regresión $\hat{\beta}_{j}$ cuando la observación $k$ es eliminada del proceso de estimación. En consecuencia, esta medida evalúa la influencia individual de cada observación sobre los parámetros del modelo, identificando aquellas unidades cuya presencia altera de manera importante las estimaciones obtenidas. Valores elevados de $D_f\text{Beta}_{(k)j}$ indican que la observación ejerce una influencia considerable sobre el coeficiente correspondiente, lo que puede afectar la estabilidad e interpretación del modelo.
+Otro estadístico que mide el grado de influencia de una observación es el DfBetas, denotado como $D_f\text{Beta}_{(k)j}$, que mide el cambio que experimenta el coeficiente de regresión $\hat{\beta}_{j}$ cuando la observación $k$ es eliminada del proceso de estimación. En consecuencia, esta medida evalúa la influencia individual de cada observación sobre los parámetros del modelo, identificando aquellas unidades cuya presencia altera de manera importante las estimaciones obtenidas. Valores elevados de $D_f\text{Beta}_{(k)j}$ indican que la observación ejerce una influencia considerable sobre el coeficiente correspondiente, lo que puede afectar la estabilidad e interpretación del modelo.
 
 Como criterio práctico de diagnóstico, @Li_Valliant_2015 señalan que una observación suele considerarse influyente sobre el coeficiente $\hat{\beta}_{j}$ cuando
 
@@ -387,7 +377,7 @@ tabla_fmt(dfbetas_first_ten_table,
           col.names = c("ID del hogar", paste("Beta", 0:(length(coef(fit_svy)) - 1))))
 ```
 
-A partir de los valores DFBETA de cada observación y coeficiente del modelo, el siguiente código computacional calcula el correspondiente umbral de influencia a partir de los resultados generados por la función `svydfbetas`. Con base en este criterio, se construye una variable dicotómica que permite clasificar las observaciones según su nivel de influencia sobre las estimaciones del modelo. Los resultados de esta clasificación se presentan en la @tbl-dfbetas-influyentes.
+A partir de los valores DfBetas de cada observación y coeficiente del modelo, el siguiente código computacional calcula el correspondiente umbral de influencia a partir de los resultados generados por la función `svydfbetas`. `reshape2::melt(id.vars = "id")` mantiene fijo el identificador de cada observación y reorganiza en filas las columnas de coeficientes. Con base en este criterio, se construye una variable dicotómica que permite clasificar las observaciones según su nivel de influencia sobre las estimaciones del modelo. Los resultados de esta clasificación se presentan en la @tbl-dfbetas-influyentes.
 
 ```{r code-dfbetas-influential}
 #| results: hide
@@ -396,7 +386,7 @@ d_dfbetas <- reshape2::melt(d_dfbetas, id.vars = "id")
 cutoff <- svydfbetas(fit_svy)$cutoff
 d_dfbetas <- d_dfbetas %>%
   mutate(
-    criterion = ifelse(abs(value) > cutoff, "Yes", "No" )
+    criterion = ifelse(abs(value) > cutoff, "Yes", "No")
   )
 
 label_text <- d_dfbetas %>%
@@ -420,11 +410,11 @@ tabla_fmt(influential_dfbetas_table,
           col.names = c("ID del hogar", "Parámetro", "Valor", "Criterio"))
 ```
 
-Los resultados muestran que `r sum(d_dfbetas$criterion == "Yes")` combinaciones de observación y coeficiente superan el umbral establecido por el criterio DFBETAS, lo que indica que dichas unidades ejercen una influencia importante sobre la estimación de algunos coeficientes del modelo, sugiriendo la presencia de unidades con alto impacto sobre la estabilidad del ajuste. La @fig-dfbetas, obtenida con el siguiente código computacional, muestra la representación gráfica de los valores de $D_f\text{Beta}$ junto con el umbral de referencia utilizado para identificar observaciones influyentes. En la figura, los puntos resaltados en rojo corresponden a las observaciones que exceden dicho umbral y que, por tanto, requieren una revisión más detallada dentro del proceso de diagnóstico del modelo.
+Los resultados muestran que `r sum(d_dfbetas$criterion == "Yes")` combinaciones de observación y coeficiente superan el umbral establecido por el criterio DfBetas, lo que indica que dichas unidades ejercen una influencia importante sobre la estimación de algunos coeficientes del modelo, sugiriendo la presencia de unidades con alto impacto sobre la estabilidad del ajuste. La @fig-dfbetas, obtenida con el siguiente código computacional, muestra la representación gráfica de los valores de $D_f\text{Beta}$ junto con el umbral de referencia utilizado para identificar observaciones influyentes. En la figura, los puntos resaltados en rojo corresponden a las observaciones que exceden dicho umbral y que, por tanto, requieren una revisión más detallada dentro del proceso de diagnóstico del modelo. Las etiquetas se giran 45 grados y se desplazan verticalmente; `data = label_text` limita cuáles observaciones se etiquetan, `aes(label = id)` indica qué identificador imprimir y `facet_wrap(nrow = 3)` organiza los paneles de coeficientes en tres filas.
 
 ```{r fig-dfbetas, fig.height=7, fig.cap="Valores DfBetas por parámetro: observaciones influyentes señaladas en rojo", fig.align='center', out.width='80%', echo = TRUE, eval = TRUE}
 ggplot(d_dfbetas, aes(y = abs(value), x = id)) +
-  geom_point(aes(col = criterion)) +
+  geom_point(aes(color = criterion)) +
   geom_text(
     data = label_text,
     angle = 45,
@@ -461,7 +451,7 @@ d_dffits <- d_dffits %>%
   )
 
 ggplot(d_dffits, aes(y = abs(dffits), x = id)) +
-  geom_point(aes(col = cutoff_criterion)) +
+  geom_point(aes(color = cutoff_criterion)) +
   geom_hline(yintercept = cutoff) +
   scale_color_manual(
     values = c("Yes" = "red", "No" = "black")
@@ -627,19 +617,20 @@ colnames(mu_ci) <- c("lower_limit", "upper_limit")
 ```
 
 
-Las estimaciones obtenidas a partir del modelo, junto con sus respectivos intervalos de confianza, pueden visualizarse gráficamente en la @fig-prediction-intervals, obtenida con el siguiente código computacional.
+Las estimaciones obtenidas a partir del modelo, junto con sus respectivos intervalos de confianza, pueden visualizarse gráficamente en la @fig-prediction-intervals, obtenida con el siguiente código computacional. En el gráfico, `width` controla el ancho de los topes de cada intervalo y `linetype = 1` dibuja líneas continuas; `size` fija el tamaño de los puntos y `position_dodge()` los desplaza ligeramente para mejorar su visibilidad.
 
 ```{r fig-prediction-intervals, fig.cap="Estimaciones del logaritmo del gasto per cápita e intervalos de confianza para los primeros 100 hogares de la muestra", fig.align='center', out.width='65%', echo = TRUE, eval = TRUE}
 pred <- cbind(hat_mu, mu_ci)
 pred$log_income <- log(survey_data$Income)
 pd <- position_dodge(width = 0.2)
 ggplot(
-  pred %>% slice(1:100L),
+  pred %>%
+    slice(1:100L),
   aes(x = log_income, y = link)
 ) +
   geom_errorbar(
     aes(ymin = lower_limit, ymax = upper_limit),
-    width = .1,
+    width = 0.1,
     linetype = 1
   ) +
   geom_point(size = 2, position = pd) +

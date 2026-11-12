@@ -593,7 +593,7 @@ window.MathJax = {
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>log_income_data <span class="ot">&lt;-</span> working_data <span class="sc">%&gt;%</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_income =</span> <span class="fu">if_else</span>( Income <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="fu">log</span>(Income), <span class="cn">NA_real_</span> )</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_income =</span> <span class="fu">if_else</span>(Income <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="fu">log</span>(Income), <span class="cn">NA_real_</span>)</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>log_income_data <span class="sc">%&gt;%</span></span>

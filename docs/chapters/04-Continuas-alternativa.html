@@ -372,7 +372,8 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(srvyr)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/sample.rds"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/sample.rds"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Con los datos cargados, se define el diseño muestral que se utilizará para realizar la inferencia apropiada en este capítulo.</p>
 <div class="cell" data-layout-align="center">
@@ -927,7 +928,7 @@ Tabla&nbsp;4.7: Media poblacional del gasto per cápita desagregada por zona y r
 </section>
 <section id="estimacion-de-razones" class="level3" data-number="4.1.3">
 <h3 data-number="4.1.3" class="anchored" data-anchor-id="estimacion-de-razones"><span class="header-section-number">4.1.3</span> Razones</h3>
-<p>Las proporciones del capítulo anterior constituyen un caso particular de razón de totales. La razón poblacional es un parámetro no lineal definido como el cociente entre los totales de dos variables de interés. Permite cuantificar la relación entre ambas variables y resulta especialmente útil para construir indicadores relativos, comparar grupos y analizar su evolución a lo largo del tiempo. En las encuestas de hogares, este parámetro se utiliza ampliamente para calcular indicadores como el número de hombres por cada mujer, la proporción de personas ocupadas respecto de la población en edad de trabajar y la prevalencia de la subalimentación <span class="citation" data-cites="FAO2026PoU">(<a href="references.html#ref-FAO2026PoU" role="doc-biblioref">FAO 2026</a>)</span>.</p>
+<p>La razón poblacional es un parámetro no lineal definido como el cociente entre los totales de dos variables de interés. Permite cuantificar la relación entre ambas variables y resulta especialmente útil para construir indicadores relativos, comparar grupos y analizar su evolución a lo largo del tiempo. En las encuestas de hogares, este parámetro se utiliza ampliamente para calcular indicadores como el número de hombres por cada mujer, la proporción de personas ocupadas respecto de la población en edad de trabajar y la prevalencia de la subalimentación <span class="citation" data-cites="FAO2026PoU">(<a href="references.html#ref-FAO2026PoU" role="doc-biblioref">FAO 2026</a>)</span>.</p>
 <p>Dado que la razón corresponde al cociente entre dos parámetros (totales) poblacionales desconocidos, tanto el numerador como el denominador deben ser estimados a partir de la muestra. Siendo <span class="math inline">\(t_y\)</span> el total de la variable <span class="math inline">\(y\)</span> y <span class="math inline">\(t_x\)</span> el total de la variable <span class="math inline">\(x\)</span>, la razón poblacional se define como <span class="math inline">\(R = \frac{t_y}{t_x}\)</span> y su estimador puntual se expresa como:</p>
 <p><span id="eq-estimador-razon"><span class="math display">\[
 \hat{R} = \frac{\hat{t}_y}{\hat{t}_x}
@@ -944,7 +945,8 @@ Tabla&nbsp;4.7: Media poblacional del gasto per cápita desagregada por zona y r
 {\hat{t}_x^{\,2}}.
 \tag{4.10}\]</span></span></p>
 <p>Las varianzas de los totales y su covarianza se estiman considerando los estratos, las UPM y los pesos del diseño. El término de covarianza recoge la variación conjunta del numerador y del denominador, calculados sobre la misma muestra, por lo que no deben suponerse independientes. De manera equivalente, es poisble estimar la varianza del total ponderado de la variable linealizada <span class="math inline">\(z_{hik}=y_{hik}-\hat{R}x_{hik}\)</span> mediante el método del último conglomerado y dividir por <span class="math inline">\(\hat{t}_x^{\,2}\)</span>. La raíz cuadrada de la varianza aproximada es el error estándar de <span class="math inline">\(\hat{R}\)</span>. La función <code>survey_ratio()</code> realiza esta estimación y permite obtener las correspondientes medidas de precisión.</p>
-<p>Como primer ejemplo de aplicación, se estima el índice de masculinidad (<em>sex ratio</em>, en inglés), definido como el número de hombres por cada 100 mujeres en la población representada por la encuesta. En la fórmula, <span class="math inline">\(\hat N_{\mathrm{hombres}}\)</span> y <span class="math inline">\(\hat N_{\mathrm{mujeres}}\)</span> representan los totales poblacionales estimados de hombres y mujeres, respectivamente. Su estimador es:</p>
+<p>Algunos indicadores de esta sección comparan tamaños de grupos —por ejemplo, personas de distintas edades o sexos—, mientras que otros relacionan totales de variables numéricas, como el gasto y el ingreso. Se presentan juntos porque todos se estiman como el cociente de dos totales poblacionales. Este cociente es una función no lineal de los totales del numerador y del denominador; por ello, para calcular su varianza se consideran la variabilidad de ambos y la covarianza entre ellos. La función <code>survey_ratio()</code> aplica este procedimiento incorporando el diseño muestral. En el capítulo 3 se estimaron los tamaños de los grupos que forman algunos de estos cocientes; aquí se muestra cómo relacionarlos y evaluar la precisión de la razón resultante.</p>
+<p>Como primer ejemplo de aplicación, se estima el índice de masculinidad (<em>sex ratio</em>, en inglés), definido como el número de hombres por cada 100 mujeres en la población representada por la encuesta. En la fórmula, <span class="math inline">\(\hat N_{\mathrm{hombres}}\)</span> y <span class="math inline">\(\hat N_{\mathrm{mujeres}}\)</span> representan los tamaños poblacionales estimados de hombres y mujeres, respectivamente. Su estimador es:</p>
 <p><span id="eq-indice-masculinidad"><span class="math display">\[
 \hat R_{\mathrm{SR}}
 =
@@ -957,8 +959,8 @@ Tabla&nbsp;4.7: Media poblacional del gasto per cápita desagregada por zona y r
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ratio =</span> <span class="fu">survey_ratio</span>(</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">numerator =</span> <span class="dv">100</span> <span class="sc">*</span> (Sex <span class="sc">==</span> <span class="st">"Male"</span>),</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">denominator =</span> Sex <span class="sc">==</span> <span class="st">"Female"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
@@ -1005,8 +1007,8 @@ Tabla&nbsp;4.8: Índice de masculinidad: hombres por cada 100 mujeres en la pobl
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">ratio =</span> <span class="fu">survey_ratio</span>(</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">numerator =</span> <span class="dv">100</span> <span class="sc">*</span> (Sex <span class="sc">==</span> <span class="st">"Male"</span>),</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">denominator =</span> Sex <span class="sc">==</span> <span class="st">"Female"</span>,</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span>,</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span></span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
@@ -1044,7 +1046,7 @@ Tabla&nbsp;4.9: Índice de masculinidad: hombres por cada 100 mujeres en zona ru
 </div>
 </div>
 <p>La <a href="#tbl-razon-sexo-rural" class="quarto-xref">tabla&nbsp;<span>4.9</span></a> estima 93.62 hombres por cada 100 mujeres en la zona rural. Su error estándar es 3.09 y el intervalo de confianza del 95 % va de 87.43 a 99.82. Como el intervalo no incluye el valor 100, al nivel del 5 % existe evidencia de una diferencia entre las cantidades de hombres y mujeres en este dominio.</p>
-<p>Una aplicación demográfica de las razones es el índice de envejecimiento (<em>Ageing Index</em>, en inglés). De acuerdo con la definición de <span class="citation" data-cites="CEPAL2022PanoramaEnvejecimiento">Comisión Económica para América Latina y el Caribe (<a href="references.html#ref-CEPAL2022PanoramaEnvejecimiento" role="doc-biblioref">2022</a>)</span>, se calcula como el número de personas de 60 años o más por cada 100 personas de 0 a 14 años. En la fórmula, <span class="math inline">\(\hat N_{60+}\)</span> representa el total estimado de personas de 60 años o más y <span class="math inline">\(\hat N_{0-14}\)</span>, el total estimado de personas de 0 a 14 años. Su estimador es:</p>
+<p>Una aplicación demográfica de las razones es el índice de envejecimiento (<em>Ageing Index</em>, en inglés). De acuerdo con la definición de <span class="citation" data-cites="CEPAL2022PanoramaEnvejecimiento">Comisión Económica para América Latina y el Caribe (<a href="references.html#ref-CEPAL2022PanoramaEnvejecimiento" role="doc-biblioref">2022</a>)</span>, se calcula como el número de personas de 60 años o más por cada 100 personas de 0 a 14 años. En la fórmula, <span class="math inline">\(\hat N_{60+}\)</span> representa el tamaño estimado de personas de 60 años o más y <span class="math inline">\(\hat N_{0-14}\)</span>, el tamaño estimado de personas de 0 a 14 años. Su estimador es:</p>
 <p><span id="eq-indice-envejecimiento"><span class="math display">\[
 \hat R_{\mathrm{AI}}
 =
@@ -1163,7 +1165,7 @@ Tabla&nbsp;4.11: Índice de envejecimiento por zona de residencia
 </div>
 </div>
 <p>La <a href="#tbl-indice-envejecimiento-zona" class="quarto-xref">tabla&nbsp;<span>4.11</span></a> presenta un índice de 30.72 en la zona rural y de 52.32 en la urbana. En cada caso, el valor indica cuántas personas de 60 años o más se estiman por cada 100 menores de 15 años del dominio. Los intervalos de confianza describen la incertidumbre de las estimaciones.</p>
-<p>Otra aplicación demográfica de las razones es la razón de dependencia total (<em>Total Dependency Ratio</em>, en inglés), que describe la composición por edad de la población. Adoptando la definición de <a href="https://statistics.cepal.org/portal/cepalstat/technical-sheet.html?indicator_id=35&amp;lang=es">CEPALSTAT</a>, se calcula como el número de personas de 0 a 14 años y de 65 años o más por cada 100 personas de 15 a 64 años. En la fórmula, <span class="math inline">\(\hat N_{0-14}\)</span> y <span class="math inline">\(\hat N_{65+}\)</span> son los totales estimados de esos grupos dependientes, que se suman en el numerador; <span class="math inline">\(\hat N_{15-64}\)</span> es el total estimado de personas de 15 a 64 años y forma el denominador. Su estimador es:</p>
+<p>Otra aplicación demográfica de las razones es la razón de dependencia total (<em>Total Dependency Ratio</em>, en inglés), que describe la composición por edad de la población. Adoptando la definición de <a href="https://statistics.cepal.org/portal/cepalstat/technical-sheet.html?indicator_id=35&amp;lang=es">CEPALSTAT</a>, se calcula como el número de personas de 0 a 14 años y de 65 años o más por cada 100 personas de 15 a 64 años. En la fórmula, <span class="math inline">\(\hat N_{0-14}\)</span> y <span class="math inline">\(\hat N_{65+}\)</span> son los tamaños estimados de esos grupos dependientes, que se suman en el numerador; <span class="math inline">\(\hat N_{15-64}\)</span> es el tamaño estimado de personas de 15 a 64 años y forma el denominador. Su estimador es:</p>
 <p><span id="eq-dependencia-demografica"><span class="math display">\[
 \hat R_{\mathrm{TDR}} = 100\times\frac{\hat N_{0-14}+\hat N_{65+}}{\hat N_{15-64}}.
 \tag{4.13}\]</span></span></p>
@@ -1278,7 +1280,7 @@ Tabla&nbsp;4.13: Razón de dependencia demográfica por zona de residencia
 </div>
 </div>
 <p>La <a href="#tbl-razon-dependencia-zona" class="quarto-xref">tabla&nbsp;<span>4.13</span></a> presenta una razón estimada de 61.52 en la zona rural y de 53.47 en la urbana, siempre por cada 100 personas de 15 a 64 años de la zona correspondiente. Los intervalos describen la incertidumbre de cada estimación. Para evaluar la diferencia entre zonas se requiere estimar directamente su contraste, considerando también la covarianza entre ambas razones, como se desarrolla en la <a href="../chapters/04-Continuas-alternativa.html#estimacion-de-contrastes">sección de contrastes</a>.</p>
-<p>También puede definirse una razón de dependencia económica potencial (<em>Economic Dependency Ratio</em>, en inglés). En este ejemplo, el numerador corresponde al total estimado de personas no ocupadas de 15 años o más, incluidas las desocupadas y las inactivas; el denominador corresponde al total estimado de personas ocupadas de esas edades. En la fórmula, estos totales se denotan por <span class="math inline">\(\hat N_{\text{no ocupadas, 15+}}\)</span> y <span class="math inline">\(\hat N_{\text{ocupadas, 15+}}\)</span>, respectivamente. Su estimador es:</p>
+<p>También puede definirse una razón de dependencia económica potencial (<em>Economic Dependency Ratio</em>, en inglés). En este ejemplo, el numerador corresponde al total estimado de personas no ocupadas de 15 años o más, incluidas las desocupadas y las inactivas; el denominador corresponde al total estimado de personas ocupadas de esas edades. En la fórmula, estos tamaños se denotan por <span class="math inline">\(\hat N_{\text{no ocupadas, 15+}}\)</span> y <span class="math inline">\(\hat N_{\text{ocupadas, 15+}}\)</span>, respectivamente. Su estimador es:</p>
 <p><span id="eq-dependencia-economica-potencial"><span class="math display">\[
 \hat R_{\mathrm{EDR},15+}
 =
@@ -1405,8 +1407,8 @@ Tabla&nbsp;4.15: Razón de dependencia económica potencial por zona de residenc
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ratio =</span> <span class="fu">survey_ratio</span>(</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">numerator =</span> Expenditure,</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">denominator =</span> Income,</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span>,</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
@@ -1452,8 +1454,8 @@ Tabla&nbsp;4.16: Razón gasto/ingreso per cápita
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ratio =</span> <span class="fu">survey_ratio</span>(</span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">numerator =</span> Expenditure,</span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">denominator =</span> Income,</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span>,</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>),</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span></span>
 <span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
@@ -1540,7 +1542,7 @@ Tabla&nbsp;4.17: Razón gasto/ingreso para las regiones
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>income_dispersion_by_zone_table <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Zone) <span class="sc">%&gt;%</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Var =</span> <span class="fu">survey_var</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">variance =</span> <span class="fu">survey_var</span>(</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>      Income,</span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span>,</span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>),</span>
@@ -1548,9 +1550,9 @@ Tabla&nbsp;4.17: Razón gasto/ingreso para las regiones
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sd =</span> <span class="fu">sqrt</span>(Var),</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sd_low =</span> <span class="fu">sqrt</span>(<span class="fu">pmax</span>(Var_low, <span class="dv">0</span>)),</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sd_upp =</span> <span class="fu">sqrt</span>(Var_upp)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sqrt</span>(variance),</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_low =</span> <span class="fu">sqrt</span>(<span class="fu">pmax</span>(variance_low, <span class="dv">0</span>)),</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_upp =</span> <span class="fu">sqrt</span>(variance_upp)</span>
 <span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>income_dispersion_by_zone_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1614,7 +1616,7 @@ Tabla&nbsp;4.18: Desviación estándar de los ingresos desagregada por zona
 </figure>
 </div>
 </div>
-<p><code>Var_se</code> es el error estándar de la varianza y no el de la desviación estándar. Los límites de esta última se obtienen transformando los de la varianza; el inferior se restringe a cero antes de aplicar la raíz si la aproximación produce un límite negativo.</p>
+<p><code>variance_se</code> es el error estándar de la varianza y no el de la desviación estándar. Los límites de esta última se obtienen transformando los de la varianza; el inferior se restringe a cero antes de aplicar la raíz si la aproximación produce un límite negativo.</p>
 <p>Los argumentos de la función <code>survey_var()</code> son equivalentes a los utilizados previamente para la estimación de medias y totales. Los resultados de la <a href="#tbl-sd-ingreso-zona" class="quarto-xref">tabla&nbsp;<span>4.18</span></a> muestran que los ingresos presentan una dispersión considerablemente mayor en la zona urbana que en la rural. En la zona rural, la desviación estándar alcanza 310 dólares, mientras que en la zona urbana se eleva a 582 dólares. Los intervalos describen la incertidumbre de cada medida de dispersión. Para realizar una prueba formal de su diferencia se necesitaría estimar el contraste correspondiente.</p>
 </section>
 <section id="sec-estimacion-de-percentiles" class="level3" data-number="4.2.2">
@@ -1751,9 +1753,9 @@ Tabla&nbsp;4.20: Estimación del primer cuartil de los gastos per cápita
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(convey)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>gini_design <span class="ot">&lt;-</span> <span class="fu">convey_prep</span>(survey_design)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>gini <span class="ot">&lt;-</span> <span class="fu">svygini</span>(<span class="sc">~</span>Income, <span class="at">design =</span> gini_design)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>gini <span class="ot">&lt;-</span> <span class="fu">svygini</span>(<span class="sc">~</span> Income, <span class="at">design =</span> gini_design)</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>income_gini_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Gini =</span> <span class="fu">coef</span>(gini),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">gini =</span> <span class="fu">coef</span>(gini),</span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">SE</span>(gini),</span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_lower =</span> <span class="fu">confint</span>(gini)[<span class="dv">1</span>],</span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_upper =</span> <span class="fu">confint</span>(gini)[<span class="dv">2</span>]</span>
@@ -1800,10 +1802,10 @@ Tabla&nbsp;4.21: Estimación del coeficiente de Gini para el ingreso per cápita
 <p>En encuestas con diseños muestrales complejos, la estimación de las ordenadas de la curva de Lorenz y de sus varianzas debe incorporar las ponderaciones y las demás características del diseño muestral <span class="citation" data-cites="KovacevicBinder1997">(<a href="references.html#ref-KovacevicBinder1997" role="doc-biblioref">Kovačević y Binder 1997</a>)</span>. El siguiente código computacional utiliza <code>svylorenz()</code> para estimar la curva de Lorenz representada en la <a href="#fig-lorenz" class="quarto-xref">figura&nbsp;<span>4.1</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>clorenz <span class="ot">&lt;-</span> <span class="fu">svylorenz</span>(</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> <span class="sc">~</span>Income,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> <span class="sc">~</span> Income,</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> gini_design,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantiles =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, .<span class="dv">05</span>),</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> .<span class="dv">05</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantiles =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> <span class="cn">TRUE</span></span>
 <span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -1832,9 +1834,9 @@ Figura&nbsp;4.1: Curva de Lorenz estimada para el ingreso per cápita
 <p>La covarianza entre variables describe su distribución conjunta en la población. Es distinta de la covarianza entre estimadores obtenida con <code>vcov()</code> en los contrastes del capítulo anterior.</p>
 <p>El siguiente código computacional utiliza <code>svyvar()</code> del paquete <code>survey</code> para estimar la matriz de varianzas y covarianzas del ingreso y el gasto per cápita, incorporando el diseño muestral. Luego organiza los resultados con los nombres de las variables para presentarlos en la <a href="#tbl-covarianza" class="quarto-xref">tabla&nbsp;<span>4.22</span></a>. Esta matriz también permite calcular la correlación entre ambas variables.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>cov_matrix <span class="ot">&lt;-</span> <span class="fu">svyvar</span>(<span class="sc">~</span>Income <span class="sc">+</span> Expenditure, <span class="at">design =</span> survey_design)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>cov_matrix <span class="ot">&lt;-</span> <span class="fu">svyvar</span>(<span class="sc">~</span> Income <span class="sc">+</span> Expenditure, <span class="at">design =</span> survey_design)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>income_expenditure_covariance_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variable =</span> <span class="fu">rownames</span>(cov_matrix),</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variable =</span> <span class="fu">rownames</span>(cov_matrix),</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>(cov_matrix)</span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
@@ -1894,7 +1896,7 @@ Tabla&nbsp;4.22: Matriz de varianzas y covarianzas ponderada entre ingreso y gas
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jtools)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">svycor</span>(</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Income <span class="sc">+</span> Expenditure,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> Income <span class="sc">+</span> Expenditure,</span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design,</span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sig.stats =</span> <span class="cn">FALSE</span></span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1941,7 +1943,7 @@ Expenditure   0.71        1.00</code></pre>
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimated_difference =</span> ttest_sex<span class="sc">$</span>estimate,</span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> ttest_sex<span class="sc">$</span>statistic,</span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_value =</span> ttest_sex<span class="sc">$</span>p.value,</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">gl =</span> ttest_sex<span class="sc">$</span>parameter,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">df =</span> ttest_sex<span class="sc">$</span>parameter,</span>
 <span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_lower =</span> ttest_sex<span class="sc">$</span>conf.int[<span class="dv">1</span>],</span>
 <span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_upper =</span> ttest_sex<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
 <span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -2133,29 +2135,27 @@ Tabla&nbsp;4.25: Contraste de ingresos medios: región North menos región South
 </figure>
 </div>
 </div>
-<p>La estimación de la diferencia de medias indica que el ingreso promedio en la región Norte es aproximadamente 73,4 dólares inferior al observado en la región Sur. Sin embargo, el error estándar de 83,4 es mayor que la diferencia estimada, lo que refleja una incertidumbre considerable. Por tanto, no hay evidencia suficiente para concluir que exista una diferencia estadísticamente significativa entre ambas regiones. Nótese que estos mismos resultados podrían obtenerse realizando explícitamente el proceso de construcción del estimador del contraste y de su varianza estimada. El siguiente código computacional inicia este cálculo directo restando el ingreso medio estimado de Sur al de Norte.</p>
+<p>La estimación de la diferencia de medias indica que el ingreso promedio en la región Norte es aproximadamente 73,4 dólares inferior al observado en la región Sur. Sin embargo, el error estándar de 83,4 es mayor que la diferencia estimada, lo que refleja una incertidumbre considerable. Por tanto, no hay evidencia suficiente para concluir que exista una diferencia estadísticamente significativa entre ambas regiones. Nótese que estos mismos resultados podrían obtenerse realizando explícitamente el proceso de construcción del estimador del contraste y de su varianza estimada. Como primer paso, el siguiente código computacional inicia este cálculo directo restando el ingreso medio estimado de Sur al de Norte.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 1: diferencia de las estimaciones (North - South)</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>region_income_mean <span class="ot">&lt;-</span> <span class="fu">setNames</span>(</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>(region_mean_contrast[[<span class="st">"Income"</span>]]),</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  region_mean_contrast[[<span class="st">"Region"</span>]]</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>region_income_mean[<span class="st">"North"</span>] <span class="sc">-</span> region_income_mean[<span class="st">"South"</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>region_income_mean <span class="ot">&lt;-</span> <span class="fu">setNames</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>(region_mean_contrast[[<span class="st">"Income"</span>]]),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  region_mean_contrast[[<span class="st">"Region"</span>]]</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>region_income_mean[<span class="st">"North"</span>] <span class="sc">-</span> region_income_mean[<span class="st">"South"</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>North 
 -73.4 </code></pre>
 </div>
 </div>
-<p>El siguiente código computacional obtiene la matriz de varianzas y covarianzas y la organiza con los nombres de las regiones para presentarla en la <a href="#tbl-vcov-region" class="quarto-xref">tabla&nbsp;<span>4.26</span></a>. De ella se extraen los elementos correspondientes a Norte y Sur. Las covarianzas estimadas entre las regiones son todas nulas, lo que resulta coherente con el diseño muestral, dado que la estratificación se realizó por región y la selección de la muestra se efectuó de manera independiente en cada estrato. En consecuencia, los estimadores regionales no comparten unidades muestrales y su covarianza bajo el diseño es igual a cero.</p>
+<p>Como segundo paso, el siguiente código computacional obtiene la matriz de varianzas y covarianzas y la organiza con los nombres de las regiones para presentarla en la <a href="#tbl-vcov-region" class="quarto-xref">tabla&nbsp;<span>4.26</span></a>. De ella se extraen los elementos correspondientes a Norte y Sur. Las covarianzas estimadas entre las regiones son todas nulas, lo que resulta coherente con el diseño muestral, dado que la estratificación se realizó por región y la selección de la muestra se efectuó de manera independiente en cada estrato. En consecuencia, los estimadores regionales no comparten unidades muestrales y su covarianza bajo el diseño es igual a cero.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 2: matriz de varianzas y covarianzas</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>region_vcov <span class="ot">&lt;-</span> <span class="fu">vcov</span>(region_mean_contrast)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>regional_income_covariance_table <span class="ot">&lt;-</span> region_vcov <span class="sc">%&gt;%</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"Region"</span>)</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>regional_income_covariance_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>region_vcov <span class="ot">&lt;-</span> <span class="fu">vcov</span>(region_mean_contrast)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>regional_income_covariance_table <span class="ot">&lt;-</span> region_vcov <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"Region"</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>regional_income_covariance_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-vcov-region" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2535,11 +2535,10 @@ Tabla&nbsp;4.31: Contraste de la razón ingreso/gasto entre sexos
 </figure>
 </div>
 </div>
-<p>A partir de dichos resultados, puede concluirse que el contraste mujeres menos hombres es aproximadamente -0,178; la razón ingreso/gasto es mayor para los hombres en este dominio.</p>
-<p>Finalmente, la comparación demográfica de la <a href="../chapters/04-Continuas-alternativa.html#estimacion-de-razones">sección de estimación de razones</a> puede formalizarse mediante la diferencia entre la zona rural y la urbana, cuyo estimador está dado por</p>
+<p>A partir de dichos resultados, puede concluirse que el contraste mujeres menos hombres es aproximadamente -0,178; la razón ingreso/gasto es mayor para los hombres en este dominio. Finalmente, la comparación demográfica de la <a href="../chapters/04-Continuas-alternativa.html#estimacion-de-razones">sección de estimación de razones</a> puede formalizarse mediante la diferencia entre la zona rural y la urbana, cuyo estimador está dado por</p>
 <p><span class="math display">\[
 \hat\Delta_{\mathrm{TDR}}=\hat R_{\mathrm{TDR},\mathrm{rural}}-\hat R_{\mathrm{TDR},\mathrm{urbana}}
-\]</span>.</p>
+\]</span></p>
 <p>Y su varianza estimada es:</p>
 <p><span class="math display">\[
 \widehat{Var}(\hat\Delta_{\mathrm{TDR}}) =
@@ -2550,10 +2549,10 @@ Tabla&nbsp;4.31: Contraste de la razón ingreso/gasto entre sexos
 <p>La covarianza se obtiene estimando conjuntamente las razones con <code>svyby()</code>, <code>svyratio()</code> y <code>covmat = TRUE</code>. Esta covarianza entre dominios es distinta de la covarianza entre numerador y denominador incorporada al linealizar cada razón. <code>svycontrast()</code> combina las estimaciones y su matriz completa de varianzas y covarianzas. Los coeficientes se asignan por nombre para conservar la orientación rural menos urbana aunque cambie el orden de las filas. El siguiente código computacional estima la diferencia rural menos urbana de las razones de dependencia.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>zone_dependency_joint <span class="ot">&lt;-</span> <span class="fu">svyby</span>(</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>dependency_units,</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Zone,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> dependency_units,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> Zone,</span>
 <span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> dependency_design,</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">denominator =</span> <span class="sc">~</span>reference_age,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">denominator =</span> <span class="sc">~</span> reference_age,</span>
 <span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> svyratio,</span>
 <span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">covmat =</span> <span class="cn">TRUE</span></span>
 <span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -2692,7 +2691,7 @@ Figura&nbsp;4.3: Histograma ponderado del ingreso por zona geográfica
 </div>
 </div>
 <p>Cada panel muestra la distribución ponderada del ingreso per cápita para una zona. <code>facet_wrap(~ Zone, ncol = 1)</code> separa las zonas en filas y conserva escalas comunes, de modo que las alturas y los rangos del eje horizontal se puedan comparar directamente. Las etiquetas de los paneles se presentan en español. Se utilizan los mismos 30 intervalos en ambos paneles; el eje vertical muestra densidades, por lo que el área de las barras representa proporciones.</p>
-<p>Además, es posible superponer curvas de densidad suavizadas mediante la función <code>geom_density()</code>, lo que permite representar de manera continua la forma de la distribución de la variable analizada. Este tipo de gráfico facilita la identificación de características como la asimetría, la concentración de los valores y la posible presencia de múltiples modas. En la <a href="#fig-densities" class="quarto-xref">figura&nbsp;<span>4.4</span></a>, obtenida con el siguiente código computacional, se presentan los histogramas del ingreso y el gasto junto con sus respectivas curvas de densidad estimadas. Para disponer ambos gráficos uno al lado del otro, se utiliza el operador <code>|</code> del paquete <code>patchwork</code>, que permite combinar distintas visualizaciones en una misma composición gráfica.</p>
+<p>Además, es posible superponer curvas de densidad suavizadas mediante la función <code>geom_density()</code>, lo que permite representar de manera continua la forma de la distribución de la variable analizada. Este tipo de gráfico facilita la identificación de características como la asimetría, la concentración de los valores y la posible presencia de múltiples modas. En la <a href="#fig-densities" class="quarto-xref">figura&nbsp;<span>4.4</span></a>, obtenida con el siguiente código computacional, se presentan los histogramas del ingreso y el gasto junto con sus respectivas curvas de densidad estimadas. En <code>geom_density()</code>, <code>fill</code> asigna el color bajo cada curva y <code>alpha = 0.3</code> regula su transparencia. Para disponer ambos gráficos uno al lado del otro, se utiliza el operador <code>|</code> del paquete <code>patchwork</code>, que permite combinar distintas visualizaciones en una misma composición gráfica.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>weighted_expenditure_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  survey_data,</span>
@@ -2723,19 +2722,19 @@ Figura&nbsp;4.4: Histogramas ponderados y densidades del ingreso y gasto per cá
 <section id="diagramas-de-caja-boxplots" class="level3" data-number="4.5.2">
 <h3 data-number="4.5.2" class="anchored" data-anchor-id="diagramas-de-caja-boxplots"><span class="header-section-number">4.5.2</span> Diagramas de caja (<em>boxplots</em>)</h3>
 <p>Introducidos por <span class="citation" data-cites="Tukey1977EDA">Tukey (<a href="references.html#ref-Tukey1977EDA" role="doc-biblioref">1977</a>)</span>, los diagramas de caja (<em>boxplots</em>) permiten identificar valores atípicos y evaluar la dispersión de la distribución. Son una representación gráfica que resume una variable mediante estadísticas basadas en cuartiles, permitiendo identificar la mediana, la dispersión de los datos y la presencia de valores atípicos. En el contexto de encuestas de hogares, este tipo de gráfico resulta útil para comparar distribuciones entre distintos grupos poblacionales de manera compacta y visualmente intuitiva.</p>
-<p>Los cuartiles y la mediana corresponden a los conceptos de la <a href="#sec-estimacion-de-percentiles" class="quarto-xref"><span>Sección 4.2.2</span></a>. Las cajas resumen la dispersión y no son intervalos de confianza de la mediana. Para incorporar las ponderaciones y el diseño muestral, se utiliza <code>svyboxplot()</code> del paquete <code>survey</code>, que calcula y representa diagramas de caja directamente a partir del objeto de diseño. Como el ingreso y el gasto presentan asimetría y valores altos, se muestran en escala logarítmica: esta comprime la cola superior y facilita comparar los valores centrales entre zonas. En esta escala, las distancias representan cambios multiplicativos. La transformación requiere valores positivos, condición que cumplen ambas variables en esta base. Las fórmulas especifican la variable graficada a la izquierda de <code>~</code> y el grupo de comparación a la derecha. El argumento <code>design</code> especifica el diseño muestral, <code>horizontal = TRUE</code> dispone las cajas horizontalmente y <code>col</code> asigna un color a cada zona. <code>par(mfrow = c(1, 2))</code> organiza los dos gráficos en una fila, y <code>par(old_par)</code> restaura la configuración gráfica anterior. El siguiente código computacional genera la <a href="#fig-boxplot-zone-sex" class="quarto-xref">figura&nbsp;<span>4.5</span></a>.</p>
+<p>Los cuartiles y la mediana corresponden a los conceptos de la <a href="#sec-estimacion-de-percentiles" class="quarto-xref"><span>Sección 4.2.2</span></a>. Las cajas resumen la dispersión y no son intervalos de confianza de la mediana. Para incorporar las ponderaciones y el diseño muestral, se utiliza <code>svyboxplot()</code> del paquete <code>survey</code>, que calcula y representa diagramas de caja directamente a partir del objeto de diseño. Como el ingreso y el gasto presentan asimetría y valores altos, se muestran en escala logarítmica: esta comprime la cola superior y facilita comparar los valores centrales entre zonas. En esta escala, las distancias representan cambios multiplicativos. La transformación requiere valores positivos, condición que cumplen ambas variables en esta base. Las fórmulas especifican la variable graficada a la izquierda de <code>~</code> y el grupo de comparación a la derecha. El argumento <code>design</code> especifica el diseño muestral, <code>horizontal = TRUE</code> dispone las cajas horizontalmente y <code>col</code> asigna un color a cada zona. <code>par(no.readonly = TRUE)</code> guarda los parámetros gráficos que pueden modificarse y permite restaurarlos luego con <code>par(old_par)</code>. <code>par(mfrow = c(1, 2))</code> organiza los dos gráficos en una fila, y <code>par(old_par)</code> restaura la configuración gráfica anterior. El siguiente código computacional genera la <a href="#fig-boxplot-zone-sex" class="quarto-xref">figura&nbsp;<span>4.5</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>survey_design_log <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_Income =</span> <span class="fu">log</span>(Income),</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_Expenditure =</span> <span class="fu">log</span>(Expenditure)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_income =</span> <span class="fu">log</span>(Income),</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_expenditure =</span> <span class="fu">log</span>(Expenditure)</span>
 <span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>old_par <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
 <span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="fu">svyboxplot</span>(</span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  log_Income <span class="sc">~</span> Zone,</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  log_income <span class="sc">~</span> Zone,</span>
 <span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_log,</span>
 <span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizontal =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> zone_colors,</span>
@@ -2745,7 +2744,7 @@ Figura&nbsp;4.4: Histogramas ponderados y densidades del ingreso y gasto per cá
 <span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a><span class="fu">svyboxplot</span>(</span>
-<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>  log_Expenditure <span class="sc">~</span> Zone,</span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>  log_expenditure <span class="sc">~</span> Zone,</span>
 <span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_log,</span>
 <span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizontal =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> zone_colors,</span>
@@ -2832,7 +2831,6 @@ Figura&nbsp;4.7: Diagrama de dispersión entre ingreso y gasto por zona geográf
 </div>
 </div>
 <p>La <a href="#fig-scatter-zone" class="quarto-xref">figura&nbsp;<span>4.7</span></a> mantiene las mismas escalas logarítmicas del gráfico anterior y diferencia las zonas por color y forma. Así se pueden comparar los patrones entre zonas sin que los valores altos compriman la mayor parte de los puntos. La escala logarítmica cambia la lectura de los ejes: por ejemplo, un mismo tramo visual corresponde a una razón constante entre valores, no a una diferencia fija en dólares.</p>
-<p>Las distribuciones y la correlación permiten reconocer heterogeneidad y patrones de asociación. Junto con las herramientas para variables categóricas, preparan el estudio de modelos de regresión del capítulo siguiente, donde se analizarán varias variables simultáneamente incorporando el diseño muestral.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">

@@ -31,12 +31,13 @@ Para describir la ausencia de respuesta, sea $\boldsymbol{X}_{n \times p} = x_{i
 - La matriz $\boldsymbol{M}_{n \times p}$ presenta un comportamiento al azar (MAR, por sus siglas en inglés) si la probabilidad de respuesta es completamente independiente de las variables no observadas y no de las observadas. En este caso, el mecanismo de respuesta se considera ignorable para inferencias basadas en máxima verosimilitud.
 - La matriz $\boldsymbol{M}_{n \times p}$ presenta un comportamiento no al azar (MNAR, por sus siglas en inglés) si la probabilidad de respuesta no es completamente independiente de las variables no observadas y posiblemente también de las observadas. El mecanismo de respuesta es no ignorable.
 
-La @tbl-ap3-patron-no-monotono ilustra datos faltantes en posiciones dispersas. Cada fila representa un caso y cada columna $X_j$ una variable. **O** indica un dato observado y **?** un dato faltante. El siguiente código computacional construye el esquema de datos observados y faltantes presentado en la tabla.
+La @tbl-ap3-patron-no-monotono ilustra datos faltantes en posiciones dispersas. Cada fila representa un caso y cada columna $X_j$ una variable. **O** indica un dato observado y **?** un dato faltante.
 
 ```{r code-pattern-non-monotone}
+#| echo: false
 #| results: hide
 missing_pattern_table <- tibble::tribble(
-  ~case, ~x1, ~x2, ~x3, ~x4, ~x5, ~x6, ~type,
+  ~ case, ~ x1, ~ x2, ~ x3, ~ x4, ~ x5, ~ x6, ~ type,
   "1", "O", "O", "O", "O", "O", "O", "Completo",
   "2", "O", "O", "O", "O", "O", "O", "Completo",
   "3", "O", "O", "O", "O", "O", "O", "Completo",
@@ -68,7 +69,7 @@ survey_data <- readRDS("../data/sample.rds")
 
 La base `sample.rds` conserva los nombres de las variables y utiliza etiquetas y categorías en inglés. En `Region`, las categorías `North`, `South`, `Central`, `West` y `East` corresponden a Norte, Sur, Centro, Occidente y Oriente; `CatAge` contiene grupos decenales ordenados: `0-9`, `10-19`, `20-29`, y así sucesivamente hasta `90-99`.
 
-El siguiente código computacional carga los paquetes y estima la tasa de desocupación antes de generar los valores faltantes. El diseño se construye con la muestra completa y luego se crea `labor_force_subset`, que contiene a las personas de 15 años o más ocupadas o desocupadas. Posteriormente, los ejercicios de imputación utilizan la población de 15 años o más, incluidas las personas inactivas.
+El siguiente código computacional carga los paquetes y estima la tasa de desocupación antes de generar los valores faltantes. El diseño se construye con la muestra completa y luego se crea `labor_force_subset`, que contiene a las personas de 15 años o más ocupadas o desocupadas. Posteriormente, los ejercicios de imputación utilizan la población de 15 años o más, incluidas las personas inactivas. Los resultados se presentan en la @tbl-ap3-prepare-data-imputation.
 
 ```{r prepare-data-imputation}
 library(tidyverse)
@@ -100,18 +101,36 @@ unemployment_rate <- labor_force_subset %>%
     )
   )
 
-unemployment_rate
-
 survey_data <- survey_data %>%
   filter(Age >= 15)
-
 ```
 
-La tasa de desocupación estimada es de `r round(100 * unemployment_rate$unemployment_rate, 2)` %, con un error estándar de `r round(100 * unemployment_rate$unemployment_rate_se, 2)` %. Como referencia para los ejercicios posteriores, el siguiente código computacional calcula también la media del ingreso en la muestra.
+```{r}
+#| label: tbl-ap3-prepare-data-imputation
+#| tbl-cap: "Tasa de desocupación en la muestra completa"
+#| echo: false
+tabla_fmt(
+  unemployment_rate,
+  digits = 3,
+  col.names = c("Tasa", "EE", "LI 95 %", "LS 95 %")
+)
+```
+
+La tasa de desocupación estimada es de `r round(100 * unemployment_rate$unemployment_rate, 2)` %, con un error estándar de `r round(100 * unemployment_rate$unemployment_rate_se, 2)` %. Como referencia para los ejercicios posteriores, el siguiente código computacional calcula también la media del ingreso en la muestra. Los resultados se presentan en la @tbl-ap3-mean-initial-imputation.
 
 ```{r mean-initial-imputation}
 income_mean <- mean(survey_data$Income, na.rm = TRUE)
-income_mean
+```
+
+```{r}
+#| label: tbl-ap3-mean-initial-imputation
+#| tbl-cap: "Media del ingreso original de las personas de 15 años o más"
+#| echo: false
+tabla_fmt(
+  data.frame(income_mean),
+  digits = 3,
+  col.names = c("Media original")
+)
 ```
 
 A continuación, se genera un 20 % de valores faltantes siguiendo un mecanismo MCAR. La función `sample_frac` del paquete `dplyr` permite seleccionar aleatoriamente una fracción de las filas de un conjunto de datos.
@@ -185,14 +204,12 @@ sex_expenditure_density_plot <- expenditure_density_plot +
 expenditure_density_plot / sex_expenditure_density_plot
 ```
 
-A continuación, se simula una pérdida de información al azar (MAR) que depende de la zona y del sexo:
-
+A continuación, se simula una pérdida de información al azar (MAR) que depende de la zona y del sexo: Los resultados se presentan en la @tbl-ap3-simulate-mar-imputation.
 
 ```{r simulate-mar-imputation}
 set.seed(1234)
 stratum_id <- paste0(survey_data$Zone, survey_data$Sex)
 stratum_sizes <- table(stratum_id)
-stratum_sizes
 
 sample_indices <- S.STSI(
   S = stratum_id,
@@ -207,9 +224,18 @@ mar_plot_data <- bind_rows(
 )
 ```
 
-El código anterior utiliza el paquete `TeachingSampling` para realizar un muestreo aleatorio en cada combinación de zona y sexo. Primero, se fija la semilla en `1234` para que los resultados sean reproducibles. Luego, se crea la variable `stratum_id`, que combina `Zone` y `Sex` mediante la función `paste0` para definir los estratos. La función `table` muestra la frecuencia de cada estrato. El muestreo estratificado se realiza con `S.STSI`, cuyos argumentos son `S`, el vector de estratos; `Nh`, el número de unidades en cada estrato (`r paste(as.numeric(stratum_sizes), collapse = ", ")`, en el orden mostrado por `stratum_sizes`); y `nh`, el tamaño de muestra deseado en cada estrato (20, 380, 20 y 280).
+```{r}
+#| label: tbl-ap3-simulate-mar-imputation
+#| tbl-cap: "Número de observaciones por combinación de zona y sexo"
+#| echo: false
+tabla_fmt(
+  as.data.frame(stratum_sizes),
+  digits = 3,
+  col.names = c("Grupo", "Observaciones")
+)
+```
 
-El muestreo estratificado devuelve un vector con los índices de las filas seleccionadas. Estas observaciones se excluyen de la base para crear `mar_data`. Por último, la función `bind_rows` del paquete `dplyr` reúne `survey_data` y `mar_data` en `mar_plot_data`. La nueva variable `data_source` identifica la base de origen de cada observación.
+El código anterior utiliza el paquete `TeachingSampling` para realizar un muestreo aleatorio en cada combinación de zona y sexo. Primero, se fija la semilla en `1234` para que los resultados sean reproducibles. Luego, se crea la variable `stratum_id`, que combina `Zone` y `Sex` mediante la función `paste0` para definir los estratos. La función `table` muestra la frecuencia de cada estrato. El muestreo se realiza con `S.STSI`, cuyos argumentos son `S`, el vector de estratos; `Nh`, el número de unidades en cada estrato (`r paste(as.numeric(stratum_sizes), collapse = ", ")`, en el orden mostrado por `stratum_sizes`); y `nh`, el tamaño de muestra deseado en cada estrato (20, 380, 20 y 280). Nótese que el muestreo estratificado devuelve un vector con los índices de las filas seleccionadas. Estas observaciones se excluyen de la base para crear `mar_data`. Por último, la función `bind_rows` del paquete `dplyr` reúne `survey_data` y `mar_data` en `mar_plot_data`. La nueva variable `data_source` identifica la base de origen de cada observación.
 
 El siguiente código computacional compara el gasto por zona y sexo entre la base completa (`survey_data`) y la muestra con pérdida MAR (`mar_data`) (@fig-ap3-mar-boxplots). Las medianas permanecen próximas, aunque cambian la dispersión y algunos valores extremos, especialmente entre los hombres. La línea roja señala la media del gasto en la base completa.
 
@@ -282,7 +308,7 @@ mnar_plot_data <- bind_rows(
 )
 ```
 
-El código anterior conserva en `mnar_data` las `r formatC(nrow(mnar_data), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` observaciones con menores ingresos y las reúne con la base completa en `mnar_plot_data`. La @fig-ap3-mnar-income, obtenida con el siguiente código computacional, muestra cómo esta selección elimina la cola de ingresos altos y desplaza la distribución hacia valores menores. La media de los casos conservados, en azul, queda por debajo de la media de la base completa, en rojo.
+El código anterior conserva en `mnar_data` las `r formatC(nrow(mnar_data), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` observaciones con menores ingresos y las reúne con la base completa en `mnar_plot_data`. En `slice_min()`, `with_ties = FALSE` evita añadir observaciones empatadas en el punto de corte, de modo que se conserve exactamente el número solicitado. La @fig-ap3-mnar-income, obtenida con el siguiente código computacional, muestra cómo esta selección elimina la cola de ingresos altos y desplaza la distribución hacia valores menores. La media de los casos conservados, en azul, queda por debajo de la media de la base completa, en rojo.
 
 ```{r fig-ap3-mnar-income, fig.cap = "Distribución del ingreso bajo un patrón MNAR"}
 mnar_income_density_plot <- ggplot(
@@ -337,7 +363,7 @@ mnar_income_boxplot
 
 ## Algunos métodos de imputación
 
-La sección anterior mostró cómo los mecanismos MCAR, MAR y MNAR pueden afectar la distribución de los datos observados. A partir de ese diagnóstico, esta sección presenta distintos métodos para reemplazar los valores faltantes utilizando la información disponible. Mediante ejemplos en `R`, se comparan los ingresos originales con los obtenidos por imputación, prestando atención tanto a su media como a su dispersión y distribución. El recorrido comienza con métodos de imputación simple y concluye con la imputación múltiple.
+La sección anterior mostró cómo los mecanismos MCAR, MAR y MNAR pueden afectar la distribución de los datos observados. A partir de ese diagnóstico, esta sección presenta distintos métodos para reemplazar los valores faltantes utilizando la información disponible. Mediante ejemplos en `R`, se comparan los ingresos originales con los obtenidos por imputación, prestando atención tanto a su media como a su dispersión y distribución. Las tablas descriptivas comparan toda la base completada con los ingresos originales anteriores a la pérdida simulada, sin ponderación muestral. En este capítulo, DE denota desviación estándar. Para la media y la DE, el sesgo relativo (%) se calcula como $100(\text{valor imputado}/\text{valor original}-1)$: un valor negativo indica subestimación y uno positivo, sobreestimación respecto de la base original. Aquí se denomina sesgo relativo a esta discrepancia en la simulación realizada, no a una estimación del sesgo esperado sobre repeticiones del mecanismo de ausencia de respuesta. El recorrido comienza con métodos de imputación simple y concluye con la imputación múltiple.
 
 ### Imputación por la media no condicional
 
@@ -348,32 +374,54 @@ Para ilustrar el tratamiento de los datos faltantes bajo un mecanismo MCAR, se c
 ```{r prepare-values-missing-imputation}
 survey_data <- left_join(
   survey_data,
-  mcar_data %>% transmute(
-    HHID,
-    PersonID,
-    income_missing = Income,
-    employment_missing = Employment
-  ),
+  mcar_data %>%
+    transmute(
+      HHID,
+      PersonID,
+      income_missing = Income,
+      employment_missing = Employment
+    ),
   by = c("HHID", "PersonID")
 )
 
 ```
 
-El código anterior utiliza `left_join()` para añadir a `survey_data` las variables con valores faltantes de `mcar_data`, conservando todas las filas de la base original. Como `mcar_data` se deriva de `survey_data`, las claves coinciden. Para conocer el porcentaje de valores faltantes, se ejecuta el siguiente código:
+El código anterior utiliza `left_join()` para añadir a `survey_data` las variables con valores faltantes de `mcar_data`, conservando todas las filas de la base original. Como `mcar_data` se deriva de `survey_data`, las claves coinciden. Para conocer el porcentaje de valores faltantes, se ejecuta el siguiente código: Las tablas @tbl-ap3-missing-zone y @tbl-ap3-missing-sex presentan las proporciones.
 
 ```{r summarize-values-missing-imputation}
-survey_data %>%
+missing_zone_table <- survey_data %>%
   group_by(Zone) %>%
   summarise(
     missing_proportion = mean(is.na(income_missing))
   )
 
-survey_data %>%
+missing_sex_table <- survey_data %>%
   group_by(Sex) %>%
   summarise(
     missing_proportion = mean(is.na(income_missing))
   )
+```
 
+```{r}
+#| label: tbl-ap3-missing-zone
+#| tbl-cap: "Proporción de ingresos faltantes por zona"
+#| echo: false
+tabla_fmt(
+  missing_zone_table,
+  digits = 3,
+  col.names = c("Zona", "Proporción faltante")
+)
+```
+
+```{r}
+#| label: tbl-ap3-missing-sex
+#| tbl-cap: "Proporción de ingresos faltantes por sexo"
+#| echo: false
+tabla_fmt(
+  missing_sex_table,
+  digits = 3,
+  col.names = c("Sexo", "Proporción faltante")
+)
 ```
 
 La imputación por la media no condicional es un método simple y rápido. Puede resultar útil cuando la distribución de la variable no es muy asimétrica o cuando hay pocos valores faltantes en relación con el tamaño de la muestra. Sin embargo, presenta limitaciones cuando existen sesgos o patrones en los datos faltantes, o cuando las variables están muy correlacionadas. Aunque conserva la media de los valores observados, modifica la variabilidad y los percentiles, y puede afectar el sesgo. El método se aplica de la siguiente manera:
@@ -385,18 +433,78 @@ survey_data <- survey_data %>%
   mutate(
     income_imputed = coalesce(income_missing, observed_income_mean)
   )
-
-sum(is.na(survey_data$income_imputed))
 ```
 
-El código anterior calcula la media de los valores observados de `income_missing` y la almacena en `observed_income_mean`. Luego, reemplaza los valores faltantes con esa media y guarda el resultado en `income_imputed`. La última línea cuenta los valores faltantes de esta nueva columna de `survey_data` y confirma que no quedan datos sin imputar.
+El código anterior calcula la media de los valores observados de `income_missing` y la almacena en `observed_income_mean`. Luego, reemplaza los valores faltantes con esa media y guarda el resultado en `income_imputed`. Las tablas siguientes permiten evaluar los cambios en la media y la dispersión después de completar los ingresos.
 
-El siguiente código computacional compara el ingreso original (`Income`) con el completado mediante la media no condicional (`income_imputed`) (@fig-ap3-mean-non-conditional). La imputación produce una concentración artificial alrededor de la media, visible como un pico pronunciado. Las líneas roja y azul representan las medias original e imputada, respectivamente; su cercanía no implica que las distribuciones sean iguales.
+El siguiente código computacional compara la media y la desviación estándar del ingreso original e imputado en toda la base.
+
+```{r summarize-mean-non-conditional}
+summarize_mean_non_conditional_table <- survey_data %>%
+  summarise(
+    income_mean = mean(Income),
+    income_sd = sd(Income),
+    imputed_income_mean = mean(income_imputed),
+    imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
+  )
+```
+
+```{r}
+#| label: tbl-ap3-summarize-mean-non-conditional
+#| tbl-cap: "Ingreso original e imputado por media no condicional, total"
+#| echo: false
+tabla_fmt(
+  summarize_mean_non_conditional_table,
+  digits = 3,
+  col.names = c("Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
+
+La @tbl-ap3-summarize-mean-non-conditional presenta la comparación. En toda la base, el sesgo relativo de la media imputada es de `r formatC(with(summarize_mean_non_conditional_table, 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(summarize_mean_non_conditional_table, 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. El siguiente código computacional compara la media y la desviación estándar del ingreso original e imputado por zona.
+
+```{r summarize-mean-non-conditional-zone}
+summarize_mean_non_conditional_zone_table <- survey_data %>%
+  group_by(Zone) %>%
+  summarise(
+    income_mean = mean(Income),
+    income_sd = sd(Income),
+    imputed_income_mean = mean(income_imputed),
+    imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
+  )
+```
+
+```{r}
+#| label: tbl-ap3-summarize-mean-non-conditional-zone
+#| tbl-cap: "Ingreso original e imputado por media no condicional, por zona"
+#| echo: false
+tabla_fmt(
+  summarize_mean_non_conditional_zone_table,
+  digits = 3,
+  col.names = c("Zona", "Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
+
+La @tbl-ap3-summarize-mean-non-conditional-zone presenta la comparación. En la zona rural, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_mean_non_conditional_zone_table, Zone == "Rural"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_mean_non_conditional_zone_table, Zone == "Rural"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. En la zona urbana, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_mean_non_conditional_zone_table, Zone == "Urban"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_mean_non_conditional_zone_table, Zone == "Urban"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. 
+
+El siguiente código computacional compara el ingreso original (`Income`) con el completado mediante la media no condicional (`income_imputed`) (@fig-ap3-mean-non-conditional). Para preparar los datos, `pivot_longer()` reúne las columnas de ingreso en `income_value` e identifica su procedencia en `data_source`; `cols = -c(Zone, Sex)` conserva las variables de agrupación y `cols_vary = "slowest"` mantiene juntas las observaciones de cada columna original. La imputación produce una concentración artificial alrededor de la media, visible como un pico pronunciado. Las líneas roja y azul representan las medias original e imputada, respectivamente; su cercanía no implica que las distribuciones sean iguales.
 
 ```{r fig-ap3-mean-non-conditional, fig.cap = "Distribución del ingreso original e imputado por la media no condicional"}
 mean_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
-  tidyr::gather(data_source, income_value, -Zone, -Sex)
+  tidyr::pivot_longer(
+    cols = -c(Zone, Sex),
+    names_to = "data_source",
+    values_to = "income_value",
+    cols_vary = "slowest"
+  )
 
 mean_density_plot <- ggplot(
   mean_plot_data,
@@ -446,51 +554,78 @@ survey_data <- survey_data %>%
   ) %>%
   data.frame()
 
-sum(is.na(survey_data$income_imputed))
-
 survey_data <- survey_data %>%
   mutate(
     income_imputed = coalesce(income_imputed, observed_income_mean)
   )
-
-sum(is.na(survey_data$income_imputed))
 ```
 
-El código anterior utiliza `group_by()` para agrupar las observaciones de `survey_data` por `Stratum`. Los valores faltantes se reemplazan con la media de los ingresos observados en el estrato correspondiente, mientras que los observados se conservan. Si un estrato no tiene ingresos observados, se usa la media general almacenada en `observed_income_mean`. El resultado se guarda en `income_imputed`; a continuación se comparan las medias y desviaciones estándar originales e imputadas:
+El código anterior utiliza `group_by()` para agrupar las observaciones de `survey_data` por `Stratum`. Los valores faltantes se reemplazan con la media de los ingresos observados en el estrato correspondiente, mientras que los observados se conservan. Si un estrato no tiene ingresos observados, se usa la media general almacenada en `observed_income_mean`. El resultado se guarda en `income_imputed`; a continuación se comparan las medias y desviaciones estándar originales e imputadas: La @tbl-ap3-summarize-mean-conditional presenta la comparación.
 
 ```{r summarize-mean-conditional}
-survey_data %>%
+summarize_mean_conditional_table <- survey_data %>%
   summarise(
     income_mean = mean(Income),
     income_sd = sd(Income),
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
   )
-
 ```
 
-En este ejemplo, el sesgo relativo de la media del ingreso es de `r formatC(with(survey_data, 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %, y el de la desviación estándar es de `r formatC(with(survey_data, 100 * (sd(income_imputed) / sd(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %. Al desagregar los resultados de la imputación por zona, se obtiene lo siguiente:
+```{r}
+#| label: tbl-ap3-summarize-mean-conditional
+#| tbl-cap: "Ingreso original e imputado por media condicional, total"
+#| echo: false
+tabla_fmt(
+  summarize_mean_conditional_table,
+  digits = 3,
+  col.names = c("Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
+
+En este ejemplo, el sesgo relativo de la media del ingreso es de `r formatC(with(survey_data, 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %, y el de la desviación estándar es de `r formatC(with(survey_data, 100 * (sd(income_imputed) / sd(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %. Al desagregar los resultados de la imputación por zona, se obtiene lo siguiente: La @tbl-ap3-summarize-mean-conditional-zone presenta la comparación.
 
 ```{r summarize-mean-conditional-zone}
-survey_data %>%
+summarize_mean_conditional_zone_table <- survey_data %>%
   group_by(Zone) %>%
   summarise(
     income_mean = mean(Income),
     income_sd = sd(Income),
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
   )
-
 ```
 
-Los sesgos relativos de la media del ingreso son del `r formatC(with(subset(survey_data, Zone == "Rural"), 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` % en la zona rural y del `r formatC(with(subset(survey_data, Zone == "Urban"), 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` % en la urbana. En ambos casos, las medias obtenidas tras la imputación son próximas a las originales.
+```{r}
+#| label: tbl-ap3-summarize-mean-conditional-zone
+#| tbl-cap: "Ingreso original e imputado por media condicional, por zona"
+#| echo: false
+tabla_fmt(
+  summarize_mean_conditional_zone_table,
+  digits = 3,
+  col.names = c("Zona", "Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
 
-El siguiente código computacional compara las densidades del ingreso original (`Income`) y del completado con medias por estrato (`income_imputed`) (@fig-ap3-mean-conditional). La curva imputada se aproxima a la original, aunque conserva diferencias en el tramo central. Las líneas roja y azul señalan las medias original e imputada, respectivamente.
+En la zona rural, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_mean_conditional_zone_table, Zone == "Rural"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_mean_conditional_zone_table, Zone == "Rural"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. En la zona urbana, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_mean_conditional_zone_table, Zone == "Urban"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_mean_conditional_zone_table, Zone == "Urban"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. El siguiente código computacional compara las densidades del ingreso original (`Income`) y del completado con medias por estrato (`income_imputed`) (@fig-ap3-mean-conditional). La curva imputada se aproxima a la original, aunque conserva diferencias en el tramo central. Las líneas roja y azul señalan las medias original e imputada, respectivamente.
 
 ```{r fig-ap3-mean-conditional, fig.cap = "Distribución del ingreso original e imputado por la media condicional"}
 conditional_mean_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
-  tidyr::gather(data_source, income_value, -Zone, -Sex)
+  tidyr::pivot_longer(
+    cols = -c(Zone, Sex),
+    names_to = "data_source",
+    values_to = "income_value",
+    cols_vary = "slowest"
+  )
 
 conditional_mean_density_plot <- ggplot(
   conditional_mean_plot_data,
@@ -544,51 +679,89 @@ selected_donors <- sample(
 )
 survey_data$income_imputed[recipient_indices] <-
   survey_data$income_missing[selected_donors]
-
-sum(is.na(survey_data$income_imputed))
 ```
 
-El código anterior identifica las observaciones con y sin valores faltantes en `income_missing` y crea `income_imputed` para almacenar los resultados. `sample()` selecciona con reemplazo tantos donantes como receptores hay; sus ingresos se asignan a las posiciones faltantes.
-
-Una vez realizada la imputación, el siguiente código computacional compara la media y la desviación estándar del ingreso original con las del ingreso completado.
+El código anterior identifica las observaciones con y sin valores faltantes en `income_missing` y crea `income_imputed` para almacenar los resultados. `sample()` selecciona con reemplazo tantos donantes como receptores hay; sus ingresos se asignan a las posiciones faltantes. Una vez realizada la imputación, el siguiente código computacional compara la media y la desviación estándar del ingreso original con las del ingreso completado. La @tbl-ap3-summarize-hot-deck presenta la comparación.
 
 ```{r summarize-hot-deck}
-survey_data %>%
+summarize_hot_deck_table <- survey_data %>%
   summarise(
     income_mean = mean(Income),
     income_sd = sd(Income),
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
   )
-
 ```
 
-El sesgo relativo de la media del ingreso es del `r formatC(with(survey_data, 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %. Al desagregar los resultados por zona, se obtiene lo siguiente:
+```{r}
+#| label: tbl-ap3-summarize-hot-deck
+#| tbl-cap: "Ingreso original e imputado por hot-deck, total"
+#| echo: false
+tabla_fmt(
+  summarize_hot_deck_table,
+  digits = 3,
+  col.names = c("Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
+
+El sesgo relativo de la media del ingreso es del `r formatC(with(survey_data, 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %. El siguiente código desagrega los resultados por zona para obtener la @tbl-ap3-summarize-hot-deck-zone.
 
 ```{r summarize-hot-deck-zone}
-survey_data %>%
+summarize_hot_deck_zone_table <- survey_data %>%
   group_by(Zone) %>%
   summarise(
     income_mean = mean(Income),
     income_sd = sd(Income),
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
   )
-
 ```
 
-El sesgo relativo de la media del ingreso es del `r formatC(with(subset(survey_data, Zone == "Rural"), 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` % en la zona rural y del `r formatC(with(subset(survey_data, Zone == "Urban"), 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` % en la urbana. El siguiente código computacional extiende la comparación de estos resúmenes a los grupos definidos por sexo.
+```{r}
+#| label: tbl-ap3-summarize-hot-deck-zone
+#| tbl-cap: "Ingreso original e imputado por hot-deck, por zona"
+#| echo: false
+tabla_fmt(
+  summarize_hot_deck_zone_table,
+  digits = 3,
+  col.names = c("Zona", "Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
+
+En la zona rural, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_hot_deck_zone_table, Zone == "Rural"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_hot_deck_zone_table, Zone == "Rural"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. En la zona urbana, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_hot_deck_zone_table, Zone == "Urban"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_hot_deck_zone_table, Zone == "Urban"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. El siguiente código computacional extiende la comparación de estos resúmenes a los grupos definidos por sexo. La @tbl-ap3-hot-deck-sex presenta estos resultados.
 
 ```{r summarize-hot-deck-sex}
-survey_data %>%
+hot_deck_sex_table <- survey_data %>%
   group_by(Sex) %>%
   summarise(
     income_mean = mean(Income),
     income_sd = sd(Income),
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
   )
+```
 
+```{r}
+#| label: tbl-ap3-hot-deck-sex
+#| tbl-cap: "Ingreso original e imputado por hot-deck, por sexo"
+#| echo: false
+tabla_fmt(
+  hot_deck_sex_table,
+  digits = 3,
+  col.names = c("Sexo", "Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
 ```
 
 El siguiente código computacional compara la densidad del ingreso original (`Income`) con la del ingreso completado mediante donantes aleatorios (`income_imputed`) (@fig-ap3-hot-deck). Las curvas prácticamente se superponen en esta simulación, conservando la asimetría y la cola de ingresos altos. Las líneas roja y azul representan las medias original e imputada, respectivamente.
@@ -596,7 +769,12 @@ El siguiente código computacional compara la densidad del ingreso original (`In
 ```{r fig-ap3-hot-deck, fig.cap = "Distribución del ingreso original e imputado mediante hot-deck"}
 hot_deck_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
-  tidyr::gather(data_source, income_value, -Zone, -Sex)
+  tidyr::pivot_longer(
+    cols = -c(Zone, Sex),
+    names_to = "data_source",
+    values_to = "income_value",
+    cols_vary = "slowest"
+  )
 
 hot_deck_density_plot <- ggplot(
   hot_deck_plot_data,
@@ -642,39 +820,72 @@ missing_data$income_imputed <- predict(
 survey_data <- bind_rows(observed_data, missing_data)
 ```
 
-A continuación, se calculan la media y la desviación estándar de los ingresos originales y de los completados por imputación:
+A continuación, se calculan la media y la desviación estándar de los ingresos originales y de los completados por imputación: La @tbl-ap3-summarize-regression-imputation presenta la comparación.
 
 ```{r summarize-regression-imputation}
-survey_data %>%
+summarize_regression_imputation_table <- survey_data %>%
   summarise(
     income_mean = mean(Income),
     income_sd = sd(Income),
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
   )
-
 ```
 
-El sesgo relativo de la media del ingreso es del `r formatC(with(survey_data, 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %. El siguiente código computacional compara por zona los resúmenes del ingreso original y del completado por regresión.
+```{r}
+#| label: tbl-ap3-summarize-regression-imputation
+#| tbl-cap: "Ingreso original e imputado por regresión, total"
+#| echo: false
+tabla_fmt(
+  summarize_regression_imputation_table,
+  digits = 3,
+  col.names = c("Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
+
+El sesgo relativo de la media del ingreso es del `r formatC(with(survey_data, 100 * (mean(income_imputed) / mean(Income) - 1)), format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %. El siguiente código computacional compara por zona los resúmenes del ingreso original y del completado por regresión. La @tbl-ap3-summarize-regression-imputation-zone presenta la comparación.
 
 ```{r summarize-regression-imputation-zone}
-survey_data %>%
+summarize_regression_imputation_zone_table <- survey_data %>%
   group_by(Zone) %>%
   summarise(
     income_mean = mean(Income),
     income_sd = sd(Income),
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
   )
-
 ```
 
-El siguiente código computacional compara las densidades del ingreso original (`Income`) y del completado con predicciones del modelo de regresión (`income_imputed`) (@fig-ap3-regression). La forma general es similar, aunque aparecen diferencias alrededor del tramo central de la distribución. Las líneas roja y azul indican las medias original e imputada, respectivamente.
+```{r}
+#| label: tbl-ap3-summarize-regression-imputation-zone
+#| tbl-cap: "Ingreso original e imputado por regresión, por zona"
+#| echo: false
+tabla_fmt(
+  summarize_regression_imputation_zone_table,
+  digits = 3,
+  col.names = c("Zona", "Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
+
+En la zona rural, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_regression_imputation_zone_table, Zone == "Rural"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_regression_imputation_zone_table, Zone == "Rural"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. En la zona urbana, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_regression_imputation_zone_table, Zone == "Urban"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_regression_imputation_zone_table, Zone == "Urban"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. El siguiente código computacional compara las densidades del ingreso original (`Income`) y del completado con predicciones del modelo de regresión (`income_imputed`) (@fig-ap3-regression). La forma general es similar, aunque aparecen diferencias alrededor del tramo central de la distribución. Las líneas roja y azul indican las medias original e imputada, respectivamente.
 
 ```{r fig-ap3-regression, fig.cap = "Distribución del ingreso original e imputado por regresión"}
 regression_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
-  tidyr::gather(data_source, income_value, -Zone, -Sex)
+  tidyr::pivot_longer(
+    cols = -c(Zone, Sex),
+    names_to = "data_source",
+    values_to = "income_value",
+    cols_vary = "slowest"
+  )
 
 regression_density_plot <- ggplot(
   regression_plot_data,
@@ -725,41 +936,72 @@ for (i in seq_len(nrow(missing_data))) {
 survey_data <- bind_rows(observed_data, missing_data)
 ```
 
-Las medias y las desviaciones estándar de los ingresos originales y de los completados por imputación se calculan de la siguiente manera:
+Las medias y las desviaciones estándar de los ingresos originales y de los completados por imputación se calculan de la siguiente manera: La @tbl-ap3-summarize-nearest-neighbor presenta la comparación.
 
 ```{r summarize-nearest-neighbor}
-survey_data %>%
+summarize_nearest_neighbor_table <- survey_data %>%
   summarise(
     income_mean = mean(Income),
     income_sd = sd(Income),
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
   )
-
 ```
 
-La media imputada supera a la original en aproximadamente `r format(round(mean(survey_data$income_imputed) - mean(survey_data$Income), 1), decimal.mark = ",", nsmall = 1)` unidades monetarias. El siguiente código computacional compara por zona los resúmenes del ingreso original y del completado con donantes.
+```{r}
+#| label: tbl-ap3-summarize-nearest-neighbor
+#| tbl-cap: "Ingreso original e imputado por vecino más cercano, total"
+#| echo: false
+tabla_fmt(
+  summarize_nearest_neighbor_table,
+  digits = 3,
+  col.names = c("Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
+
+La media imputada supera a la original en aproximadamente `r format(round(mean(survey_data$income_imputed) - mean(survey_data$Income), 1), decimal.mark = ",", nsmall = 1)` unidades monetarias. El siguiente código computacional compara por zona los resúmenes del ingreso original y del completado con donantes. La @tbl-ap3-summarize-nearest-neighbor-zone presenta la comparación.
 
 ```{r summarize-nearest-neighbor-zone}
-survey_data %>%
+summarize_nearest_neighbor_zone_table <- survey_data %>%
   group_by(Zone) %>%
   summarise(
     income_mean = mean(Income),
     income_sd = sd(Income),
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
   )
-
 ```
 
-La media imputada supera a la original en aproximadamente `r format(round(with(subset(survey_data, Zone == "Rural"), mean(income_imputed) - mean(Income)), 1), decimal.mark = ",", nsmall = 1)` unidades monetarias en la zona rural y `r format(round(with(subset(survey_data, Zone == "Urban"), mean(income_imputed) - mean(Income)), 1), decimal.mark = ",", nsmall = 1)` en la urbana.
+```{r}
+#| label: tbl-ap3-summarize-nearest-neighbor-zone
+#| tbl-cap: "Ingreso original e imputado por vecino más cercano, por zona"
+#| echo: false
+tabla_fmt(
+  summarize_nearest_neighbor_zone_table,
+  digits = 3,
+  col.names = c("Zona", "Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
 
-El siguiente código computacional compara la densidad del ingreso original (`Income`) y la del ingreso imputado con donantes de gasto similar (`income_imputed`) (@fig-ap3-nearest-neighbor). Las curvas son muy próximas y conservan la cola de ingresos altos. Las líneas roja y azul muestran las medias original e imputada, respectivamente.
+En la zona rural, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_nearest_neighbor_zone_table, Zone == "Rural"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_nearest_neighbor_zone_table, Zone == "Rural"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. En la zona urbana, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_nearest_neighbor_zone_table, Zone == "Urban"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_nearest_neighbor_zone_table, Zone == "Urban"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. El siguiente código computacional compara la densidad del ingreso original (`Income`) y la del ingreso imputado con donantes de gasto similar (`income_imputed`) (@fig-ap3-nearest-neighbor). Las curvas son muy próximas y conservan la cola de ingresos altos. Las líneas roja y azul muestran las medias original e imputada, respectivamente.
 
 ```{r fig-ap3-nearest-neighbor, fig.cap = "Distribución del ingreso original e imputado por el vecino más cercano"}
 nearest_neighbor_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
-  tidyr::gather(data_source, income_value, -Zone, -Sex)
+  tidyr::pivot_longer(
+    cols = -c(Zone, Sex),
+    names_to = "data_source",
+    values_to = "income_value",
+    cols_vary = "slowest"
+  )
 
 nearest_neighbor_density_plot <- ggplot(
   nearest_neighbor_plot_data,
@@ -822,27 +1064,72 @@ for (i in seq_len(nrow(missing_data))) {
 survey_data <- bind_rows(observed_data, missing_data)
 ```
 
-Como en los ejemplos anteriores, el siguiente código computacional compara la media y la desviación estándar del ingreso original con las del ingreso completado, en este caso mediante donantes seleccionados por la proximidad de sus predicciones.
+Como en los ejemplos anteriores, el siguiente código computacional compara la media y la desviación estándar del ingreso original con las del ingreso completado, en este caso mediante donantes seleccionados por la proximidad de sus predicciones. La @tbl-ap3-summarize-nearest-neighbor-regression presenta la comparación.
 
 ```{r summarize-nearest-neighbor-regression}
-survey_data %>%
+summarize_nearest_neighbor_regression_table <- survey_data %>%
   summarise(
     income_mean = mean(Income),
     income_sd = sd(Income),
     imputed_income_mean = mean(income_imputed),
     imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
   )
-
 ```
 
-La diferencia entre la media del ingreso original y la obtenida tras la imputación es de aproximadamente `r formatC(abs(mean(survey_data$income_imputed) - mean(survey_data$Income)), format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` unidades monetarias.
+```{r}
+#| label: tbl-ap3-summarize-nearest-neighbor-regression
+#| tbl-cap: "Ingreso original e imputado por vecino más cercano con regresión, total"
+#| echo: false
+tabla_fmt(
+  summarize_nearest_neighbor_regression_table,
+  digits = 3,
+  col.names = c("Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
 
-El siguiente código computacional compara el ingreso original (`Income`) con el completado mediante donantes cuyas predicciones son próximas a las del receptor (`income_imputed`) (@fig-ap3-nearest-neighbor-regression). Las densidades prácticamente se superponen en esta simulación. Las líneas roja y azul representan las medias original e imputada, respectivamente.
+La @tbl-ap3-summarize-nearest-neighbor-regression muestra que la imputación por vecino más cercano con regresión conserva aproximadamente la media y la dispersión del ingreso original. La media pasa de `r formatC(summarize_nearest_neighbor_regression_table$income_mean, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` a `r formatC(summarize_nearest_neighbor_regression_table$imputed_income_mean, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` y la desviación estándar, de `r formatC(summarize_nearest_neighbor_regression_table$income_sd, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` a `r formatC(summarize_nearest_neighbor_regression_table$imputed_income_sd, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`, con sesgos relativos de `r formatC(summarize_nearest_neighbor_regression_table$mean_relative_bias, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` % y `r formatC(summarize_nearest_neighbor_regression_table$sd_relative_bias, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")` %, respectivamente. Ambos son positivos y pequeños: en esta simulación, el método sobreestima ligeramente las dos medidas. El siguiente código computacional compara la media y la desviación estándar del ingreso original e imputado por zona.
+
+```{r summarize-nearest-neighbor-regression-zone}
+summarize_nearest_neighbor_regression_zone_table <- survey_data %>%
+  group_by(Zone) %>%
+  summarise(
+    income_mean = mean(Income),
+    income_sd = sd(Income),
+    imputed_income_mean = mean(income_imputed),
+    imputed_income_sd = sd(income_imputed)
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
+  )
+```
+
+```{r}
+#| label: tbl-ap3-summarize-nearest-neighbor-regression-zone
+#| tbl-cap: "Ingreso original e imputado por vecino más cercano con regresión, por zona"
+#| echo: false
+tabla_fmt(
+  summarize_nearest_neighbor_regression_zone_table,
+  digits = 3,
+  col.names = c("Zona", "Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
+
+La @tbl-ap3-summarize-nearest-neighbor-regression-zone presenta la comparación. En la zona rural, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_nearest_neighbor_regression_zone_table, Zone == "Rural"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_nearest_neighbor_regression_zone_table, Zone == "Rural"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. En la zona urbana, el sesgo relativo de la media imputada es de `r formatC(with(subset(summarize_nearest_neighbor_regression_zone_table, Zone == "Urban"), 100 * (imputed_income_mean / income_mean - 1)), format = "f", digits = 2, decimal.mark = ",")` % y el de la DE es de `r formatC(with(subset(summarize_nearest_neighbor_regression_zone_table, Zone == "Urban"), 100 * (imputed_income_sd / income_sd - 1)), format = "f", digits = 2, decimal.mark = ",")` %. El siguiente código computacional compara el ingreso original (`Income`) con el completado mediante donantes cuyas predicciones son próximas a las del receptor (`income_imputed`) (@fig-ap3-nearest-neighbor-regression). Las densidades prácticamente se superponen en esta simulación. Las líneas roja y azul representan las medias original e imputada, respectivamente.
 
 ```{r fig-ap3-nearest-neighbor-regression, fig.cap = "Distribución del ingreso original e imputado por el vecino más cercano con regresión"}
 predictive_matching_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, Income, income_imputed) %>%
-  tidyr::gather(data_source, income_value, -Zone, -Sex)
+  tidyr::pivot_longer(
+    cols = -c(Zone, Sex),
+    names_to = "data_source",
+    values_to = "income_value",
+    cols_vary = "slowest"
+  )
 
 predictive_matching_density_plot <- ggplot(
   predictive_matching_plot_data,
@@ -947,11 +1234,76 @@ for (i in seq_len(n_imputations)) {
 
 ```
 
-El código anterior ajusta modelos de regresión lineal con `Income` como variable de respuesta y `Zone`, `Sex` y `Expenditure` como covariables. Estos modelos permiten predecir los ingresos faltantes en `missing_data`. El siguiente código computacional permite revisar los ingresos originales junto con algunos de los valores imputados.
+El código anterior ajusta modelos de regresión lineal con `Income` como variable de respuesta y `Zone`, `Sex` y `Expenditure` como covariables. Estos modelos permiten predecir los ingresos faltantes en `missing_data`. El siguiente código computacional permite revisar los ingresos originales junto con algunos de los valores imputados. La @tbl-ap3-imputation-examples permite comparar estos valores.
 
 ```{r show-multiple-imputations}
-dplyr::select(missing_data, Income, matches("income_draw_"))[1:10, 1:4]
+imputation_examples <- dplyr::select(
+  missing_data,
+  Income,
+  matches("income_draw_")
+)[1:10, 1:4]
 ```
+
+```{r}
+#| label: tbl-ap3-imputation-examples
+#| tbl-cap: "Ingresos originales y tres imputaciones para diez receptores"
+#| echo: false
+tabla_fmt(
+  imputation_examples,
+  digits = 3,
+  col.names = c("Ingreso original", "Imputación 1", "Imputación 2", "Imputación 3")
+)
+```
+
+Con los conjuntos completados, el siguiente código computacional compara la media y la desviación estándar originales con las de cada imputación, para toda la base y por zona. La @tbl-ap3-multiple-comparison presenta estos resúmenes descriptivos sin ponderación muestral para las tres primeras imputaciones, en el orden total, zona rural y zona urbana.
+
+```{r compare-multiple-imputations}
+completed_data <- bind_rows(observed_data, missing_data)
+multiple_comparison <- bind_rows(
+  completed_data %>%
+    mutate(Zone = "Total"),
+  completed_data %>%
+    mutate(Zone = as.character(Zone))
+) %>%
+  pivot_longer(
+    starts_with("income_draw_"),
+    names_to = "imputation",
+    values_to = "imputed_income"
+  ) %>%
+  group_by(Zone, imputation) %>%
+  summarise(
+    income_mean = mean(Income),
+    income_sd = sd(Income),
+    imputed_income_mean = mean(imputed_income),
+    imputed_income_sd = sd(imputed_income),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    mean_relative_bias = 100 * (imputed_income_mean / income_mean - 1),
+    sd_relative_bias = 100 * (imputed_income_sd / income_sd - 1)
+  )
+```
+
+```{r}
+#| label: tbl-ap3-multiple-comparison
+#| tbl-cap: "Ingreso original y completado en las tres primeras imputaciones, total y por zona"
+#| echo: false
+multiple_comparison_display <- multiple_comparison %>%
+  mutate(
+    imputation = as.integer(sub("income_draw_", "", imputation)),
+    Zone = factor(Zone, levels = c("Total", "Rural", "Urban"))
+  ) %>%
+  filter(imputation <= 3) %>%
+  arrange(Zone, imputation)
+
+tabla_fmt(
+  multiple_comparison_display,
+  digits = 3,
+  col.names = c("Zona", "Imputación", "Media original", "DE original", "Media imputada", "DE imputada", "Sesgo relativo media (%)", "Sesgo relativo DE (%)")
+)
+```
+
+En toda la base, los sesgos relativos de las medias imputadas oscilan entre `r paste(formatC(range(subset(multiple_comparison_display, Zone == "Total")$mean_relative_bias), format = "f", digits = 2, decimal.mark = ","), collapse = " y ")` %, y los de las DE entre `r paste(formatC(range(subset(multiple_comparison_display, Zone == "Total")$sd_relative_bias), format = "f", digits = 2, decimal.mark = ","), collapse = " y ")` %. En la zona rural, los sesgos relativos de las medias imputadas oscilan entre `r paste(formatC(range(subset(multiple_comparison_display, Zone == "Rural")$mean_relative_bias), format = "f", digits = 2, decimal.mark = ","), collapse = " y ")` %, y los de las DE entre `r paste(formatC(range(subset(multiple_comparison_display, Zone == "Rural")$sd_relative_bias), format = "f", digits = 2, decimal.mark = ","), collapse = " y ")` %. En la zona urbana, los sesgos relativos de las medias imputadas oscilan entre `r paste(formatC(range(subset(multiple_comparison_display, Zone == "Urban")$mean_relative_bias), format = "f", digits = 2, decimal.mark = ","), collapse = " y ")` %, y los de las DE entre `r paste(formatC(range(subset(multiple_comparison_display, Zone == "Urban")$sd_relative_bias), format = "f", digits = 2, decimal.mark = ","), collapse = " y ")` %. Estos rangos corresponden a las tres imputaciones mostradas en la tabla; no son intervalos de confianza. Los cálculos combinados conservan las `r n_imputations` imputaciones.
 
 El siguiente código computacional compara la densidad del ingreso original, representada por la línea negra, con las de los `r n_imputations` conjuntos completados, representadas por las líneas de colores (`income_draw_1` a `r paste0("income_draw_", n_imputations)`) (@fig-ap3-imputation-multiple). Las curvas mantienen una forma similar, con pequeñas diferencias en el tramo central que reflejan la variación entre las imputaciones.
 
@@ -960,7 +1312,12 @@ survey_data <- bind_rows(observed_data, missing_data)
 
 multiple_imputation_plot_data <- survey_data %>%
   dplyr::select(Zone, Sex, matches("income_draw_")) %>%
-  tidyr::gather(data_source, income_value, -Zone, -Sex)
+  tidyr::pivot_longer(
+    cols = -c(Zone, Sex),
+    names_to = "data_source",
+    values_to = "income_value",
+    cols_vary = "slowest"
+  )
 
 multiple_imputation_density_plot <- ggplot(
   multiple_imputation_plot_data,
@@ -992,7 +1349,7 @@ survey_design <- survey_data %>%
 
 ```
 
-A partir de este diseño, el siguiente código computacional estima la media del ingreso y su varianza en cada conjunto de datos completado.
+A partir de este diseño, el siguiente código computacional estima la media del ingreso y su varianza en cada conjunto de datos completado. `pivot_longer()` reúne en filas las columnas de las imputaciones: `names_to` separa el identificador de imputación y el tipo de estadístico, mientras que `.value` convierte `mean` y `var` en nombres de las columnas resultantes. `names_pattern` extrae ambos componentes de cada nombre y `names_transform` convierte el identificador de imputación a número para poder ordenarlo. Los resultados se presentan en la @tbl-ap3-estimate-means-imputation.
 
 ```{r estimate-means-imputation}
 mean_estimates <- survey_design %>%
@@ -1013,19 +1370,25 @@ mean_estimates <- survey_design %>%
     names_transform = list(imputation = as.numeric)
   ) %>%
   arrange(imputation)
-
-mean_estimates
 ```
 
-El siguiente código computacional combina las medias estimadas y sus varianzas mediante las reglas de imputación múltiple descritas anteriormente.
+```{r}
+#| label: tbl-ap3-estimate-means-imputation
+#| tbl-cap: "Media ponderada y varianza de su estimador por imputación"
+#| echo: false
+tabla_fmt(
+  mean_estimates,
+  digits = 3,
+  col.names = c("Imputación", "Media estimada", "Varianza del estimador")
+)
+```
+
+El siguiente código computacional combina las medias estimadas y sus varianzas mediante las reglas de imputación múltiple descritas anteriormente. La @tbl-ap3-pooled-mean presenta la media combinada, su error estándar y los componentes de incertidumbre.
 
 ```{r combine-means-imputation}
 pooled_mean <- mean(mean_estimates$mean)
 within_variance <- mean(mean_estimates$var)
 between_variance <- var(mean_estimates$mean)
-
-within_variance
-between_variance
 
 pooled_mean_variance <- within_variance +
   (1 + 1 / n_imputations) * between_variance
@@ -1033,14 +1396,25 @@ pooled_results <- data.frame(
   pooled_mean = pooled_mean,
   mean_se = sqrt(pooled_mean_variance)
 )
-pooled_results
 
 variance_estimates <- survey_design %>%
-  summarise_at(vars(matches("income_draw")), survey_var, vartype = "var")
-
+  summarise(
+    across(matches("income_draw"), ~ survey_var(.x, vartype = "var"))
+  )
 ```
 
-Otro parámetro de interés es la varianza del ingreso, que mide su dispersión entre las personas de la muestra. Se sigue el mismo procedimiento utilizado para la media: el siguiente código computacional reorganiza las estimaciones de la varianza del ingreso y sus medidas de incertidumbre para combinarlas por imputación.
+```{r}
+#| label: tbl-ap3-pooled-mean
+#| tbl-cap: "Media ponderada combinada y componentes de incertidumbre"
+#| echo: false
+tabla_fmt(
+  data.frame(pooled_results, within_variance, between_variance),
+  digits = 3,
+  col.names = c("Media combinada", "EE de la media", "Varianza intraimputación", "Varianza entre imputaciones")
+)
+```
+
+Otro parámetro de interés es la varianza del ingreso, que mide su dispersión entre las personas de la muestra. Se sigue el mismo procedimiento utilizado para la media: el siguiente código computacional reorganiza las estimaciones de la varianza del ingreso y sus medidas de incertidumbre para combinarlas por imputación. Los resultados se presentan en la @tbl-ap3-organize-variances-imputation.
 
 ```{r organize-variances-imputation}
 variance_estimates <- variance_estimates %>%
@@ -1055,11 +1429,20 @@ variance_estimates <- variance_estimates %>%
     names_transform = list(imputation = as.numeric)
   ) %>%
   arrange(imputation)
-
-variance_estimates
 ```
 
-Por último, el siguiente código computacional combina las estimaciones de la varianza del ingreso y su incertidumbre mediante las expresiones anteriores.
+```{r}
+#| label: tbl-ap3-organize-variances-imputation
+#| tbl-cap: "Varianza del ingreso y varianza de su estimador por imputación"
+#| echo: false
+tabla_fmt(
+  variance_estimates,
+  digits = 3,
+  col.names = c("Imputación", "Varianza del ingreso", "Varianza del estimador")
+)
+```
+
+Por último, el siguiente código computacional combina las estimaciones de la varianza del ingreso y su incertidumbre mediante las expresiones anteriores. La @tbl-ap3-pooled-variance presenta el resultado y sus componentes de incertidumbre.
 
 ```{r combine-variances-imputation}
 pooled_variance <- mean(variance_estimates$mean)
@@ -1070,6 +1453,16 @@ pooled_variance_variance <- within_variance +
 
 pooled_results$pooled_variance <- pooled_variance
 pooled_results$variance_se <- sqrt(pooled_variance_variance)
-cbind(pooled_variance, pooled_variance_variance)
+```
+
+```{r}
+#| label: tbl-ap3-pooled-variance
+#| tbl-cap: "Varianza del ingreso combinada y componentes de incertidumbre"
+#| echo: false
+tabla_fmt(
+  data.frame(pooled_variance, variance_se = sqrt(pooled_variance_variance), within_variance, between_variance),
+  digits = 3,
+  col.names = c("Varianza del ingreso", "EE del estimador", "Varianza intraimputación", "Varianza entre imputaciones")
+)
 ```
 

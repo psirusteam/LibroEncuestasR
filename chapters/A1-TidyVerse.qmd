@@ -278,7 +278,7 @@ El siguiente ejemplo crea `log_income`, que corresponde al logaritmo natural del
 ```{r create-log-income, eval = TRUE}
 log_income_data <- working_data %>%
   mutate(
-    log_income = if_else( Income > 0, log(Income), NA_real_ )
+    log_income = if_else(Income > 0, log(Income), NA_real_)
   )
 
 log_income_data %>%

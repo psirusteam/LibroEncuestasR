@@ -40,9 +40,7 @@ Finalmente, este documento constituye en sí mismo un ejercicio de investigació
 
 ## Uso del software R para el análisis de encuestas {#uso-del-software-r-para-el-analisis-de-encuestas}
 
-La elección de `R` como entorno computacional para este documento no es arbitraria. `R` reúne al menos tres características que lo convierten en una opción idónea para el análisis de encuestas de hogares en el contexto latinoamericano.
-
-En primer lugar, su condición de acceso libre. A diferencia de otros programas con costos de licencia que pueden resultar prohibitivos para muchas oficinas nacionales de estadística en países en desarrollo, `R` se distribuye bajo licencia GNU, lo que garantiza que los métodos presentados en este documento sean plenamente accesibles y replicables, independientemente de las restricciones presupuestarias que algunas veces aquejan a las instituciones públicas.
+La elección de `R` como entorno computacional para este documento no es arbitraria. `R` reúne al menos tres características que lo convierten en una opción idónea para el análisis de encuestas de hogares en el contexto latinoamericano. En primer lugar, su condición de acceso libre. A diferencia de otros programas con costos de licencia que pueden resultar prohibitivos para muchas oficinas nacionales de estadística en países en desarrollo, `R` se distribuye bajo licencia GNU, lo que garantiza que los métodos presentados en este documento sean plenamente accesibles y replicables, independientemente de las restricciones presupuestarias que algunas veces aquejan a las instituciones públicas.
 
 En segundo lugar, destaca su ecosistema especializado. El paquete `survey` [@Lumley2026] implementa estimadores, calibración, linealización, replicación, modelos y pruebas ajustadas a diseños complejos. El paquete `srvyr` [@FreedmanEllis2026] incorpora la sintaxis de `tidyverse` a estas herramientas. Su primera aplicación detallada aparece en el @sec-cap-categoricas y se retoma en el @sec-cap-continuas. Paquetes complementarios como `TeachingSampling` [@GutierrezT2020] y `convey` [@convey2024] amplían las posibilidades de análisis.
 

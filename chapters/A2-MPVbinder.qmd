@@ -72,14 +72,32 @@ model_estimates <- replicate(
   mean(rbinom(population_size, 1, theta))
 )
 
-cbind(
+model_simulation_results <- cbind(
   theta,
   expected_model_mean = mean(model_estimates),
-  bias = mean(model_estimates) - theta
+  bias = 100 * (mean(model_estimates) - theta) / theta
 )
 ```
 
-El código fija una semilla para que el ejercicio sea reproducible. Luego genera `n_sim_model` poblaciones independientes mediante `rbinom()`. La salida reporta el parámetro verdadero `theta`, el promedio de las medias simuladas `expected_model_mean` y el sesgo Monte Carlo. Como se espera bajo el modelo Bernoulli IID, `expected_model_mean` queda muy cerca de `r formatC(theta, format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` y el sesgo es cercano a cero. Las pequeñas diferencias se deben a que se usan `r formatC(n_sim_model, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` simulaciones, no un número infinito de repeticiones.
+```{r}
+#| label: tbl-ap2-model-simulation
+#| tbl-cap: "Simulación bajo el modelo Bernoulli: parámetro, media y sesgo relativo (%)"
+#| echo: FALSE
+tabla_fmt(
+  data.frame(
+    indicator = c(
+      "Parámetro del modelo",
+      "Promedio de las medias poblacionales",
+      "Sesgo relativo de Monte Carlo (%)"
+    ),
+    value = as.numeric(model_simulation_results)
+  ),
+  digits = 5,
+  col.names = c("Indicador", "Valor")
+)
+```
+
+El código fija una semilla para que el ejercicio sea reproducible. Luego genera `n_sim_model` poblaciones independientes mediante `rbinom()`. La @tbl-ap2-model-simulation reporta el parámetro verdadero `theta`, el promedio de las medias simuladas `expected_model_mean` y el sesgo relativo de Monte Carlo. El sesgo se expresa como porcentaje del valor de referencia: $100(\overline{\hat\theta}-\theta_{\mathrm{ref}})/\theta_{\mathrm{ref}}$, donde $\overline{\hat\theta}$ es el promedio de las estimaciones simuladas. En esta tabla la referencia es el parámetro del modelo; las medias conservan su escala original. Como se espera bajo el modelo Bernoulli IID, `expected_model_mean` queda muy cerca de `r formatC(theta, format = "f", digits = 1, big.mark = ".", decimal.mark = ",")` y el sesgo es cercano a cero. Las pequeñas diferencias se deben a que se usan `r formatC(n_sim_model, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` simulaciones, no un número infinito de repeticiones.
 
 En la teoría de muestreo, en cambio, las características de interés son parámetros fijos de la población. 
 por ejemplo, si una persona está desempleada, su estado se considera un valor fijo de la población finita. Lo aleatorio es el mecanismo mediante el cual se selecciona la muestra. El total poblacional se define como $t_y = \sum_{k \in U} y_k$, mientras que la media poblacional es $\bar{y}_U = \frac{t_y}{N}$. Si se observa una muestra $s$, se propone estimar el total como
@@ -125,7 +143,7 @@ $$
 
 el cual trata la muestra como si fuera autoponderada. Este estimador es sesgado cuando las probabilidades de selección son desiguales, especialmente si el tamaño del conglomerado se relaciona con la variable de interés. 
 
-En este ejemplo artificial, cada hogar constituye un conglomerado y actúa como unidad primaria de muestreo. Se seleccionan hogares con probabilidades proporcionales a su tamaño y se observan todas las personas que los integran. En esta simulación, todas las personas de la población artificial pertenecen a la fuerza de trabajo; por tanto, la media de la indicadora de desocupación representa la tasa de desocupación. Este universo simulado es independiente de `sample.rds` y de su dominio `labor_force_subset`. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño mediante `S.piPS()` del paquete `TeachingSampling`. En cada muestra se calculan dos estimadores: `design_estimates`, que corresponde a $\hat{\bar{y}}$, y `simple_estimates`, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, $\bar{y}_s$. Además, estos estimadores se comparan con la tasa poblacional `unemployment_rate_population`, calculada sobre la realización finita generada con el modelo.
+En este ejemplo artificial, cada hogar constituye un conglomerado y actúa como unidad primaria de muestreo. Se seleccionan hogares con probabilidades proporcionales a su tamaño y se observan todas las personas que los integran. En esta simulación, todas las personas de la población artificial pertenecen a la fuerza de trabajo; por tanto, la media de la indicadora de desocupación representa la tasa de desocupación. Este universo simulado es independiente de `sample.rds` y de su dominio `labor_force_subset`. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño mediante `S.piPS()` del paquete `TeachingSampling`: el primer argumento indica cuántas UPMs seleccionar y el segundo proporciona el vector de tamaños de los conglomerados. En cada muestra se calculan dos estimadores: `design_estimates`, que corresponde a $\hat{\bar{y}}$, y `simple_estimates`, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, $\bar{y}_s$. Además, estos estimadores se comparan con la tasa poblacional `unemployment_rate_population`, calculada sobre la realización finita generada con el modelo.
 
 ```{r simulate-sampling, echo = TRUE, eval = TRUE}
 library(TeachingSampling)
@@ -134,7 +152,8 @@ set.seed(2026)
 population_size <- 100
 theta <- 0.3
 n_sim_sampling <- 1000
-design_estimates <- simple_estimates <- rep(NA, n_sim_sampling)
+design_estimates <- rep(NA, n_sim_sampling)
+simple_estimates <- rep(NA, n_sim_sampling)
 
 cluster_size <- rep(2:6, each = 5)
 n_clusters <- length(cluster_size)
@@ -161,20 +180,38 @@ for (sim in seq_len(n_sim_sampling)) {
     sum(sampled_cluster_total) / sum(sampled_cluster_size)
 }
 
-cbind(
+sampling_simulation_results <- cbind(
   unemployment_rate_population,
   expected_pps = mean(design_estimates),
-  bias_pps = mean(design_estimates) - unemployment_rate_population,
+  bias_pps = 100 * (mean(design_estimates) /
+    unemployment_rate_population - 1),
   expected_simple = mean(simple_estimates),
-  bias_simple = mean(simple_estimates) - unemployment_rate_population
+  bias_simple = 100 * (mean(simple_estimates) /
+    unemployment_rate_population - 1)
 )
 ```
 
-El primer bloque del código genera hogares de tamaños desiguales, entre `r min(cluster_size)` y `r max(cluster_size)` personas. Para hacer visible el efecto del diseño, la probabilidad individual de desocupación varía ligeramente con el tamaño del hogar, pero se centra de manera que el promedio esperado de la población siga siendo cercano a `theta`. Luego se calcula `unemployment_rate_population`, que es la tasa real de desocupación en esa población específica. En cada repetición, `S.piPS()` selecciona UPMs con probabilidades proporcionales al tamaño; después se calculan la media de las medias de las UPMs seleccionadas y el promedio simple de las personas observadas. La salida compara ambos estimadores con `unemployment_rate_population`. El sesgo de Monte Carlo de `expected_pps` es cercano a cero, mientras que el de `expected_simple` no lo es, mostrando resultado de ignorar el diseño en este ejercicio.
+```{r}
+#| label: tbl-ap2-sampling-simulation
+#| tbl-cap: "Simulación con población fija: comparación de los estimadores"
+#| echo: FALSE
+tabla_fmt(
+  data.frame(
+    estimator = c("Media de las medias de las UPM", "Promedio simple de personas"),
+    reference = sampling_simulation_results[1, "unemployment_rate_population"],
+    mean = as.numeric(sampling_simulation_results[1, c("expected_pps", "expected_simple")]),
+    bias = as.numeric(sampling_simulation_results[1, c("bias_pps", "bias_simple")])
+  ),
+  digits = 5,
+  col.names = c("Estimador", "Tasa poblacional", "Promedio estimado", "Sesgo relativo (%)")
+)
+```
 
-La tasa de desocupación verdadera de la población simulada es `r round(100 * unemployment_rate_population, 2)` %, mientras que el promedio de las estimaciones en las `r n_sim_sampling` muestras es `r round(100 * mean(design_estimates), 2)` %. El sesgo de Monte Carlo del estimador basado en la media de los conglomerados seleccionados es de `r round(100 * (mean(design_estimates) - unemployment_rate_population), 2)` %.
+El primer bloque del código genera hogares de tamaños desiguales, entre `r min(cluster_size)` y `r max(cluster_size)` personas; `rep(2:6, each = 5)` crea cinco hogares de cada tamaño entre dos y seis. Para hacer visible el efecto del diseño, la probabilidad individual de desocupación varía ligeramente con el tamaño del hogar, pero se centra de manera que el promedio esperado de la población siga siendo cercano a `theta`. Luego se calcula `unemployment_rate_population`, que es la tasa real de desocupación en esa población específica. En cada repetición, `S.piPS()` selecciona UPMs con probabilidades proporcionales al tamaño; después se calculan la media de las medias de las UPMs seleccionadas y el promedio simple de las personas observadas. La @tbl-ap2-sampling-simulation presenta los promedios y los sesgos relativos porcentuales de ambos estimadores, tomando como referencia `unemployment_rate_population`. El sesgo relativo de Monte Carlo de `expected_pps` es cercano a cero, mientras que el de `expected_simple` no lo es, mostrando el efecto de ignorar el diseño en este ejercicio.
 
-En contraste, el promedio simple de las personas observadas estima una tasa de desocupación media de `r round(100 * mean(simple_estimates), 2)` %, con un sesgo de `r round(100 * (mean(simple_estimates) - unemployment_rate_population), 2)` %. En esta simulación, los conglomerados de mayor tamaño tienen mayor probabilidad de selección y mayor frecuencia del evento; ignorar las probabilidades de selección sobreestima la tasa poblacional.
+La tasa de desocupación verdadera de la población simulada es `r round(100 * unemployment_rate_population, 2)` %, mientras que el promedio de las estimaciones en las `r n_sim_sampling` muestras es `r round(100 * mean(design_estimates), 2)` %. El sesgo relativo de Monte Carlo del estimador basado en la media de los conglomerados seleccionados es de `r round(100 * (mean(design_estimates) / unemployment_rate_population - 1), 2)` %.
+
+En contraste, el promedio simple de las personas observadas estima una tasa de desocupación media de `r round(100 * mean(simple_estimates), 2)` %, con un sesgo relativo de `r round(100 * (mean(simple_estimates) / unemployment_rate_population - 1), 2)` %. En esta simulación, los conglomerados de mayor tamaño tienen mayor probabilidad de selección y mayor frecuencia del evento; ignorar las probabilidades de selección sobreestima la tasa poblacional.
 
 
 ## La integración de ambas inferencias {#la-integracion-de-ambas-inferencias}
@@ -333,10 +370,9 @@ set.seed(2026)
 population_size <- 100
 theta <- 0.3
 n_sim_population <- 100
-expected_design_estimates <- 
-  expected_simple_estimates <- 
-  population_means <-
-  rep(NA, n_sim_population)
+expected_design_estimates <- rep(NA, n_sim_population)
+expected_simple_estimates <- rep(NA, n_sim_population)
+population_means <- rep(NA, n_sim_population)
 
 cluster_size <- rep(2:6, each = 5)
 n_clusters <- length(cluster_size)
@@ -353,8 +389,9 @@ for (population_sim in seq_len(n_sim_population)) {
   population_means[population_sim] <- mean(outcome)
   cluster_totals <- tapply(outcome, cluster_id, sum)
   cluster_means <- tapply(outcome, cluster_id, mean)
-  
-  design_estimates <- simple_estimates <- rep(NA, 100)
+
+  design_estimates <- rep(NA, 100)
+  simple_estimates <- rep(NA, 100)
   for (sample_sim in seq_len(100)) {
     pps_sample <- S.piPS(sampled_cluster_count, cluster_size)
     sampled_clusters <- pps_sample[, 1]
@@ -369,21 +406,42 @@ for (population_sim in seq_len(n_sim_population)) {
   expected_simple_estimates[population_sim] <- mean(simple_estimates)
 }
 
-cbind(
+double_simulation_results <- cbind(
   theta,
   mean_population = mean(population_means),
   expected_pps = mean(expected_design_estimates),
-  bias_pps = mean(expected_design_estimates) - theta,
+  bias_pps = 100 * (mean(expected_design_estimates) - theta) / theta,
   expected_simple = mean(expected_simple_estimates),
-  bias_simple = mean(expected_simple_estimates) - theta
+  bias_simple = 100 * (mean(expected_simple_estimates) - theta) / theta
 )
 ```
 
-El código reproduce las dos fuentes de aleatoriedad. El ciclo externo representa el modelo $\xi$, porque genera nuevas poblaciones finitas con `rbinom()`. El ciclo interno representa el diseño $p$, porque para cada población se seleccionan múltiples muestras con `S.piPS()`. La salida incluye `mean_population`, que es el promedio de las medias poblacionales generadas; `expected_pps`, que resume el comportamiento del estimador que incorpora el diseño; y `expected_simple`, que resume el promedio simple de la muestra seleccionada. Cuando el diseño se incorpora correctamente, el sesgo Monte Carlo respecto de `theta` debe ser pequeño. La comparación con `expected_simple` muestra por qué la inferencia basada en encuestas requiere pesos y varianzas de diseño, incluso cuando se parte de un modelo estadístico sencillo.
+```{r}
+#| label: tbl-ap2-double-simulation
+#| tbl-cap: "Inferencia doble: medias simuladas y sesgos relativos (%)"
+#| echo: FALSE
+tabla_fmt(
+  data.frame(
+    indicator = c(
+      "Parámetro del modelo",
+      "Promedio de las medias poblacionales",
+      "Promedio del estimador basado en el diseño",
+      "Sesgo relativo del estimador basado en el diseño (%)",
+      "Promedio del estimador simple",
+      "Sesgo relativo del estimador simple (%)"
+    ),
+    value = as.numeric(double_simulation_results)
+  ),
+  digits = 5,
+  col.names = c("Indicador", "Valor")
+)
+```
 
-Los resultados de la simulación muestran con claridad el efecto de respetar (o ignorar) el diseño complejo cuando el tamaño del conglomerado está relacionado con la variable de interés. En la simulación, el parámetro poblacional se fija en `r paste0("theta = ", format(theta, decimal.mark = ","))` y la media observada entre las `r n_sim_population` poblaciones simuladas es `r formatC(mean(population_means), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`, una pequeña diferencia atribuible a la variabilidad de Monte Carlo. El estimador basado en el promedio simple de las medias de los conglomerados seleccionados alcanza `r formatC(mean(expected_design_estimates), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`. Esto ocurre porque la probabilidad de seleccionar cada conglomerado es proporcional a su tamaño: al promediar las medias de los conglomerados seleccionados, la selección introduce precisamente la ponderación por tamaño necesaria para recuperar la media a nivel de personas. Por ello, el sesgo reportado es prácticamente nulo (`r formatC(mean(expected_design_estimates) - theta, format = "f", digits = 5, big.mark = ".", decimal.mark = ",")`).
+El código reproduce las dos fuentes de aleatoriedad. El ciclo externo representa el modelo $\xi$, porque genera nuevas poblaciones finitas con `rbinom()`. El ciclo interno representa el diseño $p$, porque para cada población se seleccionan múltiples muestras con `S.piPS()`. La @tbl-ap2-double-simulation incluye `mean_population`, que es el promedio de las medias poblacionales generadas; `expected_pps`, que resume el comportamiento del estimador que incorpora el diseño; y `expected_simple`, que resume el promedio simple de la muestra seleccionada. Cuando el diseño se incorpora correctamente, el sesgo relativo de Monte Carlo respecto de `theta` debe ser pequeño. La comparación con `expected_simple` muestra por qué la inferencia basada en encuestas requiere pesos y varianzas de diseño, incluso cuando se parte de un modelo estadístico sencillo.
 
-En contraste, el estimador que combina todos los individuos pertenecientes a los conglomerados seleccionados como si constituyeran una muestra simple, tiene una media de `r formatC(mean(expected_simple_estimates), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")` presentando un sesgo positivo (`r formatC(mean(expected_simple_estimates) - theta, format = "f", digits = 4, big.mark = ".", decimal.mark = ",")`). El problema es que los conglomerados grandes ya tienen una probabilidad mayor de ser seleccionados por el diseño y, posteriormente, al calcular la media agrupando todos sus individuos, vuelven a recibir mayor peso debido a que contienen más personas. Se produce así una especie de doble ponderación por tamaño. El ejercicio ilustra, por tanto, que ignorar las probabilidades de selección puede producir sesgo cuando el diseño es informativo.
+Los resultados de la simulación muestran con claridad el efecto de respetar (o ignorar) el diseño complejo cuando el tamaño del conglomerado está relacionado con la variable de interés. En la simulación, el parámetro poblacional se fija en `r paste0("theta = ", format(theta, decimal.mark = ","))` y la media observada entre las `r n_sim_population` poblaciones simuladas es `r formatC(mean(population_means), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`, una pequeña diferencia atribuible a la variabilidad de Monte Carlo. El estimador basado en el promedio simple de las medias de los conglomerados seleccionados alcanza `r formatC(mean(expected_design_estimates), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")`. Esto ocurre porque la probabilidad de seleccionar cada conglomerado es proporcional a su tamaño: al promediar las medias de los conglomerados seleccionados, la selección introduce precisamente la ponderación por tamaño necesaria para recuperar la media a nivel de personas. Por ello, el sesgo relativo reportado es prácticamente nulo (`r formatC(100 * (mean(expected_design_estimates) - theta) / theta, format = "f", digits = 5, big.mark = ".", decimal.mark = ",")` %).
+
+En contraste, el estimador que combina todos los individuos pertenecientes a los conglomerados seleccionados como si constituyeran una muestra simple, tiene una media de `r formatC(mean(expected_simple_estimates), format = "f", digits = 3, big.mark = ".", decimal.mark = ",")` presentando un sesgo relativo positivo (`r formatC(100 * (mean(expected_simple_estimates) - theta) / theta, format = "f", digits = 4, big.mark = ".", decimal.mark = ",")` %). El problema es que los conglomerados grandes ya tienen una probabilidad mayor de ser seleccionados por el diseño y, posteriormente, al calcular la media agrupando todos sus individuos, vuelven a recibir mayor peso debido a que contienen más personas. Se produce así una especie de doble ponderación por tamaño. El ejercicio ilustra, por tanto, que ignorar las probabilidades de selección puede producir sesgo cuando el diseño es informativo.
 
 En síntesis, como explica @pfeffermann1993role, la máxima verosimilitud es adecuada cuando las observaciones pueden tratarse como IID bajo un modelo probabilístico. En encuestas complejas, la máxima pseudo-verosimilitud ofrece una extensión natural: conserva la estructura de las ecuaciones de estimación, pero pondera cada contribución individual por su peso muestral. La ponderación protege frente a ciertos diseños informativos o a determinadas especificaciones incorrectas, pero su necesidad y sus propiedades dependen del diseño y del modelo. Así, los modelos estadísticos se ajustan de manera más coherente con la población que la encuesta busca representar.
 

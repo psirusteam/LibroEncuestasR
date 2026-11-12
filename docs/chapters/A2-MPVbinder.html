@@ -392,17 +392,48 @@ E_{\xi}\left(\frac{1}{N}\sum_{k \in U}Y_k\right)
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="fu">rbinom</span>(population_size, <span class="dv">1</span>, theta))</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>model_simulation_results <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  theta,</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_model_mean =</span> <span class="fu">mean</span>(model_estimates),</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias =</span> <span class="fu">mean</span>(model_estimates) <span class="sc">-</span> theta</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias =</span> <span class="dv">100</span> <span class="sc">*</span> (<span class="fu">mean</span>(model_estimates) <span class="sc">-</span> theta) <span class="sc">/</span> theta</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     theta expected_model_mean    bias
-[1,]   0.3               0.302 0.00225</code></pre>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-ap2-model-simulation" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ap2-model-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;9.1: Simulación bajo el modelo Bernoulli: parámetro, media y sesgo relativo (%)
+</figcaption>
+<div aria-describedby="tbl-ap2-model-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Indicador</th>
+<th style="text-align: right;">Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Parámetro del modelo</td>
+<td style="text-align: right;">0.300</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Promedio de las medias poblacionales</td>
+<td style="text-align: right;">0.302</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sesgo relativo de Monte Carlo (%)</td>
+<td style="text-align: right;">0.750</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<p>El código fija una semilla para que el ejercicio sea reproducible. Luego genera <code>n_sim_model</code> poblaciones independientes mediante <code>rbinom()</code>. La salida reporta el parámetro verdadero <code>theta</code>, el promedio de las medias simuladas <code>expected_model_mean</code> y el sesgo Monte Carlo. Como se espera bajo el modelo Bernoulli IID, <code>expected_model_mean</code> queda muy cerca de 0,3 y el sesgo es cercano a cero. Las pequeñas diferencias se deben a que se usan 1.000 simulaciones, no un número infinito de repeticiones.</p>
+</figure>
+</div>
+</div>
+<p>El código fija una semilla para que el ejercicio sea reproducible. Luego genera <code>n_sim_model</code> poblaciones independientes mediante <code>rbinom()</code>. La <a href="#tbl-ap2-model-simulation" class="quarto-xref">tabla&nbsp;<span>9.1</span></a> reporta el parámetro verdadero <code>theta</code>, el promedio de las medias simuladas <code>expected_model_mean</code> y el sesgo relativo de Monte Carlo. El sesgo se expresa como porcentaje del valor de referencia: <span class="math inline">\(100(\overline{\hat\theta}-\theta_{\mathrm{ref}})/\theta_{\mathrm{ref}}\)</span>, donde <span class="math inline">\(\overline{\hat\theta}\)</span> es el promedio de las estimaciones simuladas. En esta tabla la referencia es el parámetro del modelo; las medias conservan su escala original. Como se espera bajo el modelo Bernoulli IID, <code>expected_model_mean</code> queda muy cerca de 0,3 y el sesgo es cercano a cero. Las pequeñas diferencias se deben a que se usan 1.000 simulaciones, no un número infinito de repeticiones.</p>
 <p>En la teoría de muestreo, en cambio, las características de interés son parámetros fijos de la población. por ejemplo, si una persona está desempleada, su estado se considera un valor fijo de la población finita. Lo aleatorio es el mecanismo mediante el cual se selecciona la muestra. El total poblacional se define como <span class="math inline">\(t_y = \sum_{k \in U} y_k\)</span>, mientras que la media poblacional es <span class="math inline">\(\bar{y}_U = \frac{t_y}{N}\)</span>. Si se observa una muestra <span class="math inline">\(s\)</span>, se propone estimar el total como</p>
 <p><span class="math display">\[
 \hat{t}_{y} = \sum_{k \in s}\frac{y_k}{\pi_k}
@@ -433,58 +464,98 @@ E_{\xi}\left(\frac{1}{N}\sum_{k \in U}Y_k\right)
      {\sum_{i \in S_I}N_i},
 \]</span></p>
 <p>el cual trata la muestra como si fuera autoponderada. Este estimador es sesgado cuando las probabilidades de selección son desiguales, especialmente si el tamaño del conglomerado se relaciona con la variable de interés.</p>
-<p>En este ejemplo artificial, cada hogar constituye un conglomerado y actúa como unidad primaria de muestreo. Se seleccionan hogares con probabilidades proporcionales a su tamaño y se observan todas las personas que los integran. En esta simulación, todas las personas de la población artificial pertenecen a la fuerza de trabajo; por tanto, la media de la indicadora de desocupación representa la tasa de desocupación. Este universo simulado es independiente de <code>sample.rds</code> y de su dominio <code>labor_force_subset</code>. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño mediante <code>S.piPS()</code> del paquete <code>TeachingSampling</code>. En cada muestra se calculan dos estimadores: <code>design_estimates</code>, que corresponde a <span class="math inline">\(\hat{\bar{y}}\)</span>, y <code>simple_estimates</code>, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, <span class="math inline">\(\bar{y}_s\)</span>. Además, estos estimadores se comparan con la tasa poblacional <code>unemployment_rate_population</code>, calculada sobre la realización finita generada con el modelo.</p>
+<p>En este ejemplo artificial, cada hogar constituye un conglomerado y actúa como unidad primaria de muestreo. Se seleccionan hogares con probabilidades proporcionales a su tamaño y se observan todas las personas que los integran. En esta simulación, todas las personas de la población artificial pertenecen a la fuerza de trabajo; por tanto, la media de la indicadora de desocupación representa la tasa de desocupación. Este universo simulado es independiente de <code>sample.rds</code> y de su dominio <code>labor_force_subset</code>. La siguiente simulación fija una población finita y repite muchas veces la selección de hogares con probabilidades proporcionales al tamaño mediante <code>S.piPS()</code> del paquete <code>TeachingSampling</code>: el primer argumento indica cuántas UPMs seleccionar y el segundo proporciona el vector de tamaños de los conglomerados. En cada muestra se calculan dos estimadores: <code>design_estimates</code>, que corresponde a <span class="math inline">\(\hat{\bar{y}}\)</span>, y <code>simple_estimates</code>, que corresponde al promedio simple de las personas observadas en las UPMs seleccionadas, <span class="math inline">\(\bar{y}_s\)</span>. Además, estos estimadores se comparan con la tasa poblacional <code>unemployment_rate_population</code>, calculada sobre la realización finita generada con el modelo.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TeachingSampling)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>population_size <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>n_sim_sampling <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>design_estimates <span class="ot">&lt;-</span> simple_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_sim_sampling)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>cluster_size <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">5</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(cluster_size)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>cluster_id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq_len</span>(n_clusters), cluster_size)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>size_center <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(cluster_size, cluster_size)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>prob_person <span class="ot">&lt;-</span> theta <span class="sc">+</span> <span class="fu">rep</span>(</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  (cluster_size <span class="sc">-</span> size_center) <span class="sc">/</span> <span class="dv">12</span>,</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  cluster_size</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>outcome <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(population_size, <span class="dv">1</span>, prob_person)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>unemployment_rate_population <span class="ot">&lt;-</span> <span class="fu">mean</span>(outcome)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>cluster_totals <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, sum)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>cluster_means <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, mean)</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>sampled_cluster_count <span class="ot">&lt;-</span> <span class="fu">floor</span>(n_clusters <span class="sc">*</span> <span class="fl">0.3</span>)</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (sim <span class="cf">in</span> <span class="fu">seq_len</span>(n_sim_sampling)) {</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  pps_sample <span class="ot">&lt;-</span> <span class="fu">S.piPS</span>(sampled_cluster_count, cluster_size)</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  sampled_clusters <span class="ot">&lt;-</span> pps_sample[, <span class="dv">1</span>]</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  sampled_cluster_size <span class="ot">&lt;-</span> cluster_size[sampled_clusters]</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  sampled_cluster_total <span class="ot">&lt;-</span> cluster_totals[sampled_clusters]</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  sampled_cluster_mean <span class="ot">&lt;-</span> cluster_means[sampled_clusters]</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  design_estimates[sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sampled_cluster_mean)</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  simple_estimates[sim] <span class="ot">&lt;-</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(sampled_cluster_total) <span class="sc">/</span> <span class="fu">sum</span>(sampled_cluster_size)</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  unemployment_rate_population,</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_pps =</span> <span class="fu">mean</span>(design_estimates),</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_pps =</span> <span class="fu">mean</span>(design_estimates) <span class="sc">-</span> unemployment_rate_population,</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_simple =</span> <span class="fu">mean</span>(simple_estimates),</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_simple =</span> <span class="fu">mean</span>(simple_estimates) <span class="sc">-</span> unemployment_rate_population</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     unemployment_rate_population expected_pps bias_pps expected_simple
-[1,]                          0.3        0.304  0.00368           0.358
-     bias_simple
-[1,]      0.0585</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TeachingSampling)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>population_size <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>n_sim_sampling <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>design_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_sim_sampling)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>simple_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_sim_sampling)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>cluster_size <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">5</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(cluster_size)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>cluster_id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq_len</span>(n_clusters), cluster_size)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>size_center <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(cluster_size, cluster_size)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>prob_person <span class="ot">&lt;-</span> theta <span class="sc">+</span> <span class="fu">rep</span>(</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  (cluster_size <span class="sc">-</span> size_center) <span class="sc">/</span> <span class="dv">12</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  cluster_size</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>outcome <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(population_size, <span class="dv">1</span>, prob_person)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>unemployment_rate_population <span class="ot">&lt;-</span> <span class="fu">mean</span>(outcome)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>cluster_totals <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, sum)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>cluster_means <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, mean)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>sampled_cluster_count <span class="ot">&lt;-</span> <span class="fu">floor</span>(n_clusters <span class="sc">*</span> <span class="fl">0.3</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (sim <span class="cf">in</span> <span class="fu">seq_len</span>(n_sim_sampling)) {</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  pps_sample <span class="ot">&lt;-</span> <span class="fu">S.piPS</span>(sampled_cluster_count, cluster_size)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  sampled_clusters <span class="ot">&lt;-</span> pps_sample[, <span class="dv">1</span>]</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  sampled_cluster_size <span class="ot">&lt;-</span> cluster_size[sampled_clusters]</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  sampled_cluster_total <span class="ot">&lt;-</span> cluster_totals[sampled_clusters]</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  sampled_cluster_mean <span class="ot">&lt;-</span> cluster_means[sampled_clusters]</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  design_estimates[sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sampled_cluster_mean)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  simple_estimates[sim] <span class="ot">&lt;-</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(sampled_cluster_total) <span class="sc">/</span> <span class="fu">sum</span>(sampled_cluster_size)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>sampling_simulation_results <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  unemployment_rate_population,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_pps =</span> <span class="fu">mean</span>(design_estimates),</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_pps =</span> <span class="dv">100</span> <span class="sc">*</span> (<span class="fu">mean</span>(design_estimates) <span class="sc">/</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    unemployment_rate_population <span class="sc">-</span> <span class="dv">1</span>),</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_simple =</span> <span class="fu">mean</span>(simple_estimates),</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_simple =</span> <span class="dv">100</span> <span class="sc">*</span> (<span class="fu">mean</span>(simple_estimates) <span class="sc">/</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    unemployment_rate_population <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-ap2-sampling-simulation" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ap2-sampling-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;9.2: Simulación con población fija: comparación de los estimadores
+</figcaption>
+<div aria-describedby="tbl-ap2-sampling-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 20%">
+<col style="width: 21%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Estimador</th>
+<th style="text-align: right;">Tasa poblacional</th>
+<th style="text-align: right;">Promedio estimado</th>
+<th style="text-align: right;">Sesgo relativo (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Media de las medias de las UPM</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">0.304</td>
+<td style="text-align: right;">1.23</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Promedio simple de personas</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">0.358</td>
+<td style="text-align: right;">19.50</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<p>El primer bloque del código genera hogares de tamaños desiguales, entre 2 y 6 personas. Para hacer visible el efecto del diseño, la probabilidad individual de desocupación varía ligeramente con el tamaño del hogar, pero se centra de manera que el promedio esperado de la población siga siendo cercano a <code>theta</code>. Luego se calcula <code>unemployment_rate_population</code>, que es la tasa real de desocupación en esa población específica. En cada repetición, <code>S.piPS()</code> selecciona UPMs con probabilidades proporcionales al tamaño; después se calculan la media de las medias de las UPMs seleccionadas y el promedio simple de las personas observadas. La salida compara ambos estimadores con <code>unemployment_rate_population</code>. El sesgo de Monte Carlo de <code>expected_pps</code> es cercano a cero, mientras que el de <code>expected_simple</code> no lo es, mostrando resultado de ignorar el diseño en este ejercicio.</p>
-<p>La tasa de desocupación verdadera de la población simulada es 30 %, mientras que el promedio de las estimaciones en las 1000 muestras es 30.37 %. El sesgo de Monte Carlo del estimador basado en la media de los conglomerados seleccionados es de 0.37 %.</p>
-<p>En contraste, el promedio simple de las personas observadas estima una tasa de desocupación media de 35.85 %, con un sesgo de 5.85 %. En esta simulación, los conglomerados de mayor tamaño tienen mayor probabilidad de selección y mayor frecuencia del evento; ignorar las probabilidades de selección sobreestima la tasa poblacional.</p>
+</figure>
+</div>
+</div>
+<p>El primer bloque del código genera hogares de tamaños desiguales, entre 2 y 6 personas; <code>rep(2:6, each = 5)</code> crea cinco hogares de cada tamaño entre dos y seis. Para hacer visible el efecto del diseño, la probabilidad individual de desocupación varía ligeramente con el tamaño del hogar, pero se centra de manera que el promedio esperado de la población siga siendo cercano a <code>theta</code>. Luego se calcula <code>unemployment_rate_population</code>, que es la tasa real de desocupación en esa población específica. En cada repetición, <code>S.piPS()</code> selecciona UPMs con probabilidades proporcionales al tamaño; después se calculan la media de las medias de las UPMs seleccionadas y el promedio simple de las personas observadas. La <a href="#tbl-ap2-sampling-simulation" class="quarto-xref">tabla&nbsp;<span>9.2</span></a> presenta los promedios y los sesgos relativos porcentuales de ambos estimadores, tomando como referencia <code>unemployment_rate_population</code>. El sesgo relativo de Monte Carlo de <code>expected_pps</code> es cercano a cero, mientras que el de <code>expected_simple</code> no lo es, mostrando el efecto de ignorar el diseño en este ejercicio.</p>
+<p>La tasa de desocupación verdadera de la población simulada es 30 %, mientras que el promedio de las estimaciones en las 1000 muestras es 30.37 %. El sesgo relativo de Monte Carlo del estimador basado en la media de los conglomerados seleccionados es de 1.23 %.</p>
+<p>En contraste, el promedio simple de las personas observadas estima una tasa de desocupación media de 35.85 %, con un sesgo relativo de 19.5 %. En esta simulación, los conglomerados de mayor tamaño tienen mayor probabilidad de selección y mayor frecuencia del evento; ignorar las probabilidades de selección sobreestima la tasa poblacional.</p>
 </section>
 <section id="la-integracion-de-ambas-inferencias" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="la-integracion-de-ambas-inferencias"><span class="header-section-number">9.2</span> La integración de ambas inferencias</h2>
@@ -600,62 +671,105 @@ w_1 &amp; 0 &amp; \cdots &amp; 0\\
 <p>De acuerdo con <span class="citation" data-cites="HeeringaWestBerglund2017">Heeringa et&nbsp;al. (<a href="references.html#ref-HeeringaWestBerglund2017" role="doc-biblioref">2017</a>)</span>, este resultado extiende de manera natural el estimador ordinario al contexto de encuestas complejas: cada observación contribuye al ajuste del modelo en proporción a su peso muestral. No obstante, para la inferencia no basta con ponderar la estimación puntual; también se requiere estimar correctamente la varianza considerando estratos, conglomerados y pesos.</p>
 <p>La siguiente simulación de Monte Carlo anidada ilustra la inferencia doble. En el ciclo externo se genera una nueva población bajo el modelo Bernoulli. En el ciclo interno se seleccionan muchas muestras por diseño y se comparan el estimador que incorpora el diseño y el promedio simple de la muestra.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>population_size <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>n_sim_population <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>expected_design_estimates <span class="ot">&lt;-</span> </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  expected_simple_estimates <span class="ot">&lt;-</span> </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  population_means <span class="ot">&lt;-</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep</span>(<span class="cn">NA</span>, n_sim_population)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>cluster_size <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">5</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(cluster_size)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>cluster_id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq_len</span>(n_clusters), cluster_size)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>size_center <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(cluster_size, cluster_size)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>prob_person <span class="ot">&lt;-</span> theta <span class="sc">+</span> <span class="fu">rep</span>(</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  (cluster_size <span class="sc">-</span> size_center) <span class="sc">/</span> <span class="dv">12</span>,</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  cluster_size</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>sampled_cluster_count <span class="ot">&lt;-</span> <span class="fu">floor</span>(n_clusters <span class="sc">*</span> <span class="fl">0.3</span>)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (population_sim <span class="cf">in</span> <span class="fu">seq_len</span>(n_sim_population)) {</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  outcome <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(population_size, <span class="dv">1</span>, prob_person)</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  population_means[population_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(outcome)</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  cluster_totals <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, sum)</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  cluster_means <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, mean)</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  design_estimates <span class="ot">&lt;-</span> simple_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">100</span>)</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (sample_sim <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="dv">100</span>)) {</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    pps_sample <span class="ot">&lt;-</span> <span class="fu">S.piPS</span>(sampled_cluster_count, cluster_size)</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    sampled_clusters <span class="ot">&lt;-</span> pps_sample[, <span class="dv">1</span>]</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    sampled_cluster_size <span class="ot">&lt;-</span> cluster_size[sampled_clusters]</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    sampled_cluster_total <span class="ot">&lt;-</span> cluster_totals[sampled_clusters]</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    sampled_cluster_mean <span class="ot">&lt;-</span> cluster_means[sampled_clusters]</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    design_estimates[sample_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sampled_cluster_mean)</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    simple_estimates[sample_sim] <span class="ot">&lt;-</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(sampled_cluster_total) <span class="sc">/</span> <span class="fu">sum</span>(sampled_cluster_size)</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  expected_design_estimates[population_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(design_estimates)</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  expected_simple_estimates[population_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(simple_estimates)</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  theta,</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_population =</span> <span class="fu">mean</span>(population_means),</span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_pps =</span> <span class="fu">mean</span>(expected_design_estimates),</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_pps =</span> <span class="fu">mean</span>(expected_design_estimates) <span class="sc">-</span> theta,</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_simple =</span> <span class="fu">mean</span>(expected_simple_estimates),</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_simple =</span> <span class="fu">mean</span>(expected_simple_estimates) <span class="sc">-</span> theta</span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     theta mean_population expected_pps bias_pps expected_simple bias_simple
-[1,]   0.3           0.304        0.302  0.00248           0.332      0.0317</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>population_size <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>n_sim_population <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>expected_design_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_sim_population)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>expected_simple_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_sim_population)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>population_means <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, n_sim_population)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>cluster_size <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">each =</span> <span class="dv">5</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="ot">&lt;-</span> <span class="fu">length</span>(cluster_size)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>cluster_id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq_len</span>(n_clusters), cluster_size)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>size_center <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(cluster_size, cluster_size)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>prob_person <span class="ot">&lt;-</span> theta <span class="sc">+</span> <span class="fu">rep</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  (cluster_size <span class="sc">-</span> size_center) <span class="sc">/</span> <span class="dv">12</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  cluster_size</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>sampled_cluster_count <span class="ot">&lt;-</span> <span class="fu">floor</span>(n_clusters <span class="sc">*</span> <span class="fl">0.3</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (population_sim <span class="cf">in</span> <span class="fu">seq_len</span>(n_sim_population)) {</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  outcome <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(population_size, <span class="dv">1</span>, prob_person)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  population_means[population_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(outcome)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  cluster_totals <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, sum)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  cluster_means <span class="ot">&lt;-</span> <span class="fu">tapply</span>(outcome, cluster_id, mean)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  design_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">100</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  simple_estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">100</span>)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (sample_sim <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="dv">100</span>)) {</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    pps_sample <span class="ot">&lt;-</span> <span class="fu">S.piPS</span>(sampled_cluster_count, cluster_size)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    sampled_clusters <span class="ot">&lt;-</span> pps_sample[, <span class="dv">1</span>]</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    sampled_cluster_size <span class="ot">&lt;-</span> cluster_size[sampled_clusters]</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    sampled_cluster_total <span class="ot">&lt;-</span> cluster_totals[sampled_clusters]</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    sampled_cluster_mean <span class="ot">&lt;-</span> cluster_means[sampled_clusters]</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    design_estimates[sample_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sampled_cluster_mean)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    simple_estimates[sample_sim] <span class="ot">&lt;-</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(sampled_cluster_total) <span class="sc">/</span> <span class="fu">sum</span>(sampled_cluster_size)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  expected_design_estimates[population_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(design_estimates)</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  expected_simple_estimates[population_sim] <span class="ot">&lt;-</span> <span class="fu">mean</span>(simple_estimates)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>double_simulation_results <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  theta,</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_population =</span> <span class="fu">mean</span>(population_means),</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_pps =</span> <span class="fu">mean</span>(expected_design_estimates),</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_pps =</span> <span class="dv">100</span> <span class="sc">*</span> (<span class="fu">mean</span>(expected_design_estimates) <span class="sc">-</span> theta) <span class="sc">/</span> theta,</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">expected_simple =</span> <span class="fu">mean</span>(expected_simple_estimates),</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">bias_simple =</span> <span class="dv">100</span> <span class="sc">*</span> (<span class="fu">mean</span>(expected_simple_estimates) <span class="sc">-</span> theta) <span class="sc">/</span> theta</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div id="tbl-ap2-double-simulation" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ap2-double-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;9.3: Inferencia doble: medias simuladas y sesgos relativos (%)
+</figcaption>
+<div aria-describedby="tbl-ap2-double-simulation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Indicador</th>
+<th style="text-align: right;">Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Parámetro del modelo</td>
+<td style="text-align: right;">0.300</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Promedio de las medias poblacionales</td>
+<td style="text-align: right;">0.304</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Promedio del estimador basado en el diseño</td>
+<td style="text-align: right;">0.302</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sesgo relativo del estimador basado en el diseño (%)</td>
+<td style="text-align: right;">0.826</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Promedio del estimador simple</td>
+<td style="text-align: right;">0.332</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sesgo relativo del estimador simple (%)</td>
+<td style="text-align: right;">10.560</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<p>El código reproduce las dos fuentes de aleatoriedad. El ciclo externo representa el modelo <span class="math inline">\(\xi\)</span>, porque genera nuevas poblaciones finitas con <code>rbinom()</code>. El ciclo interno representa el diseño <span class="math inline">\(p\)</span>, porque para cada población se seleccionan múltiples muestras con <code>S.piPS()</code>. La salida incluye <code>mean_population</code>, que es el promedio de las medias poblacionales generadas; <code>expected_pps</code>, que resume el comportamiento del estimador que incorpora el diseño; y <code>expected_simple</code>, que resume el promedio simple de la muestra seleccionada. Cuando el diseño se incorpora correctamente, el sesgo Monte Carlo respecto de <code>theta</code> debe ser pequeño. La comparación con <code>expected_simple</code> muestra por qué la inferencia basada en encuestas requiere pesos y varianzas de diseño, incluso cuando se parte de un modelo estadístico sencillo.</p>
-<p>Los resultados de la simulación muestran con claridad el efecto de respetar (o ignorar) el diseño complejo cuando el tamaño del conglomerado está relacionado con la variable de interés. En la simulación, el parámetro poblacional se fija en theta = 0,3 y la media observada entre las 100 poblaciones simuladas es 0,304, una pequeña diferencia atribuible a la variabilidad de Monte Carlo. El estimador basado en el promedio simple de las medias de los conglomerados seleccionados alcanza 0,302. Esto ocurre porque la probabilidad de seleccionar cada conglomerado es proporcional a su tamaño: al promediar las medias de los conglomerados seleccionados, la selección introduce precisamente la ponderación por tamaño necesaria para recuperar la media a nivel de personas. Por ello, el sesgo reportado es prácticamente nulo (0,00248).</p>
-<p>En contraste, el estimador que combina todos los individuos pertenecientes a los conglomerados seleccionados como si constituyeran una muestra simple, tiene una media de 0,332 presentando un sesgo positivo (0,0317). El problema es que los conglomerados grandes ya tienen una probabilidad mayor de ser seleccionados por el diseño y, posteriormente, al calcular la media agrupando todos sus individuos, vuelven a recibir mayor peso debido a que contienen más personas. Se produce así una especie de doble ponderación por tamaño. El ejercicio ilustra, por tanto, que ignorar las probabilidades de selección puede producir sesgo cuando el diseño es informativo.</p>
+</figure>
+</div>
+</div>
+<p>El código reproduce las dos fuentes de aleatoriedad. El ciclo externo representa el modelo <span class="math inline">\(\xi\)</span>, porque genera nuevas poblaciones finitas con <code>rbinom()</code>. El ciclo interno representa el diseño <span class="math inline">\(p\)</span>, porque para cada población se seleccionan múltiples muestras con <code>S.piPS()</code>. La <a href="#tbl-ap2-double-simulation" class="quarto-xref">tabla&nbsp;<span>9.3</span></a> incluye <code>mean_population</code>, que es el promedio de las medias poblacionales generadas; <code>expected_pps</code>, que resume el comportamiento del estimador que incorpora el diseño; y <code>expected_simple</code>, que resume el promedio simple de la muestra seleccionada. Cuando el diseño se incorpora correctamente, el sesgo relativo de Monte Carlo respecto de <code>theta</code> debe ser pequeño. La comparación con <code>expected_simple</code> muestra por qué la inferencia basada en encuestas requiere pesos y varianzas de diseño, incluso cuando se parte de un modelo estadístico sencillo.</p>
+<p>Los resultados de la simulación muestran con claridad el efecto de respetar (o ignorar) el diseño complejo cuando el tamaño del conglomerado está relacionado con la variable de interés. En la simulación, el parámetro poblacional se fija en theta = 0,3 y la media observada entre las 100 poblaciones simuladas es 0,304, una pequeña diferencia atribuible a la variabilidad de Monte Carlo. El estimador basado en el promedio simple de las medias de los conglomerados seleccionados alcanza 0,302. Esto ocurre porque la probabilidad de seleccionar cada conglomerado es proporcional a su tamaño: al promediar las medias de los conglomerados seleccionados, la selección introduce precisamente la ponderación por tamaño necesaria para recuperar la media a nivel de personas. Por ello, el sesgo relativo reportado es prácticamente nulo (0,82563 %).</p>
+<p>En contraste, el estimador que combina todos los individuos pertenecientes a los conglomerados seleccionados como si constituyeran una muestra simple, tiene una media de 0,332 presentando un sesgo relativo positivo (10,5600 %). El problema es que los conglomerados grandes ya tienen una probabilidad mayor de ser seleccionados por el diseño y, posteriormente, al calcular la media agrupando todos sus individuos, vuelven a recibir mayor peso debido a que contienen más personas. Se produce así una especie de doble ponderación por tamaño. El ejercicio ilustra, por tanto, que ignorar las probabilidades de selección puede producir sesgo cuando el diseño es informativo.</p>
 <p>En síntesis, como explica <span class="citation" data-cites="pfeffermann1993role">Pfeffermann (<a href="references.html#ref-pfeffermann1993role" role="doc-biblioref">1993</a>)</span>, la máxima verosimilitud es adecuada cuando las observaciones pueden tratarse como IID bajo un modelo probabilístico. En encuestas complejas, la máxima pseudo-verosimilitud ofrece una extensión natural: conserva la estructura de las ecuaciones de estimación, pero pondera cada contribución individual por su peso muestral. La ponderación protege frente a ciertos diseños informativos o a determinadas especificaciones incorrectas, pero su necesidad y sus propiedades dependen del diseño y del modelo. Así, los modelos estadísticos se ajustan de manera más coherente con la población que la encuesta busca representar.</p>
 
 
