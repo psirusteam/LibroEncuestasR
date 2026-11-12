@@ -108,7 +108,7 @@ tabla_fmt(income_total_table,
 
 De la tabla, se obtiene que la estimación corresponde a la suma ponderada del ingreso per cápita asociado a las personas representadas por la encuesta. No debe interpretarse como el ingreso total de los hogares. Este valor incorpora los factores de expansión y las características del diseño muestral. El error estándar asociado a esta estimación es de `r formatC(income_total_table$total_se, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`, lo que refleja la variabilidad muestral del estimador. A partir de este valor se construye un intervalo de confianza del 95%, cuyos límites inferior y superior son `r formatC(income_total_table$total_low, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` y `r formatC(income_total_table$total_upp, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`, respectivamente. El efecto de diseño (`deff`), en el sentido desarrollado por @kish1965survey, es cercano a `r formatC(income_total_table$total_deff, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")`: la varianza supera considerablemente la del diseño de referencia. Su magnitud refleja el efecto combinado del diseño y la ponderación y no debe interpretarse como una pérdida ligera de precisión.
 
-Para continuar ilustrando el uso de la función `survey_total()`, estimemos el total poblacional del gasto per cápita, pero ahora calculando el intervalo de confianza al 90%. El siguiente código realiza esta estimación, presentada en la @tbl-total-gasto:
+Para continuar ilustrando el uso de la función `survey_total()`, estimemos el total poblacional del gasto per cápita y su intervalo de confianza del 95 %. El siguiente código realiza esta estimación, presentada en la @tbl-total-gasto:
 
 ```{r code-total-expenditure}
 #| results: hide
@@ -117,7 +117,7 @@ expenditure_total_table <- survey_design %>%
     total = survey_total(
       Expenditure,
       vartype = "ci",
-      level = 0.9,
+      level = 0.95,
       deff = TRUE
     )
   )
@@ -126,10 +126,10 @@ expenditure_total_table
 ```
 ```{r}
 #| label: tbl-total-gasto
-#| tbl-cap: "Estimación del total poblacional del gasto per cápita con intervalo de confianza al 90%"
+#| tbl-cap: "Estimación del total poblacional del gasto per cápita con intervalo de confianza al 95 %"
 #| echo: false
 tabla_fmt(expenditure_total_table,
-          col.names = c("Total", "LI 90 %", "LS 90 %", "Efecto de diseño"))
+          col.names = c("Total", "LI 95 %", "LS 95 %", "Efecto de diseño"))
 ```
 
 
@@ -358,7 +358,7 @@ $$ {#eq-varianza-razon}
 
 Las varianzas de los totales y su covarianza se estiman considerando los estratos, las UPM y los pesos del diseño. El término de covarianza recoge la variación conjunta del numerador y del denominador, calculados sobre la misma muestra, por lo que no deben suponerse independientes. De manera equivalente, es poisble estimar la varianza del total ponderado de la variable linealizada $z_{hik}=y_{hik}-\hat{R}x_{hik}$ mediante el método del último conglomerado y dividir por $\hat{t}_x^{\,2}$. La raíz cuadrada de la varianza aproximada es el error estándar de $\hat{R}$. La función `survey_ratio()` realiza esta estimación y permite obtener las correspondientes medidas de precisión.
 
-Como primer ejemplo de aplicación, se estima el índice de masculinidad (*sex ratio*, en inglés), definido como el número de hombres por cada 100 mujeres en la población representada por la encuesta. Su estimador es:
+Como primer ejemplo de aplicación, se estima el índice de masculinidad (*sex ratio*, en inglés), definido como el número de hombres por cada 100 mujeres en la población representada por la encuesta. En la fórmula, $\hat N_{\mathrm{hombres}}$ y $\hat N_{\mathrm{mujeres}}$ representan los totales poblacionales estimados de hombres y mujeres, respectivamente. Su estimador es:
 
 $$
 \hat R_{\mathrm{SR}}
@@ -425,7 +425,7 @@ tabla_fmt(
 
 La @tbl-razon-sexo-rural estima `r round(rural_sex_ratio_table$ratio, 2)` hombres por cada 100 mujeres en la zona rural. Su error estándar es `r round(rural_sex_ratio_table$ratio_se, 2)` y el intervalo de confianza del 95 % va de `r round(rural_sex_ratio_table$ratio_low, 2)` a `r round(rural_sex_ratio_table$ratio_upp, 2)`. Como el intervalo `r if (rural_sex_ratio_table$ratio_low <= 100 && rural_sex_ratio_table$ratio_upp >= 100) "incluye" else "no incluye"` el valor 100, al nivel del 5 % `r if (rural_sex_ratio_table$ratio_low <= 100 && rural_sex_ratio_table$ratio_upp >= 100) "no existe evidencia suficiente para concluir que las cantidades de hombres y mujeres difieren" else "existe evidencia de una diferencia entre las cantidades de hombres y mujeres"` en este dominio.
 
-Una aplicación demográfica de las razones es el índice de envejecimiento (*Ageing Index*, en inglés). De acuerdo con la definición de @CEPAL2022PanoramaEnvejecimiento, se calcula como el número de personas de 60 años o más por cada 100 personas de 0 a 14 años. Su estimador es:
+Una aplicación demográfica de las razones es el índice de envejecimiento (*Ageing Index*, en inglés). De acuerdo con la definición de @CEPAL2022PanoramaEnvejecimiento, se calcula como el número de personas de 60 años o más por cada 100 personas de 0 a 14 años. En la fórmula, $\hat N_{60+}$ representa el total estimado de personas de 60 años o más y $\hat N_{0-14}$, el total estimado de personas de 0 a 14 años. Su estimador es:
 
 $$
 \hat R_{\mathrm{AI}}
@@ -505,7 +505,7 @@ tabla_fmt(
 
 La @tbl-indice-envejecimiento-zona presenta un índice de `r round(zone_aging_index$aging[zone_aging_index$Zone == "Rural"], 2)` en la zona rural y de `r round(zone_aging_index$aging[zone_aging_index$Zone == "Urban"], 2)` en la urbana. En cada caso, el valor indica cuántas personas de 60 años o más se estiman por cada 100 menores de 15 años del dominio. Los intervalos de confianza describen la incertidumbre de las estimaciones.
 
-Otra aplicación demográfica de las razones es la razón de dependencia total (*Total Dependency Ratio*, en inglés), que describe la composición por edad de la población. Adoptando la definición de [CEPALSTAT](https://statistics.cepal.org/portal/cepalstat/technical-sheet.html?indicator_id=35&lang=es), el estimador estaría dado por el número de personas de 0 a 14 años y de 65 años o más por cada 100 personas de 15 a 64 años. Su estimador está dado por:
+Otra aplicación demográfica de las razones es la razón de dependencia total (*Total Dependency Ratio*, en inglés), que describe la composición por edad de la población. Adoptando la definición de [CEPALSTAT](https://statistics.cepal.org/portal/cepalstat/technical-sheet.html?indicator_id=35&lang=es), se calcula como el número de personas de 0 a 14 años y de 65 años o más por cada 100 personas de 15 a 64 años. En la fórmula, $\hat N_{0-14}$ y $\hat N_{65+}$ son los totales estimados de esos grupos dependientes, que se suman en el numerador; $\hat N_{15-64}$ es el total estimado de personas de 15 a 64 años y forma el denominador. Su estimador es:
 
 $$
 \hat R_{\mathrm{TDR}} = 100\times\frac{\hat N_{0-14}+\hat N_{65+}}{\hat N_{15-64}}.
@@ -579,7 +579,7 @@ tabla_fmt(
 
 La @tbl-razon-dependencia-zona presenta una razón estimada de `r round(zone_dependency_ratio$dependency[zone_dependency_ratio$Zone == "Rural"], 2)` en la zona rural y de `r round(zone_dependency_ratio$dependency[zone_dependency_ratio$Zone == "Urban"], 2)` en la urbana, siempre por cada 100 personas de 15 a 64 años de la zona correspondiente. Los intervalos describen la incertidumbre de cada estimación. Para evaluar la diferencia entre zonas se requiere estimar directamente su contraste, considerando también la covarianza entre ambas razones, como se desarrolla en la [sección de contrastes](04-Continuas-alternativa.qmd#estimacion-de-contrastes).
 
-También puede definirse una razón de dependencia económica potencial (*Economic Dependency Ratio*, en inglés). En este ejemplo se relaciona el número de personas no ocupadas de 15 años o más, que incluye a las desocupadas y a las inactivas, con el número de personas ocupadas de esas edades. Su estimador es:
+También puede definirse una razón de dependencia económica potencial (*Economic Dependency Ratio*, en inglés). En este ejemplo, el numerador corresponde al total estimado de personas no ocupadas de 15 años o más, incluidas las desocupadas y las inactivas; el denominador corresponde al total estimado de personas ocupadas de esas edades. En la fórmula, estos totales se denotan por $\hat N_{\text{no ocupadas, 15+}}$ y $\hat N_{\text{ocupadas, 15+}}$, respectivamente. Su estimador es:
 
 $$
 \hat R_{\mathrm{EDR},15+}
@@ -926,11 +926,8 @@ La covarianza entre variables describe su distribución conjunta en la població
 El siguiente código computacional utiliza `svyvar()` del paquete `survey` para estimar la matriz de varianzas y covarianzas del ingreso y el gasto per cápita, incorporando el diseño muestral. Luego organiza los resultados con los nombres de las variables para presentarlos en la @tbl-covarianza. Esta matriz también permite calcular la correlación entre ambas variables.
 
 ```{r code-covariance}
-cov_matrix <- svyvar(~Income + Expenditure, design = survey_design)
-```
-
-```{r code-covariance-object}
 #| results: hide
+cov_matrix <- svyvar(~Income + Expenditure, design = survey_design)
 income_expenditure_covariance_table <- data.frame(
   Variable = rownames(cov_matrix),
   as.matrix(cov_matrix)
@@ -1008,15 +1005,12 @@ La presencia del término de covarianza, ya estudiado al comparar proporciones, 
 El siguiente código computacional crea primero el objeto `survey_design_heads`, que conserva únicamente las observaciones correspondientes a las personas jefas de hogar, identificadas mediante `PersonID == "idPer01"`, sin perder las características del diseño muestral. Posteriormente, la función `svyttest()` compara el ingreso medio entre las categorías de la variable `Sex`. Se fija `Female` como referencia: el resultado representa hombres menos mujeres. La prueba devuelve un intervalo del 95 %. Para este ejemplo se aplica la convención del capítulo 3: se conserva el registro de la persona principal de cada hogar y se utiliza su factor de expansión como aproximación al peso del hogar. Así se compara el ingreso per cápita entre hogares con jefatura masculina y femenina, con las limitaciones señaladas para esta aproximación. Finalmente, se reúnen la diferencia estimada, el estadístico, el valor-*p*, los grados de libertad y el intervalo de confianza.
 
 ```{r code-ttest-sex, eval=TRUE}
+#| results: hide
 survey_design_heads <- survey_design %>%
   filter(PersonID == "idPer01") %>%
   mutate(Sex = factor(Sex, levels = c("Female", "Male")))
 
 ttest_sex <- svyttest(Income ~ Sex, design = survey_design_heads)
-```
-
-```{r code-ttest-sex-object}
-#| results: hide
 income_sex_test_table <- tibble(
   estimated_difference = ttest_sex$estimate,
   statistic = ttest_sex$statistic,
@@ -1067,6 +1061,7 @@ $$
 En consecuencia, el vector de contraste asociado a esta comparación es $\left[1,\,-1,\,0,\,0,\,0\right]$, donde los coeficientes positivos y negativos indican las poblaciones que se desean comparar y los ceros representan las poblaciones excluidas del contraste. En `R`, estos procedimientos se encuentran disponibles mediante la función `svycontrast()` del paquete `survey`. El siguiente código computacional estima las medias regionales de ingreso, conserva sus covarianzas y organiza los resultados para presentarlos en la @tbl-prom-region.
 
 ```{r code-mean-region, eval=TRUE}
+#| results: hide
 region_mean_contrast <- svyby(
   formula = ~ Income,
   by = ~ Region,
@@ -1076,10 +1071,6 @@ region_mean_contrast <- svyby(
   covmat = TRUE,
   vartype = c("se", "ci")
 )
-```
-
-```{r code-mean-region-object}
-#| results: hide
 regional_income_means_table <- region_mean_contrast
 
 regional_income_means_table
@@ -1099,16 +1090,13 @@ La función `svyby()` estima el ingreso medio por región, de acuerdo con el dis
 Luego, la función `svycontrast()` devuelve el contraste estimado y su error estándar, como se muestra en la @tbl-contraste-ns. Los argumentos de esta función son los promedios de los ingresos estimados (`stat`) y las constantes de contraste (`contrasts`). Para los contrastes lineales de esta sección, el error estándar se calcula a partir de la matriz de varianzas y covarianzas de las estimaciones que se comparan. Si se aplica `confint()` directamente al resultado de `svycontrast()`, el intervalo de Wald utiliza por defecto un cuantil normal. En las tablas de contrastes de esta sección se adopta una distribución $t$ de Student con los grados de libertad del diseño utilizado en cada comparación. Los límites se calculan explícitamente con `qt()` y `degf()`. Para estos contrastes se obtienen los mismos límites al usar `confint()` con `df = degf(diseño)` y el mismo nivel de confianza. El siguiente código computacional estima la diferencia entre los ingresos medios de Norte y Sur mediante `svycontrast()` y reúne el contraste, su error estándar y su intervalo de confianza para presentarlos en la tabla.
 
 ```{r code-contrast-north-south}
+#| results: hide
 contrast_region_ns <- svycontrast(
   stat = region_mean_contrast,
   contrasts = list(
     north_south_difference = c(North = 1, South = -1)
   )
 )
-```
-
-```{r code-contrast-north-south-object}
-#| results: hide
 critical <- qt(0.975, df = degf(survey_design))
 north_south_income_contrast_table <- tibble(
   contrast = names(coef(contrast_region_ns)),
@@ -1144,12 +1132,9 @@ region_income_mean["North"] - region_income_mean["South"]
 El siguiente código computacional obtiene la matriz de varianzas y covarianzas y la organiza con los nombres de las regiones para presentarla en la @tbl-vcov-region. De ella se extraen los elementos correspondientes a Norte y Sur. Las covarianzas estimadas entre las regiones son todas nulas, lo que resulta coherente con el diseño muestral, dado que la estratificación se realizó por región y la selección de la muestra se efectuó de manera independiente en cada estrato. En consecuencia, los estimadores regionales no comparten unidades muestrales y su covarianza bajo el diseño es igual a cero.
 
 ```{r code-vcov-region, eval=TRUE}
+#| results: hide
 # Paso 2: matriz de varianzas y covarianzas
 region_vcov <- vcov(region_mean_contrast)
-```
-
-```{r code-vcov-region-object}
-#| results: hide
 regional_income_covariance_table <- region_vcov %>%
   as.data.frame() %>%
   tibble::rownames_to_column("Region")
@@ -1198,6 +1183,7 @@ $$
 Se estiman varias diferencias, sin realizar aquí una prueba conjunta ni un ajuste de comparaciones múltiples. El orden de columnas es Norte, Sur, Centro, Occidente y Oriente; el código asigna coeficientes por nombre. En esta matriz, cada fila define un contraste distinto y cada columna corresponde a una de las regiones consideradas en el análisis. Los coeficientes positivos y negativos indican las medias que participan en cada comparación, mientras que los ceros representan las regiones que no intervienen en el contraste correspondiente. El siguiente código computacional estima estos contrastes y organiza las diferencias regionales, sus errores estándar y sus intervalos de confianza para presentarlos en la @tbl-contraste-regiones.
 
 ```{r code-contrasts-regions, eval=TRUE}
+#| results: hide
 contrast_regions <- svycontrast(
   stat = region_mean_contrast,
   contrasts = list(
@@ -1206,10 +1192,6 @@ contrast_regions <- svycontrast(
     west_east = c(West = 1, East = -1)
   )
 )
-```
-
-```{r code-contrast-regions-object}
-#| results: hide
 critical <- qt(0.975, df = degf(survey_design))
 regional_income_contrasts_table <- tibble(
   contrast = names(coef(contrast_regions)),
@@ -1234,6 +1216,7 @@ tabla_fmt(regional_income_contrasts_table,
 También pueden construirse contrastes para comparar el ingreso per cápita según el sexo de la persona jefa del hogar. El siguiente código computacional utiliza `survey_design_heads` para estimar la media de cada grupo y organizar las estimaciones y sus medidas de precisión, presentadas en la @tbl-prom-sexo.
 
 ```{r code-mean-sex, eval=TRUE}
+#| results: hide
 sex_mean_contrast <- svyby(
   formula = ~ Income,
   by = ~ Sex,
@@ -1243,10 +1226,6 @@ sex_mean_contrast <- svyby(
   covmat = TRUE,
   vartype = c("se", "ci")
 )
-```
-
-```{r code-mean-sex-object}
-#| results: hide
 income_means_by_sex_table <- sex_mean_contrast %>%
   as_tibble()
 
@@ -1266,16 +1245,13 @@ tabla_fmt(income_means_by_sex_table,
 En este caso, el contraste de interés está dado por $\bar{y}_{F} - \bar{y}_{M}$, el cual permite cuantificar la diferencia entre el ingreso medio de las mujeres y el correspondiente a los hombres. El siguiente código computacional estima esta diferencia mediante `svycontrast()` y organiza su error estándar e intervalo de confianza para presentarlos en la @tbl-contraste-sexo.
 
 ```{r code-contrast-sex}
+#| results: hide
 contrast_sex <- svycontrast(
   stat = sex_mean_contrast,
   contrasts = list(
     sex_difference = c(Female = 1, Male = -1)
   )
 )
-```
-
-```{r code-contrast-sex-object}
-#| results: hide
 critical <- qt(0.975, df = degf(survey_design_heads))
 income_sex_contrast_table <- tibble(
   contrast = names(coef(contrast_sex)),
@@ -1302,6 +1278,7 @@ A partir de estos resultados, se concluye que, el ingreso per cápita asociado a
 Un contraste lineal también puede combinar razones estimadas, aunque cada razón sea una función no lineal de totales. En este ejemplo se utiliza ingreso/gasto, la orientación inversa de gasto/ingreso empleada anteriormente. Un ejemplo de ello consiste en comparar la relación entre ingresos y gastos según el sexo del jefe de hogar. En este caso, primero se estima la razón ingreso-gasto para cada grupo y posteriormente se construye el contraste entre dichas razones. El siguiente código computacional estima las razones ingreso/gasto por sexo y organiza sus medidas de precisión para presentarlas en la @tbl-razon-ingreso-gasto-sexo.
 
 ```{r code-ratio-income-expenditure-sex, echo=TRUE, eval=TRUE}
+#| results: hide
 sex_ratio_contrast <- svyby(
   formula = ~ Income,
   by = ~ Sex,
@@ -1312,10 +1289,6 @@ sex_ratio_contrast <- svyby(
   covmat = TRUE,
   vartype = c("se", "ci")
 )
-```
-
-```{r code-ratio-income-expenditure-sex-object}
-#| results: hide
 income_expenditure_ratio_by_sex_table <- sex_ratio_contrast
 
 income_expenditure_ratio_by_sex_table
@@ -1335,16 +1308,13 @@ tabla_fmt(income_expenditure_ratio_by_sex_table,
 El siguiente código computacional utiliza `svycontrast()` para comparar las razones ingreso/gasto de los hogares con jefatura femenina y masculina, incorporando el diseño muestral. La diferencia, su error estándar y su intervalo de confianza se presentan en la @tbl-contraste-razon-sexo.
 
 ```{r code-contrast-ratio-sex}
+#| results: hide
 contrast_sex_ratio <- svycontrast(
   stat = sex_ratio_contrast,
   contrasts = list(
     sex_difference = c(Female = 1, Male = -1)
   )
 )
-```
-
-```{r code-contrast-ratio-sex-object}
-#| results: hide
 critical <- qt(0.975, df = degf(survey_design_heads))
 sex_ratio_contrast_table <- tibble(
   contrast = names(coef(contrast_sex_ratio)),

@@ -135,15 +135,10 @@ En la especificación del modelo, el argumento `formula = poor ~ Age + Sex + Emp
 
 El objeto resultante, `logit_model`, contiene los parámetros estimados, sus medidas de precisión y las estadísticas necesarias para realizar inferencia sobre la relación entre la condición de pobreza y las variables explicativas consideradas en el modelo. El siguiente código computacional organiza los coeficientes del modelo logístico, sus medidas de precisión y sus exponenciales para presentarlos en la tabla.
 
-```{r code-results-logistic, echo = FALSE}
+```{r code-results-logistic, echo = TRUE}
 #| results: hide
 logit_results <- tidy(logit_model, conf.int = TRUE, conf.level = 0.95)
 
-logit_results
-```
-
-```{r code-ci-logistic-object}
-#| results: hide
 logistic_intervals_table <- logit_results %>%
   mutate(OR = exp(estimate)) %>%
   dplyr::select(-statistic)
@@ -181,27 +176,19 @@ plot_summs(
 El modelo puede ampliarse incorporando términos de interacción para evaluar si el efecto de una variable explicativa depende de los valores que toma otra. En este caso, se incluye una interacción entre el sexo del jefe y el tamaño del hogar mediante el término `Sex:household_size`, con el objetivo de analizar si la relación entre el número de integrantes y las *odds* de pobreza es la misma para hogares con jefatura masculina y femenina. Sin este término, el modelo asume que la pendiente del tamaño del hogar sobre el logit de pobreza es idéntica para ambos tipos de jefatura. En cambio, al incorporar la interacción, se permite que dicha pendiente varíe, capturando posibles diferencias en la forma en que el tamaño del hogar se asocia con la pobreza en cada grupo. Los resultados del modelo ajustado se presentan en la @tbl-logistica-interaccion. El siguiente código computacional ajusta este modelo y reúne los coeficientes, sus errores estándar, los intervalos de confianza y sus exponenciales para facilitar la comparación.
 
 ```{r model-logistic-interaction, echo = TRUE, eval = TRUE}
+#| results: hide
 interaction_logit_model <- svyglm(
   formula = poor ~ Age + Sex + Employment +
     household_size + Sex:household_size,
   family = quasibinomial(),
   design = household_design
 )
-```
-
-```{r code-results-logistic-interaction, echo = FALSE}
-#| results: hide
 interaction_logit_results <- tidy(
   interaction_logit_model,
   conf.int = TRUE,
   conf.level = 0.95
 )
 
-interaction_logit_results
-```
-
-```{r code-logistic-interaction-object}
-#| results: hide
 interaction_logistic_coefficients_table <- interaction_logit_results %>%
   mutate(OR = exp(estimate)) %>%
   dplyr::select(-statistic)
@@ -419,16 +406,13 @@ tidy.svyVGAM <- function(x,
 
 La @tbl-multinomial-coef presenta los coeficientes estimados del modelo logístico multinomial, tomando la categoría `Unemployed` como referencia. Los errores estándar y los intervalos de confianza del 95 % se expresan en la escala de los coeficientes $\beta$. Para el intercepto, la exponencial es la razón de probabilidades del perfil de referencia, no una comparación entre perfiles. Los resultados muestran que la edad tiene una asociación positiva y estadísticamente significativa con las probabilidades relativas de pertenecer a las categorías `Inactive` y `Employed` frente a `Unemployed`. Asimismo, la variable `SexMale` presenta coeficientes negativos y significativos, indicando que, manteniendo constantes la edad y la zona, los hombres tienen menores razones relativas de estar `Inactive` o `Employed` frente a estar `Unemployed` que las mujeres. Por el contrario, la variable de zona de residencia no muestra efectos estadísticamente significativos al nivel convencional del 5%. El siguiente código computacional prepara los coeficientes del modelo multinomial para la tabla: asigna etiquetas a las categorías de respuesta y calcula la razón de riesgo relativo como la exponencial del coeficiente.
 
-```{r calculate-multinomial-coefficients, echo = FALSE}
+```{r calculate-multinomial-coefficients, echo = TRUE}
+#| results: hide
 multinomial_results <- tidy.svyVGAM(
   multinomial_model,
   exponentiate = FALSE,
   conf.int = TRUE
 )
-```
-
-```{r code-multinomial-coefficients-object}
-#| results: hide
 multinomial_coefficients_table <- multinomial_results %>%
   mutate(
     y.level = recode(y.level, `1` = "Inactive", `2` = "Employed"),
@@ -537,15 +521,12 @@ En donde $k$ representa las unidades de observación de la muestra y $w_k$ corre
 El siguiente código computacional ajusta, mediante `svyglm()`, un modelo de regresión Gamma para el ingreso per cápita del hogar (`Income`), incorporando el diseño complejo de la encuesta conservado en el objeto `household_design`. La unidad de análisis es el hogar, con una observación por hogar identificada mediante `PersonID == "idPer01"`, siguiendo la convención utilizada en el modelo logístico. La muestra de análisis contiene `r formatC(nrow(household_design$variables), format = "f", digits = 0, big.mark = ".", decimal.mark = ",")` hogares; las categorías de referencia son jefatura masculina y zona rural. El modelo utiliza como variables explicativas el gasto per cápita del hogar (`Expenditure`), la edad del jefe de hogar (`Age`), su sexo (`Sex`) y la zona de residencia (`Zone`). Asimismo, se especifica una función de enlace logarítmica, garantizando predicciones positivas y permitiendo interpretar los efectos de las variables explicativas en términos multiplicativos sobre el ingreso per cápita esperado. Finalmente, se reúnen los coeficientes, sus medidas de precisión y los factores multiplicativos correspondientes para presentarlos en la @tbl-gamma-coeficientes.
 
 ```{r fit-model-gamma, echo = TRUE, eval = TRUE}
+#| results: hide
 gamma_model <- svyglm(
   formula = Income ~ Expenditure + Age + Sex + Zone,
   design = household_design,
   family = Gamma(link = "log")
 )
-```
-
-```{r code-gamma-coefficients-object}
-#| results: hide
 gamma_results <- broom::tidy(
   gamma_model,
   conf.int = TRUE,
@@ -554,8 +535,6 @@ gamma_results <- broom::tidy(
 gamma_coefficients_table <- gamma_results %>%
   mutate(factor = exp(estimate)) %>%
   dplyr::select(-statistic)
-
-gamma_coefficients_table
 ```
 
 ```{r}

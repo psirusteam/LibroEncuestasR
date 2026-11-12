@@ -137,12 +137,10 @@ $$
 
 En este capítulo se mostrará cómo implementar estos modelos en `R` mediante las librerías `survey` y `srvyr`, junto con `tidyverse` para organizar el flujo de trabajo. Se abordará la especificación del diseño muestral, la estimación de modelos lineales, así como la obtención de errores estándar y pruebas de hipótesis ajustadas al diseño, integrando los fundamentos teóricos con ejemplos prácticos reproducibles. Para ejemplificar los conceptos desarrollados hasta este punto, se empleará la misma base de datos utilizada a lo largo del libro. El siguiente código computacional carga los paquetes y los datos, prepara las variables categóricas y define el diseño de muestreo que se utilizará en los modelos del capítulo.
 
-```{r options-regression, echo = FALSE}
+```{r prepare-design-regression, eval = TRUE, echo = TRUE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, error = FALSE)
 options(digits = 4)
-```
 
-```{r prepare-design-regression, eval = TRUE}
 library(survey)
 library(srvyr)
 library(tidyverse)

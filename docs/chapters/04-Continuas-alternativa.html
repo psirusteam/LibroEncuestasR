@@ -464,14 +464,14 @@ Tabla&nbsp;4.1: Estimación del total poblacional del ingreso per cápita con in
 </div>
 </div>
 <p>De la tabla, se obtiene que la estimación corresponde a la suma ponderada del ingreso per cápita asociado a las personas representadas por la encuesta. No debe interpretarse como el ingreso total de los hogares. Este valor incorpora los factores de expansión y las características del diseño muestral. El error estándar asociado a esta estimación es de 4.778.674, lo que refleja la variabilidad muestral del estimador. A partir de este valor se construye un intervalo de confianza del 95%, cuyos límites inferior y superior son 76.331.414 y 95.255.920, respectivamente. El efecto de diseño (<code>deff</code>), en el sentido desarrollado por <span class="citation" data-cites="kish1965survey">Kish (<a href="references.html#ref-kish1965survey" role="doc-biblioref">1965</a>)</span>, es cercano a 11: la varianza supera considerablemente la del diseño de referencia. Su magnitud refleja el efecto combinado del diseño y la ponderación y no debe interpretarse como una pérdida ligera de precisión.</p>
-<p>Para continuar ilustrando el uso de la función <code>survey_total()</code>, estimemos el total poblacional del gasto per cápita, pero ahora calculando el intervalo de confianza al 90%. El siguiente código realiza esta estimación, presentada en la <a href="#tbl-total-gasto" class="quarto-xref">tabla&nbsp;<span>4.2</span></a>:</p>
+<p>Para continuar ilustrando el uso de la función <code>survey_total()</code>, estimemos el total poblacional del gasto per cápita y su intervalo de confianza del 95 %. El siguiente código realiza esta estimación, presentada en la <a href="#tbl-total-gasto" class="quarto-xref">tabla&nbsp;<span>4.2</span></a>:</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>expenditure_total_table <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">total =</span> <span class="fu">survey_total</span>(</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      Expenditure,</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="st">"ci"</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.9</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span>,</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">deff =</span> <span class="cn">TRUE</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  )</span>
@@ -482,7 +482,7 @@ Tabla&nbsp;4.1: Estimación del total poblacional del ingreso per cápita con in
 <div id="tbl-total-gasto" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-total-gasto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabla&nbsp;4.2: Estimación del total poblacional del gasto per cápita con intervalo de confianza al 90%
+Tabla&nbsp;4.2: Estimación del total poblacional del gasto per cápita con intervalo de confianza al 95 %
 </figcaption>
 <div aria-describedby="tbl-total-gasto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -490,16 +490,16 @@ Tabla&nbsp;4.2: Estimación del total poblacional del gasto per cápita con inte
 <thead>
 <tr class="header">
 <th style="text-align: right;">Total</th>
-<th style="text-align: right;">LI 90 %</th>
-<th style="text-align: right;">LS 90 %</th>
+<th style="text-align: right;">LI 95 %</th>
+<th style="text-align: right;">LS 95 %</th>
 <th style="text-align: right;">Efecto de diseño</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">55677504</td>
-<td style="text-align: right;">51360469</td>
-<td style="text-align: right;">59994539</td>
+<td style="text-align: right;">50521050</td>
+<td style="text-align: right;">60833958</td>
 <td style="text-align: right;">10.2</td>
 </tr>
 </tbody>
@@ -944,7 +944,7 @@ Tabla&nbsp;4.7: Media poblacional del gasto per cápita desagregada por zona y r
 {\hat{t}_x^{\,2}}.
 \tag{4.10}\]</span></span></p>
 <p>Las varianzas de los totales y su covarianza se estiman considerando los estratos, las UPM y los pesos del diseño. El término de covarianza recoge la variación conjunta del numerador y del denominador, calculados sobre la misma muestra, por lo que no deben suponerse independientes. De manera equivalente, es poisble estimar la varianza del total ponderado de la variable linealizada <span class="math inline">\(z_{hik}=y_{hik}-\hat{R}x_{hik}\)</span> mediante el método del último conglomerado y dividir por <span class="math inline">\(\hat{t}_x^{\,2}\)</span>. La raíz cuadrada de la varianza aproximada es el error estándar de <span class="math inline">\(\hat{R}\)</span>. La función <code>survey_ratio()</code> realiza esta estimación y permite obtener las correspondientes medidas de precisión.</p>
-<p>Como primer ejemplo de aplicación, se estima el índice de masculinidad (<em>sex ratio</em>, en inglés), definido como el número de hombres por cada 100 mujeres en la población representada por la encuesta. Su estimador es:</p>
+<p>Como primer ejemplo de aplicación, se estima el índice de masculinidad (<em>sex ratio</em>, en inglés), definido como el número de hombres por cada 100 mujeres en la población representada por la encuesta. En la fórmula, <span class="math inline">\(\hat N_{\mathrm{hombres}}\)</span> y <span class="math inline">\(\hat N_{\mathrm{mujeres}}\)</span> representan los totales poblacionales estimados de hombres y mujeres, respectivamente. Su estimador es:</p>
 <p><span id="eq-indice-masculinidad"><span class="math display">\[
 \hat R_{\mathrm{SR}}
 =
@@ -1044,7 +1044,7 @@ Tabla&nbsp;4.9: Índice de masculinidad: hombres por cada 100 mujeres en zona ru
 </div>
 </div>
 <p>La <a href="#tbl-razon-sexo-rural" class="quarto-xref">tabla&nbsp;<span>4.9</span></a> estima 93.62 hombres por cada 100 mujeres en la zona rural. Su error estándar es 3.09 y el intervalo de confianza del 95 % va de 87.43 a 99.82. Como el intervalo no incluye el valor 100, al nivel del 5 % existe evidencia de una diferencia entre las cantidades de hombres y mujeres en este dominio.</p>
-<p>Una aplicación demográfica de las razones es el índice de envejecimiento (<em>Ageing Index</em>, en inglés). De acuerdo con la definición de <span class="citation" data-cites="CEPAL2022PanoramaEnvejecimiento">Comisión Económica para América Latina y el Caribe (<a href="references.html#ref-CEPAL2022PanoramaEnvejecimiento" role="doc-biblioref">2022</a>)</span>, se calcula como el número de personas de 60 años o más por cada 100 personas de 0 a 14 años. Su estimador es:</p>
+<p>Una aplicación demográfica de las razones es el índice de envejecimiento (<em>Ageing Index</em>, en inglés). De acuerdo con la definición de <span class="citation" data-cites="CEPAL2022PanoramaEnvejecimiento">Comisión Económica para América Latina y el Caribe (<a href="references.html#ref-CEPAL2022PanoramaEnvejecimiento" role="doc-biblioref">2022</a>)</span>, se calcula como el número de personas de 60 años o más por cada 100 personas de 0 a 14 años. En la fórmula, <span class="math inline">\(\hat N_{60+}\)</span> representa el total estimado de personas de 60 años o más y <span class="math inline">\(\hat N_{0-14}\)</span>, el total estimado de personas de 0 a 14 años. Su estimador es:</p>
 <p><span id="eq-indice-envejecimiento"><span class="math display">\[
 \hat R_{\mathrm{AI}}
 =
@@ -1163,7 +1163,7 @@ Tabla&nbsp;4.11: Índice de envejecimiento por zona de residencia
 </div>
 </div>
 <p>La <a href="#tbl-indice-envejecimiento-zona" class="quarto-xref">tabla&nbsp;<span>4.11</span></a> presenta un índice de 30.72 en la zona rural y de 52.32 en la urbana. En cada caso, el valor indica cuántas personas de 60 años o más se estiman por cada 100 menores de 15 años del dominio. Los intervalos de confianza describen la incertidumbre de las estimaciones.</p>
-<p>Otra aplicación demográfica de las razones es la razón de dependencia total (<em>Total Dependency Ratio</em>, en inglés), que describe la composición por edad de la población. Adoptando la definición de <a href="https://statistics.cepal.org/portal/cepalstat/technical-sheet.html?indicator_id=35&amp;lang=es">CEPALSTAT</a>, el estimador estaría dado por el número de personas de 0 a 14 años y de 65 años o más por cada 100 personas de 15 a 64 años. Su estimador está dado por:</p>
+<p>Otra aplicación demográfica de las razones es la razón de dependencia total (<em>Total Dependency Ratio</em>, en inglés), que describe la composición por edad de la población. Adoptando la definición de <a href="https://statistics.cepal.org/portal/cepalstat/technical-sheet.html?indicator_id=35&amp;lang=es">CEPALSTAT</a>, se calcula como el número de personas de 0 a 14 años y de 65 años o más por cada 100 personas de 15 a 64 años. En la fórmula, <span class="math inline">\(\hat N_{0-14}\)</span> y <span class="math inline">\(\hat N_{65+}\)</span> son los totales estimados de esos grupos dependientes, que se suman en el numerador; <span class="math inline">\(\hat N_{15-64}\)</span> es el total estimado de personas de 15 a 64 años y forma el denominador. Su estimador es:</p>
 <p><span id="eq-dependencia-demografica"><span class="math display">\[
 \hat R_{\mathrm{TDR}} = 100\times\frac{\hat N_{0-14}+\hat N_{65+}}{\hat N_{15-64}}.
 \tag{4.13}\]</span></span></p>
@@ -1278,7 +1278,7 @@ Tabla&nbsp;4.13: Razón de dependencia demográfica por zona de residencia
 </div>
 </div>
 <p>La <a href="#tbl-razon-dependencia-zona" class="quarto-xref">tabla&nbsp;<span>4.13</span></a> presenta una razón estimada de 61.52 en la zona rural y de 53.47 en la urbana, siempre por cada 100 personas de 15 a 64 años de la zona correspondiente. Los intervalos describen la incertidumbre de cada estimación. Para evaluar la diferencia entre zonas se requiere estimar directamente su contraste, considerando también la covarianza entre ambas razones, como se desarrolla en la <a href="../chapters/04-Continuas-alternativa.html#estimacion-de-contrastes">sección de contrastes</a>.</p>
-<p>También puede definirse una razón de dependencia económica potencial (<em>Economic Dependency Ratio</em>, en inglés). En este ejemplo se relaciona el número de personas no ocupadas de 15 años o más, que incluye a las desocupadas y a las inactivas, con el número de personas ocupadas de esas edades. Su estimador es:</p>
+<p>También puede definirse una razón de dependencia económica potencial (<em>Economic Dependency Ratio</em>, en inglés). En este ejemplo, el numerador corresponde al total estimado de personas no ocupadas de 15 años o más, incluidas las desocupadas y las inactivas; el denominador corresponde al total estimado de personas ocupadas de esas edades. En la fórmula, estos totales se denotan por <span class="math inline">\(\hat N_{\text{no ocupadas, 15+}}\)</span> y <span class="math inline">\(\hat N_{\text{ocupadas, 15+}}\)</span>, respectivamente. Su estimador es:</p>
 <p><span id="eq-dependencia-economica-potencial"><span class="math display">\[
 \hat R_{\mathrm{EDR},15+}
 =
@@ -1832,15 +1832,13 @@ Figura&nbsp;4.1: Curva de Lorenz estimada para el ingreso per cápita
 <p>La covarianza entre variables describe su distribución conjunta en la población. Es distinta de la covarianza entre estimadores obtenida con <code>vcov()</code> en los contrastes del capítulo anterior.</p>
 <p>El siguiente código computacional utiliza <code>svyvar()</code> del paquete <code>survey</code> para estimar la matriz de varianzas y covarianzas del ingreso y el gasto per cápita, incorporando el diseño muestral. Luego organiza los resultados con los nombres de las variables para presentarlos en la <a href="#tbl-covarianza" class="quarto-xref">tabla&nbsp;<span>4.22</span></a>. Esta matriz también permite calcular la correlación entre ambas variables.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>cov_matrix <span class="ot">&lt;-</span> <span class="fu">svyvar</span>(<span class="sc">~</span>Income <span class="sc">+</span> Expenditure, <span class="at">design =</span> survey_design)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>income_expenditure_covariance_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variable =</span> <span class="fu">rownames</span>(cov_matrix),</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>(cov_matrix)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>income_expenditure_covariance_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>cov_matrix <span class="ot">&lt;-</span> <span class="fu">svyvar</span>(<span class="sc">~</span>Income <span class="sc">+</span> Expenditure, <span class="at">design =</span> survey_design)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>income_expenditure_covariance_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variable =</span> <span class="fu">rownames</span>(cov_matrix),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>(cov_matrix)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>income_expenditure_covariance_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-covarianza" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -1881,25 +1879,25 @@ Tabla&nbsp;4.22: Matriz de varianzas y covarianzas ponderada entre ingreso y gas
 </div>
 <p>La función <code>svyvar</code> estima la matriz de varianzas y covarianzas considerando el diseño muestral. A partir de dicha matriz puede obtenerse la correlación aplicando las siguientes instrucciones:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cov_xy <span class="ot">&lt;-</span> cov_matrix[<span class="dv">1</span>, <span class="dv">2</span>]</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>sd_x <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(cov_matrix[<span class="dv">1</span>, <span class="dv">1</span>])</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>sd_y <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(cov_matrix[<span class="dv">2</span>, <span class="dv">2</span>])</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>weighted_cor <span class="ot">&lt;-</span> cov_xy <span class="sc">/</span> (sd_x <span class="sc">*</span> sd_y)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>weighted_cor</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>cov_xy <span class="ot">&lt;-</span> cov_matrix[<span class="dv">1</span>, <span class="dv">2</span>]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>sd_x <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(cov_matrix[<span class="dv">1</span>, <span class="dv">1</span>])</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>sd_y <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(cov_matrix[<span class="dv">2</span>, <span class="dv">2</span>])</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>weighted_cor <span class="ot">&lt;-</span> cov_xy <span class="sc">/</span> (sd_x <span class="sc">*</span> sd_y)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>weighted_cor</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.714</code></pre>
 </div>
 </div>
 <p>Si además se desea realizar inferencia estadística sobre la correlación, por ejemplo obtener errores estándar o intervalos de confianza, pueden utilizarse métodos de replicación compatibles con el paquete <code>survey</code>. El siguiente código computacional ilustra otra opción: estimar directamente la correlación entre ingreso y gasto con <code>svycor()</code> del paquete <code>jtools</code> <span class="citation" data-cites="jtools2026">(<a href="references.html#ref-jtools2026" role="doc-biblioref">Long 2026</a>)</span>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jtools)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">svycor</span>(</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Income <span class="sc">+</span> Expenditure,</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design,</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sig.stats =</span> <span class="cn">FALSE</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jtools)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">svycor</span>(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Income <span class="sc">+</span> Expenditure,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sig.stats =</span> <span class="cn">FALSE</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            Income Expenditure
 Income        1.00        0.71
@@ -1934,23 +1932,21 @@ Expenditure   0.71        1.00</code></pre>
 <p>La presencia del término de covarianza, ya estudiado al comparar proporciones, es importante porque las estimaciones de ambos dominios suelen provenir de la misma muestra y, por tanto, no necesariamente son independientes. Una vez calculado el estimador y su error estándar, se aplica el procedimiento descrito en la <a href="03-Categoricas-alternativa.html#sec-pruebas-de-hipotesis-sobre-proporciones" class="quarto-xref"><span>Sección 3.4</span></a>, sustituyendo <span class="math inline">\(\hat{\Delta}_p\)</span> por <span class="math inline">\(\hat{\Delta}\)</span>. El estadístico de prueba, su distribución de referencia y el intervalo de confianza se construyen de la misma manera, utilizando los grados de libertad devueltos por <code>svyttest()</code>.</p>
 <p>El siguiente código computacional crea primero el objeto <code>survey_design_heads</code>, que conserva únicamente las observaciones correspondientes a las personas jefas de hogar, identificadas mediante <code>PersonID == "idPer01"</code>, sin perder las características del diseño muestral. Posteriormente, la función <code>svyttest()</code> compara el ingreso medio entre las categorías de la variable <code>Sex</code>. Se fija <code>Female</code> como referencia: el resultado representa hombres menos mujeres. La prueba devuelve un intervalo del 95 %. Para este ejemplo se aplica la convención del capítulo 3: se conserva el registro de la persona principal de cada hogar y se utiliza su factor de expansión como aproximación al peso del hogar. Así se compara el ingreso per cápita entre hogares con jefatura masculina y femenina, con las limitaciones señaladas para esta aproximación. Finalmente, se reúnen la diferencia estimada, el estadístico, el valor-<em>p</em>, los grados de libertad y el intervalo de confianza.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>survey_design_heads <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(PersonID <span class="sc">==</span> <span class="st">"idPer01"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sex =</span> <span class="fu">factor</span>(Sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Female"</span>, <span class="st">"Male"</span>)))</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>ttest_sex <span class="ot">&lt;-</span> <span class="fu">svyttest</span>(Income <span class="sc">~</span> Sex, <span class="at">design =</span> survey_design_heads)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>income_sex_test_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimated_difference =</span> ttest_sex<span class="sc">$</span>estimate,</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> ttest_sex<span class="sc">$</span>statistic,</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_value =</span> ttest_sex<span class="sc">$</span>p.value,</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">gl =</span> ttest_sex<span class="sc">$</span>parameter,</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_lower =</span> ttest_sex<span class="sc">$</span>conf.int[<span class="dv">1</span>],</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_upper =</span> ttest_sex<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>income_sex_test_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>survey_design_heads <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(PersonID <span class="sc">==</span> <span class="st">"idPer01"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sex =</span> <span class="fu">factor</span>(Sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Female"</span>, <span class="st">"Male"</span>)))</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>ttest_sex <span class="ot">&lt;-</span> <span class="fu">svyttest</span>(Income <span class="sc">~</span> Sex, <span class="at">design =</span> survey_design_heads)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>income_sex_test_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimated_difference =</span> ttest_sex<span class="sc">$</span>estimate,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">statistic =</span> ttest_sex<span class="sc">$</span>statistic,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_value =</span> ttest_sex<span class="sc">$</span>p.value,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">gl =</span> ttest_sex<span class="sc">$</span>parameter,</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_lower =</span> ttest_sex<span class="sc">$</span>conf.int[<span class="dv">1</span>],</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">ci_upper =</span> ttest_sex<span class="sc">$</span>conf.int[<span class="dv">2</span>]</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>income_sex_test_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-ttest-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2010,20 +2006,18 @@ Tabla&nbsp;4.23: Diferencia de ingreso per cápita entre personas jefas de hogar
 \]</span></p>
 <p>En consecuencia, el vector de contraste asociado a esta comparación es <span class="math inline">\(\left[1,\,-1,\,0,\,0,\,0\right]\)</span>, donde los coeficientes positivos y negativos indican las poblaciones que se desean comparar y los ceros representan las poblaciones excluidas del contraste. En <code>R</code>, estos procedimientos se encuentran disponibles mediante la función <code>svycontrast()</code> del paquete <code>survey</code>. El siguiente código computacional estima las medias regionales de ingreso, conserva sus covarianzas y organiza los resultados para presentarlos en la <a href="#tbl-prom-region" class="quarto-xref">tabla&nbsp;<span>4.24</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>region_mean_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> <span class="sc">~</span> Income,</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="sc">~</span> Region,</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design,</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> svymean,</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>regional_income_means_table <span class="ot">&lt;-</span> region_mean_contrast</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>regional_income_means_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>region_mean_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> <span class="sc">~</span> Income,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="sc">~</span> Region,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> svymean,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>regional_income_means_table <span class="ot">&lt;-</span> region_mean_contrast</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>regional_income_means_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-prom-region" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2089,24 +2083,22 @@ Tabla&nbsp;4.24: Ingreso medio estimado por región
 <p>La función <code>svyby()</code> estima el ingreso medio por región, de acuerdo con el diseño de muestreo <code>survey_design</code>. El argumento <code>formula = ~Income</code> especifica la variable numérica de interés, mientras que <code>by = ~Region</code> define los dominios para los cuales se realizará la estimación. La opción <code>FUN = svymean</code> indica que debe calcularse la media del ingreso en cada región y <code>na.rm = TRUE</code> excluye las observaciones con valores faltantes. Por su parte, <code>vartype = c("se", "ci")</code> solicita el error estándar y el intervalo de confianza de cada media estimada. Estos intervalos utilizan la aproximación normal, como se explica en la <a href="03-Categoricas-alternativa.html#sec-contrastes-y-diferencias-de-proporciones" class="quarto-xref"><span>Sección 3.5</span></a>. Finalmente, <code>covmat = TRUE</code> calcula la matriz de varianzas y covarianzas entre las estimaciones regionales, lo que permite realizar posteriormente contrastes o comparaciones entre ellas.</p>
 <p>Luego, la función <code>svycontrast()</code> devuelve el contraste estimado y su error estándar, como se muestra en la <a href="#tbl-contraste-ns" class="quarto-xref">tabla&nbsp;<span>4.25</span></a>. Los argumentos de esta función son los promedios de los ingresos estimados (<code>stat</code>) y las constantes de contraste (<code>contrasts</code>). Para los contrastes lineales de esta sección, el error estándar se calcula a partir de la matriz de varianzas y covarianzas de las estimaciones que se comparan. Si se aplica <code>confint()</code> directamente al resultado de <code>svycontrast()</code>, el intervalo de Wald utiliza por defecto un cuantil normal. En las tablas de contrastes de esta sección se adopta una distribución <span class="math inline">\(t\)</span> de Student con los grados de libertad del diseño utilizado en cada comparación. Los límites se calculan explícitamente con <code>qt()</code> y <code>degf()</code>. Para estos contrastes se obtienen los mismos límites al usar <code>confint()</code> con <code>df = degf(diseño)</code> y el mismo nivel de confianza. El siguiente código computacional estima la diferencia entre los ingresos medios de Norte y Sur mediante <code>svycontrast()</code> y reúne el contraste, su error estándar y su intervalo de confianza para presentarlos en la tabla.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>contrast_region_ns <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> region_mean_contrast,</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">north_south_difference =</span> <span class="fu">c</span>(<span class="at">North =</span> <span class="dv">1</span>, <span class="at">South =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>critical <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="fu">degf</span>(survey_design))</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>north_south_income_contrast_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrast =</span> <span class="fu">names</span>(<span class="fu">coef</span>(contrast_region_ns)),</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(contrast_region_ns)),</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(contrast_region_ns)),</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> estimate <span class="sc">-</span> critical <span class="sc">*</span> standard_error,</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> estimate <span class="sc">+</span> critical <span class="sc">*</span> standard_error</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>north_south_income_contrast_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>contrast_region_ns <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> region_mean_contrast,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">north_south_difference =</span> <span class="fu">c</span>(<span class="at">North =</span> <span class="dv">1</span>, <span class="at">South =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>critical <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="fu">degf</span>(survey_design))</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>north_south_income_contrast_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrast =</span> <span class="fu">names</span>(<span class="fu">coef</span>(contrast_region_ns)),</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(contrast_region_ns)),</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(contrast_region_ns)),</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> estimate <span class="sc">-</span> critical <span class="sc">*</span> standard_error,</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> estimate <span class="sc">+</span> critical <span class="sc">*</span> standard_error</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>north_south_income_contrast_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-contraste-ns" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2143,13 +2135,13 @@ Tabla&nbsp;4.25: Contraste de ingresos medios: región North menos región South
 </div>
 <p>La estimación de la diferencia de medias indica que el ingreso promedio en la región Norte es aproximadamente 73,4 dólares inferior al observado en la región Sur. Sin embargo, el error estándar de 83,4 es mayor que la diferencia estimada, lo que refleja una incertidumbre considerable. Por tanto, no hay evidencia suficiente para concluir que exista una diferencia estadísticamente significativa entre ambas regiones. Nótese que estos mismos resultados podrían obtenerse realizando explícitamente el proceso de construcción del estimador del contraste y de su varianza estimada. El siguiente código computacional inicia este cálculo directo restando el ingreso medio estimado de Sur al de Norte.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 1: diferencia de las estimaciones (North - South)</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>region_income_mean <span class="ot">&lt;-</span> <span class="fu">setNames</span>(</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>(region_mean_contrast[[<span class="st">"Income"</span>]]),</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  region_mean_contrast[[<span class="st">"Region"</span>]]</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>region_income_mean[<span class="st">"North"</span>] <span class="sc">-</span> region_income_mean[<span class="st">"South"</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 1: diferencia de las estimaciones (North - South)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>region_income_mean <span class="ot">&lt;-</span> <span class="fu">setNames</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>(region_mean_contrast[[<span class="st">"Income"</span>]]),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  region_mean_contrast[[<span class="st">"Region"</span>]]</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>region_income_mean[<span class="st">"North"</span>] <span class="sc">-</span> region_income_mean[<span class="st">"South"</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>North 
 -73.4 </code></pre>
@@ -2157,15 +2149,13 @@ Tabla&nbsp;4.25: Contraste de ingresos medios: región North menos región South
 </div>
 <p>El siguiente código computacional obtiene la matriz de varianzas y covarianzas y la organiza con los nombres de las regiones para presentarla en la <a href="#tbl-vcov-region" class="quarto-xref">tabla&nbsp;<span>4.26</span></a>. De ella se extraen los elementos correspondientes a Norte y Sur. Las covarianzas estimadas entre las regiones son todas nulas, lo que resulta coherente con el diseño muestral, dado que la estratificación se realizó por región y la selección de la muestra se efectuó de manera independiente en cada estrato. En consecuencia, los estimadores regionales no comparten unidades muestrales y su covarianza bajo el diseño es igual a cero.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 2: matriz de varianzas y covarianzas</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>region_vcov <span class="ot">&lt;-</span> <span class="fu">vcov</span>(region_mean_contrast)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>regional_income_covariance_table <span class="ot">&lt;-</span> region_vcov <span class="sc">%&gt;%</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"Region"</span>)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>regional_income_covariance_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paso 2: matriz de varianzas y covarianzas</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>region_vcov <span class="ot">&lt;-</span> <span class="fu">vcov</span>(region_mean_contrast)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>regional_income_covariance_table <span class="ot">&lt;-</span> region_vcov <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"Region"</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>regional_income_covariance_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-vcov-region" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2242,11 +2232,11 @@ Tabla&nbsp;4.26: Matriz de varianzas y covarianzas de los ingresos medios por re
 \]</span></p>
 <p>Para evitar inconsistencias por redondeo, el siguiente código computacional calcula el error estándar de la diferencia Norte menos Sur directamente a partir de la matriz estimada de varianzas y covarianzas.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  region_vcov[<span class="st">"North"</span>, <span class="st">"North"</span>] <span class="sc">+</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    region_vcov[<span class="st">"South"</span>, <span class="st">"South"</span>] <span class="sc">-</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span> <span class="sc">*</span> region_vcov[<span class="st">"North"</span>, <span class="st">"South"</span>]</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  region_vcov[<span class="st">"North"</span>, <span class="st">"North"</span>] <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    region_vcov[<span class="st">"South"</span>, <span class="st">"South"</span>] <span class="sc">-</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span> <span class="sc">*</span> region_vcov[<span class="st">"North"</span>, <span class="st">"South"</span>]</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 83.4</code></pre>
 </div>
@@ -2262,26 +2252,24 @@ Tabla&nbsp;4.26: Matriz de varianzas y covarianzas de los ingresos medios por re
 \]</span></p>
 <p>Se estiman varias diferencias, sin realizar aquí una prueba conjunta ni un ajuste de comparaciones múltiples. El orden de columnas es Norte, Sur, Centro, Occidente y Oriente; el código asigna coeficientes por nombre. En esta matriz, cada fila define un contraste distinto y cada columna corresponde a una de las regiones consideradas en el análisis. Los coeficientes positivos y negativos indican las medias que participan en cada comparación, mientras que los ceros representan las regiones que no intervienen en el contraste correspondiente. El siguiente código computacional estima estos contrastes y organiza las diferencias regionales, sus errores estándar y sus intervalos de confianza para presentarlos en la <a href="#tbl-contraste-regiones" class="quarto-xref">tabla&nbsp;<span>4.27</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>contrast_regions <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> region_mean_contrast,</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">north_center =</span> <span class="fu">c</span>(<span class="at">North =</span> <span class="dv">1</span>, <span class="at">Central =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">south_center =</span> <span class="fu">c</span>(<span class="at">South =</span> <span class="dv">1</span>, <span class="at">Central =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">west_east =</span> <span class="fu">c</span>(<span class="at">West =</span> <span class="dv">1</span>, <span class="at">East =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>critical <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="fu">degf</span>(survey_design))</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>regional_income_contrasts_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrast =</span> <span class="fu">names</span>(<span class="fu">coef</span>(contrast_regions)),</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(contrast_regions)),</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(contrast_regions)),</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> estimate <span class="sc">-</span> critical <span class="sc">*</span> standard_error,</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> estimate <span class="sc">+</span> critical <span class="sc">*</span> standard_error</span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>regional_income_contrasts_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>contrast_regions <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> region_mean_contrast,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">north_center =</span> <span class="fu">c</span>(<span class="at">North =</span> <span class="dv">1</span>, <span class="at">Central =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">south_center =</span> <span class="fu">c</span>(<span class="at">South =</span> <span class="dv">1</span>, <span class="at">Central =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">west_east =</span> <span class="fu">c</span>(<span class="at">West =</span> <span class="dv">1</span>, <span class="at">East =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>critical <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="fu">degf</span>(survey_design))</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>regional_income_contrasts_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrast =</span> <span class="fu">names</span>(<span class="fu">coef</span>(contrast_regions)),</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(contrast_regions)),</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(contrast_regions)),</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> estimate <span class="sc">-</span> critical <span class="sc">*</span> standard_error,</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> estimate <span class="sc">+</span> critical <span class="sc">*</span> standard_error</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>regional_income_contrasts_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-contraste-regiones" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2332,21 +2320,19 @@ Tabla&nbsp;4.27: Contrastes de ingresos medios entre regiones
 </div>
 <p>También pueden construirse contrastes para comparar el ingreso per cápita según el sexo de la persona jefa del hogar. El siguiente código computacional utiliza <code>survey_design_heads</code> para estimar la media de cada grupo y organizar las estimaciones y sus medidas de precisión, presentadas en la <a href="#tbl-prom-sexo" class="quarto-xref">tabla&nbsp;<span>4.28</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>sex_mean_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> <span class="sc">~</span> Income,</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="sc">~</span> Sex,</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_heads,</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> svymean,</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)</span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>income_means_by_sex_table <span class="ot">&lt;-</span> sex_mean_contrast <span class="sc">%&gt;%</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>income_means_by_sex_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>sex_mean_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> <span class="sc">~</span> Income,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="sc">~</span> Sex,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_heads,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> svymean,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>income_means_by_sex_table <span class="ot">&lt;-</span> sex_mean_contrast <span class="sc">%&gt;%</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>income_means_by_sex_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-prom-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2390,24 +2376,22 @@ Tabla&nbsp;4.28: Ingreso per cápita asociado a personas jefas de hogar, por sex
 </div>
 <p>En este caso, el contraste de interés está dado por <span class="math inline">\(\bar{y}_{F} - \bar{y}_{M}\)</span>, el cual permite cuantificar la diferencia entre el ingreso medio de las mujeres y el correspondiente a los hombres. El siguiente código computacional estima esta diferencia mediante <code>svycontrast()</code> y organiza su error estándar e intervalo de confianza para presentarlos en la <a href="#tbl-contraste-sexo" class="quarto-xref">tabla&nbsp;<span>4.29</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>contrast_sex <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> sex_mean_contrast,</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sex_difference =</span> <span class="fu">c</span>(<span class="at">Female =</span> <span class="dv">1</span>, <span class="at">Male =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>critical <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="fu">degf</span>(survey_design_heads))</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>income_sex_contrast_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrast =</span> <span class="fu">names</span>(<span class="fu">coef</span>(contrast_sex)),</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(contrast_sex)),</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(contrast_sex)),</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> estimate <span class="sc">-</span> critical <span class="sc">*</span> standard_error,</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> estimate <span class="sc">+</span> critical <span class="sc">*</span> standard_error</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>income_sex_contrast_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>contrast_sex <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> sex_mean_contrast,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sex_difference =</span> <span class="fu">c</span>(<span class="at">Female =</span> <span class="dv">1</span>, <span class="at">Male =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>critical <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="fu">degf</span>(survey_design_heads))</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>income_sex_contrast_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrast =</span> <span class="fu">names</span>(<span class="fu">coef</span>(contrast_sex)),</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(contrast_sex)),</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(contrast_sex)),</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> estimate <span class="sc">-</span> critical <span class="sc">*</span> standard_error,</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> estimate <span class="sc">+</span> critical <span class="sc">*</span> standard_error</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>income_sex_contrast_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-contraste-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2445,21 +2429,19 @@ Tabla&nbsp;4.29: Contraste de ingresos medios entre mujeres y hombres
 <p>A partir de estos resultados, se concluye que, el ingreso per cápita asociado a hombres jefes de hogar supera aproximadamente en 122 dólares al asociado a mujeres jefas de hogar, con un error estándar estimado de 44,3 dólares.</p>
 <p>Un contraste lineal también puede combinar razones estimadas, aunque cada razón sea una función no lineal de totales. En este ejemplo se utiliza ingreso/gasto, la orientación inversa de gasto/ingreso empleada anteriormente. Un ejemplo de ello consiste en comparar la relación entre ingresos y gastos según el sexo del jefe de hogar. En este caso, primero se estima la razón ingreso-gasto para cada grupo y posteriormente se construye el contraste entre dichas razones. El siguiente código computacional estima las razones ingreso/gasto por sexo y organiza sus medidas de precisión para presentarlas en la <a href="#tbl-razon-ingreso-gasto-sexo" class="quarto-xref">tabla&nbsp;<span>4.30</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>sex_ratio_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> <span class="sc">~</span> Income,</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="sc">~</span> Sex,</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">denominator =</span> <span class="sc">~</span> Expenditure,</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_heads,</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> svyratio,</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)</span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>income_expenditure_ratio_by_sex_table <span class="ot">&lt;-</span> sex_ratio_contrast</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>income_expenditure_ratio_by_sex_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>sex_ratio_contrast <span class="ot">&lt;-</span> <span class="fu">svyby</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> <span class="sc">~</span> Income,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="sc">~</span> Sex,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">denominator =</span> <span class="sc">~</span> Expenditure,</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_heads,</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> svyratio,</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">covmat =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">vartype =</span> <span class="fu">c</span>(<span class="st">"se"</span>, <span class="st">"ci"</span>)</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>income_expenditure_ratio_by_sex_table <span class="ot">&lt;-</span> sex_ratio_contrast</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>income_expenditure_ratio_by_sex_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-razon-ingreso-gasto-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2503,24 +2485,22 @@ Tabla&nbsp;4.30: Razón ingreso/gasto en el dominio de personas jefas de hogar p
 </div>
 <p>El siguiente código computacional utiliza <code>svycontrast()</code> para comparar las razones ingreso/gasto de los hogares con jefatura femenina y masculina, incorporando el diseño muestral. La diferencia, su error estándar y su intervalo de confianza se presentan en la <a href="#tbl-contraste-razon-sexo" class="quarto-xref">tabla&nbsp;<span>4.31</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>contrast_sex_ratio <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> sex_ratio_contrast,</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sex_difference =</span> <span class="fu">c</span>(<span class="at">Female =</span> <span class="dv">1</span>, <span class="at">Male =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>critical <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="fu">degf</span>(survey_design_heads))</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>sex_ratio_contrast_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrast =</span> <span class="fu">names</span>(<span class="fu">coef</span>(contrast_sex_ratio)),</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(contrast_sex_ratio)),</span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(contrast_sex_ratio)),</span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> estimate <span class="sc">-</span> critical <span class="sc">*</span> standard_error,</span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> estimate <span class="sc">+</span> critical <span class="sc">*</span> standard_error</span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>sex_ratio_contrast_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>contrast_sex_ratio <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat =</span> sex_ratio_contrast,</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">list</span>(</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sex_difference =</span> <span class="fu">c</span>(<span class="at">Female =</span> <span class="dv">1</span>, <span class="at">Male =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>critical <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="fu">degf</span>(survey_design_heads))</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>sex_ratio_contrast_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrast =</span> <span class="fu">names</span>(<span class="fu">coef</span>(contrast_sex_ratio)),</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(contrast_sex_ratio)),</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(contrast_sex_ratio)),</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> estimate <span class="sc">-</span> critical <span class="sc">*</span> standard_error,</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> estimate <span class="sc">+</span> critical <span class="sc">*</span> standard_error</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>sex_ratio_contrast_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-contraste-razon-sexo" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2569,35 +2549,35 @@ Tabla&nbsp;4.31: Contraste de la razón ingreso/gasto entre sexos
 \]</span></p>
 <p>La covarianza se obtiene estimando conjuntamente las razones con <code>svyby()</code>, <code>svyratio()</code> y <code>covmat = TRUE</code>. Esta covarianza entre dominios es distinta de la covarianza entre numerador y denominador incorporada al linealizar cada razón. <code>svycontrast()</code> combina las estimaciones y su matriz completa de varianzas y covarianzas. Los coeficientes se asignan por nombre para conservar la orientación rural menos urbana aunque cambie el orden de las filas. El siguiente código computacional estima la diferencia rural menos urbana de las razones de dependencia.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>zone_dependency_joint <span class="ot">&lt;-</span> <span class="fu">svyby</span>(</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>dependency_units,</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Zone,</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> dependency_design,</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">denominator =</span> <span class="sc">~</span>reference_age,</span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> svyratio,</span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">covmat =</span> <span class="cn">TRUE</span></span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>dependency_difference <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
-<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>  zone_dependency_joint,</span>
-<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(</span>
-<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(zone_dependency_joint<span class="sc">$</span>Zone <span class="sc">==</span> <span class="st">"Rural"</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">names</span>(<span class="fu">coef</span>(zone_dependency_joint))</span>
-<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>dependency_ci <span class="ot">&lt;-</span> <span class="fu">confint</span>(</span>
-<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>  dependency_difference,</span>
-<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">level =</span> <span class="fl">0.95</span>,</span>
-<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">df =</span> <span class="fu">degf</span>(dependency_design)</span>
-<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>dependency_contrast_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrast =</span> <span class="st">"Rural - Urban"</span>,</span>
-<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">difference =</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(dependency_difference)),</span>
-<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(dependency_difference)),</span>
-<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fu">as.numeric</span>(dependency_ci[<span class="dv">1</span>, <span class="dv">1</span>]),</span>
-<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fu">as.numeric</span>(dependency_ci[<span class="dv">1</span>, <span class="dv">2</span>])</span>
-<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a>dependency_contrast_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>zone_dependency_joint <span class="ot">&lt;-</span> <span class="fu">svyby</span>(</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>dependency_units,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Zone,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> dependency_design,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">denominator =</span> <span class="sc">~</span>reference_age,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> svyratio,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">covmat =</span> <span class="cn">TRUE</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>dependency_difference <span class="ot">&lt;-</span> <span class="fu">svycontrast</span>(</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  zone_dependency_joint,</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(zone_dependency_joint<span class="sc">$</span>Zone <span class="sc">==</span> <span class="st">"Rural"</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">names</span>(<span class="fu">coef</span>(zone_dependency_joint))</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>dependency_ci <span class="ot">&lt;-</span> <span class="fu">confint</span>(</span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>  dependency_difference,</span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">level =</span> <span class="fl">0.95</span>,</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">df =</span> <span class="fu">degf</span>(dependency_design)</span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>dependency_contrast_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrast =</span> <span class="st">"Rural - Urban"</span>,</span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">difference =</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(dependency_difference)),</span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">standard_error =</span> <span class="fu">as.numeric</span>(<span class="fu">SE</span>(dependency_difference)),</span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fu">as.numeric</span>(dependency_ci[<span class="dv">1</span>, <span class="dv">1</span>]),</span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fu">as.numeric</span>(dependency_ci[<span class="dv">1</span>, <span class="dv">2</span>])</span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>dependency_contrast_table</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div id="tbl-contraste-dependencia" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-layout-align="center">
@@ -2639,26 +2619,26 @@ Tabla&nbsp;4.32: Diferencia rural menos urbana de las razones de dependencia dem
 <p>La representación gráfica de variables continuas constituye un componente fundamental del análisis de encuestas de hogares. Los gráficos bien diseñados permiten examinar la forma de las distribuciones, identificar tendencias y explorar relaciones entre variables, lo que facilita tanto la interpretación de los resultados como su comunicación a distintos públicos. En este contexto, es importante que las representaciones gráficas incorporen, cuando corresponda, las características del diseño muestral <span class="citation" data-cites="Lumley2010">(<a href="references.html#ref-Lumley2010" role="doc-biblioref">Lumley 2010</a>)</span>. En particular, el uso de los factores de expansión permite que la distribución representada refleje adecuadamente a la población de interés, en lugar de limitarse a describir únicamente las observaciones incluidas en la muestra.</p>
 <p>La gramática de gráficos se introdujo en la <a href="03-Categoricas-alternativa.html#sec-viz-categoricas" class="quarto-xref"><span>Sección 3.6</span></a>. Aquí se aplica a distribuciones y relaciones numéricas. Los pesos permiten representar su composición estimada, pero no generan por sí solos intervalos de confianza ni incorporan toda la inferencia bajo el diseño. El paquete <code>patchwork</code> <span class="citation" data-cites="patchwork">(<a href="references.html#ref-patchwork" role="doc-biblioref">Pedersen 2025</a>)</span> permite disponer varios gráficos en una misma composición. El siguiente código computacional carga los paquetes necesarios para construir y combinar las visualizaciones.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="histogramas" class="level3" data-number="4.5.1">
 <h3 data-number="4.5.1" class="anchored" data-anchor-id="histogramas"><span class="header-section-number">4.5.1</span> Histogramas</h3>
 <p>Un histograma es una representación gráfica de la distribución de una variable numérica continua, construida a partir de rectángulos cuya altura es proporcional a la frecuencia de observaciones dentro de determinados intervalos. En el contexto de las encuestas de hogares, los histogramas ponderados permiten aproximar la distribución de la variable de interés en la población, incorporando los factores de expansión asociados al diseño muestral.</p>
 <p>A continuación, se presenta el histograma ponderado de la variable <code>Income</code>, construido incorporando los pesos muestrales (<code>wk</code>) con el fin de representar la distribución estimada del ingreso en la población. Los resultados obtenidos se muestran en la <a href="#fig-hist-income-weighted" class="quarto-xref">figura&nbsp;<span>4.2</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>weighted_income_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">30</span></span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Ingreso mensual per cápita"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>) <span class="sc">+</span></span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histograma ponderado"</span>)</span>
-<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>weighted_income_hist</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>weighted_income_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">30</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Ingreso mensual per cápita"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>) <span class="sc">+</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Histograma ponderado"</span>)</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>weighted_income_hist</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-hist-income-weighted" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2675,29 +2655,29 @@ Figura&nbsp;4.2: Histograma ponderado del ingreso per cápita
 <p>En este código, se inicia la construcción del gráfico utilizando la base de datos <code>survey_data</code>. Dentro de <code>aes()</code>, el argumento <code>x = Income</code> indica que la variable representada en el eje horizontal corresponde al ingreso, mientras que <code>weight = wk</code> incorpora los pesos muestrales para construir un histograma ponderado que refleje la distribución estimada en la población. La función <code>geom_histogram()</code> genera el histograma y, mediante <code>aes(y = after_stat(density))</code>, la altura de las barras se expresa en términos de densidad en lugar de frecuencias absolutas. La opción <code>bins = 30</code> fija el número de intervalos. <code>labs()</code> identifica las unidades del eje horizontal y la densidad del eje vertical; el área de las barras, y no su altura aislada, representa proporciones. <code>ggtitle()</code> añade el título.</p>
 <p>Para comparar la distribución del ingreso entre zonas urbanas y rurales, se presenta un histograma ponderado en paneles separados y con escalas comunes, como se muestra en la <a href="#fig-hist-zone" class="quarto-xref">figura&nbsp;<span>4.3</span></a>, obtenida con el siguiente código computacional.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>zone_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Urban =</span> <span class="st">"#48C9B0"</span>, <span class="at">Rural =</span> <span class="st">"#117864"</span>)</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>weighted_zone_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  survey_data,</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
-<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">30</span>,</span>
-<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"#48C9B0"</span></span>
-<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(</span>
-<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> Zone,</span>
-<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">1</span>,</span>
-<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">labeller =</span> <span class="fu">labeller</span>(<span class="at">Zone =</span> <span class="fu">c</span>(<span class="at">Urban =</span> <span class="st">"Urbana"</span>, <span class="at">Rural =</span> <span class="st">"Rural"</span>))</span>
-<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Ingreso mensual per cápita"</span>,</span>
-<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Densidad"</span>,</span>
-<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribución ponderada del ingreso por zona"</span></span>
-<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a>weighted_zone_hist</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>zone_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Urban =</span> <span class="st">"#48C9B0"</span>, <span class="at">Rural =</span> <span class="st">"#117864"</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>weighted_zone_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  survey_data,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Income, <span class="at">weight =</span> wk)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">30</span>,</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"#48C9B0"</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> Zone,</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">1</span>,</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">labeller =</span> <span class="fu">labeller</span>(<span class="at">Zone =</span> <span class="fu">c</span>(<span class="at">Urban =</span> <span class="st">"Urbana"</span>, <span class="at">Rural =</span> <span class="st">"Rural"</span>))</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Ingreso mensual per cápita"</span>,</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Densidad"</span>,</span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribución ponderada del ingreso por zona"</span></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>weighted_zone_hist</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-hist-zone" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2714,18 +2694,18 @@ Figura&nbsp;4.3: Histograma ponderado del ingreso por zona geográfica
 <p>Cada panel muestra la distribución ponderada del ingreso per cápita para una zona. <code>facet_wrap(~ Zone, ncol = 1)</code> separa las zonas en filas y conserva escalas comunes, de modo que las alturas y los rangos del eje horizontal se puedan comparar directamente. Las etiquetas de los paneles se presentan en español. Se utilizan los mismos 30 intervalos en ambos paneles; el eje vertical muestra densidades, por lo que el área de las barras representa proporciones.</p>
 <p>Además, es posible superponer curvas de densidad suavizadas mediante la función <code>geom_density()</code>, lo que permite representar de manera continua la forma de la distribución de la variable analizada. Este tipo de gráfico facilita la identificación de características como la asimetría, la concentración de los valores y la posible presencia de múltiples modas. En la <a href="#fig-densities" class="quarto-xref">figura&nbsp;<span>4.4</span></a>, obtenida con el siguiente código computacional, se presentan los histogramas del ingreso y el gasto junto con sus respectivas curvas de densidad estimadas. Para disponer ambos gráficos uno al lado del otro, se utiliza el operador <code>|</code> del paquete <code>patchwork</code>, que permite combinar distintas visualizaciones en una misma composición gráfica.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>weighted_expenditure_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  survey_data,</span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Expenditure, <span class="at">weight =</span> wk)</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
-<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">30</span></span>
-<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Gasto mensual per cápita"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)</span>
-<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>(weighted_income_hist <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>)) <span class="sc">|</span></span>
-<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>  (weighted_expenditure_hist <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"green"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>weighted_expenditure_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  survey_data,</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Expenditure, <span class="at">weight =</span> wk)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">30</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Gasto mensual per cápita"</span>, <span class="at">y =</span> <span class="st">"Densidad"</span>)</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>(weighted_income_hist <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>)) <span class="sc">|</span></span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>  (weighted_expenditure_hist <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"green"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-densities" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2745,36 +2725,36 @@ Figura&nbsp;4.4: Histogramas ponderados y densidades del ingreso y gasto per cá
 <p>Introducidos por <span class="citation" data-cites="Tukey1977EDA">Tukey (<a href="references.html#ref-Tukey1977EDA" role="doc-biblioref">1977</a>)</span>, los diagramas de caja (<em>boxplots</em>) permiten identificar valores atípicos y evaluar la dispersión de la distribución. Son una representación gráfica que resume una variable mediante estadísticas basadas en cuartiles, permitiendo identificar la mediana, la dispersión de los datos y la presencia de valores atípicos. En el contexto de encuestas de hogares, este tipo de gráfico resulta útil para comparar distribuciones entre distintos grupos poblacionales de manera compacta y visualmente intuitiva.</p>
 <p>Los cuartiles y la mediana corresponden a los conceptos de la <a href="#sec-estimacion-de-percentiles" class="quarto-xref"><span>Sección 4.2.2</span></a>. Las cajas resumen la dispersión y no son intervalos de confianza de la mediana. Para incorporar las ponderaciones y el diseño muestral, se utiliza <code>svyboxplot()</code> del paquete <code>survey</code>, que calcula y representa diagramas de caja directamente a partir del objeto de diseño. Como el ingreso y el gasto presentan asimetría y valores altos, se muestran en escala logarítmica: esta comprime la cola superior y facilita comparar los valores centrales entre zonas. En esta escala, las distancias representan cambios multiplicativos. La transformación requiere valores positivos, condición que cumplen ambas variables en esta base. Las fórmulas especifican la variable graficada a la izquierda de <code>~</code> y el grupo de comparación a la derecha. El argumento <code>design</code> especifica el diseño muestral, <code>horizontal = TRUE</code> dispone las cajas horizontalmente y <code>col</code> asigna un color a cada zona. <code>par(mfrow = c(1, 2))</code> organiza los dos gráficos en una fila, y <code>par(old_par)</code> restaura la configuración gráfica anterior. El siguiente código computacional genera la <a href="#fig-boxplot-zone-sex" class="quarto-xref">figura&nbsp;<span>4.5</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>survey_design_log <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_Income =</span> <span class="fu">log</span>(Income),</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_Expenditure =</span> <span class="fu">log</span>(Expenditure)</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>old_par <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="fu">svyboxplot</span>(</span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  log_Income <span class="sc">~</span> Zone,</span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_log,</span>
-<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizontal =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> zone_colors,</span>
-<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Logaritmo del ingreso mensual per cápita"</span>,</span>
-<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Zona"</span>,</span>
-<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Ingreso por zona"</span></span>
-<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a><span class="fu">svyboxplot</span>(</span>
-<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>  log_Expenditure <span class="sc">~</span> Zone,</span>
-<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_log,</span>
-<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizontal =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> zone_colors,</span>
-<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Logaritmo del gasto mensual per cápita"</span>,</span>
-<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Zona"</span>,</span>
-<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Gasto por zona"</span></span>
-<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(old_par)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>survey_design_log <span class="ot">&lt;-</span> survey_design <span class="sc">%&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_Income =</span> <span class="fu">log</span>(Income),</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_Expenditure =</span> <span class="fu">log</span>(Expenditure)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>old_par <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="fu">svyboxplot</span>(</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  log_Income <span class="sc">~</span> Zone,</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_log,</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizontal =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> zone_colors,</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Logaritmo del ingreso mensual per cápita"</span>,</span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Zona"</span>,</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Ingreso por zona"</span></span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a><span class="fu">svyboxplot</span>(</span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>  log_Expenditure <span class="sc">~</span> Zone,</span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> survey_design_log,</span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizontal =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> zone_colors,</span>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Logaritmo del gasto mensual per cápita"</span>,</span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Zona"</span>,</span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Gasto por zona"</span></span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(old_par)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-boxplot-zone-sex" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2794,19 +2774,19 @@ Figura&nbsp;4.5: Cuartiles ponderados del logaritmo del ingreso y el gasto per c
 <h3 data-number="4.5.3" class="anchored" data-anchor-id="diagramas-de-dispersion"><span class="header-section-number">4.5.3</span> Diagramas de dispersión</h3>
 <p>Los diagramas de dispersión permiten examinar la relación entre dos variables numéricas. En esta sección se compara el ingreso con el gasto mensual per cápita. Ambas variables presentan distribuciones asimétricas y valores altos, por lo que se representan en escala logarítmica: esta comprime los valores extremos y facilita apreciar la concentración y los patrones de asociación. Como las dos variables son positivas en esta base, es posible aplicar esta transformación; en esa escala, las distancias expresan cambios multiplicativos y no diferencias absolutas. En el primer gráfico, el tamaño de cada punto representa el peso muestral de la observación, lo que ayuda a explorar cuánta población representa. Esta codificación visual no sustituye el ajuste de un modelo ni incorpora por sí misma la incertidumbre del diseño. El siguiente código computacional construye la <a href="#fig-scatter-basic" class="quarto-xref">figura&nbsp;<span>4.6</span></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>weighted_basic_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure)</span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> wk), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
-<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
-<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Gasto mensual per cápita (escala log10)"</span>,</span>
-<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Ingreso mensual per cápita (escala log10)"</span></span>
-<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>weighted_basic_scatter</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>weighted_basic_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> wk), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Gasto mensual per cápita (escala log10)"</span>,</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Ingreso mensual per cápita (escala log10)"</span></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>weighted_basic_scatter</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-scatter-basic" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2823,21 +2803,21 @@ Figura&nbsp;4.6: Diagrama de dispersión entre ingreso y gasto per cápita
 <p>La transparencia, fijada en 0,3 para todas las observaciones, facilita la lectura de las zonas con mayor concentración de puntos.</p>
 <p>Adicionalmente, es posible incorporar variables de agrupamiento en los diagramas de dispersión mediante los argumentos <code>shape</code> y <code>color</code>, los cuales permiten diferenciar visualmente las observaciones según categorías específicas de la población. Esto facilita la identificación de patrones diferenciados entre grupos y mejora la interpretación de la relación entre las variables analizadas. Un ejemplo de este tipo de representación se presenta en la <a href="#fig-scatter-zone" class="quarto-xref">figura&nbsp;<span>4.7</span></a>, obtenida con el siguiente código computacional.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>weighted_zone_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">shape =</span> Zone)</span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> wk, <span class="at">color =</span> Zone), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="st">"Peso"</span>,</span>
-<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Gasto mensual per cápita (escala log10)"</span>,</span>
-<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Ingreso mensual per cápita (escala log10)"</span></span>
-<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
-<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
-<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>()</span>
-<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a>weighted_zone_scatter</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>weighted_zone_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> survey_data,</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">y =</span> Income, <span class="at">x =</span> Expenditure, <span class="at">shape =</span> Zone)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">size =</span> wk, <span class="at">color =</span> Zone), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="st">"Peso"</span>,</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Gasto mensual per cápita (escala log10)"</span>,</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Ingreso mensual per cápita (escala log10)"</span></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> zone_colors) <span class="sc">+</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>()</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>weighted_zone_scatter</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-scatter-zone" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">

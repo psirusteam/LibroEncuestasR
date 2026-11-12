@@ -107,6 +107,18 @@ Como explica @Lumley2026, la opción `options(survey.lonely.psu = "adjust")` def
 
 Así mismo, `survey_data` corresponde a la base de datos que contiene la muestra seleccionada. A partir de estos datos, la función `as_survey_design()` convierte la información en un objeto de clase `tbl_svy`, el cual almacena todos los elementos necesarios para describir el diseño muestral de la encuesta. Entre ellos se incluyen la variable de estratificación (`strata`), que identifica los estratos definidos en el diseño, junto con la variable que representa las unidades primarias de muestreo (UPM) o conglomerados seleccionados en la primera etapa del muestreo (`ids`). Asimismo, el argumento `weights` define la variable que contiene los factores de expansión asociados a cada observación. Finalmente, la opción `nest = TRUE` vuelve únicos dentro de cada estrato los identificadores de conglomerado que pudieran repetirse entre estratos.
 
+Una vez definido el diseño, conviene revisar cómo quedó registrado en `survey_design`. El siguiente código computacional muestra un resumen de su estructura, los estratos y las unidades primarias de muestreo identificados en los datos, así como las probabilidades que el paquete deriva de los pesos especificados.
+
+```{r summarize-design-categorical, results='hide'}
+summary(survey_design)
+```
+
+El resumen identifica un diseño estratificado con 238 conglomerados distribuidos en 119 estratos. La tabla `Stratum Sizes` detalla, para cada estrato, el número de observaciones (`obs`) y las UPM especificadas y observadas (`design.PSU` y `actual.PSU`). En esta base hay dos UPM en cada estrato.
+
+La sección `Probabilities` resume los valores de probabilidad que `survey` obtiene a partir de los pesos incluidos en el objeto. En esta base, van de 0,003794 a 0,089186, con una mediana de 0,019034 y un promedio de 0,024242; los cuartiles son 0,014140 y 0,029810. Como aquí se especificó el factor de expansión final `wk`, el paquete presenta sus inversos. Estos valores describen las probabilidades implícitas en `wk`; no necesariamente coinciden con las probabilidades originales de selección, porque el factor final puede incorporar ajustes o calibración. En la notación del capítulo 2, las probabilidades originales se relacionan con el peso básico mediante $\pi_k=1/d_k$.
+
+Por último, la salida clasifica el objeto como un diseño de conglomerados estratificado con una etapa. Esa descripción corresponde a las variables incluidas aquí: `Stratum` y `PSU`. La indicación *with replacement* refleja el supuesto que usa `survey` para calcular la varianza cuando no se especifica una corrección por población finita; no afirma por sí sola que la selección original se haya realizado con reemplazo.
+
 ### Variables derivadas y subpoblaciones {#variables-dominios-categoricas}
 
 A partir de la información original de la encuesta, también es posible construir algunas variables adicionales que serán utilizadas en los ejercicios desarrollados a lo largo de este capítulo. El siguiente código computacional define una variable dicotómica que identifica si una persona se encuentra o no en condición de pobreza, considerando como pobres a quienes pertenecen a cualquiera de las categorías de pobreza registradas en la encuesta. Asimismo, se crea una variable que permite distinguir a las personas desempleadas del resto de la población y otra que clasifica a las personas en dos grupos de edad: menores de 18 años y personas de 18 años o más. Estas variables facilitarán la desagregación de los resultados y la comparación de indicadores entre distintos grupos de la población.
@@ -1494,7 +1506,7 @@ ggplot(
   theme(legend.position = "top")
 ```
 
-Otra forma de representar los tamaños poblacionales es la pirámide por edad y sexo de la @fig-pyramid-population, obtenida con el siguiente código computacional. Se utilizan las estimaciones y los intervalos de confianza de la @tbl-tamano-edad-sexo, almacenados en `age_sex_population_size`. Los hombres se sitúan a la izquierda, en azul, y las mujeres a la derecha, en rosa; los grupos de menor edad aparecen en la base. La longitud de cada barra representa el número estimado de personas y las líneas negras muestran sus intervalos de confianza del 95 %.
+Otra forma de representar los tamaños poblacionales es la pirámide por edad y sexo de la @fig-pyramid-population, obtenida con el siguiente código computacional. Aunque las pirámides poblacionales suelen presentar grupos de edad quinquenales, aquí se usan grupos decenales para simplificar la exposición. Se utilizan las estimaciones y los intervalos de confianza de la @tbl-tamano-edad-sexo, almacenados en `age_sex_population_size`. Los hombres se sitúan a la izquierda, en azul, y las mujeres a la derecha, en rosa; los grupos de menor edad aparecen en la base. La longitud de cada barra representa el número estimado de personas y las líneas negras muestran sus intervalos de confianza del 95 %.
 
 ```{r fig-pyramid-population, fig.cap="Pirámide de población estimada por edad y sexo con intervalos de confianza del 95 %", fig.align='center', fig.width=10.5, fig.height=9, out.width='100%', echo=TRUE}
 ggplot(

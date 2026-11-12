@@ -106,9 +106,7 @@ Una primera revisión consiste en conocer las dimensiones de la base. El siguien
 
 ```{r count-rows-bigcity}
 nrow(bigcity_data)
-```
 
-```{r count-columns-bigcity}
 ncol(bigcity_data)
 ```
 
